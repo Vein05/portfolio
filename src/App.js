@@ -5,6 +5,8 @@ import Footer from "./components/Footer";
 import Intro from "./components/Intro";
 import LongIntro from "./components/LongIntro";
 import Github from "./components/Github";
+import Blog from "./components/Blog";
+import Coding from "./components/Coding";
 import './App.css';
 
 function App() {
@@ -14,6 +16,14 @@ function App() {
         <Nav/>
         
         <Intro/>
+        <div className=" py-4 mt-auto">
+          <Footer/>
+        </div>
+      </div>
+
+      <div className=" p-2 flex flex-col min-h-screen">
+        <Coding/>
+        
         <div className=" py-4 mt-auto">
           <Footer/>
         </div>
@@ -36,6 +46,7 @@ function App() {
       </div>
 
       <div className="pt-2 flex flex-col min-h-screen space-y-5">
+        <Blog/>
         <div className="pr-5 pl-5 mt-auto">
           <Footer/>
         </div>
