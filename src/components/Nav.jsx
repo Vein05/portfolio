@@ -3,8 +3,6 @@ import Logo from "../images/logo.jpg"
 import Typewriter from 'typewriter-effect';
 import GraphemeSplitter from "grapheme-splitter";
 
-const app = document.getElementById("app");
-
 const stringSplitter = string => {
   const splitter = new GraphemeSplitter();
   return splitter.splitGraphemes(string);
@@ -37,10 +35,10 @@ function Nav(){
 
                 <div className='py-2 px-10 flex justify-end fixed top-0 w-full' >
                     <ul className='flex space-x-2 text-xs'>
-                        <li><a href="" className='hover:shadow-md transition duration-300 transform hover:scale-105'>About</a></li>
-                        <li><a href="" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Projects</a></li>
-                        <li><a href="" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Contact</a></li>
-                        <li><a href="" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Blog</a></li>
+                        <li><a href="#About" className='hover:shadow-md transition duration-300 transform hover:scale-105'>About</a></li>
+                        <li><a href="#Projects" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Projects</a></li>
+                        <li><a href="#Contacts" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Contact</a></li>
+                        <li><a href="#Blog" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Blog</a></li>
                     </ul>
                 </div>
             </div>
