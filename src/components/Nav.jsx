@@ -10,13 +10,13 @@ const stringSplitter = string => {
 
 function Nav(){
     return(
-        <nav className='py-2'>
-            <div className='flex justify-between flex-wrap: nowrap '>
-                <div className='flex space-x-1 flex-row items-center'>
+        <nav className='py-2 flex items-center'>
+            <div className='flex justify-between items-center flex-wrap: nowrap '>
+                <div className='flex space-x-1 flex-row'>
                     <img src={Logo} 
-                    className='h-10 w-10 rounded-full hover:shadow-md transition duration-300 transform hover:scale-105'
-                    alt="Logo"/>
-                    <p className='text-xl inline-flex '>I love 
+                    className='h-10 w-10 rounded-full hover:shadow-md transition duration-300 transform hover:scale-125'
+                    alt=""/>
+                    <p className='text-2xl inline-flex '>I love 
                         <span className='pl-1'><Typewriter
                             options={{
                                 strings: ['<u>OpenSource</u> 🌍','<u>Coding</u> 💻', '<u>Music</u> 🎸', ' <u>Reading</u> 📖', ' <u>Writing</u> 🖊'],
@@ -34,11 +34,11 @@ function Nav(){
                 </div>
 
                 <div className='py-2 px-10 flex justify-end fixed top-0 w-full' >
-                    <ul className='flex space-x-2 text-xs'>
-                        <li><a href="#About" className='hover:shadow-md transition duration-300 transform hover:scale-105'>About</a></li>
-                        <li><a href="#Projects" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Projects</a></li>
-                        <li><a href="#Contacts" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Contact</a></li>
-                        <li><a href="#Blog" className='hover:shadow-md transition duration-300 transform hover:scale-105'>Blog</a></li>
+                    <ul className='flex space-x-2 text-2xl'>
+                        <li><a href="#About" className='hover:text-shadow-md hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>About</a></li>
+                        <li><a href="#Contacts" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Contact</a></li>
+                        <li><a href="#Projects" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Projects</a></li>
+                        <li><a href="#Blog" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Blog</a></li>
                     </ul>
                 </div>
             </div>
