@@ -11,8 +11,8 @@ import './App.css';
 
 function App() {
   return (
-    <div className="bg-main">
-      <div className=" p-2 flex flex-col min-h-screen">
+    <div className="bg-main ">
+      <div className=" p-2 flex space-x-8 flex-col min-h-screen">
         <Nav/>
         
         <Intro/>
