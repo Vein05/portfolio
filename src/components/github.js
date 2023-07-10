@@ -30,10 +30,16 @@ export async function getRepositoryStats(repo) {
       repo,
     });
 
-    const contributorData = contributors.data.map((contributor) => ({
-      name: contributor.login,
-      avatarUrl: contributor.avatar_url,
-    }));
+    const contributorData = contributors.data.slice(0,6).map((contributor) => {
+      if (contributor.login.includes("deepsource")) {
+        return null
+      }
+      return {
+        name: contributor.login,
+        avatarUrl: contributor.avatar_url,
+      };
+
+    }).filter(contributor => contributor !== null);
 
     return {
       fullName,
