@@ -1,6 +1,4 @@
 import { Octokit } from "@octokit/rest";
-
-console.log(process.env)
 const octokit = new Octokit({
   auth: `${process.env.REACT_APP_GITHUB_KEY}`,
 });
