@@ -71,8 +71,8 @@ function RepoCard(props) {
                     <div>
                         <div className="flex flex-wrap items-center justify-center space-x-2">
                             <span>Contributors: </span>
-                            {stats.contributors.map((contributor) => (
-                                <AvaIcon key="1" name={contributor.name} link={contributor.avatarUrl} />
+                            {stats.contributors.map((contributor,index) => (
+                                <AvaIcon key={index} name={contributor.name} link={contributor.avatarUrl} />
                             ))}
                         </div>
                         <Button
