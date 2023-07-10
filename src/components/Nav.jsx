@@ -39,6 +39,7 @@ function Nav(){
                         <li><a href="#Contacts" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Contact</a></li>
                         <li><a href="#Projects" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Projects</a></li>
                         <li><a href="#Blog" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Blog</a></li>
+
                     </ul>
                 </div>
             </div>
