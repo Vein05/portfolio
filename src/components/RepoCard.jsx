@@ -48,7 +48,7 @@ function RepoCard(props) {
         <div className="">
             <Card className="" style={{ width: "30rem"}}>
                 <CardHeader shadow={false} floated={false} className="">
-                    <img src={image} className="w-full h-full object-cover" />
+                    <img src={image} alt="image for this card" className="w-full h-full object-cover" />
                 </CardHeader>
                 <CardBody className="space-y-2">
                     <div className="flex items-center justify-between mb-2">

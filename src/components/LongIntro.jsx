@@ -3,9 +3,9 @@ import Table from "./Table"
 
 function LongIntro(){
     return (
-        <div>
+        <div id="Qualifications">
             <div className="flex items-center space-x-3 overflow-hidden">
-                <img src={Image} alt="image" height="300" width="300" className= "object-cover pl-5 transition duration-300 transform hover:scale-105 rounded-lg shadow-xl shadow-blue-gray-900/50" />
+                <img src={Image} alt="myPhoto" height="300" width="300" className= "object-cover pl-5 transition duration-300 transform hover:scale-105 rounded-lg shadow-xl shadow-blue-gray-900/50" />
 
                 <p className="pl-2  font-ClashGrotesk-Light">
                 <div class="text-2xl text-gray-600 inline-flex">“</div>
