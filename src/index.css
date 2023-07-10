@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+@font-face {
+    font-family: 'ClashGrotesk-Regular';
+    src: url('../assets/Fonts/OTF/ClashGrotesk-Regular.otf') format('woff2'),
+         url('../assets/Fonts/WEB/fonts/ClashGrotesk-Light.woff') format('woff'),
+         url('../assets/Fonts/WEB/fonts/ClashGrotesk-Light.ttf') format('truetype');
+         font-weight: 200;
+         font-display: swap;
+         font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'ClashGrotesk-Medium';
+    src: url('../assets/Fonts/OTF/ClashGrotesk-Medium.otf') format('woff2'),
+         url('../assets/Fonts/WEB/fonts/ClashGrotesk-Medium.woff') format('woff'),
+         url('../assets/Fonts/WEB/fonts/ClashGrotesk-Medium.ttf') format('truetype');
+         font-weight: 300;
+         font-display: swap;
+         font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'ClashGrotesk-Light';
+    src: url('../assets/Fonts/OTF/ClashGrotesk-Light.otf') format('woff2'),
+         url('../assets/Fonts/WEB/fonts/ClashGrotesk-Light.woff') format('woff'),
+         url('../assets/Fonts/WEB/fonts/ClashGrotesk-Light.ttf') format('truetype');
+         font-weight: 300;
+         font-display: swap;
+         font-style: normal;
+  }
+
+
+body {
+    font-family: 'ClashGrotesk-Regular', sans-serif;
+  }
+
+.font-custom {
+    font-family: 'ClashGrotesk-Medium', serif;
+    }

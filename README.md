@@ -1,2 +1,3 @@
-# Portfolio
-A portfolio about me, made using React and Tailwind.
+## Portfolio for [Vein05](https://github.com/vein05)
+
+Made using React and TailWind.
