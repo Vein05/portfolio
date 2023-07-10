@@ -6,31 +6,28 @@ import topicsData from "../data/topics.json";
 
 function Table() {
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
-  const [currentSubTopicIndex, setCurrentSubTopicIndex] = useState(0);
 
   const currentTopic = topicsData[currentTopicIndex];
-  const subTopic = currentTopic.subTopic;
+
 
   function handleNext() {
     setCurrentTopicIndex(Math.min(currentTopicIndex + 1, topicsData.length - 1));
-    setCurrentSubTopicIndex(0);
   }
   
   function handleBack() {
     setCurrentTopicIndex(Math.max(currentTopicIndex - 1, 0));
-    setCurrentSubTopicIndex(0);
   }
 
   return (
-    <div>
+    <div id="Topic">
       <div className="font-bold flex items-center justify-center space-x-2">
-        <a href="" onClick={(e) => { e.preventDefault(); handleBack(); }}>
+        <a href="#Topic" onClick={(e) => { e.preventDefault(); handleBack(); }}>
           <img src={Before} alt="Before" className="h-8 w-7 duration-300 transform hover:scale-125" />
         </a>
 
         <p className="underline">{currentTopic.topic}</p>
 
-        <a href="" onClick={(e) => { e.preventDefault(); handleNext(); }}>
+        <a href="#Topic" onClick={(e) => { e.preventDefault(); handleNext(); }}>
           <img src={Next} alt="Next" className="h-8 w-7 duration-300 transform hover:scale-125" />
         </a>
       </div>
