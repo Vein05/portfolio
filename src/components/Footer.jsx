@@ -12,7 +12,7 @@ function Footer(props) {
   }
 
   return (
-    <div className="flex flex-row justify-between items-center ">
+    <div className="flex flex-row justify-between items-center text-xl">
 
       
         <p className="text-center">Hello, 25th viewer</p>
