@@ -23,7 +23,7 @@ function Footer(props) {
           />
         
         </button>
-        <a href="#" class="">
+        <a href="#Qualifications" class="">
           <u><span class="h-10 w-10 rounded-full hover:shadow-md shadow-white transition duration-300 transform hover:scale-105">Academic Qualifications</span></u>
         </a>    
     </div>

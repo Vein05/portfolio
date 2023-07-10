@@ -8,7 +8,7 @@ function Github() {
   const [currentRepoIndex, setCurrentRepoIndex] = useState(0);
 
     return (
-      <div >
+      <div id="Projects">
         <h1 className="bold text-center underline text-3xl">Projects I've worked on</h1>
         <div className="flex pl-10 pt-5 space-x-32 items-center justify-center">
           <ProjectInfo/>

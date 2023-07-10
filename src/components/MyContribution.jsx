@@ -12,9 +12,15 @@ function MyContribution(props){
         
         case "Calculator":
             info = "Owner and Developer"
+            break;
         
         case "Quotient-Bot":
             info = "Support and Issues"
+            break;
+        
+        default:
+            info="Unknown"
+            break;
     }
 
     return (
