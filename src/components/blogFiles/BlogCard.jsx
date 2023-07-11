@@ -15,7 +15,7 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 
 function BlogCard(props){
     return (
-        <Card className="max-w-[24rem] overflow-hidden">
+        <Card className="overflow-hidden"  style={{ width: '24rem' }}>
           <CardHeader
             floated={false}
             shadow={false}
@@ -27,7 +27,7 @@ function BlogCard(props){
               alt=""
             />
           </CardHeader>
-          <CardBody>
+          <CardBody color="" className="color-main">
             <Typography variant="h4" color="blue-gray">
               {props.title}
             </Typography>
@@ -48,7 +48,7 @@ function BlogCard(props){
                   size="sm"
                   variant="circular"
                   alt="sugam panthi"
-                  src = "./images/image.jpg"
+                  src = "/images/image.jpg"
                   className="border-2 border-white hover:z-10"
                 />
               </Tooltip>

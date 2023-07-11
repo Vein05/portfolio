@@ -58,12 +58,12 @@ function Coding(){
             <div className="pt-5 flex flex-col justify-center items-center">
                 <p className="className pb-5 text-2xl">Technologies I use</p>
                 <div className="flex space-x-3">
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="./images/python.png" alt="Python" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="./images/html.png" alt="HTML" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="./images/react.png" alt="React" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="./images/tailwind.png" alt="Tailwind" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="./images/c.png" alt="C" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="./images/js.png" alt="JS" />
+                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/python.png" alt="Python" />
+                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/html.png" alt="HTML" />
+                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/react.png" alt="React" />
+                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/tailwind.png" alt="Tailwind" />
+                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/c.png" alt="C" />
+                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/js.png" alt="JS" />
                 </div>
             </div>
         </div>
