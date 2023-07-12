@@ -1,5 +1,7 @@
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Nav from "../components/Nav";
-// import Quote from "../components/Quote";
 import Footer from "../components/Footer";
 import Intro from "../components/Intro";
 import LongIntro from "../components/LongIntro";
@@ -8,43 +10,88 @@ import Blog from "../components/Blog";
 import Coding from "../components/Coding";
 import Contact from "../components/Contact";
 
-function Home(){
+
+gsap.registerPlugin(ScrollTrigger);
+
+function Home() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    gsap.fromTo(
+      element.querySelector('.intro'), 
+      { autoAlpha: 0, x: -200 }, 
+      { 
+        duration: 1.5,  
+        autoAlpha: 1,  
+        x: 0,
+        ease: "power3.out" 
+      });
+      gsap.fromTo(
+        element.querySelector('.github'), 
+        { autoAlpha: 0, x: 1200 }, 
+        {
+          duration: 1.5,  
+          autoAlpha: 1,  
+          x: 0, 
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: '.github',
+            start: 'top center',
+            end: 'bottom center',
+            scrub: true
+          }})
+
+    gsap.fromTo(
+      element.querySelector('.coding'), 
+      { autoAlpha: 0, x: 200 }, 
+      {
+        duration: 1.5,  
+        autoAlpha: 1,  
+        x: 0, 
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: '.coding',
+          start: 'top center',
+          end: 'bottom center',
+          scrub: true
+        }})
+   }, []);
+
     return(
-        <div className="bg-main" >
+        <div className="bg-main" ref={ref}>
             <div className=" p-2 flex space-x-8 flex-col min-h-screen">
             <Nav/>
-            
-            <Intro/>
+            <div className="intro">
+                <Intro/>
+            </div>
             <div className=" py-4 mt-auto">
             <Footer/>
             </div>
         </div>
 
-        <div className=" p-2 flex flex-col min-h-screen">
+        <div className="coding p-2 flex flex-col min-h-screen">
             <Coding/>
-            
             <div className=" py-4 mt-auto">
             <Footer/>
             </div>
         </div>
 
-        <div className="pt-2 flex flex-col min-h-screen">
-
+        <div className="longIntro pt-2 flex flex-col min-h-screen">
             <LongIntro/>
-            
             <div className="pr-5 pl-5 mt-auto">
             <Footer/>
             </div>
         </div>
 
-        <div className="pt-2 flex flex-col min-h-screen space-y-5">
+        <div className="github pt-2 flex flex-col min-h-screen space-y-5">
             <Github />
             <div className="pr-5 pl-5 mt-auto">
             <Footer/>
             </div>
         </div>
 
-        <div className="pt-2 flex flex-col min-h-screen space-y-5">
+        <div className="blog pt-2 flex flex-col min-h-screen space-y-5">
             <Blog/>
             <div className="pr-5 pl-5 mt-auto">
             <Footer/>
@@ -52,7 +99,7 @@ function Home(){
 
       </div>
 
-      <div className="pt-2 flex flex-col min-h-screen space-y-5">
+      <div className="contact pt-2 flex flex-col min-h-screen space-y-5">
             <Contact/>
         </div>
 
