@@ -1,4 +1,8 @@
-# Portfolio Website
+<h1 align="center">
+  <img src="https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png" alt="React Logo" height="24" style="vertical-align: text-bottom; margin-right: 8px;">
+  <img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png" alt="Tailwind CSS Logo" height="24" style="vertical-align: text-bottom; margin-right: 8px;">
+  Portfolio Website
+</h1>
 
 This repository contains the code for my personal portfolio website. The website showcases my projects, skills, and experience.
 
@@ -6,8 +10,9 @@ This repository contains the code for my personal portfolio website. The website
 
 The portfolio website is built using the following technologies:
 
-- **React**: A JavaScript library for building user interfaces.
-- **Tailwind CSS**: A highly customizable CSS framework.
+- [**React**](https://reactjs.org/) : A JavaScript library for building user interfaces.
+- [**Tailwind CSS**](https://tailwindcss.com/) : A highly customizable CSS framework.
+
 
 ## Features
 
@@ -18,8 +23,7 @@ The portfolio website is built using the following technologies:
 
 ## Installation
 
-1. Clone this repository to your local machine using 
-`git clone https://github.com/vein05/portfolio.git`
+1. Clone this repository to your local machine using `git clone https://github.com/vein05/portfolio.git`
 2. Navigate to the project directory: `cd portfolio`
 3. Install the dependencies: `npm install`
 
@@ -43,4 +47,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Built with ❤️ using React and Tailwind CSS.
+Built with ❤️ using <img src="https://cdn4.iconfinder.com/data/icons/logos-3/600/React.js_logo-512.png" alt="React Logo" height="16" style="vertical-align: text-bottom; margin-right: 4px;"> React and <img src="https://seeklogo.com/images/T/tailwind-css-logo-5AD4175897-seeklogo.com.png" alt="Tailwind CSS Logo" height="16" style="vertical-align: text-bottom; margin-right: 4px;"> Tailwind CSS.
