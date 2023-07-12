@@ -1,16 +1,19 @@
-function Coding(){
-    return(
-        <div className="flex justify-center flex-col items-center">
-            <p className="pt-5 text-2xl  font-custom">Let's learn some more about me</p>
-            
-            <div className="pb-5 border-b-4 border-blue-800 w-1/2 pt-10 flex space-x-5 flex-col justify-center items-center">
-                <img
-                src="https://github-readme-stats.vercel.app/api?username=vein05&show_icons=true&card=600&line_height=30&include_all_commits=true"
-                alt="Stats"/>
-            </div>
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHtml5, faJs, faPython, faReact } from '@fortawesome/free-brands-svg-icons';
 
+function Coding() {
+  return (
+    <div className="flex justify-center flex-col items-center">
+      <p className="pt-5 text-2xl font-custom">Let's learn some more about me</p>
 
-            <div className="pb-5 border-b-4 border-blue-800 w-1/2 flex flex-row justify-center items-center space-x-10">
+      <div className="pb-5 border-b-4 border-blue-800 w-1/2 pt-10 flex space-x-5 flex-col justify-center items-center">
+        <img
+          src="https://github-readme-stats.vercel.app/api?username=vein05&show_icons=true&card=600&line_height=30&include_all_commits=true"
+          alt="Stats"
+        />
+      </div>
+
+      <div className="pb-5 border-b-4 border-blue-800 w-1/2 flex flex-row justify-center items-center space-x-10">
                 <div className="flex flex-col items-center">
                     <p className="pt-5 text-2xl">I'm currently learning</p>
                     <ul className="list-disc pl-8 pt-2">
@@ -55,21 +58,19 @@ function Coding(){
                 </div>
 
             </div>
-            <div className="pt-5 flex flex-col justify-center items-center">
-                <p className="className pb-5 text-2xl">Technologies I use</p>
-                <div className="flex space-x-3">
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/python.png" alt="Python" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/html.png" alt="HTML" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/react.png" alt="React" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/tailwind.png" alt="Tailwind" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/c.png" alt="C" />
-                    <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/js.png" alt="JS" />
-                </div>
-            </div>
+      <div className="pt-5 flex flex-col justify-center items-center">
+        <p className="pb-5 text-2xl">Technologies I use</p>
+        <div className="flex space-x-3">
+          <FontAwesomeIcon icon={faPython} className="fa-lg h-8 w-8 rounded-md hover:scale-125 duration-200 text-gray-500" />
+          <FontAwesomeIcon icon={faHtml5} className="fa-lg h-8 w-8 rounded-md hover:scale-125 duration-200 text-gray-500" />
+          <FontAwesomeIcon icon={faReact} className="fa-lg h-8 w-8 rounded-md hover:scale-125 duration-200 text-gray-500" />
+          <FontAwesomeIcon icon={faJs} className="fa-lg h-8 w-8 rounded-md hover:scale-125 duration-200 text-gray-500" />
+          <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/tailwind.png" alt="Tailwind" />          
+          <img className="h-8 w-8 rounded-md hover:scale-125 duration-200 "src="/images/c.png" alt="C" />
         </div>
-    )
-
+      </div>
+    </div>
+  );
 }
 
-
-export default Coding
+export default Coding;
