@@ -1,23 +1,27 @@
 import React from "react";
 import { FaDiscord, FaInstagram, FaFacebook, FaGithub, FaEnvelope } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { gsap } from "gsap"; 
 
 const Contact = () => {
+  const onEnter = (event) => {
+    gsap.to(event.target, { scale: 1.1 });
+  };
+
+  const onLeave = (event) => {
+    gsap.to(event.target, { scale: 1 });
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      id="Contacts"
-      className="flex flex-col items-center justify-center h-screen"
-    >
-      <h1 className="text-3xl font-bold mb-8">Talk to me on</h1>
+    <div id="Contacts" className="flex flex-col items-center justify-center h-screen">
       <img
         src="/images/logo.jpg"
         alt=""
         className="w-72 h-72 object-top rounded-full mb-8 object-cover"
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
       />
-      <div className="flex justify-center mb-8">
+      <h1 className="text-3xl font-bold mb-8">Talk to me on</h1>
+      <div className="flex justify-center mb-8 border-b-4 border-blue-500 pb-4">
         <a
           href="https://discordapp.com/users/427436602403323905"
           target="_blank"
@@ -74,7 +78,7 @@ const Contact = () => {
           />
         </a>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
