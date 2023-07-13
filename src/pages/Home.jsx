@@ -27,26 +27,26 @@ function Home() {
         x: 0,
         ease: "power3.out" 
       });
-      gsap.fromTo(
-        element.querySelector('.github'), 
-        { autoAlpha: 0, x: 1200 }, 
-        {
-          duration: 1.5,  
-          autoAlpha: 1,  
-          x: 0, 
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: '.github',
-            start: 'top center',
-            end: 'bottom center',
-            scrub: true
-          }})
+      // gsap.fromTo(
+      //   element.querySelector('.github'), 
+      //   { autoAlpha: 0, x: 1200 }, 
+      //   {
+      //     duration: 1.5,  
+      //     autoAlpha: 1,  
+      //     x: 0, 
+      //     ease: "power3.out",
+      //     scrollTrigger: {
+      //       trigger: '.github',
+      //       start: 'top center',
+      //       end: 'bottom center',
+      //       scrub: true
+      //     }})
 
     gsap.fromTo(
       element.querySelector('.coding'), 
-      { autoAlpha: 0, x: 200 }, 
+      { autoAlpha: 0, x: -200 }, 
       {
-        duration: 1.5,  
+        duration: 2,  
         autoAlpha: 1,  
         x: 0, 
         ease: "power3.out",
