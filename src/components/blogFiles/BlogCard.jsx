@@ -14,6 +14,9 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 
 
 function BlogCard(props){
+  const handelClick = () => {
+    window.open(props.page, "_blank");
+  }
     return (
         <Card className="overflow-hidden"  style={{ width: '24rem' }}>
           <CardHeader
@@ -22,10 +25,12 @@ function BlogCard(props){
             color="transparent"
             className="m-0 rounded-none"
           >
+          <a href={props.page} >
             <img
               src={props.image}
               alt=""
             />
+            </a>
           </CardHeader>
           <CardBody color="" className="color-main">
             <Typography variant="h4" color="blue-gray">
@@ -35,7 +40,7 @@ function BlogCard(props){
 							{props.description}
             </Typography>
 						<a href="#Blog" className="">
-							<Button variant="text" className="pt-3 flex items-center gap-2">
+							<Button variant="text" className="pt-3 flex items-center gap-2" onClick={handelClick}>
 								Learn More 
 								<ArrowLongRightIcon strokeWidth={2} className="w-4 h-4" />
 							</Button>
