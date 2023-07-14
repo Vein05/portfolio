@@ -4,6 +4,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PTE from "./pages/Blogs/10-best-tips-for-the-PTE-examination"
 import NoPage from "./pages/NoPage"
+import SAT from "./pages/Blogs/best-free-resources-for-the-digital-SAT"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="*" element={<NoPage/>} />
 
           <Route path="/blogs/10-best-tips-for-the-PTE-examination" element={<PTE/>}  />
+          <Route path="/blogs/best-free-resources-for-the-digital-SAT" element={<SAT />} />
         </Routes>
 
       </BrowserRouter>
