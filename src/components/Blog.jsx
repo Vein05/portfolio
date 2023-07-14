@@ -8,13 +8,13 @@ function Blog(){
             <div id="Blog" className="pt-8 flex justify-center items-center space-x-5">
                 <BlogCard 
                 title="10 Must know Tips for the PTE examination"
-                description= "This comprehensive guide is designed to help you achieve a top score in this English proficiency test. Discover essential tips and strategies tailored to your PTE preparation, empowering you to excel in every module. Embark on this transformative journey and unlock new horizons of success!"
+                description= "The Pearson Test of English (PTE) is a crucial English proficiency test for those looking to study or work in an English-speaking country. This guide offers essential tips and strategies tailored to your PTE preparation, empowering you to excel in every module. Embark on this transformative journey and unlock new horizons of success!"
                 image = "/images/pte.jpg"
                 page = "/blogs/10-best-tips-for-the-PTE-examination"
                 />
                 <BlogCard
                 title="Best FREE resources to Ace the Digital-SAT" 
-                description= "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Numquam minus magni maiores autem eius dolorem, obcaecati error repellendus veritatis quasi iste voluptatum. Porro et deleniti maxime ex ducimus nulla eligendi!"
+                description= "Preparing for the SAT exam can be a daunting task, but with the right resources and strategies, you can achieve your target score. In this guide, we introduce you to some of the top YouTube channels for SAT prep. These channels offer a diverse range of resources, including practice questions, tips, and strategies, to help you improve your scores in every module."
                 image = "/images/SAT.svg"
                 page="/blogs/best-free-resources-for-the-digital-SAT"
                 />
