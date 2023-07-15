@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Next from "../images/next.svg";
 import Before from "../images/before.svg";
-import { Card, CardBody, CardFooter, Typography, Button } from "@material-tailwind/react";
+import DOMPurify from "dompurify";
 import topicsData from "../data/topics.json";
 
 function Table() {
@@ -9,6 +9,11 @@ function Table() {
 
   const currentTopic = topicsData[currentTopicIndex];
 
+  useEffect(() => {
+    if (currentTopic.description) {
+      currentTopic.description = DOMPurify.sanitize(currentTopic.description);
+    }
+  }, [currentTopic]);
 
   function handleNext() {
     setCurrentTopicIndex(Math.min(currentTopicIndex + 1, topicsData.length - 1));
@@ -19,41 +24,36 @@ function Table() {
   }
 
   return (
-    <div id="Topic">
-      <div className="font-bold flex items-center justify-center space-x-2">
-        <a href="#Topic" onClick={(e) => { e.preventDefault(); handleBack(); }}>
-          <img src={Before} alt="Before" className="h-8 w-7 duration-300 transform hover:scale-125" />
-        </a>
-
-        <p className="underline">{currentTopic.topic}</p>
-
-        <a href="#Topic" onClick={(e) => { e.preventDefault(); handleNext(); }}>
-          <img src={Next} alt="Next" className="h-8 w-7 duration-300 transform hover:scale-125" />
-        </a>
+    <div id="Topic" className="">
+      <div className="">
+        <div className="flex items-center justify-center space-x-2 px-4 py-2">
+          <a href="#Topic" onClick={(e) => { e.preventDefault(); handleBack(); }}>
+            <img src={Before} alt="Before" className="h-10 w-10 duration-300 transform hover:scale-125" />
+          </a>
+          <p className="text-bold text-3xl text-blue-500 ">{currentTopic.topic}</p>
+          <a href="#Topic" onClick={(e) => { e.preventDefault(); handleNext(); }}>
+            <img src={Next} alt="Next" className="h-10 w-10 duration-300 transform hover:scale-125" />
+          </a>
+        </div>
       </div>
-
-      <div className="flex items-center justify-center">
-        <Card className="flex justify-center items-center mt-2">
-          <CardBody>
-            
-            {currentTopic.subTopic && (
-              <Typography variant="h5" className="mb-2">
-               {`• ${currentTopic.subTopic}`}
-              </Typography>)
-            }
-            <Typography dangerouslySetInnerHTML={{ __html: currentTopic.description }} />
-          </CardBody>
+      <div className="flex items-center justify-center mt-5">
+        <div className="p-6">
+          {currentTopic.subTopic !== undefined && (
+            <div className="text-2xl font-bold mb-4">
+              {`${currentTopic.subTopic}`}
+            </div>
+          )}
           
-          {currentTopic.readMore && (
-            <CardFooter className="pt-0">
-                <a href={currentTopic.readMore}>
-                <Button color="indigo">Read More</Button>
-                </a>
-            </CardFooter>
-            )}
-            
+          {currentTopic.description !== undefined && (
+            <div className="text-xl" dangerouslySetInnerHTML={{ __html: currentTopic.description }}></div>
+          )}
 
-        </Card>
+          {currentTopic.readMore && (
+            <div className="mt-4 text-xl flex justify-center items-center">
+              <a href={currentTopic.readMore} className="text-blue-500 hover:text-blue-700">Read More</a>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
