@@ -1,12 +1,3 @@
-import {
-    Card,
-    CardHeader,
-    CardBody,
-    Typography,
-    CardFooter,
-    Button,
-} from "@material-tailwind/react";
-
 import Abode from "../images/abode.png";
 import Calculator from "../images/calc.jpg";
 import Danime from "../images/danime.png";
@@ -17,77 +8,72 @@ import AvaIcon from "./AvaIcon";
 import MyContribution from "./MyContribution";
 
 function RepoCard(props) {
-    const { stats } = props;
+  const { stats } = props;
 
-    let image;
-    switch (stats.repo) {
-        case "Abode":
-            image = Abode;
-            break;
-        case "Calculator":
-            image = Calculator;
-            break;
-        case "Danime":
-            image = Danime;
-            break;
-        case "QPlayer":
-            image = QPlayer;
-            break;
-        case "Quotient-Bot":
-            image = Quotient;
-            break;
-        default:
-            break;
-    }
+  let image;
+  switch (stats.repo) {
+    case "Abode":
+      image = Abode;
+      break;
+    case "Calculator":
+      image = Calculator;
+      break;
+    case "Danime":
+      image = Danime;
+      break;
+    case "QPlayer":
+      image = QPlayer;
+      break;
+    case "Quotient-Bot":
+      image = Quotient;
+      break;
+    default:
+      break;
+  }
 
-    function handleClick() {
-        window.open("https://github.com/" + stats.fullName, "_blank");
-    }
+  function handleClick() {
+    window.open("https://github.com/" + stats.fullName, "_blank");
+  }
 
-    return (
+  return (
+    <div className="w-96 px-2 py-2 ">
+      <div className="overflow-hidden">
         <div className="">
-            <Card className="" style={{ width: "30rem"}}>
-                <CardHeader shadow={false} floated={false} className="">
-                    <img src={image} alt="" className="w-full h-full object-cover" />
-                </CardHeader>
-                <CardBody className="space-y-2">
-                    <div className="flex items-center justify-between mb-2">
-                        <Typography color="blue-gray" className="capitalize ">
-                            {stats.repo}
-                        </Typography>
-                        <Typography color="blue-gray" className="font-medium">
-                            🌟 {stats.totalStars} <br />
-                        </Typography>
-                    </div>
-                    <div className="flex space-x-2">
-                        <p className="font-normal opacity-75">My Contribution:</p>{" "}
-                        <MyContribution repo={stats.repo} />
-                    </div>
-                    <Typography variant="small" className="font-normal opacity-75">
-                        Description: {stats.description}
-                    </Typography>
-                </CardBody>
-                <CardFooter className="pt-0">
-                    <div>
-                        <div className="flex flex-wrap items-center justify-center space-x-2">
-                            <span>Contributors: </span>
-                            {stats.contributors.map((contributor,index) => (
-                                <AvaIcon key={index} name={contributor.name} link={contributor.avatarUrl} />
-                            ))}
-                        </div>
-                        <Button
-                            ripple={false}
-                            fullWidth={true}
-                            className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:shadow-none hover:scale-105 focus:shadow-none focus:scale-105 active:scale-100"
-                            onClick={handleClick}
-                        >
-                            Visit on GitHub
-                        </Button>
-                    </div>
-                </CardFooter>
-            </Card>
+          <img src={image} alt="" className="w-full h-full rounded-full object-cover" />
         </div>
-    );
+        <div className="p-4 space-y-2">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="capitalize font-bold text-xl text-blue-500">{stats.repo}</h2>
+            <p className="font-medium ">🌟 {stats.totalStars}</p>
+          </div>
+          <div className="flex flex-col space-y-2">
+            <p className="inline-flex">My Role: &nbsp;<MyContribution repo={stats.repo} /> </p>
+            <p className="inline-flex">Description:&nbsp;{stats.description}</p>
+            </div>
+        </div>
+        <div className="p-4 pt-0">
+          <div className="flex flex-col space-y-4">
+            <div className="flex flex-wrap items-center justify-center space-x-2">
+              <span>Devs: </span>
+              {stats.contributors.map((contributor, index) => (
+                <AvaIcon
+                  key={index}
+                  name={contributor.name}
+                  link={contributor.avatarUrl}
+                />
+              ))}
+            </div>
+            <button
+              className="text-center py-2 block w-full bg-blue-gray-900/10 text-blue-gray-900 hover:bg-blue-gray-900/20 font-bold rounded-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+              onClick={handleClick}
+            >
+              Visit on GitHub
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default RepoCard;
