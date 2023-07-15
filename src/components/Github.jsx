@@ -18,13 +18,7 @@ function Github() {
             <div className="flex flex-row items-center justify-center space-x-5">
               
               <Button
-                color="lightBlue"
-                buttonType="filled"
-                size="regular"
-                rounded={true}
-                block={false}
-                iconOnly={false}
-                ripple="light"
+                color="light-blue"
                 disabled={currentRepoIndex === 0}
                 onClick={() => {
                   setCurrentRepoIndex(currentRepoIndex - 1);
@@ -34,13 +28,7 @@ function Github() {
               </Button>
               <Repo repo={repos[currentRepoIndex]} />
               <Button
-                color="lightBlue"
-                buttonType="filled"
-                size="regular"
-                rounded={true}
-                block={false}
-                iconOnly={false}
-                ripple="light"
+                color="light-blue"
                 disabled={currentRepoIndex === repos.length - 1}
                 onClick={() => {
                   setCurrentRepoIndex(currentRepoIndex + 1);
