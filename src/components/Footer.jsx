@@ -1,31 +1,39 @@
 import image from "../images/expand.svg";
+import { useRef, useEffect } from "react";
 
 function Footer(props) {
-  function scrollByScreen() {
-    const screenHeight = window.innerHeight;
-    const currentScrollPosition = window.pageYOffset;
-    const newScrollPosition = currentScrollPosition + screenHeight;
-    window.scrollTo({
-      top: newScrollPosition,
-      behavior: 'smooth'
-    });
-  }
+  const myRef = useRef(null);
+
+  useEffect(() => {
+    const element = document.querySelector(props.scrollTo);
+
+    function handleScroll() {
+      if (element) {
+        window.scrollTo({
+          top: element.offsetTop,
+          behavior: "smooth"
+        });
+      }
+    }
+
+    const buttonRef = myRef.current;
+
+    buttonRef.addEventListener("click", handleScroll);
+
+    return () => {
+      buttonRef.removeEventListener("click", handleScroll);
+    };
+  }, [props.scrollTo]);
 
   return (
-    <div className="flex flex-row justify-between items-center text-xl">
-
-      
-        <p className="text-center">Hello, 25th viewer</p>
-        <button>
-          <img src={image} alt="Button " 
-          className="bg-transparent transform transition duration-300 hover:scale-110"
-          onClick={scrollByScreen}
-          />
-        
-        </button>
-        <a href="#Qualifications" class="">
-          <u><span class="h-10 w-10 rounded-full hover:shadow-md shadow-white transition duration-300 transform hover:scale-105">Academic Qualifications</span></u>
-        </a>    
+    <div className="pt-5 pb-5 flex justify-center items-center text-xl">
+      <button ref={myRef}>
+        <img
+          src={image}
+          alt="Button"
+          className="bg-transparent transition duration-300 hover:scale-140"
+        />
+      </button>
     </div>
   );
 }
