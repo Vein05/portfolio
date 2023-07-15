@@ -3,19 +3,18 @@
       "topic": "Academics",
       "subTopic": "High School",
       "description": "I successfully completed my secondary education program under the National Examination Board (NEB) curriculum, earning a remarkable grade point average of 3.72 out of 4.0 in the 11th grade and x out of 4.0 in the 12th grade, respectively. The comprehensive program encompassed an array of subjects, including advanced Physics, Chemistry, Mathematics, Computer Science, English, and Nepali, which honed my analytical and critical thinking skills. I found the program to be intellectually stimulating, particularly in the domains of Computer Science, Mathematics, and English. My rank of x out of approximately 500 students attests to my academic excellence and dedication to learning.",
-      "readMore": "https://www.google.com/"
+      "readMore": "/pages/academic"
     },
     {
       "topic": "Projects",
       "subTopic": "Programming",
       "description": "Ever since I embarked my journey in programming and software development, I have achieved notable milestones. Comprising of- creating a popular Discord bot with over a million users, developing a user-friendly GUI for a scientific calculator, crafting a comprehensive music player for Linux systems, collaborating on a prestigious Discord bot project, and building a robust web application with React, Python, and Firebase. These accomplishments bespeak my passion for programming and software development, and my commitment to delivering practical solutions with a touch of charm and friendliness.",
-      "readMore": "https://www.google.com/"
+      "readMore": "/home/#Projects"
     },
     {
       "topic": "Hobbies",
       "subTopic": "",
-      "description": "I find peace in music, which feels like an extension of myself. It allows me to explore my creativity and create sounds that I've always enjoyed. Recently, I've also started to create my own sounds. While I'm not very skilled at songwriting, I'm open to expanding my horizons. I also enjoy reading novels, particularly fiction. It's a great way for me to spend my time and I'm always captivated by the imaginative scope and narrative depth of fictional works.",
-      "readMore": "https://www.google.com/"
+      "description": "I find peace in music, which feels like an extension of myself. It allows me to explore my creativity and create sounds that I've always enjoyed. Recently, I've also started to create my own sounds. While I'm not very skilled at songwriting, I'm open to expanding my horizons. I also enjoy reading novels, particularly fiction. It's a great way for me to spend my time and I'm always captivated by the imaginative scope and narrative depth of fictional works."
     },
     {
       "topic": "Trivia",

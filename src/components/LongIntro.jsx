@@ -12,7 +12,7 @@ function LongIntro(){
                 Endowed with a passion for technology, I embark on a quest to unravel the enigmatic mysteries of the digital realm. 
                 Through relentless pursuit of knowledge and innovation, I push the limits of what's possible and explore uncharted territories,
                 eager to discover endless possibilities.
-                <div class="h-3 text-2xl inline-flex text-gray-600">”</div>
+                <div className="h-3 text-2xl inline-flex text-gray-600">”</div>
                 </p>
                 
 
