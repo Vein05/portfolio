@@ -8,7 +8,7 @@ function Coding() {
 
       <div className="pb-5 border-b-4 border-blue-800 w-1/2 pt-10 flex space-x-5 flex-col justify-center items-center">
         <img
-          src="https://github-readme-stats.vercel.app/api?username=vein05&show_icons=true&card=600&line_height=30&include_all_commits=true"
+          src="https://github-readme-stats.vercel.app/api?username=vein05&show_icons=true&card=600&line_height=30&include_all_commits=true&theme=transparent"
           alt="Stats"
         />
       </div>
