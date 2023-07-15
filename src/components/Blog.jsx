@@ -4,12 +4,12 @@ import BlogCard from "./blogFiles/BlogCard";
 function Blog(){
     return (
         <div className="flex flex-col space-x-6 justify-center items-center">
-            <p className="font-custom text-6xl">Blogs & Articles</p>
+            <p className="font-custom text-4xl">Blogs & Articles</p>
             <div id="Blog" className="pt-8 flex justify-center items-center space-x-5">
                 <BlogCard 
                 title="10 Must know Tips for the PTE examination"
                 description= "The Pearson Test of English (PTE) is a crucial English proficiency test for those looking to study or work in an English-speaking country. This guide offers essential tips and strategies tailored to your PTE preparation, empowering you to excel in every module. Embark on this transformative journey and unlock new horizons of success!"
-                image = "/images/pte.jpg"
+                image = "/images/pte.png"
                 page = "/blogs/10-best-tips-for-the-PTE-examination"
                 />
                 <BlogCard
