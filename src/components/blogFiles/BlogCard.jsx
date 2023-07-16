@@ -6,7 +6,7 @@ function BlogCard(props) {
     <div className="w-full sm:w-96 overflow-hidden flex-1">
       <div className="m-0">
         <a href="#Blog" onClick={handelClick}>
-          <img className="rounded-md bg-transparent" src={props.image} alt="" height={300}  />
+          <img className="rounded-md bg-transparent" src={props.image} alt="" height={300} />
         </a>
       </div>
       <div className="p-4 color-main">
