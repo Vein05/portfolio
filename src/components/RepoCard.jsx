@@ -43,7 +43,7 @@ function RepoCard(props) {
         </div>
         <div className="p-4 space-y-2">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="capitalize font-bold text-xl text-blue-500">{stats.repo}</h2>
+            <h2 className="capitalize font-bold text-2xl text-blue-500">{stats.repo}</h2>
             <p className="font-medium ">🌟 {stats.totalStars}</p>
           </div>
           <div className="flex flex-col space-y-2">
