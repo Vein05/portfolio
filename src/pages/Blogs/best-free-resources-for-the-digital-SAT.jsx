@@ -5,8 +5,8 @@ import Nav from "../../components/Nav";
 const SAT = () => {
 
   const opts = {
-    height: "250",
-    width:"470",
+    // height: "250",
+    // width:"470",
     playerVars: {
       autoplay: 0,
     },
@@ -85,7 +85,7 @@ const SAT = () => {
               </div>
               <p className="text-gray-700 mb-4">{channel.description}</p>
               <div className="aspect-w-16 aspect-h-9">
-                <YouTube videoId={channel.videoId} opts={opts} className="w-full h-full" />
+                <YouTube videoId={channel.videoId} opts={opts} className="" />
               </div>
             </div>
           ))}
