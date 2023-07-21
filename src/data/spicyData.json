@@ -1,0 +1,28 @@
+
+[
+    {
+      "repo": "Danime",
+      "info": [
+        "Status: Inactive",
+        "Had more than 5k servers and 1million+ users with 5m+ monthly API calls.",
+        "One of the best in it's niche according to users.",
+        "Taught me : Python, Flask, MongoDB, and AWS"
+      ]
+    },
+    {
+      "repo": "Quotient-Bot",
+      "info": [
+        "Status: Active",
+        "Largest tournament manager bot with ",
+        "React frontend"
+      ]
+    },
+    {
+        "repo": "Abode",
+        "info": [
+          "Status: Active",
+          "A custom bot for my server with exp and leveling system",
+          "Taght me: Python, SQL, discord.py, and discord API"
+        ]
+      }
+  ]
