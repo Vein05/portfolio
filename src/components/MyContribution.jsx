@@ -24,7 +24,7 @@ function MyContribution(props){
     }
 
     return (
-        <h1>{info}</h1>
+        <h1 className="pl-2">{info}</h1>
     )
 }
 

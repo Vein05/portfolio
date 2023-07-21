@@ -4,7 +4,6 @@ const octokit = new Octokit({
 });
 
 
-
 export async function getRepositoryStats(repo) {
   let userData = await octokit.users.getAuthenticated();
   let owner = userData.data.login;
