@@ -3,10 +3,10 @@ function BlogCard(props) {
     window.open(props.page, "_blank");
   };
   return (
-    <div className="w-full sm:w-96 overflow-hidden flex-1">
-      <div className="m-0">
+    <div className="w-full lg:w-96 overflow-hidden flex-1">
+      <div className="m-0 flex items-center justify-center">
         <a href="#Blog" onClick={handelClick}>
-          <img className="rounded-md bg-transparent" src={props.image} alt="" height={300} />
+          <img className="pr w-72 lg:w-96 rounded-md bg-transparent" src={props.image} alt="" height={300} />
         </a>
       </div>
       <div className="p-4 color-main">
