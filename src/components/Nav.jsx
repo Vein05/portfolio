@@ -10,13 +10,13 @@ const stringSplitter = string => {
 
 function Nav(){
     return(
-        <nav className='py-2 flex items-center'>
-            <div className='flex justify-between items-center flex-wrap: nowrap '>
-                <div className='flex space-x-1 flex-row'>
+        <nav className='py-2 flex justify-center items-center lg:justify-between'>
+            <div className='flex items-center justify-center lg:items-strech'>
+                <div className='lg:flex space-x-1 hidden'>
                     <img src={Logo} 
-                    className='h-10 w-10 rounded-full hover:shadow-md transition duration-300 transform hover:scale-125'
+                    className='w-10 h-10 object-fit rounded-full lg:'
                     alt=""/>
-                    <p className='text-2xl inline-flex '>I love 
+                    <p className='text-xl lg:text-2xl lg:inline-flex'>I love 
                         <span className='pl-1'><Typewriter
                             options={{
                                 strings: ['<u>OpenSource</u> 🌍','<u>Coding</u> 💻', '<u>Music</u> 🎸', ' <u>Reading</u> 📖', ' <u>Writing</u> 🖊'],
@@ -33,8 +33,9 @@ function Nav(){
 
                 </div>
 
-                <div className='py-2 px-10 flex justify-end fixed top-0 w-full' >
-                    <ul className='flex space-x-2 text-2xl'>
+            </div>
+            <div className='py-2 lg:px-10'>
+                    <ul className='text-xl lg:text-2xl flex space-x-2 flex-wrap'>
                         <li><a href="/home/#About" className='hover:text-shadow-md hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>About</a></li>
                         <li><a href="/home/#Contacts" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Contact</a></li>
                         <li><a href="/home/#Projects" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Projects</a></li>
@@ -42,7 +43,6 @@ function Nav(){
 
                     </ul>
                 </div>
-            </div>
         </nav>
     )
 }
