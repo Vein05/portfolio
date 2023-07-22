@@ -44,7 +44,7 @@ function Github() {
   const repoImagePosition = currentRepoIndex % 2 === 0 ? "left" : "right";
 
   return (
-    <div className="flex flex-col items-center space-y-5">
+    <div id="Projects" className="flex flex-col items-center space-y-5">
       <h1 className="text-3xl font-bold underline">Projects I've worked on</h1>
       {repoStats ? (
         <RepoCard stats={repoStats} image={repoImages[repoStats.repo]} imagePosition={repoImagePosition} />
