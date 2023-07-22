@@ -1,28 +1,32 @@
-
 [
-    {
-      "repo": "Danime",
-      "info": [
-        "Status: Inactive",
-        "Had more than 5k servers and 1million+ users with 5m+ monthly API calls.",
-        "One of the best in it's niche according to users.",
-        "Taught me : Python, Flask, MongoDB, and AWS"
-      ]
-    },
-    {
-      "repo": "Quotient-Bot",
-      "info": [
+  {
+    "repo": "Danime",
+    "info": [
+      "Status: Inactive",
+      "Had over 5,000 servers and 1 million+ users, with 5 million+ monthly API calls.",
+      "Considered by users to be one of the best in its niche.",
+      "Taught me valuable skills in Python, Flask, MongoDB, and AWS."
+    ]
+  },
+  {
+    "repo": "Quotient-Bot",
+    "info": [
         "Status: Active",
-        "Largest tournament manager bot with ",
-        "React frontend"
-      ]
-    },
-    {
-        "repo": "Abode",
-        "info": [
-          "Status: Active",
-          "A custom bot for my server with exp and leveling system",
-          "Taght me: Python, SQL, discord.py, and discord API"
-        ]
-      }
-  ]
+        "Boasts more than 15 million members and is used on 14,800 servers.",
+        "Has facilitated over 5000 scrims and 5000 tournaments.",
+        "Built using Python programming language.",
+        "Uses PostgreSQL as the database management system.",
+        "Uses Tortoise ORM.",
+        "Hosted on AWS Lightsail and Deployed using Docker.",
+        "Has an intuitive web dashboard for tournament management."
+    ]
+  },
+  {
+    "repo": "Abode",
+    "info": [
+      "Status: Active",
+      "A custom bot for my server with an experience and leveling system.",
+      "Taught me important skills in Python, SQL, discord.py, and the Discord API."
+    ]
+  }
+]
