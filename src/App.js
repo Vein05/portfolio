@@ -6,6 +6,7 @@ import PTE from "./pages/Blogs/10-best-tips-for-the-PTE-examination"
 import NoPage from "./pages/NoPage"
 import SAT from "./pages/Blogs/best-free-resources-for-the-digital-SAT"
 import AcademicQualifications from "./pages/AcademicQualtifications"
+import Qin from "./pages/Qin/Main"
 function App() {
   return (
     <>
@@ -19,6 +20,7 @@ function App() {
 
           <Route path="/blogs/10-best-tips-for-the-PTE-examination" element={<PTE/>}  />
           <Route path="/blogs/best-free-resources-for-the-digital-SAT" element={<SAT />} />
+          <Route path="/qin" element={<Qin/>} />
         </Routes>
 
       </BrowserRouter>
