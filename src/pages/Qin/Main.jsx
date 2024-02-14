@@ -17,7 +17,7 @@ function Main(){
     let nisha1= "https://media.discordapp.net/attachments/478172509037133824/1175300007038046259/77.jpg?ex=656aba6d&is=6558456d&hm=1ab5a7be8b05b7c808f5517e232fdc852eea1c9a8c4230d270b0840a76f4a6a2"
     let nisha2= "https://media.discordapp.net/attachments/478172509037133824/1175300669893267557/19.jpg?ex=656abb0b&is=6558460b&hm=96a8faf6e59a6c6a1086731053d4c966e9053d9ddc89dd5194afc2f180b6b528"
     return (
-        <>
+        <div className="bg-red-200 ">
         <div>
             <div class="h-screen flex items-center flex-col gap-y-10 lg:gap-y-3 bg-red-200">
                 <div className="lg:scale-50 m-3 p-3 flex flex-row space-x-2">
@@ -38,9 +38,12 @@ function Main(){
             </div>
         </div>  
         <div id="loveLetter" class="h-screen">
+            <div className="pt-2 m-2 font-bold text-black">
+                This is a love letter to my girlfriend, Qin: my girl, my pearl, my whole wide world.
+            </div>
             <Letter/>
         </div>
-        </>
+        </div>
     )
 
 }

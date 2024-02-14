@@ -10,7 +10,7 @@ import Qin from "./pages/Qin/Main"
 function App() {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter> 
         <Routes>
           <Route index element= {<Home/>} />
           <Route path="/home" element={<Home/>} />

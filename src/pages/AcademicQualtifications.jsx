@@ -46,10 +46,10 @@ function AcademicQuantifications() {
                 English and Nepali
               </li>
               <li className="mb-1">
-                CGPA : x/4.0 | A A A A A A
-              </li>
+                CGPA : 3.58/4.0 | A+ A+ A+ A+ B+ B+
+                              </li>
               <li className="mb-1">
-                Rank : x/450
+                Rank : 9/1500
               </li>
             </ul>
           </div>
@@ -66,7 +66,7 @@ function AcademicQuantifications() {
                 Stream : Science
               </li>
               <li className="mb-1">
-                Subjects : Computer Science, Mathematics, Physics, Chemistry,
+                Subjects : Computer Science, Mathematics, Physics, Chemistry
                 English and Nepali
               </li>
               <li className="mb-1">
