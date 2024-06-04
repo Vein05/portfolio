@@ -8,6 +8,7 @@ import SAT from "./pages/Blogs/best-free-resources-for-the-digital-SAT"
 import AcademicQualifications from "./pages/AcademicQualtifications"
 import Qin from "./pages/Qin/Main"
 function App() {
+
   return (
     <>
       <BrowserRouter> 
