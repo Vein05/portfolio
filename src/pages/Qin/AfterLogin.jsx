@@ -14,6 +14,70 @@ const AfterLogin = () => {
 
   const FIRSTDATE = new Date('2022-06-18');
   let timeSince = moment(FIRSTDATE).fromNow();
+    let song =          `**Shani**
+                        [Intro]
+                        La, La La La La Laaaa
+                        La La, La La Lalala
+
+                        **[Verse]**
+                        Malai, man parxa timi
+                        Timro tyo, sabai kura
+
+                        Timi, aaeu kaha-bata?
+                        Baseu yo man mah, Malai nashodi
+
+                        Kina timi, risauxau vana
+                        Bacha dinxu ma, dinxu yo mana
+
+                        Samau, yhi hat mero
+                        Bana mero, shadai varriiiiii laiiii (DDDU)
+
+                        **[Chorous]**
+                        Timro tyo sano keshle
+                        Paryi halyo ni, malai behal
+                        Herda herdai samay bitiskiyo
+                        Timi sangai, tha na paii
+
+                        Timro tyo nasilo aakha le
+                        Pari halyo ni, malai behal
+                        Garo hunxa, timi na huda
+                        Parki rahanxu timro tiraa…
+
+                        One more stanza here must include sani 
+
+                        **[Verse 2]** 
+
+                        Hera, buja kura mero
+                        Kina tadpauxau, Esari malai
+
+                        Mana, kura yo mero, 
+                        khusi rakhxuu, Juni Juni vari laiii 
+
+                        Makuka deuu, ferie aaudainaa
+                        Ma jastaiiiii…… 
+
+                        **[Chorous]**
+                        Timro tyo sano keshle
+                        Paryi halyo ni, malai behal
+                        Herda herdai samay bitiskiyo
+                        Timi sangai, tha na paii
+
+                        Timro tyo nasilo aakha le
+                        Pari halyo ni, malai behal
+                        Garo hunxa, timi na huda
+                        Parki rahanxu timro tiraa…
+
+                        **[Outro]**
+                        La, La La La La Laaaa
+                        La La, La La Lalala
+
+`
+    const formattedSong = song.split('\n').map((line, index) => (
+        <span key={index}>
+        {line.startsWith('**') ? <strong>{line.replace(/\*\*/g, '')}</strong> : line}
+        <br />
+        </span>
+    ));     
   return (
     <div className="mt-20 bg-blue-100 flex flex-col items-center justify-center h-full">
       <h1>Welcome Dear, <u>I've missed you very much</u></h1>
@@ -67,8 +131,15 @@ const AfterLogin = () => {
         {showMessage && (
             <div className="m-2 mr-5 bg-yellow-100 p-2 rounded-md">
                 <p className="text-sm font-sans">I love you more than words can express. Here’s to many more wonderful
-                    years together 🍷!</p>
+                    years together 🍷 <br/> Here is a song for youu
+                    <p id='song-lyrics'>
+                        {formattedSong}
+                    </p>
+                </p>
+            
+    
             </div>
+            
         )}
     </div>
   );
