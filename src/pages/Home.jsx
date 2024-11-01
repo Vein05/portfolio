@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import Intro from "../components/Intro";
 import LongIntro from "../components/LongIntro";
 import Github from "../components/Github";
-import Blog from "../components/Blog";
+// import Blog from "../components/Blog";
 import Coding from "../components/Coding";
 import Contact from "../components/Contact";
 
@@ -21,58 +21,44 @@ function Home() {
       element.querySelector(".intro"),
       { autoAlpha: 0, x: -200 },
       {
-        duration: 1.5,
+        duration: 1.1,
         autoAlpha: 1,
         x: 0,
         ease: "power3.out",
       }
     );
+
     // gsap.fromTo(
-    //   element.querySelector('.github'),
-    //   { autoAlpha: 0, x: 1200 },
+    //   element.querySelector(".coding"),
+    //   { autoAlpha: 0, x: -200 },
     //   {
-    //     duration: 1.5,
+    //     duration: 2,
     //     autoAlpha: 1,
     //     x: 0,
     //     ease: "power3.out",
     //     scrollTrigger: {
-    //       trigger: '.github',
-    //       start: 'top center',
-    //       end: 'bottom center',
-    //       scrub: true
-    //     }})
-
-    gsap.fromTo(
-      element.querySelector(".coding"),
-      { autoAlpha: 0, x: -200 },
-      {
-        duration: 2,
-        autoAlpha: 1,
-        x: 0,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".coding",
-          start: "top center",
-          end: "bottom center",
-          scrub: true,
-        },
-      }
-    );
+    //       trigger: ".coding",
+    //       start: "top center",
+    //       end: "bottom center",
+    //       scrub: true,
+    //     },
+    //   }
+    // );
   }, []);
 
     return (
       <div className="bg-main" ref={ref}>
         <div className="p-2 flex flex-col min-h-screen">
           <Nav />
-          <div className="flex-1 space-y-5">
+          <div className="flex-1 space-y-5 pt-5">
             <div className="intro">
               <Intro />
               <Footer scrollTo=".coding" />
             </div>
 
-            <div className="coding">
+            <div className="coding min">
               <Coding />
-              <Footer scrollTo=".longIntro" />
+              {/* <Footer scrollTo=".longIntro" /> */}
             </div>
 
             <div className="longIntro">
@@ -85,10 +71,10 @@ function Home() {
               <Footer scrollTo=".blog" />
             </div>
 
-            <div className="blog">
+            {/* <div className="blog">
               <Blog />
               <Footer scrollTo=".contact" />
-            </div>
+            </div> */}
 
             <div className="contact">
               <Contact />
