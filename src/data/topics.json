@@ -1,14 +1,14 @@
 [
     {
       "topic": "Academics",
-      "subTopic": "High School",
-      "description": "I successfully completed my secondary education program under the National Examination Board (NEB) curriculum, earning a remarkable grade point average of 3.72 out of 4.0 in the 11th grade and x out of 4.0 in the 12th grade, respectively. The comprehensive program encompassed an array of subjects, including advanced Physics, Chemistry, Mathematics, Computer Science, English, and Nepali, which honed my analytical and critical thinking skills. I found the program to be intellectually stimulating, particularly in the domains of Computer Science, Mathematics, and English. My rank of x out of approximately 500 students attests to my academic excellence and dedication to learning.",
+      "subTopic": "",
+      "description": "<b>College:</b> I'm an honors Computer Science student at the University of Southern Mississippi.<br/><b>Highschool:</b> I completed my secondary education under the NEB curriculum, achieving a GPA of 3.72 in 11th grade and 3.6 in 12th grade.  My rank was 8 out of around 1200 students.",
       "readMore": "/pages/academic-qualifications"
     },
     {
       "topic": "Projects",
       "subTopic": "Programming",
-      "description": "Ever since I embarked my journey in programming and software development, I have achieved notable milestones. Comprising of- creating a popular Discord bot with over a million users, developing a user-friendly GUI for a scientific calculator, crafting a comprehensive music player for Linux systems, collaborating on a prestigious Discord bot project, and building a robust web application with React, Python, and Firebase. These accomplishments bespeak my passion for programming and software development, and my commitment to delivering practical solutions with a touch of charm and friendliness.",
+      "description": "Since I began my journey in programming, I have achieved significant milestones, including creating a popular Discord bot with over a million users, developing a user-friendly GUI for a scientific calculator, crafting a comprehensive music player for Linux, collaborating on a prestigious Discord bot project, and building a robust web application with React, Python, and Firebase.",
       "readMore": "/home/#Projects"
     },
     {
