@@ -13,9 +13,9 @@ function Nav(){
         <nav className='py-2 flex justify-center items-center lg:justify-between'>
             <div className='flex items-center justify-center lg:items-strech'>
                 <div className='lg:flex space-x-1 hidden'>
-                    <img src={Logo} 
+                    {/* <img src={Logo} 
                     className='w-10 h-10 object-fit rounded-full lg:'
-                    alt=""/>
+                    alt=""/> */}
                     <p className='text-xl lg:text-2xl lg:inline-flex'>I love 
                         <span className='pl-1'><Typewriter
                             options={{
