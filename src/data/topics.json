@@ -1,15 +1,15 @@
 [
     {
-      "topic": "Academics",
-      "subTopic": "",
-      "description": "<b>College:</b> I'm an honors Computer Science student at the University of Southern Mississippi.<br/><b>Highschool:</b> I completed my secondary education under the NEB curriculum, achieving a GPA of 3.72 in 11th grade and 3.6 in 12th grade.  My rank was 8 out of around 1200 students.",
-      "readMore": "/pages/academic-qualifications"
-    },
-    {
       "topic": "Projects",
       "subTopic": "Programming",
       "description": "Since I began my journey in programming, I have achieved significant milestones, including creating a popular Discord bot with over a million users, developing a user-friendly GUI for a scientific calculator, crafting a comprehensive music player for Linux, collaborating on a prestigious Discord bot project, and building a robust web application with React, Python, and Firebase.",
       "readMore": "/home/#Projects"
+    },
+    {
+      "topic": "Academics",
+      "subTopic": "",
+      "description": "<b>College:</b> I'm an honors Computer Science student at the University of Southern Mississippi.<br/><b>Highschool:</b> I completed my secondary education under the NEB curriculum, achieving a GPA of 3.72 in 11th grade and 3.6 in 12th grade.  My rank was 8 out of around 1200 students.",
+      "readMore": "/pages/academic-qualifications"
     },
     {
       "topic": "Hobbies",

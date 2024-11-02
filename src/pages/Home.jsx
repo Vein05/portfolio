@@ -68,7 +68,7 @@ function Home() {
 
             <div className="github">
               <Github />
-              <Footer scrollTo=".blog" />
+              <Footer scrollTo=".contact" />
             </div>
 
             {/* <div className="blog">
