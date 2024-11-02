@@ -45,6 +45,14 @@ Contributions are welcome! If you have any suggestions, bug reports, or feature 
 
 This project is licensed under the [MIT License](LICENSE).
 
+## TODO
+
+1. Maybe move the longer intorduction after my techstack?
+2. Re work on the part about tech stack, and make it more clear/update the new things I've learnt. 
+3. Fix the formatting with the table about longer introduction. 
+4. Re do the academics part
+5. Update Images(include a headshot maybe?)
+
 
 
 ---
