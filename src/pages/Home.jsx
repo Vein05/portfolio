@@ -60,16 +60,18 @@ function Home() {
               <Coding />
               {/* <Footer scrollTo=".longIntro" /> */}
             </div>
+            
+            <div className="github">
+              <Github />
+              <Footer scrollTo=".longIntro" />
+            </div>
 
             <div className="longIntro">
               <LongIntro />
-              <Footer scrollTo=".github" />
-            </div>
-
-            <div className="github">
-              <Github />
               <Footer scrollTo=".contact" />
             </div>
+
+
 
             {/* <div className="blog">
               <Blog />
