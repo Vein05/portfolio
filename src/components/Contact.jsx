@@ -67,7 +67,7 @@ const Contact = () => {
           />
         </a>
         <a
-          href="mailto:man359905@gmail.com"
+          href="mailto:sugampanthi05@gmail.com"
           target="_blank"
           rel="noreferrer"
           className="mx-3"
