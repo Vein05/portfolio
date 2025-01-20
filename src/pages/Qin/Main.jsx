@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import AfterLogin from "./AfterLogin";
 
 function Main() {
@@ -20,25 +20,34 @@ function Main() {
     }
 
     return (
-        <div className="flex items-center justify-center ">
-            <div>
-                <p>Please enter the password:</p>
-                <form onSubmit={handleSubmit}>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-purple-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg text-center">
+                <h1 className="text-2xl font-bold mb-4 text-gray-800">Welcome Qin!</h1>
+                <p className="text-gray-600 mb-6">Please enter the secret password to continue:</p>
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <input
                         id="pwd"
-                        type="password"
-                        className="rounded-md text-center"
+                        type="text"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter password"
                         value={password}
                         onChange={handlePasswordChange}
                     />
-                    <input
-                        className="ml-3 p-0.5 border-black rounded-md bg-blue-300"
+                    <button
                         type="submit"
-                        value="Submit"
-                    />
+                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+                    >
+                        Submit
+                    </button>
                 </form>
-                {isValid === false && <div className="mt-3 text-red-500">Wrong password, please try again.</div>}
-                {isValid === true && <AfterLogin/>}
+                {isValid === false && (
+                    <div className="mt-4 text-red-500 text-sm">Wrong password, please try again.</div>
+                )}
+                {isValid === true && (
+                    <div className="mt-6 transition-opacity duration-500 ease-in-out">
+                        <AfterLogin />
+                    </div>
+                )}
             </div>
         </div>
     );
