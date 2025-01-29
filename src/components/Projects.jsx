@@ -2,9 +2,9 @@ import React from 'react';
 
 const Projects = () => {
   return (
-    <div className="">
-      <h2 className="text-md font-bold">Projects</h2>
-      <div className="space-y-4">
+    <div className="mb-1">
+      <h2 className="text-2xl font-bold mb-2 underline">Projects</h2>
+      <div className="space-y-2">
         <div>
           <span className="flex flex-row text-sm font-semibold text-blue-500"><img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git"/> <a href='https://github.com/cohesion-org/deepseek-go' target='_blank' rel="noreferrer">Deepseek</a></span>
           <p className="text-xs"> A Deepseek wrapper written for Go supporting R-1, Chat V3, and Coder. </p>
@@ -26,7 +26,6 @@ const Projects = () => {
             <li>Deployed a backend testing system using Go, Gin, and Docker for optimized benchmarking.</li>
           </ul>
         </div>
-      </div>
       <div>
           <span className="flex flex-row text-sm font-semibold text-blue-500">
             <img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git" />
@@ -64,6 +63,7 @@ const Projects = () => {
             <li>Implemented a QR code system for shortened URLs.</li>
           </ul>
         </div>
+    </div>
     </div>
   );
 };
