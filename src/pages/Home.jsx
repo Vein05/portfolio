@@ -6,19 +6,19 @@ function Home() {
   return (
     <>
     <div className="page flex justify-center">
-      <div className="resume-container max-w-2xl w-full m-2 p-2">
+      <div className="resume-container max-w-2xl ">
         {/* Introduction Section */}
         <div className="introduction flex flex-col justify-center items-center">
-          <span className="text-4xl font-bold">Sugam Panthi</span>
-          <span className="italic text-sm">
+          <span className="text-lg lg:text-4xl font-bold">Sugam Panthi</span>
+          <span className="italic text-xs lg:text-sm ">
             Software Developer | Research Assistant @ The University of Southern Mississippi
           </span>
         </div>
 
         {/* Middle Section */}
-        <div className="middle mt-4 flex flex-row lg:flex-row justify-between">
+        <div className="middle mt-2 flex flex-row lg:flex-row justify-between">
           {/* About Me Section */}
-          <div className="about lg:w-2/3">
+          <div className="about lg:w-3/4">
             <div className="text-xs mt-6">
               <p>I'm Sugam Panthi, a Software Engineer based in Hattiesburg, Mississippi. I'm a self-taught backend developer with experience building applications using Go and Python.
               I also have experience working with Large Language Models and ML technologies in general.
@@ -27,7 +27,17 @@ function Home() {
                 <span> I'm doing a </span>
                 <span className="font-bold">Bachelor's in Computer Science </span>
                 <span>at The University of Southern Mississippi Hattiesburg, Mississippi.</span>
-              </div>              
+              </div>      
+            <div className="flex lg:justify-between mt-1 lg:w-1/2">
+              <div className="flex">
+                  <img src="/images/eye.png" className="h-4 w-4" alt="github" />
+                  <p><a href="/resume.pdf" className="ml-1 text-md font-bold text-blue-600" target="_blank">View Resume</a></p>
+              </div>
+              <div className="flex">
+                <img src="/images/download.png" className="h-4 w-4" alt="github"/>
+                <p><a href="/resume.pdf" className="ml-1 text-md font-bold text-blue-600" download="Sugam_Panthi_Resume.pdf">Download Resume</a></p>
+              </div>
+            </div>
               <div className="mt-1 flex flex-col lg:flex-row space-x-1">
                 <div className="flex items-center">
                   <img src="/images/mail.png" className="h-4 w-4 mr-1" alt="gmail" />
@@ -50,16 +60,14 @@ function Home() {
                     vein05
                   </a>
                 </div>
-                <div className="flex items-center">
-                  <p><a href="/resume.pdf" className="text-blue-600 underline">Resume</a></p>
-                </div>
+
               </div>
 
+
             </div>
-            <hr className="mt-3"/>
           </div>
 
-          <div className="picture w-1/5 lg:w-1/4">
+          <div className="picture w-2/3 lg:w-1/4">
             <img className="rounded-full" src="/images/headshot.jpeg" alt="headshot"/>
           </div>
         </div>
