@@ -7,10 +7,11 @@ const Projects = () => {
       <div className="space-y-2">
         <div>
           <span className="flex flex-row text-sm font-semibold text-blue-500"><img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git"/> <a href='https://github.com/cohesion-org/deepseek-go' target='_blank' rel="noreferrer">Deepseek</a></span>
-          <p className="text-xs"> A Deepseek wrapper written for Go supporting R-1, Chat V3, and Coder. </p>
+          <p className="text-xs"> A Deepseek client written for Go supporting R-1, Chat V3, and Coder. </p>
           <ul className="text-xs list-disc list-inside mt-1">
-            <li>Developed and maintained an OpenSource API wrapper with 30+ stars, 10+ dependents.</li>
-            <li>Added support for modular conversations with the AI, covering 80% of the Deepseek API.</li>
+            <li>Maintained an OpenSource package with more 130+ stars, 10+ collaboraters. </li>
+            <li>Added support for modular conversations with the AI, covering 90% of the Deepseek API functionality.</li>
+            <li>Implemented comprehensive unit and functional testing, CI/CD actions, ensuring code reliability and maintainability.</li>
           </ul>
         </div>
         <div>
