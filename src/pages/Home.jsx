@@ -1,6 +1,7 @@
 import Experience from "../components/Experience";
 import Projects from "../components/Projects";
 import Stats from "../components/Stats"
+import Honors from "../components/Honors";
 
 function Home() {
   return (
@@ -72,6 +73,7 @@ function Home() {
           </div>
         </div>
         <Projects />
+        <Honors />
         <Experience />
         <Stats />
       </div>
