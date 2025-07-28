@@ -1,70 +1,89 @@
-import React from 'react';
-
 const Projects = () => {
+  const projects = [
+    {
+      title: "Deepseek",
+      description: "A Deepseek client written for Go supporting R-1, Chat V3, and Coder.",
+      link: "https://github.com/cohesion-org/deepseek-go",
+      achievements: [
+        "Maintained an OpenSource package with more than 300+ stars, 100+ dependents, and 10+ collaborators",
+        "Added comprehensive support for modular conversations with the AI, coverin full Deepseek API functionality including R-1, Chat V3, and Coder models",
+        "Implemented comprehensive unit and functional testing with CI/CD actions, ensuring code reliability, maintainability, and automated deployment processes"
+      ]
+    },
+
+    {
+      title: "Ripple",
+      description: "Developed a web application for creating, playing, and sharing flashcards in 3D, enhancing study experiences.",
+      link: "https://github.com/saphalpdyl/ripple",
+      achievements: [
+        "Engineered with a Next.js frontend and Go backend, deployed on Cloud Run with Firebase for database storage",
+        "Utilized Turborepo for monorepo management, enabling efficient development and deployment workflows",
+        "Incorporated OCR using Tesseract and text-to-speech features powered by OpenAI, providing advanced user interactivity"
+      ]
+    },
+    {
+      title: "Cohesion - AI-Based SQL Assistant",
+      description: "Developed an AI-powered OpenSource web application for SQL schema generation.",
+      link: "https://github.com/saphalpdyl/Cohesion",
+      achievements: [
+        "Reduced SQL schema generation time by 70% through AI-powered automation, significantly improving developer productivity and workflow efficiency",
+        "Designed and implemented a custom CSV format named SS-CSV, improving data processing performance by 200% compared to standard formats",
+        "Collaborated on developing a SQL schema serializer and deployed a comprehensive backend testing system using Go, Gin, and Docker for optimized benchmarking, enhancing processing speed by 500%"
+      ]
+    },
+    {
+      title: "Danime - A Discord Bot",
+      description: "Collaborated with 3 developers to build an OpenSource Discord bot.",
+      link: "https://github.com/Danimebot/danime",
+      achievements: [
+        "Successfully collaborated with 3 developers to create a Discord-verified bot that achieved 1,000,000+ users and 2,000,000+ API calls",
+        "Developed comprehensive server management tools and entertaining commands that enhanced user engagement and community interaction across Discord servers",
+        "Utilized a robust technology stack including Python, Discord API, Flask, MongoDB, and Git for version control, ensuring scalable and maintainable code architecture"
+      ]
+    },
+    {
+      title: "Moksha - A Social App",
+      description: "Developed a full-stack self-help platform.",
+      link: "https://mokshaa.vercel.app/",
+      achievements: [
+        "Built a full-stack application using React JS and Tailwind CSS for the frontend with Firebase integration for the community forum, creating a seamless user experience",
+        "Implemented a secure Google Auth login system that successfully onboarded 50+ users and generated 1000+ page views, demonstrating strong user engagement and retention",
+        "Created an OpenSource self-help platform specifically focused on helping teenagers through comprehensive self-help guides, testimonials, and community support features"
+      ]
+    },
+  ];
+
   return (
-    <div className="mb-1">
-      <h2 className="text-2xl font-bold mb-2 underline">Projects</h2>
+    <div className="mt-8">
+      <h2 className="text-2xl font-bold mb-6 text-gray-900">Projects</h2>
       <div className="space-y-2">
-        <div>
-          <span className="flex flex-row text-sm font-semibold text-blue-500"><img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git"/> <a href='https://github.com/cohesion-org/deepseek-go' target='_blank' rel="noreferrer">Deepseek</a></span>
-          <p className="text-xs"> A Deepseek client written for Go supporting R-1, Chat V3, and Coder. </p>
-          <ul className="text-xs list-disc list-inside mt-1">
-            <li>Maintained an OpenSource package with more 130+ stars, 10+ collaboraters. </li>
-            <li>Added support for modular conversations with the AI, covering 90% of the Deepseek API functionality.</li>
-            <li>Implemented comprehensive unit and functional testing, CI/CD actions, ensuring code reliability and maintainability.</li>
-          </ul>
-        </div>
-        <div>
-          <span className="flex flex-row text-sm font-semibold text-blue-500">
-            <img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git" />
-            <a href='https://github.com/saphalpdyl/Cohesion' target='_blank' rel="noreferrer">Cohesion - AI-Based SQL Assistant</a>
-          </span>
-          <p className="text-xs">Developed an AI-powered OpenSource web application for SQL schema generation.</p>
-          <ul className="text-xs list-disc list-inside mt-1">
-            <li>Reduced SQL schema generation time by 70%.</li>
-            <li>Designed a custom CSV format named SS-CSV, improving performance by 200%.</li>
-            <li>Collaborated on a SQL schema serializer, enhancing processing speed by 500%.</li>
-            <li>Deployed a backend testing system using Go, Gin, and Docker for optimized benchmarking.</li>
-          </ul>
-        </div>
-      <div>
-          <span className="flex flex-row text-sm font-semibold text-blue-500">
-            <img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git" />
-            <a href='https://github.com/Danimebot/danime'>Danime - A Discord Bot</a>
-          </span>
-          <p className="text-xs">Collaborated with 3 developers to build an OpenSource Discord bot.</p>
-          <ul className="text-xs list-disc list-inside mt-1">
-            <li>Developed server management tools and fun commands.</li>
-            <li>Verified by Discord, achieving 1,000,000+ users and 2,000,000+ API calls.</li>
-            <li>Utilized Python, Discord API, Flask, MongoDB, and Git.</li>
-          </ul>
-        </div>
-        <div>
-          <span className="flex flex-row text-sm font-semibold text-blue-500">
-          <img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git" />
-            <a href='https://mokshaa.vercel.app/'>Moksha - A Social App</a>
-          </span>
-          <p className="text-xs">Developed a full-stack self-help platform.</p>
-          <ul className="text-xs list-disc list-inside mt-1">
-            <li>Used React JS and Tailwind CSS for the frontend and Firebase for the integrated forum.</li>
-            <li>OpenSource and hosted on Vercel.</li>
-            <li>Implemented a login system through Google Auth with 50+ users and 1000+ page views.</li>
-            <li>Focused on helping teens through self-help guides and testimonials.</li>
-          </ul>
-        </div>
-        <div>
-          <span className="flex flex-row text-sm font-semibold text-blue-500">
-            <img className="h-4 w-4 mr-1" src="/images/folder-git.png" alt="git" />
-            <a href='https://github.com/Vein05/url-shortener-go'>URL Shortener</a>
-          </span>
-          <p className="text-xs">Developed an OpenSource cross-platform dynamic URL shortener.</p>
-          <ul className="text-xs list-disc list-inside mt-1">
-            <li>Used Go, Gin, and MongoDB.</li>
-            <li>Created the frontend in HTML and JS with seamless Gin integration.</li>
-            <li>Implemented a QR code system for shortened URLs.</li>
-          </ul>
-        </div>
-    </div>
+        {projects.map((project, index) => (
+          <div key={index} className="mb-3">
+            <div className="mb-2">
+              <div className="flex items-center mb-1">
+                <a
+                  className="text-md font-semibold text-blue-500 hover:text-blue-600 transition-colors"
+                  href={project.link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {project.title}
+                </a>
+                <span className="ml-1 text-sm text-gray-600 italic">
+                  {"-"} {project.description}
+                </span>
+              </div>
+            </div>
+            <ul className="text-xs list-disc list-inside space-y-1">
+              {project.achievements.map((achievement, achievementIndex) => (
+                <li key={achievementIndex} className="text-gray-700">
+                  {achievement}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
