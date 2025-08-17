@@ -3,34 +3,37 @@ import React from 'react';
 const Experience = () => {
   const experiences = [
     {
-      title: "AI & ML Intern",
-      company: "Prediction 3D",
-      period: "May 2025 – Present",
+      title: "Co-Founder & CTO",
+      company: "MagnoliaEd LLC",
+      period: "Apr 2025 – Present",
       achievements: [
-        "Analyzed site data, including images and sensor inputs, to develop predictive models for enhancing safety and productivity using PyTorch.",
-        "Collaborated with a team of 20 engineers to integrate AI solutions into web applications using ASPNet, Node.",
-        "Contributed to data visualization dashboards, providing actionable insights for stakeholders to optimize quality control in construction projects."
+        "Founded an AI-powered EdTech platform delivering personalized instructor chatbots and role-based dashboards, adopted by multiple college classrooms.",
+        "Led full-stack development for a RAG(Retrieval-augmented generation) agentic model, established CI/CD pipelines with GitHub Actions for rapid deployment and automated testing.",
+        "Designed and implemented a Hybrid Monolithic architecture using Docker and Terraform with AWS fargate, enabling independent scaling of chat, analytics, and authentication services, enabling the platform to handle 1,000+ concurrent student sessions.",
+        "Secured $27,000 in startup funding from Co-Builders: powered by Microsoft, attracted angel investors through pitch competitions, and built investor relations while managing stakeholder communications."
       ],
       status: "active"
     },
     {
-      title: "Co-Founder & CTO",
-      company: "MagnoliaEd LLC",
-      period: "April 2025 – Present",
+      title: "AI & ML Intern",
+      company: "Prediction 3D",
+      period: "May 2025 – Present",
       achievements: [
-        "Built an AI-powered EdTech platform enabling instructors to create personalized chatbots for their classes using course materials, with role-based dashboards.",
-        "Led full-stack development (Next.js, Firebase, Python), fine-tuned LLAMA-3, and utilized vector embeddings.",
-        "Secured funding($2,500) and multiple startup competition wins; deployed to programs at Universities and Colleges."
+        "Developed predictive models using PyTorch on multimodal construction site data, by processing images and sensor readings, resulting in improved safety and productivity insights for field teams.",
+        "Integrated AI solutions into web applications with LangChain and Pinecone, collaborating with a 20-engineer team, enabling seamless deployment of ML features to end-users.",
+        "Contributed to the design of a microservice-based data pipeline, separating data ingestion, preprocessing, and model inference for improved maintainability.",
+        "Built Python-based data visualization dashboards by transforming processed datasets into actionable charts, reducing decision-making time for stakeholders by 30%."
       ],
       status: "active"
     },
     {
       title: "Undergraduate Research Assistant",
       company: "The University of Southern Mississippi",
-      period: "Aug 2024 - Present",
+      period: "Nov 2024 - Present",
       achievements: [
-        "Analyzed plastic recycling's impact on agriculture and construction, contributing to two journal submissions via data analysis, visualization, and LSTM-based predictive modeling.",
-        "Built a React Native app connecting farmers and recycling plants for efficient plastic waste transport using Clerk, MongoDB, and Mapbox."
+        "Researched and modeled U.S. plastic waste trends using LSTM networks, cleaning and visualizing large datasets, contributing to two journal paper submissions.",
+        "Designed a React Native recycling logistics app integrating Clerk, MongoDB, and Mapbox, enabling real-time waste transportation tracking for plantations.",
+        "Proposed a modular backend using microservices for data collection, analytics, and reporting, improving scalability for future research projects."
       ],
       status: "active"
     },
@@ -39,9 +42,9 @@ const Experience = () => {
       company: "Best One Network (Butwal)",
       period: "Feb 2024 - May 2024",
       achievements: [
-        "Enhanced the payment confirmation API by transitioning from Django to FlaskWSGI framework, optimizing processing speed by 20% and improving scalability by 30%.",
+        "Enhanced the payment confirmation API by transitioning from Django monolith to FlaskWSGI microservice, optimizing processing speed by 20% and improving scalability by 30%.",
         "Identified, reported, and solved 5 critical bugs during the testing phase, leading to a 10% reduction in post-deployment issues.",
-        "Efficiently integrated and documented the upgraded API into the main codebase using Git and Jira."
+        "Efficiently integrated and documented the upgraded API into the main codebase using Git and Jira, and contributed to the design of a service-oriented architecture for future integrations."
       ],
       status: "completed"
     }
