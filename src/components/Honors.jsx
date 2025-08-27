@@ -5,13 +5,13 @@ export default function Honors() {
  return (
    <>
    <div className="mt-3">
-   <h2 className="text-2xl font-bold mb-2 underline">Honors</h2>
+   <h2 className="text-2xl font-bold mb-2">Honors</h2>
 
-   <ul className="text-xs list-disc list-inside mt-1">
+   <ul className="text-sm text-gray-700 list-disc list-inside mt-1 space-y-1">
          <li>Winnder: Pitch competition by MPI(Mississippi Polymer Institute) </li>
          <li>Winner: Hackathon by <a className="text-blue-600" href='https://hack-davidson-2025.devpost.com/project-gallery' target="_blank" rel="noopener noreferrer">hack@davidson</a> </li>
          <li>Winner: Hackathon by <a className="text-blue-600" href='https://www.usm.edu/news/2024/release/hatchathon.php' target="_blank" rel="noopener noreferrer">hatchery@usm</a> </li>
-         <li>Honors Scholar by USM</li>
+         <li>Honors Scholar @ USM</li>
          <li>Verified Discord Developer</li>
         </ul>
    </div>
