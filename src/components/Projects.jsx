@@ -1,12 +1,12 @@
 const Projects = () => {
   const projects = [
     {
-      title: "Deepseek",
-      description: "A Deepseek client written for Go supporting R-1, Chat V3, and Coder.",
+      title: "Deepseek-Go",
+      description: "A Deepseek client written for Go.",
       link: "https://github.com/cohesion-org/deepseek-go",
       achievements: [
         "Maintained an OpenSource package with more than 300+ stars, 100+ dependents, and 10+ collaborators",
-        "Added comprehensive support for modular conversations with the AI, coverin full Deepseek API functionality including R-1, Chat V3, and Coder models",
+        "Added support for conversations with Deepseek models, coverin full API functionality including R-1, Chat V3, and Coder models",
         "Implemented comprehensive unit and functional testing with CI/CD actions, ensuring code reliability, maintainability, and automated deployment processes"
       ]
     },
@@ -22,8 +22,8 @@ const Projects = () => {
       ]
     },
     {
-      title: "Cohesion - AI-Based SQL Assistant",
-      description: "Developed an AI-powered OpenSource web application for SQL schema generation.",
+      title: "Cohesion",
+      description: "Developed an AI-powered OpenSource assistant for SQL schema generation.",
       link: "https://github.com/saphalpdyl/Cohesion",
       achievements: [
         "Reduced SQL schema generation time by 70% through AI-powered automation, significantly improving developer productivity and workflow efficiency",
@@ -32,7 +32,7 @@ const Projects = () => {
       ]
     },
     {
-      title: "Danime - A Discord Bot",
+      title: "Danime",
       description: "Collaborated with 3 developers to build an OpenSource Discord bot.",
       link: "https://github.com/Danimebot/danime",
       achievements: [
@@ -42,8 +42,8 @@ const Projects = () => {
       ]
     },
     {
-      title: "Moksha - A Social App",
-      description: "Developed a full-stack self-help platform.",
+      title: "Moksha",
+      description: "Developed a full-stack self-help social media platform.",
       link: "https://mokshaa.vercel.app/",
       achievements: [
         "Built a full-stack application using React JS and Tailwind CSS for the frontend with Firebase integration for the community forum, creating a seamless user experience",
@@ -74,7 +74,7 @@ const Projects = () => {
                 </span>
               </div>
             </div>
-            <ul className="text-xs list-disc list-inside space-y-1">
+            <ul className="ml-6 text-xs list-disc list-inside space-y-1">
               {project.achievements.map((achievement, achievementIndex) => (
                 <li key={achievementIndex} className="text-gray-700">
                   {achievement}

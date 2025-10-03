@@ -10,7 +10,7 @@ const Experience = () => {
         "Founded an AI-powered EdTech platform delivering personalized instructor chatbots and role-based dashboards, adopted by multiple college classrooms.",
         "Led full-stack development for a RAG(Retrieval-augmented generation) agentic model, established CI/CD pipelines with GitHub Actions for rapid deployment and automated testing.",
         "Designed and implemented a Hybrid Monolithic architecture using Docker and Terraform with AWS fargate, enabling independent scaling of chat, analytics, and authentication services, enabling the platform to handle 1,000+ concurrent student sessions.",
-        "Secured $27,000 in startup funding from Co-Builders: powered by Microsoft, attracted angel investors through pitch competitions, and built investor relations while managing stakeholder communications."
+        "Secured $27,000 in startup funding from Co-Builders: powered by Microsoft, attracted angel investors through pitch competitions, and built investor relations."
       ],
       status: "active"
     },
@@ -55,13 +55,13 @@ const Experience = () => {
       <h2 className="text-2xl font-bold mb-6 text-gray-900">Experience</h2>
       
       <div className="relative">
-        <div className="absolute left-2 top-0 bottom-0 w-1 bg-blue-300 rounded-lg"></div>
+        <div className="absolute left-2 top-0 bottom-0 w-1 bg-blue-300 rounded-lg mt-1"></div>
         
         <div className='flex flex-col'>
           {experiences.map((exp, index) => (
             <div key={index} className="relative flex mb-3 last:mb-0">
               <div className="relative z-10 flex-shrink-0">
-                <div className="ml-1 w-3 h-3 bg-blue-300 rounded-full mt-1"></div>
+                <div className="ml-1 w-3 h-3 bg-blue-400 hover:scale-125 rounded-full mt-1 transition-all"></div>
               </div>
               
               <div className="ml-4 flex-grow">
@@ -80,7 +80,7 @@ const Experience = () => {
 
                 </div>
                 
-                <ul className="text-xs list-disc list-inside space-y-1">
+                <ul className="text-xs ml-4 list-disc list-inside space-y-1">
                   {exp.achievements.map((achievement, achievementIndex) => (
                     <li key={achievementIndex} className="text-gray-700">
                       {achievement}

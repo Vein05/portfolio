@@ -58,7 +58,7 @@ function Home() {
               <div className="lg:flex-1 mb-6 lg:mb-0">
                 <div className="space-y-4">
                   <p className="text-sm lg:text-base text-gray-700 leading-relaxed">
-                    I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building technologies using Go and Python. I'm currently interning as an AI and MI fellow @{" "}
+                    I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python </strong>. I recently completed an internship as an AI and MI intern @{" "}
                     <a
                       href="https://prediction3d.com"
                       className="text-blue-600 hover:underline"
@@ -82,30 +82,28 @@ function Home() {
                     </a>
                     , Hattiesburg, Mississippi.
                   </p>
-                  <div className="border-t border-gray-200 ">
-                    <p className="font-thin text-gray-700"> For professional queries</p>
-                  </div>
+
                   <div className="flex flex-wrap gap-4 justify-center lg:justify-start ">
                     <a 
                       href="/resume.pdf" 
-                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-sm hover:bg-blue-700 transition-colors text-sm font-medium"
                       target="_blank" 
                       rel="noopener noreferrer"
                     >
-                      <FaEye className="h-2 w-4" />
-                      View Resume
+                      <FaEye className="h-4 w-4" />
+                      Resume
                     </a>
                     <a 
                       href="/resume.pdf" 
-                      className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
+                      className="flex items-center gap-2 px-4 py-2 border border-blue-600 text-blue-600 rounded-sm hover:bg-blue-50 transition-colors text-sm font-medium"
                       download="Sugam_Panthi_Resume.pdf"
                     >
                       <FaDownload className="h-4 w-4" />
-                      Download
+                      Resume
                     </a>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-200">
+                  <div className="pt-2 border-b border-gray-200">
                     <div className="flex flex-row items-center justify-center gap-3 mb-5 lg:flex-row lg:items-center lg:gap-4 lg:justify-normal">
                       <a 
                         href="mailto:Sugam.Panthi@usm.edu" 
