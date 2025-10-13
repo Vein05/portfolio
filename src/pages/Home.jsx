@@ -58,7 +58,7 @@ function Home() {
               <div className="lg:flex-1 mb-6 lg:mb-0">
                 <div className="space-y-4">
                   <p className="text-sm lg:text-base text-gray-700 leading-relaxed">
-                    I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python </strong>. I recently completed an internship as an AI and MI intern @{" "}
+                    I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python</strong>. I recently completed an internship as an AI and MI intern @{" "}
                     <a
                       href="https://prediction3d.com"
                       className="text-blue-600 hover:underline"
