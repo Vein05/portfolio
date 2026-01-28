@@ -56,11 +56,11 @@ const Projects = () => {
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-6 text-gray-900">Projects</h2>
-      <div className="space-y-2">
+      <div className="space-y-6">
         {projects.map((project, index) => (
-          <div key={index} className="mb-3">
-            <div className="mb-2">
-              <div className="flex items-center mb-1">
+          <div key={index} className="mb-6 pb-6 border-b border-gray-200 last:border-b-0">
+            <div className="mb-3">
+              <div className="flex items-center mb-2">
                 <a
                   className="text-md font-semibold text-blue-500 hover:text-blue-600 transition-colors"
                   href={project.link}
@@ -74,9 +74,9 @@ const Projects = () => {
                 </span>
               </div>
             </div>
-            <ul className="ml-6 text-xs list-disc list-inside space-y-1">
+            <ul className="ml-6 text-sm list-disc list-inside space-y-2">
               {project.achievements.map((achievement, achievementIndex) => (
-                <li key={achievementIndex} className="text-gray-700">
+                <li key={achievementIndex} className="text-gray-700 leading-relaxed">
                   {achievement}
                 </li>
               ))}
