@@ -5,6 +5,7 @@ const Experience = () => {
     {
       title: "Co-Founder & CTO",
       company: "MagnoliaEd LLC",
+      companyLink: "https://magnoliaed.ai",
       period: "Apr 2025 – Present",
       achievements: [
         "Founded an AI-powered EdTech platform delivering personalized instructor chatbots and role-based dashboards, adopted by multiple college classrooms.",
@@ -17,7 +18,8 @@ const Experience = () => {
     {
       title: "AI & ML Intern",
       company: "Prediction 3D",
-      period: "May 2025 – Present",
+      companyLink: "https://prediction3d.com",
+      period: "May 2025 – Aug 2025",
       achievements: [
         "Developed predictive models using PyTorch on multimodal construction site data, by processing images and sensor readings, resulting in improved safety and productivity insights for field teams.",
         "Integrated AI solutions into web applications with LangChain and Pinecone, collaborating with a 20-engineer team, enabling seamless deployment of ML features to end-users.",
@@ -29,6 +31,7 @@ const Experience = () => {
     {
       title: "Undergraduate Research Assistant",
       company: "The University of Southern Mississippi",
+      companyLink: "https://www.usm.edu",
       period: "Nov 2024 - Present",
       achievements: [
         "Researched and modeled U.S. plastic waste trends using LSTM networks, cleaning and visualizing large datasets, contributing to two journal paper submissions.",
@@ -39,7 +42,7 @@ const Experience = () => {
     },
     {
       title: "Tech Intern",
-      company: "Best One Network (Butwal)",
+      company: "Best One Network",
       period: "Feb 2024 - May 2024",
       achievements: [
         "Enhanced the payment confirmation API by transitioning from Django monolith to FlaskWSGI microservice, optimizing processing speed by 20% and improving scalability by 30%.",
@@ -55,13 +58,13 @@ const Experience = () => {
       <h2 className="text-2xl font-bold mb-6 text-gray-900">Experience</h2>
       
       <div className="relative">
-        <div className="absolute left-2 top-0 bottom-0 w-1 bg-blue-300 rounded-lg mt-1"></div>
+        <div className="absolute left-2 top-0 bottom-0 w-1 bg-black mt-1"></div>
         
         <div className='flex flex-col'>
           {experiences.map((exp, index) => (
             <div key={index} className="relative flex mb-3 last:mb-0">
               <div className="relative z-10 flex-shrink-0">
-                <div className="ml-1 w-3 h-3 bg-blue-400 hover:scale-125 rounded-full mt-1 transition-all"></div>
+                <div className="ml-1 w-3 h-3 bg-black hover:scale-125 rotate-45 mt-1 transition-all"></div>
               </div>
               
               <div className="ml-4 flex-grow">
@@ -74,13 +77,24 @@ const Experience = () => {
                         {exp.period}
                     </span>
                   </div>
-                  <span className="text-sm text-gray-500 italic">
-                    {exp.company}
-                  </span>
+                  {exp.companyLink ? (
+                    <a
+                      href={exp.companyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-gray-600 italic hover:text-blue-500 transition-colors"
+                    >
+                      {exp.company}
+                    </a>
+                  ) : (
+                    <span className="text-sm text-gray-600 italic">
+                      {exp.company}
+                    </span>
+                  )}
 
                 </div>
                 
-                <ul className="text-xs ml-4 list-disc list-inside space-y-1">
+                <ul className="text-sm ml-4 list-disc list-inside space-y-1">
                   {exp.achievements.map((achievement, achievementIndex) => (
                     <li key={achievementIndex} className="text-gray-700">
                       {achievement}
