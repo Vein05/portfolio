@@ -5,6 +5,8 @@ category: "Engineering"
 status: "MATURE"
 ---
 
+![Getting Started with Go](/.netlify/images?url=/posts/images/getting-started-with-go/golang.png&w=500&h=200)
+
 # Why Go?
 
 Go (or Golang) has become my daily driver for backend development. Designed at Google to solve problems of scale, it strikes an incredible balance between the performance of C++ and the developer ergonomics of Python. 

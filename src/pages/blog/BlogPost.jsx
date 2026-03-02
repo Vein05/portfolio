@@ -10,6 +10,21 @@ import Breadcrumb from '../../components/blog/Breadcrumb';
 import BlogLayout from '../../components/blog/BlogLayout';
 import { posts } from '../../data/posts';
 
+const BlogImage = ({ src, alt }) => {
+  let resolvedSrc = src;
+  if (process.env.NODE_ENV !== 'production' && src?.startsWith('/.netlify/images')) {
+    const params = new URLSearchParams(src.split('?')[1]);
+    resolvedSrc = params.get('url') || src;
+  }
+  return (
+    <img
+      src={resolvedSrc}
+      alt={alt ?? ''}
+      className="w-full rounded-sm my-8 border border-border-paper"
+    />
+  );
+};
+
 const CopyableCodeBlock = ({ children, ...props }) => {
   const [copied, setCopied] = useState(false);
   const ref = useRef(null);
@@ -185,7 +200,7 @@ const BlogPost = () => {
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               rehypePlugins={[rehypeHighlight]}
-              components={{ pre: CopyableCodeBlock }}
+              components={{ pre: CopyableCodeBlock, img: BlogImage }}
             >
               {markdown}
             </ReactMarkdown>
