@@ -7,7 +7,25 @@ module.exports = withMT({
     colors: {
       main: "#E0D0C1",
     },
-    extend: {},
+    extend: {
+      colors: {
+        // Paper aesthetic design tokens
+        "paper-light": "#f5f0e8",
+        "paper-surface": "#edeae0",
+        "ink-dark": "#1a1a14",
+        "ink-muted": "#6b6560",
+        "ink-blue": "#2563eb",
+        "ink-red": "#dc2626",
+        "blue-soft": "#dbeafe",
+        "border-paper": "#d4cfc4",
+      },
+      fontFamily: {
+        sans: ["Oswald", "sans-serif"],
+        clash: ["Oswald", "sans-serif"],
+        serif: ["Oswald", "sans-serif"],
+        mono: ["Oswald", "monospace"],
+      },
+    },
   },
   plugins: [],
 });
