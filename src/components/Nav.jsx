@@ -1,5 +1,5 @@
 import React from 'react';
-// import Logo from "../images/logo.jpg"
+import { Link } from 'react-router-dom';
 import Typewriter from 'typewriter-effect';
 import GraphemeSplitter from "grapheme-splitter";
 
@@ -39,7 +39,7 @@ function Nav(){
                         <li><a href="/home/#About" className='hover:text-shadow-md hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>About</a></li>
                         <li><a href="/home/#Contacts" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Contact</a></li>
                         <li><a href="/home/#Projects" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Projects</a></li>
-                        <li><a href="/home/#Blog" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Blog</a></li>
+                        <li><Link to="/blog" className='hover:text-blue-500 transition-colors duration-300 transform hover:scale-150'>Blog</Link></li>
 
                     </ul>
                 </div>
