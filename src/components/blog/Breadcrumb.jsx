@@ -67,6 +67,16 @@ const Breadcrumb = ({ title, status }) => {
             </span>
           </div>
         )}
+
+        {/* Mobile-only Blog link — shown on home page */}
+        {isHome && (
+          <Link
+            to="/blog"
+            className="lg:hidden flex-shrink-0 ml-4 text-xs uppercase tracking-widest text-paper-light/60 hover:text-ink-blue transition-colors"
+          >
+            Blog →
+          </Link>
+        )}
       </div>
     </div>
   );
