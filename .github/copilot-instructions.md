@@ -113,6 +113,39 @@ All fonts are **Oswald** (mapped to `sans`, `serif`, `mono`, `clash` in the conf
 
 ---
 
+## Blog Images
+
+All blog post images live in `public/posts/images/[post-slug]/`. The slug must match the markdown filename (without `.md`).
+
+```
+public/posts/
+  getting-started-with-go.md
+  images/
+    getting-started-with-go/
+      hero.webp
+      diagram.webp
+```
+
+**Always serve images through the Netlify Image CDN** — never reference the raw path directly in markdown or JSX:
+
+```md
+<!-- In markdown -->
+![Alt text](/.netlify/images?url=/posts/images/getting-started-with-go/hero.webp&w=800&fit=cover)
+```
+
+```jsx
+// In JSX
+<img src={`/.netlify/images?url=/posts/images/${slug}/hero.webp&w=800&fit=cover`} alt="..." />
+```
+
+Common Netlify Image CDN params: `w` (width), `h` (height), `fit` (`cover` | `contain` | `fill`), `position`, `q` (quality 1–100).
+
+- Convert and compress automatically — always upload source images as high-quality originals (WebP preferred).
+- Never store blog images anywhere else (no `public/images/`, no external URLs unless Cloudinary).
+- Keep `public/images/` only for site-level assets: `headshot.jpeg`, `logo.jpg`.
+
+---
+
 ## Component Locations
 
 | Component | Path |
@@ -126,3 +159,4 @@ All fonts are **Oswald** (mapped to `sans`, `serif`, `mono`, `clash` in the conf
 | Blog post | `src/pages/blog/BlogPost.jsx` |
 | Posts metadata | `src/data/posts.js` |
 | Markdown files | `public/posts/*.md` |
+| Blog post images | `public/posts/images/[slug]/` |
