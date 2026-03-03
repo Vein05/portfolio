@@ -160,3 +160,17 @@ Common Netlify Image CDN params: `w` (width), `h` (height), `fit` (`cover` | `co
 | Posts metadata | `src/data/posts.js` |
 | Markdown files | `public/posts/*.md` |
 | Blog post images | `public/posts/images/[slug]/` |
+
+
+## Sitemap maintenance
+
+- This project uses `public/sitemap.xml` for search indexing.
+- Whenever blog posts are added, removed, or slugs/canonical paths change in `src/data/posts.js`, regenerate the sitemap.
+- Run:
+
+```bash
+npm run sitemap
+```
+
+- Before deployment, run `npm run build` so prerender + sitemap are refreshed.
+- Canonical domain is `https://sugampanthi.com.np` and must stay consistent across metadata and sitemap URLs.
