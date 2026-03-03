@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -107,7 +107,8 @@ const decodeEscapedLines = (value = '') => value.replace(/\\n/g, '\n');
 
 const isSafeIframeSrc = (src = '') => {
   try {
-    const parsed = new URL(src, window.location.origin);
+    const base = typeof window !== 'undefined' ? window.location.origin : 'https://sugampanthi.com.np';
+    const parsed = new URL(src, base);
     return parsed.protocol === 'https:' && SAFE_IFRAME_HOSTS.has(parsed.hostname);
   } catch {
     return false;
@@ -256,7 +257,8 @@ const YouTubeBlock = ({ payload }) => {
 const MermaidBlock = ({ chart }) => {
   const [svg, setSvg] = useState('');
   const [error, setError] = useState('');
-  const containerId = useMemo(() => `mermaid-${Math.random().toString(36).slice(2)}`, []);
+  const uid = useId();
+  const containerId = `mermaid-${uid.replace(/:/g, '')}`;
 
   useEffect(() => {
     let cancelled = false;

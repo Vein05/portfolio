@@ -46,7 +46,9 @@ const getHattiesburgSkyState = () => {
 
 const MountainDecoration = ({ mode = 'night' }) => {
   const isAutoMode = mode === 'auto-local';
-  const [skyState, setSkyState] = React.useState(() => getHattiesburgSkyState());
+  // Initialize to null so SSR and client first-paint always match (night mode).
+  // useEffect corrects to real local time after hydration.
+  const [skyState, setSkyState] = React.useState(null);
 
   React.useEffect(() => {
     if (!isAutoMode) return undefined;
@@ -58,7 +60,7 @@ const MountainDecoration = ({ mode = 'night' }) => {
     return () => window.clearInterval(intervalId);
   }, [isAutoMode]);
 
-  const isDay = isAutoMode ? skyState.isDay : false;
+  const isDay = isAutoMode ? (skyState?.isDay ?? false) : false;
 
   return (
     <div
@@ -166,7 +168,7 @@ const MountainDecoration = ({ mode = 'night' }) => {
       </g>
     </svg>
 
-      {isAutoMode && (
+      {isAutoMode && skyState && (
         <div
           className={`absolute right-3 bottom-2 z-20 text-[10px] font-mono uppercase tracking-wide ${
             isDay ? 'text-ink-muted' : 'text-paper-light/70'

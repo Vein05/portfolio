@@ -9,19 +9,25 @@ const TableOfContents = ({ seriesItems = [], currentSeriesId = '' }) => {
     const timeoutId = setTimeout(() => {
       const elements = Array.from(document.querySelectorAll('.blog-prose h1, .blog-prose h2, .blog-prose h3'));
 
+      const seenIds = new Map();
       let count = 0;
       const navItems = elements.map((elem) => {
-        if (!elem.id) {
-          elem.id = elem.innerText
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)+/g, '');
-        }
+        let baseId = elem.id || elem.innerText
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)+/g, '');
+
+        // Deduplicate: append -2, -3, etc. for repeated ids
+        const seen = seenIds.get(baseId) ?? 0;
+        seenIds.set(baseId, seen + 1);
+        const uniqueId = seen === 0 ? baseId : `${baseId}-${seen + 1}`;
+
+        if (!elem.id || elem.id !== uniqueId) elem.id = uniqueId;
         const level = parseInt(elem.tagName.replace('H', ''), 10);
         const isTopLevel = level <= 2;
         if (isTopLevel) count++;
         return {
-          id: elem.id,
+          id: uniqueId,
           label: elem.innerText,
           level,
           number: isTopLevel ? `${String(count).padStart(2, '0')}.` : undefined,

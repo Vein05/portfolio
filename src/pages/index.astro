@@ -18,6 +18,60 @@ const currentPath = Astro.url.pathname;
   description="Portfolio of Sugam Panthi — software engineer, researcher, and writer based in Hattiesburg, MS."
   canonical="https://sugampanthi.com.np"
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://sugampanthi.com.np/#website",
+        "url": "https://sugampanthi.com.np",
+        "name": "Sugam Panthi",
+        "description": "Portfolio of Sugam Panthi — software engineer, researcher, and writer based in Hattiesburg, MS.",
+        "author": {
+          "@type": "Person",
+          "name": "Sugam Panthi",
+          "url": "https://sugampanthi.com.np",
+          "sameAs": [
+            "https://www.linkedin.com/in/sugam-panthi",
+            "https://www.github.com/vein05"
+          ]
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://sugampanthi.com.np/#person",
+        "name": "Sugam Panthi",
+        "url": "https://sugampanthi.com.np",
+        "jobTitle": "Software Engineer",
+        "alumniOf": "The University of Southern Mississippi",
+        "sameAs": [
+          "https://www.linkedin.com/in/sugam-panthi",
+          "https://www.github.com/vein05"
+        ]
+      },
+      {
+        "@type": "SiteLinksSearchBox",
+        "url": "https://sugampanthi.com.np",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://sugampanthi.com.np/blog?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "ItemList",
+        "name": "Site Navigation",
+        "itemListElement": [
+          { "@type": "SiteLinksSearchBox", "@id": "https://sugampanthi.com.np/#sitelinks" },
+          { "@type": "ListItem", "position": 1, "name": "About", "url": "https://sugampanthi.com.np/#about" },
+          { "@type": "ListItem", "position": 2, "name": "Experience", "url": "https://sugampanthi.com.np/#experience" },
+          { "@type": "ListItem", "position": 3, "name": "Projects", "url": "https://sugampanthi.com.np/#projects" },
+          { "@type": "ListItem", "position": 4, "name": "Blog", "url": "https://sugampanthi.com.np/blog" }
+        ]
+      }
+    ]
+  })} />
+
   <div class="min-h-screen bg-paper-light">
     <!-- Breadcrumb — static render + client for location awareness -->
     <BreadcrumbIsland client:load currentPath={currentPath} />

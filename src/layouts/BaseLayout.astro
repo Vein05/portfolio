@@ -7,6 +7,7 @@ export interface Props {
   canonical?: string;
   ogTitle?: string;
   ogUrl?: string;
+  ogImage?: string;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   canonical = 'https://sugampanthi.com.np',
   ogTitle,
   ogUrl,
+  ogImage = 'https://sugampanthi.com.np/images/headshot.jpeg',
 } = Astro.props;
 ---
 
@@ -28,12 +30,18 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <meta name="author" content="Sugam Panthi" />
     <meta property="og:site_name" content="Sugam Panthi" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={ogTitle ?? title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={ogUrl ?? canonical} />
+    <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@vein05" />
+    <meta name="twitter:title" content={ogTitle ?? title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -46,6 +54,7 @@ const {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
     />
+    <slot name="head" />
   </head>
   <body>
     <slot />

@@ -51,14 +51,7 @@ const today = new Date().toISOString().slice(0, 10);
 
 const staticUrls = [
   { loc: `${SITE_URL}/`, lastmod: today, changefreq: "weekly", priority: "1.0" },
-  { loc: `${SITE_URL}/home`, lastmod: today, changefreq: "weekly", priority: "0.9" },
   { loc: `${SITE_URL}/blog`, lastmod: today, changefreq: "daily", priority: "0.9" },
-  {
-    loc: `${SITE_URL}/pages/academic-qualifications`,
-    lastmod: today,
-    changefreq: "monthly",
-    priority: "0.6",
-  },
 ];
 
 const postUrls = posts
