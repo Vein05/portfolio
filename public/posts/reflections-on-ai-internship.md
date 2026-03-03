@@ -9,6 +9,18 @@ status: "DRAFT"
 
 My time as an AI and Machine Learning intern at Prediction3d was a massive period of growth. Transitioning from academic coursework to production models is a steep learning curve, but incredibly rewarding.
 
+
+```textandimage
+title: Why real-world ML feels different
+text: In coursework, the model is the center of attention. In production, reliability, observability, and data quality dominate engineering time.\n\nThat shift in priorities was the biggest mindset change from internship work.
+src: /.netlify/images?url=/posts/images/getting-started-with-go/golang.png&w=900&h=700
+alt: Whiteboard planning for production ML
+position: right
+justify: end
+valign: middle
+layout: wide
+```
+
 ## The Gap Between Theory and Practice
 
 In school, you are typically handed a clean dataset (like MNIST or Titanic) and told to build a model. In the real world, the data is messy, incomplete, and sometimes explicitly wrong.
@@ -26,6 +38,16 @@ We had models that performed well contextually but were too slow or resource-hea
 3. **ONNX Export**: Getting models out of native PyTorch and into ONNX runtime for cross-platform inference speedups.
 
 > Productionizing ML is less about finding the exact perfect theoretical architecture, and more about finding the "good enough" architecture that fits into memory and runs in <50ms.
+
+```mermaid
+graph LR
+  A[Raw data] --> B[Cleaning + QA]
+  B --> C[Feature engineering]
+  C --> D[Model training]
+  D --> E[Latency + memory profiling]
+  E --> F[Quantize and prune]
+  F --> G[Edge deployment]
+```
 
 ## Takeaways
 

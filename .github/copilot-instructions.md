@@ -18,7 +18,7 @@ Never use raw hex values in JSX — always use these tokens.
 | `ink-muted` | `#6b6560` | Secondary / dimmed text |
 | `ink-blue` | `#2563eb` | Links, accents, active text in some contexts |
 | `ink-red` | `#dc2626` | Destructive / close actions on hover only |
-| `blue-soft` | `#dbeafe` | Inline code background |
+| `blue-soft` | `#e7e1d2` | Inline code background |
 | `border-paper` | `#d4cfc4` | All borders |
 
 > `main` (`#E0D0C1`) is defined in `theme.colors` (not extended) — avoid using it, it's a legacy token.
