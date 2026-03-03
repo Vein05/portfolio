@@ -1,4 +1,24 @@
+[build]
+  command = "pnpm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
 [[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/pages/academic-qualifications"
+  to = "/"
+  status = 301
+
+# SPA fallback is NOT needed — Astro generates static HTML for every route

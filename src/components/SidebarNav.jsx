@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// NOTE: react-router-dom Link replaced with <a> for Astro compatibility
+// This file is used as a React island — no BrowserRouter context available.
 
 /**
  * Shared sidebar navigation with the ink-sweep active animation.
@@ -229,18 +230,20 @@ const SidebarNav = ({
             <li key={item.id} className="relative overflow-hidden -mx-6">
               {/* Ink envelope sweep */}
               <span
+                data-section-id={item.id}
                 className={`absolute inset-0 bg-ink-dark transition-transform duration-300 ease-in-out ${
                   isActive ? 'scale-x-100' : 'scale-x-0'
                 }`}
                 style={{ transformOrigin: 'left center' }}
               />
               {item.href ? (
-                <Link to={item.href} className={baseClass}>
+                <a href={item.href} data-section-link={item.id} className={baseClass}>
                   {content}
-                </Link>
+                </a>
               ) : (
                 <a
                   href={`#${item.id}`}
+                  data-section-link={item.id}
                   onClick={onItemClick ? (e) => onItemClick(item, e) : undefined}
                   className={baseClass}
                 >

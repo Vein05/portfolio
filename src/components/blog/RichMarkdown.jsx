@@ -127,7 +127,7 @@ const CopyableCodeBlock = ({ children, ...props }) => {
   };
 
   return (
-    <div className="relative group/code my-6">
+    <div className="relative group/code my-6 w-fit max-w-full min-w-[min(100%,32rem)]">
       <pre ref={ref} {...props} className="!my-0">
         {children}
       </pre>
@@ -143,8 +143,11 @@ const CopyableCodeBlock = ({ children, ...props }) => {
   );
 };
 
-const MediaFigure = ({ children, caption, layout = 'full' }) => (
-  <figure className={`my-8 ${getMediaLayoutClass(layout)}`}>
+const MediaFigure = ({ children, caption, layout = 'full', width }) => (
+  <figure
+    className={`my-8 ${width ? 'mx-auto' : getMediaLayoutClass(layout)}`}
+    style={width ? { maxWidth: width } : undefined}
+  >
     {children}
     {caption ? <figcaption className="mt-2 text-sm text-ink-muted italic">{caption}</figcaption> : null}
   </figure>
@@ -170,7 +173,7 @@ const RichImageBlock = ({ payload }) => {
   if (!src) return null;
 
   return (
-    <MediaFigure caption={payload.caption} layout={payload.layout}>
+    <MediaFigure caption={payload.caption} layout={payload.layout} width={payload.width}>
       <img
         src={src}
         alt={payload.alt || ''}

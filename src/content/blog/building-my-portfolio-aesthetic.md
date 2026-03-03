@@ -13,6 +13,7 @@ When I started this portfolio, the goal was less "build a trendy site" and more 
 src: /posts/images/building-my-portfolio-aesthetic/painting.png
 alt: Canvas
 caption: Canvas, Painting
+width: 480px
 ```
 
 Most modern portfolio UIs lean toward glass, blur, gradient blobs, and soft cards. I intentionally moved in the opposite direction: tighter structure, physical texture, and ink-like contrast. The north star was simple:
