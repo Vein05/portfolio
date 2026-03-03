@@ -80,7 +80,7 @@ function Home() {
 
         {/* Left Sidebar */}
         <div className="sidebar-panel hidden lg:flex flex-col border-r border-border-paper sticky top-[3.5rem] h-[calc(100vh-3.5rem)]">
-          <SidebarNav title="Sections" items={sections} activeId={activeSection} />
+          <SidebarNav title="Sections" items={sections} activeId={activeSection} decoration decorationMode="auto-local" />
         </div>
 
         {/* Main Content */}
@@ -224,7 +224,6 @@ function Home() {
           <Footer />
         </main>
 
-        {/* Right Sidebar — Blog preview */}
         <div className="sidebar-panel hidden lg:flex flex-col border-l border-border-paper sticky top-[3.5rem] h-[calc(100vh-3.5rem)] overflow-y-auto">
           <div className="py-6 px-5 flex flex-col h-full">
             <div className="flex items-center justify-between mb-6">
