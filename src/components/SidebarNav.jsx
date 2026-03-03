@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * Shared sidebar navigation with the ink-sweep active animation.
@@ -178,20 +179,51 @@ const MountainDecoration = ({ mode = 'night' }) => {
   );
 };
 
-const SidebarNav = ({ title, items, activeId, onItemClick, decoration = false, decorationMode = 'night' }) => {
+const SidebarNav = ({
+  title,
+  items,
+  activeId,
+  onItemClick,
+  decoration = false,
+  decorationMode = 'night',
+  uppercase = true,
+  grow = true,
+}) => {
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="py-8 px-6 flex-1 flex flex-col">
+    <div className={`py-8 px-6 flex flex-col ${grow ? 'flex-1' : ''}`}>
       {title && (
         <h2 className="text-xs uppercase tracking-widest text-ink-muted mb-6 px-0">
           {title}
         </h2>
       )}
-      <ul className="space-y-1 text-xs font-mono uppercase tracking-wide flex-1">
+      <ul className={`space-y-1 text-xs font-mono tracking-wide ${grow ? 'flex-1' : ''} ${uppercase ? 'uppercase' : ''}`}>
         {items.map((item) => {
           const isActive = activeId === item.id;
           const isSubItem = item.level && item.level >= 3;
+          const baseClass = `relative z-10 block py-1.5 truncate transition-colors duration-300 ${
+            isSubItem ? 'pl-10 pr-6' : 'px-6'
+          } ${
+            isActive
+              ? 'text-paper-light'
+              : 'text-ink-dark hover:text-ink-blue'
+          }`;
+          const content = (
+            <>
+              {item.number && (
+                <span className={`mr-2 ${isActive ? 'text-paper-light/50' : 'text-ink-dark/50'}`}>
+                  {item.number}
+                </span>
+              )}
+              {item.label}
+              {isActive && item.currentLabel && (
+                <span className="ml-2 text-[10px] tracking-normal normal-case text-paper-light/70">
+                  {item.currentLabel}
+                </span>
+              )}
+            </>
+          );
 
           return (
             <li key={item.id} className="relative overflow-hidden -mx-6">
@@ -202,24 +234,19 @@ const SidebarNav = ({ title, items, activeId, onItemClick, decoration = false, d
                 }`}
                 style={{ transformOrigin: 'left center' }}
               />
-              <a
-                href={`#${item.id}`}
-                onClick={onItemClick ? (e) => onItemClick(item, e) : undefined}
-                className={`relative z-10 block py-1.5 truncate transition-colors duration-300 ${
-                  isSubItem ? 'pl-10 pr-6' : 'px-6'
-                } ${
-                  isActive
-                    ? 'text-paper-light'
-                    : 'text-ink-dark hover:text-ink-blue'
-                }`}
-              >
-                {item.number && (
-                  <span className={`mr-2 ${isActive ? 'text-paper-light/50' : 'text-ink-dark/50'}`}>
-                    {item.number}
-                  </span>
-                )}
-                {item.label}
-              </a>
+              {item.href ? (
+                <Link to={item.href} className={baseClass}>
+                  {content}
+                </Link>
+              ) : (
+                <a
+                  href={`#${item.id}`}
+                  onClick={onItemClick ? (e) => onItemClick(item, e) : undefined}
+                  className={baseClass}
+                >
+                  {content}
+                </a>
+              )}
             </li>
           );
         })}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SidebarNav from '../SidebarNav';
 
-const TableOfContents = () => {
+const TableOfContents = ({ seriesItems = [], currentSeriesId = '' }) => {
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState('');
 
@@ -9,7 +9,6 @@ const TableOfContents = () => {
     const timeoutId = setTimeout(() => {
       const elements = Array.from(document.querySelectorAll('.blog-prose h1, .blog-prose h2, .blog-prose h3'));
 
-      // Build heading list with stable ids and assign 01. 02. numbers to top-level headings
       let count = 0;
       const navItems = elements.map((elem) => {
         if (!elem.id) {
@@ -76,12 +75,25 @@ const TableOfContents = () => {
   };
 
   return (
-    <SidebarNav
-      title="Contents"
-      items={items}
-      activeId={activeId}
-      onItemClick={handleClick}
-    />
+    <div className="h-full flex flex-col">
+      <SidebarNav
+        title="Contents"
+        items={items}
+        activeId={activeId}
+        onItemClick={handleClick}
+      />
+      {seriesItems.length > 0 && (
+        <div className="mt-auto border-t border-border-paper/80">
+          <SidebarNav
+            title="Go"
+            items={seriesItems}
+            activeId={currentSeriesId}
+            uppercase={false}
+            grow={false}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

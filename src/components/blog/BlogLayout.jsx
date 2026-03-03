@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TableOfContents from './TableOfContents';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
-const BlogLayout = ({ children, hideToc = false }) => {
+const BlogLayout = ({ children, hideToc = false, seriesItems = [], currentSeriesId = '' }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
 
@@ -24,7 +24,7 @@ const BlogLayout = ({ children, hideToc = false }) => {
       
       {/* Left Sidebar (Desktop only) */}
       <aside className="sidebar-panel hidden lg:block border-r border-border-paper sticky top-[3.5rem] h-[calc(100vh-3.5rem)] overflow-y-auto">
-        {!hideToc && <TableOfContents />}
+        {!hideToc && <TableOfContents seriesItems={seriesItems} currentSeriesId={currentSeriesId} />}
       </aside>
 
       {/* Main Content Area */}
@@ -42,7 +42,7 @@ const BlogLayout = ({ children, hideToc = false }) => {
             </button>
             {tocOpen && (
               <div className="border-t border-border-paper py-3 pb-5">
-                <TableOfContents />
+                <TableOfContents seriesItems={seriesItems} currentSeriesId={currentSeriesId} />
               </div>
             )}
           </div>

@@ -1,58 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/atom-one-dark.css';
-import { Copy, Check } from 'lucide-react';
 import Breadcrumb from '../../components/blog/Breadcrumb';
 import BlogLayout from '../../components/blog/BlogLayout';
+import RichMarkdown from '../../components/blog/RichMarkdown';
 import { posts } from '../../data/posts';
-
-const BlogImage = ({ src, alt }) => {
-  let resolvedSrc = src;
-  if (process.env.NODE_ENV !== 'production' && src?.startsWith('/.netlify/images')) {
-    const params = new URLSearchParams(src.split('?')[1]);
-    resolvedSrc = params.get('url') || src;
-  }
-  return (
-    <img
-      src={resolvedSrc}
-      alt={alt ?? ''}
-      className="w-full rounded-sm my-8 border border-border-paper"
-    />
-  );
-};
-
-const CopyableCodeBlock = ({ children, ...props }) => {
-  const [copied, setCopied] = useState(false);
-  const ref = useRef(null);
-
-  const handleCopy = () => {
-    const text = ref.current?.querySelector('code')?.innerText ?? '';
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
-
-  return (
-    <div className="relative group/code my-6">
-      <pre ref={ref} {...props} className="!my-0">
-        {children}
-      </pre>
-      <button
-        onClick={handleCopy}
-        aria-label="Copy code"
-        className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded opacity-0 group-hover/code:opacity-100 transition-opacity duration-150 bg-white/10 hover:bg-white/20 text-white/60 hover:text-white"
-      >
-        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-        {copied ? 'Copied' : 'Copy'}
-      </button>
-    </div>
-  );
-};
 
 const parseMarkdown = (markdownString) => {
   const fileString = markdownString.trim();
@@ -91,6 +44,14 @@ const parseMarkdown = (markdownString) => {
   return { frontmatter, body };
 };
 
+const stripLeadingTitleHeading = (body, title) => {
+  if (!title || !body) return body;
+
+  const escapedTitle = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const titleHeadingRegex = new RegExp(`^#\\s+${escapedTitle}\\s*\\n+`, 'i');
+  return body.replace(titleHeadingRegex, '');
+};
+
 const BlogPost = () => {
   const { slug } = useParams();
   const [markdown, setMarkdown] = useState('');
@@ -99,6 +60,27 @@ const BlogPost = () => {
 
   // Look up metadata from the central index
   const postMeta = posts.find(p => p.slug === slug);
+  const seriesPosts = postMeta?.series
+    ? posts
+        .filter((p) => p.series === postMeta.series)
+        .sort((a, b) => (a.seriesOrder || 0) - (b.seriesOrder || 0))
+    : [];
+  const currentSeriesIndex = seriesPosts.findIndex((p) => p.slug === slug);
+  const prevSeriesPost = currentSeriesIndex > 0 ? seriesPosts[currentSeriesIndex - 1] : null;
+  const nextSeriesPost =
+    currentSeriesIndex >= 0 && currentSeriesIndex < seriesPosts.length - 1
+      ? seriesPosts[currentSeriesIndex + 1]
+      : null;
+  const siteUrl = 'https://sugampanthi.com';
+  const canonicalPath = postMeta?.canonicalPath || `/blog/${postMeta?.slug || slug}`;
+  const canonicalUrl = `${siteUrl}${canonicalPath}`;
+  const seriesNavItems = seriesPosts.map((post, index) => ({
+    id: post.slug,
+    href: `/blog/${post.slug}`,
+    label: post.title.replace(/^Getting Started with Go for Web Services \(Part \d+\):\s*/i, ''),
+    number: `${index + 1}.`,
+    currentLabel: post.slug === slug ? 'You are here' : undefined,
+  }));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -114,7 +96,7 @@ const BlogPost = () => {
       })
       .then(text => {
         const { body } = parseMarkdown(text);
-        setMarkdown(body);
+        setMarkdown(stripLeadingTitleHeading(body, postMeta?.title));
         setIsLoading(false);
       })
       .catch(err => {
@@ -122,7 +104,7 @@ const BlogPost = () => {
         setError(true);
         setIsLoading(false);
       });
-  }, [slug]);
+  }, [slug, postMeta?.title]);
 
   if (!postMeta && !isLoading) {
     return <Navigate to="/404" />;
@@ -144,9 +126,11 @@ const BlogPost = () => {
   const jsonLd = postMeta ? {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": postMeta.title,
+    "headline": postMeta.seoTitle || postMeta.title,
     "datePublished": postMeta.date,
-    "description": postMeta.excerpt,
+    "description": postMeta.seoDescription || postMeta.excerpt,
+    "mainEntityOfPage": canonicalUrl,
+    "keywords": postMeta.tags?.join(', '),
     "author": {
       "@type": "Person",
       "name": "Sugam Panthi",
@@ -158,20 +142,31 @@ const BlogPost = () => {
     <div className="min-h-screen bg-paper-light">
       {postMeta && (
         <Helmet>
-          <title>{`${postMeta.title} - Sugam Panthi`}</title>
-          <meta name="description" content={postMeta.excerpt} />
-          <meta property="og:title" content={postMeta.title} />
-          <meta property="og:description" content={postMeta.excerpt} />
+          <title>{postMeta.seoTitle || `${postMeta.title} - Sugam Panthi`}</title>
+          <meta name="description" content={postMeta.seoDescription || postMeta.excerpt} />
+          <meta name="keywords" content={postMeta.tags?.join(', ')} />
+          <link rel="canonical" href={canonicalUrl} />
+          {prevSeriesPost && <link rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}`} />}
+          {nextSeriesPost && <link rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}`} />}
+          <meta property="og:title" content={postMeta.seoTitle || postMeta.title} />
+          <meta property="og:description" content={postMeta.seoDescription || postMeta.excerpt} />
           <meta property="og:type" content="article" />
+          <meta property="og:url" content={canonicalUrl} />
           <meta property="article:published_time" content={postMeta.date} />
+          <meta property="article:section" content={postMeta.category} />
+          {postMeta.tags?.map((tag) => (
+            <meta property="article:tag" content={tag} key={tag} />
+          ))}
           <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={postMeta.seoTitle || postMeta.title} />
+          <meta name="twitter:description" content={postMeta.seoDescription || postMeta.excerpt} />
           {jsonLd && <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>}
         </Helmet>
       )}
 
       <Breadcrumb title={postMeta?.title} status={postMeta?.status} />
 
-      <BlogLayout hideToc={isLoading}>
+      <BlogLayout hideToc={isLoading} seriesItems={seriesNavItems} currentSeriesId={slug}>
         {isLoading ? (
           <div className="animate-pulse space-y-8 mt-8">
             <div className="h-12 bg-border-paper/50 rounded w-3/4"></div>
@@ -197,13 +192,7 @@ const BlogPost = () => {
               </div>
             </header>
 
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHighlight]}
-              components={{ pre: CopyableCodeBlock, img: BlogImage }}
-            >
-              {markdown}
-            </ReactMarkdown>
+            <RichMarkdown markdown={markdown} />
             
             <footer className="mt-20 pt-8 border-t border-border-paper">
               <p className="text-sm italic text-ink-muted">

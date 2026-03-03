@@ -16,7 +16,7 @@ module.exports = withMT({
         "ink-muted": "#6b6560",
         "ink-blue": "#2563eb",
         "ink-red": "#dc2626",
-        "blue-soft": "#dbeafe",
+        "blue-soft": "#e7e1d2",
         "border-paper": "#d4cfc4",
       },
       fontFamily: {
