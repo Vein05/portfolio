@@ -537,6 +537,9 @@ body {
     border-radius: 6px;
     overflow-x: auto;
     margin-bottom: 1.5rem;
+    width: fit-content;
+    max-width: 100%;
+    min-width: min(100%, 32rem);
   }
 
   .blog-prose pre code {

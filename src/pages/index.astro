@@ -8,6 +8,7 @@ import Projects from '../components/Projects';
 import Honors from '../components/Honors';
 import Skills from '../components/Skills';
 import Footer from '../components/Footer';
+import { Mail, Linkedin, Github } from '@lucide/astro';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -85,14 +86,14 @@ const currentPath = Astro.url.pathname;
 
                 <div class="pt-2">
                   <div class="flex flex-wrap items-center justify-center gap-6 lg:justify-start">
-                    <a href="mailto:Sugam.Panthi@usm.edu" class="flex items-center gap-2 text-ink-muted hover:text-ink-blue transition-colors text-sm">
-                      Sugam.Panthi@usm.edu
+                    <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="flex items-center gap-2 test-ink hover:text-ink-blue transition-colors text-sm">
+                      <Mail class="w-4 h-4" /><span>Sugam.Panthi@usm.edu</span>
                     </a>
-                    <a href="https://www.linkedin.com/in/sugam-panthi" class="flex items-center gap-2 text-ink-muted hover:text-ink-blue transition-colors text-sm">
-                      LinkedIn
+                    <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 test-ink hover:text-ink-blue transition-colors text-sm">
+                      <Linkedin class="w-4 h-4" /><span>sugam-panthi</span>
                     </a>
-                    <a href="https://www.github.com/vein05" class="flex items-center gap-2 text-ink-muted hover:text-ink-blue transition-colors text-sm">
-                      GitHub
+                    <a href="https://www.github.com/vein05" aria-label="GitHub" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 test-ink hover:text-ink-blue transition-colors text-sm">
+                      <Github class="w-4 h-4" /><span>vein05</span>
                     </a>
                   </div>
                 </div>
@@ -165,6 +166,16 @@ const currentPath = Astro.url.pathname;
         } else {
           el.classList.remove('scale-x-100');
           el.classList.add('scale-x-0');
+        }
+      });
+      document.querySelectorAll('[data-section-link]').forEach((el) => {
+        const id = el.getAttribute('data-section-link');
+        if (id === active) {
+          el.classList.add('text-paper-light');
+          el.classList.remove('text-ink-dark', 'hover:text-ink-blue');
+        } else {
+          el.classList.remove('text-paper-light');
+          el.classList.add('text-ink-dark', 'hover:text-ink-blue');
         }
       });
     }

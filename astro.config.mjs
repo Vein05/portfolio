@@ -13,4 +13,14 @@ export default defineConfig({
     sitemap(),
   ],
   output: 'static',
+  markdown: {
+    shikiConfig: {
+      // Register custom fence languages used for image/layout blocks in blog posts
+      langAlias: {
+        image: 'plaintext',
+        twoimages: 'plaintext',
+        textandimage: 'plaintext',
+      },
+    },
+  },
 });
