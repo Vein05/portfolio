@@ -11,6 +11,10 @@ import Footer from '../components/Footer';
 import { Mail, Linkedin, Github } from '@lucide/astro';
 
 const currentPath = Astro.url.pathname;
+
+// Netlify Image CDN is only available on Netlify — fall back to raw path in local dev
+const netlifyImg = (path: string, params: string) =>
+  import.meta.env.DEV ? path : `/.netlify/images?url=${path}&${params}`;
 ---
 
 <BaseLayout
@@ -156,9 +160,13 @@ const currentPath = Astro.url.pathname;
 
             <div class="flex flex-col justify-center items-center lg:justify-end">
               <img
-                src="/images/headshot.jpeg"
+                src={netlifyImg('/images/headshot.jpeg', 'w=440&h=460&fit=cover&q=82')}
                 alt="Sugam Panthi headshot"
+                width="220"
+                height="230"
                 style="width:220px; height:230px; object-fit:cover; object-position:bottom center; opacity:0.88;"
+                loading="eager"
+                fetchpriority="high"
               />
               <span class="text-sm text-ink-muted mt-2">May 2025 | Hattiesburg, MS</span>
             </div>
