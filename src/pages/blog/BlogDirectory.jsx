@@ -74,7 +74,7 @@ const BlogDirectory = () => {
         <title>Blog - Sugam Panthi</title>
         <meta name="description" content="Thoughts on engineering, design, and machine learning by Sugam Panthi." />
         <meta property="og:title" content="Blog - Sugam Panthi" />
-        <meta property="og:url" content="https://sugampanthi.com/blog" />
+        <meta property="og:url" content="https://sugampanthi.com.np/blog" />
       </Helmet>
 
       <Breadcrumb />

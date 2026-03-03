@@ -71,7 +71,7 @@ const BlogPost = () => {
     currentSeriesIndex >= 0 && currentSeriesIndex < seriesPosts.length - 1
       ? seriesPosts[currentSeriesIndex + 1]
       : null;
-  const siteUrl = 'https://sugampanthi.com';
+  const siteUrl = 'https://sugampanthi.com.np';
   const canonicalPath = postMeta?.canonicalPath || `/blog/${postMeta?.slug || slug}`;
   const canonicalUrl = `${siteUrl}${canonicalPath}`;
   const seriesNavItems = seriesPosts.map((post, index) => ({
@@ -134,7 +134,7 @@ const BlogPost = () => {
     "author": {
       "@type": "Person",
       "name": "Sugam Panthi",
-      "url": "https://sugampanthi.com"
+      "url": "https://sugampanthi.com.np"
     }
   } : null;
 
