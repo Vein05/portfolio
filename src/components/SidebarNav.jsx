@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// NOTE: react-router-dom Link replaced with <a> for Astro compatibility
+// This file is used as a React island — no BrowserRouter context available.
 
 /**
  * Shared sidebar navigation with the ink-sweep active animation.
@@ -235,9 +236,9 @@ const SidebarNav = ({
                 style={{ transformOrigin: 'left center' }}
               />
               {item.href ? (
-                <Link to={item.href} className={baseClass}>
+                <a href={item.href} className={baseClass}>
                   {content}
-                </Link>
+                </a>
               ) : (
                 <a
                   href={`#${item.id}`}

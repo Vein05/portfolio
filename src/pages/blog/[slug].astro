@@ -1,0 +1,110 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BreadcrumbIsland from '../../components/blog/BreadcrumbIsland';
+import BlogPostIsland from '../../components/blog/BlogPostIsland';
+import { posts as postsMeta } from '../../data/posts.js';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('blog');
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await entry.render();
+const slug = entry.slug;
+
+// Get metadata from posts.js (seo fields, series info, etc.)
+const postMeta = postsMeta.find((p) => p.slug === slug) ?? null;
+
+// Build series nav items
+const siteUrl = 'https://sugampanthi.com.np';
+const canonicalPath = postMeta?.canonicalPath ?? `/blog/${slug}`;
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+
+const seriesPosts = postMeta?.series
+  ? postsMeta
+      .filter((p) => p.series === postMeta.series)
+      .sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0))
+  : [];
+const currentSeriesIndex = seriesPosts.findIndex((p) => p.slug === slug);
+const prevSeriesPost = currentSeriesIndex > 0 ? seriesPosts[currentSeriesIndex - 1] : null;
+const nextSeriesPost =
+  currentSeriesIndex >= 0 && currentSeriesIndex < seriesPosts.length - 1
+    ? seriesPosts[currentSeriesIndex + 1]
+    : null;
+
+const seriesNavItems = seriesPosts.map((post, index) => ({
+  id: post.slug,
+  href: `/blog/${post.slug}`,
+  label: post.title.replace(/^Getting Started with Go for Web Services \(Part \d+\):\s*/i, ''),
+  number: `${index + 1}.`,
+  currentLabel: post.slug === slug ? 'You are here' : undefined,
+}));
+
+// JSON-LD structured data
+const jsonLd = postMeta
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: postMeta.seoTitle ?? postMeta.title,
+      datePublished: postMeta.date,
+      description: postMeta.seoDescription ?? postMeta.excerpt,
+      mainEntityOfPage: canonicalUrl,
+      keywords: postMeta.tags?.join(', '),
+      author: {
+        '@type': 'Person',
+        name: 'Sugam Panthi',
+        url: 'https://sugampanthi.com.np',
+      },
+    }
+  : null;
+
+const title = postMeta?.seoTitle ?? `${entry.data.title} - Sugam Panthi`;
+const description = postMeta?.seoDescription ?? postMeta?.excerpt ?? entry.data.title;
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonicalUrl}
+  ogTitle={postMeta?.seoTitle ?? postMeta?.title ?? entry.data.title}
+  ogUrl={canonicalUrl}
+>
+  <!-- Extra SEO head tags injected server-side -->
+  {postMeta?.tags && <meta slot="head" name="keywords" content={postMeta.tags.join(', ')} />}
+  {prevSeriesPost && <link slot="head" rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}`} />}
+  {nextSeriesPost && <link slot="head" rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}`} />}
+  {jsonLd && <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+  <div class="min-h-screen bg-paper-light">
+    <BreadcrumbIsland
+      client:load
+      currentPath={currentPath}
+      title={postMeta?.title ?? entry.data.title}
+      status={postMeta?.status ?? entry.data.status}
+    />
+
+    <!--
+      The markdown body is rendered by Astro at build-time via <Content />.
+      We inject it into the BlogPostIsland as a serialised HTML string so the
+      RichMarkdown island can display it with all its interactive features
+      (copy buttons, mermaid, image blocks, etc.).
+
+      Alternatively, we render Content as static HTML via a hidden div and pass
+      the raw markdown string. We pass the raw markdown from entry.body for
+      full RichMarkdown support.
+    -->
+    <BlogPostIsland
+      client:load
+      markdown={entry.body}
+      postMeta={postMeta}
+      seriesNavItems={seriesNavItems}
+      slug={slug}
+    />
+  </div>
+</BaseLayout>

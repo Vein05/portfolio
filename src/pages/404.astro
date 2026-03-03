@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Sugam Panthi" description="Page not found.">
+  <div class="min-h-screen bg-paper-light flex items-center justify-center">
+    <div class="text-center px-6">
+      <p class="text-xs font-mono uppercase tracking-widest text-ink-muted mb-4">404</p>
+      <h1 class="text-4xl md:text-5xl text-ink-dark tracking-tight mb-4">Page not found</h1>
+      <p class="text-ink-muted mb-8 max-w-sm mx-auto">The page you're looking for doesn't exist or has moved.</p>
+      <div class="flex gap-4 justify-center">
+        <a href="/" class="px-6 py-2.5 bg-ink-dark text-paper-light text-sm uppercase tracking-wider hover:bg-ink-muted transition-colors">
+          Home
+        </a>
+        <a href="/blog" class="px-6 py-2.5 border border-ink-dark text-ink-dark text-sm uppercase tracking-wider hover:bg-ink-dark hover:text-paper-light transition-colors">
+          Blog
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BreadcrumbIsland from '../components/blog/BreadcrumbIsland';
+import SidebarNav from '../components/SidebarNav';
+import WritingSidebar from '../components/blog/WritingSidebar';
+import Experience from '../components/Experience';
+import Projects from '../components/Projects';
+import Honors from '../components/Honors';
+import Skills from '../components/Skills';
+import Footer from '../components/Footer';
+
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title="Sugam Panthi"
+  description="Portfolio of Sugam Panthi — software engineer, researcher, and writer based in Hattiesburg, MS."
+  canonical="https://sugampanthi.com.np"
+>
+  <div class="min-h-screen bg-paper-light">
+    <!-- Breadcrumb — static render + client for location awareness -->
+    <BreadcrumbIsland client:load currentPath={currentPath} />
+
+    <div class="w-full grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)_240px] xl:grid-cols-[280px_minmax(0,1fr)_280px] body-container">
+
+      <!-- Left Sidebar — interactive (active section tracking) -->
+      <div class="sidebar-panel hidden lg:flex flex-col border-r border-border-paper sticky top-[3.5rem] h-[calc(100vh-3.5rem)]">
+        <SidebarNav
+          client:load
+          title="Sections"
+          items={[
+            { id: "about", label: "About" },
+            { id: "experience", label: "Experience" },
+            { id: "projects", label: "Projects" },
+            { id: "honors", label: "Honors" },
+            { id: "skills", label: "Skills" },
+          ]}
+          activeId="about"
+          decoration={true}
+          decorationMode="auto-local"
+        />
+      </div>
+
+      <!-- Main Content — the rest is pure React islands -->
+      <main class="w-full px-6 sm:px-12 pt-6 pb-2 lg:pt-10 lg:pb-4">
+        <div id="about" class="header-section">
+          <div class="text-center mb-8">
+            <p class="text-base lg:text-lg text-ink-muted font-medium max-w-2xl mx-auto">
+              Co-founder @{" "}
+              <a href="https://magnoliaed.ai" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">MagnoliaEd</a>
+              {" "}| Research Assistant @{" "}
+              <a href="https://www.usm.edu/" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">The University of Southern Mississippi</a>
+            </p>
+          </div>
+
+          <div class="lg:flex lg:items-start lg:gap-12 mt-8 pb-8 border-b border-border-paper">
+            <div class="lg:flex-1 mb-8 lg:mb-0">
+              <div class="space-y-6">
+                <p class="text-base lg:text-lg text-ink-dark leading-relaxed">
+                  I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python</strong>. I recently completed an internship as an AI and ML intern @{" "}
+                  <a href="https://prediction3d.com" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">Prediction3d</a>.
+                </p>
+
+                <p class="text-base lg:text-lg text-ink-dark leading-relaxed">
+                  I'm pursuing a <span class="font-medium text-ink-dark">Bachelor's in Computer Science</span> at{" "}
+                  <a href="https://www.usm.edu/" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">The University of Southern Mississippi</a>.
+                </p>
+
+                <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
+                  <a
+                    href="/resume.pdf"
+                    class="flex items-center gap-2 px-6 py-2.5 bg-ink-blue text-white rounded-sm hover:bg-opacity-90 transition-all text-sm font-medium"
+                    target="_blank" rel="noopener noreferrer"
+                  >
+                    View Resume
+                  </a>
+                  <a
+                    href="/resume.pdf"
+                    class="flex items-center gap-2 px-6 py-2.5 border border-ink-blue text-ink-blue rounded-sm hover:bg-blue-50 transition-all text-sm font-medium"
+                    download="Sugam_Panthi_Resume.pdf"
+                  >
+                    Download Resume
+                  </a>
+                </div>
+
+                <div class="pt-2">
+                  <div class="flex flex-wrap items-center justify-center gap-6 lg:justify-start">
+                    <a href="mailto:Sugam.Panthi@usm.edu" class="flex items-center gap-2 text-ink-muted hover:text-ink-blue transition-colors text-sm">
+                      Sugam.Panthi@usm.edu
+                    </a>
+                    <a href="https://www.linkedin.com/in/sugam-panthi" class="flex items-center gap-2 text-ink-muted hover:text-ink-blue transition-colors text-sm">
+                      LinkedIn
+                    </a>
+                    <a href="https://www.github.com/vein05" class="flex items-center gap-2 text-ink-muted hover:text-ink-blue transition-colors text-sm">
+                      GitHub
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col justify-center items-center lg:justify-end">
+              <img
+                src="/images/headshot.jpeg"
+                alt="Sugam Panthi headshot"
+                style="width:220px; height:230px; object-fit:cover; object-position:bottom center; opacity:0.88;"
+              />
+              <span class="text-sm text-ink-muted mt-2">May 2025 | Hattiesburg, MS</span>
+            </div>
+          </div>
+        </div>
+
+        <section id="experience" class="mt-10">
+          <Experience client:load />
+        </section>
+
+        <section id="projects" class="mt-16">
+          <Projects client:only="react" />
+        </section>
+
+        <section id="honors" class="mt-16">
+          <Honors client:only="react" />
+        </section>
+
+        <section id="skills" class="mt-16">
+          <Skills client:load />
+        </section>
+
+        <Footer client:load />
+      </main>
+
+      <!-- Right Sidebar -->
+      <WritingSidebar client:load limit={6} />
+    </div>
+  </div>
+
+  <!-- Active section scroll tracking — runs client-side -->
+  <script>
+    const sections = ['about', 'experience', 'projects', 'honors', 'skills'];
+
+    function getActive() {
+      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
+      if (nearBottom) return sections[sections.length - 1];
+
+      const readingLine = window.innerHeight * 0.35;
+      let current = sections[0];
+
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const { top, bottom } = el.getBoundingClientRect();
+        if (top <= readingLine && bottom > readingLine) { current = id; break; }
+        if (bottom <= readingLine) current = id;
+      }
+      return current;
+    }
+
+    function updateActive() {
+      const active = getActive();
+      document.querySelectorAll('[data-section-id]').forEach((el) => {
+        const id = el.getAttribute('data-section-id');
+        if (id === active) {
+          el.classList.add('scale-x-100');
+          el.classList.remove('scale-x-0');
+        } else {
+          el.classList.remove('scale-x-100');
+          el.classList.add('scale-x-0');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+  </script>
+</BaseLayout>

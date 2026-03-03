@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BreadcrumbIsland from '../../components/blog/BreadcrumbIsland';
+import BlogDirectoryIsland from '../../components/blog/BlogDirectoryIsland';
+
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title="Blog - Sugam Panthi"
+  description="Thoughts on engineering, design, and machine learning by Sugam Panthi."
+  canonical="https://sugampanthi.com.np/blog"
+  ogTitle="Blog - Sugam Panthi"
+  ogUrl="https://sugampanthi.com.np/blog"
+>
+  <div class="min-h-screen bg-paper-light tech-paper-page">
+    <BreadcrumbIsland client:load currentPath={currentPath} />
+    <BlogDirectoryIsland client:load />
+  </div>
+</BaseLayout>

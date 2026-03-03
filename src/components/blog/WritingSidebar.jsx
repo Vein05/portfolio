@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { posts } from "../../data/posts";
 
@@ -17,19 +16,19 @@ function WritingSidebar({ limit = 3 }) {
       <div className="py-6 px-5 flex flex-col h-full">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xs uppercase tracking-widest text-ink-muted">Writing</h2>
-          <Link
-            to="/blog"
+          <a
+            href="/blog"
             className="text-xs uppercase tracking-wider text-ink-blue hover:text-ink-dark transition-colors flex items-center gap-1"
           >
             All <ArrowRight className="w-3 h-3" />
-          </Link>
+          </a>
         </div>
 
         <ul className="flex flex-col gap-0 flex-1">
           {recentPosts.map((post) => (
             <li key={post.slug} className="border-b border-border-paper last:border-0">
-              <Link
-                to={`/blog/${post.slug}`}
+              <a
+                href={`/blog/${post.slug}`}
                 className="group block py-4 hover:bg-ink-dark transition-colors duration-150 -mx-5 px-5"
               >
                 <span className="text-[10px] uppercase tracking-wider text-ink-blue block mb-1">
@@ -45,7 +44,7 @@ function WritingSidebar({ limit = 3 }) {
                     year: "numeric",
                   })}
                 </time>
-              </Link>
+              </a>
             </li>
           ))}
         </ul>
