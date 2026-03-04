@@ -229,7 +229,7 @@ const BlogDirectoryIsland = () => {
                     </span>
                     <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-ink-muted group-hover:text-paper-light/60 font-mono">
                       <time dateTime={post.date}>
-                        {new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        {new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
                       </time>
                       {post.status && (
                         <span className="px-2 py-0.5 border border-border-paper group-hover:border-paper-light/35 text-ink-muted group-hover:text-paper-light/70">

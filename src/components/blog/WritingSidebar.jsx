@@ -42,6 +42,7 @@ function WritingSidebar({ limit = 3 }) {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
+                    timeZone: "UTC",
                   })}
                 </time>
               </a>

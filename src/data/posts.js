@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "seo-optimization",
+    title: "SEO Optimization",
+    date: "2026-03-03",
+    category: "Engineering",
+    status: "MATURE",
+    excerpt: "A complete case study of the SEO work behind playimposter.xyz: metadata, canonicalization, multilingual hreflang, JSON-LD, robots, sitemap, and technical hardening.",
+    tags: ["SEO", "Technical SEO", "Schema", "Hreflang", "Web Performance"],
+    seoTitle: "SEO Optimization for playimposter.xyz: Full Technical Breakdown | Sugam Panthi",
+    seoDescription: "How we optimized playimposter.xyz for search: page intent metadata, canonical tags, hreflang, FAQ/WebApplication schema, sitemap, robots, and infrastructure-level SEO.",
+    canonicalPath: "/blog/seo-optimization"
+  },
+  {
     slug: "creating-most-popular-deepseek-api-client-go-part-1",
     title: "Creating the Most Popular Deepseek API Client in Go (Part 1): Why I Built deepseek-go",
     date: "2026-03-03",

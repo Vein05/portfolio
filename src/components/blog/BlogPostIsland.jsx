@@ -30,7 +30,7 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
         </h1>
         <div className="flex items-center gap-4 text-sm uppercase tracking-wider text-ink-muted">
           <time dateTime={postMeta.date}>
-            {new Date(postMeta.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+            {new Date(postMeta.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
           </time>
           <span className="hidden sm:inline">•</span>
           <span className="text-ink-blue hidden sm:inline">{postMeta.category}</span>
