@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "your-memory-benchmark-is-lying-to-you",
+    title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",
+    date: "2026-03-22",
+    category: "Research",
+    status: "MATURE",
+    excerpt: "A benchmark can score the same ranked list as both a hit and a miss depending only on which stored memory representation it treats as correct.",
+    tags: ["Retrieval", "Evaluation", "Memory Systems", "Benchmarking", "NLP"],
+    seoTitle: "Your Memory Benchmark Is Lying To You | Sugam Panthi",
+    seoDescription: "Why transformed conversational memory benchmarks can flip results without changing the ranked list, and why target definitions must be explicit.",
+    canonicalPath: "/blog/your-memory-benchmark-is-lying-to-you"
+  },
+  {
     slug: "seo-optimization",
     title: "SEO Optimization",
     date: "2026-03-03",

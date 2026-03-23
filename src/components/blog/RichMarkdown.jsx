@@ -105,6 +105,19 @@ const getItemWidthClass = (value = 'md') => {
 
 const decodeEscapedLines = (value = '') => value.replace(/\\n/g, '\n');
 
+const getImageFrameStyle = (payload = {}) => {
+  const imageStyle = {};
+  const position = (payload.objectposition || payload.objectPosition || payload.focus || '').trim();
+
+  if (position) {
+    imageStyle.objectPosition = position;
+  }
+
+  return {
+    imageStyle: Object.keys(imageStyle).length > 0 ? imageStyle : undefined,
+  };
+};
+
 const isSafeIframeSrc = (src = '') => {
   try {
     const base = typeof window !== 'undefined' ? window.location.origin : 'https://sugampanthi.com.np';
@@ -172,6 +185,7 @@ const MarkdownImage = ({ src, alt, title }) => {
 const RichImageBlock = ({ payload }) => {
   const src = normalizeImageSource(payload.src || '');
   if (!src) return null;
+  const { imageStyle } = getImageFrameStyle(payload);
 
   return (
     <MediaFigure caption={payload.caption} layout={payload.layout} width={payload.width}>
@@ -179,6 +193,7 @@ const RichImageBlock = ({ payload }) => {
         src={src}
         alt={payload.alt || ''}
         className="w-full rounded-sm border border-border-paper"
+        style={imageStyle}
         loading="lazy"
         decoding="async"
       />
@@ -390,6 +405,7 @@ const TextAndImageBlock = ({ payload }) => {
   const src = normalizeImageSource(payload.src || payload.image || '');
   const text = decodeEscapedLines(payload.text || payload.copy || '');
   if (!src || !text) return null;
+  const { imageStyle } = getImageFrameStyle(payload);
 
   const imageLeft = (payload.position || payload.side || 'right').toLowerCase() === 'left';
   const alignment = getVerticalAlignmentClass(payload.valign || payload.align || 'top');
@@ -422,6 +438,7 @@ const TextAndImageBlock = ({ payload }) => {
             src={src}
             alt={payload.alt || ''}
             className="w-full rounded-sm border border-border-paper"
+            style={imageStyle}
             loading="lazy"
             decoding="async"
           />
