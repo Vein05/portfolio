@@ -211,7 +211,7 @@ const Projects = () => {
 
       <div className="border border-border-paper">
         {/* Card grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-border-paper">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border-paper">
           {items.map((item, i) => {
             const ThumbComp = Thumb[item.thumb];
             const isActive = selected === i;
@@ -252,8 +252,8 @@ const Projects = () => {
 
         {/* Group expand panel — full width, below the entire grid */}
         {active && (
-          <div className="border-t border-ink-dark/30 bg-ink-dark px-6 py-5">
-            <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="border-t border-ink-dark/30 bg-ink-dark px-4 sm:px-6 py-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
               <div>
                 <h3 className="text-base font-bold text-paper-light">{active.title}</h3>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-paper-light/40">{active.tag}</span>

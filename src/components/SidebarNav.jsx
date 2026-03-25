@@ -44,7 +44,7 @@ const getHattiesburgSkyState = () => {
   return { isDay, timeLabel, dateLabel };
 };
 
-const MountainDecoration = ({ mode = 'night' }) => {
+export const MountainDecoration = ({ mode = 'night' }) => {
   const isAutoMode = mode === 'auto-local';
   // Initialize to null so SSR and client first-paint always match (night mode).
   // useEffect corrects to real local time after hydration.

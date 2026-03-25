@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BreadcrumbIsland from '../components/blog/BreadcrumbIsland';
-import SidebarNav from '../components/SidebarNav';
+import SidebarNav, { MountainDecoration } from '../components/SidebarNav';
 import WritingSidebar from '../components/blog/WritingSidebar';
 import Experience from '../components/Experience';
 import Projects from '../components/Projects';
@@ -101,10 +101,10 @@ const netlifyImg = (path: string, params: string) =>
       </div>
 
       <!-- Main Content — the rest is pure React islands -->
-      <main class="w-full px-6 sm:px-12 pt-6 pb-2 lg:pt-10 lg:pb-4">
+      <main class="w-full px-4 sm:px-8 lg:px-12 pt-5 pb-2 lg:pt-10 lg:pb-4">
         <div id="about" class="header-section">
           <div class="text-center mb-8">
-            <p class="text-base lg:text-lg text-ink-muted font-medium max-w-2xl mx-auto">
+            <p class="text-sm sm:text-base lg:text-lg text-ink-muted font-medium max-w-2xl mx-auto">
               Co-founder @{" "}
               <a href="https://magnoliaed.ai" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">MagnoliaEd</a>
               {" "}| Research Assistant @{" "}
@@ -112,63 +112,76 @@ const netlifyImg = (path: string, params: string) =>
             </p>
           </div>
 
-          <div class="lg:flex lg:items-start lg:gap-12 mt-8 pb-8 border-b border-border-paper">
-            <div class="lg:flex-1 mb-8 lg:mb-0">
+          <div class="flex flex-col lg:flex-row lg:items-start lg:gap-12 mt-8 pb-8 border-b border-border-paper">
+            <div class="order-2 lg:order-1 lg:flex-1">
               <div class="space-y-6">
-                <p class="text-base lg:text-lg text-ink-dark leading-relaxed">
+                <p class="text-[15px] sm:text-base lg:text-lg text-ink-dark leading-relaxed">
                   I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python</strong>. I recently completed an internship as an AI and ML intern @{" "}
                   <a href="https://prediction3d.com" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">Prediction3d</a>.
                 </p>
 
-                <p class="text-base lg:text-lg text-ink-dark leading-relaxed">
+                <p class="text-[15px] sm:text-base lg:text-lg text-ink-dark leading-relaxed">
                   I'm pursuing a <span class="font-medium text-ink-dark">Bachelor's in Computer Science</span> at{" "}
                   <a href="https://www.usm.edu/" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">The University of Southern Mississippi</a>.
                 </p>
 
-                <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-4">
-                  <a
-                    href="/resume.pdf"
-                    class="flex items-center gap-2 px-6 py-2.5 bg-ink-blue text-white rounded-sm hover:bg-opacity-90 transition-all text-sm font-medium"
-                    target="_blank" rel="noopener noreferrer"
-                  >
-                    View Resume
-                  </a>
-                  <a
-                    href="/resume.pdf"
-                    class="flex items-center gap-2 px-6 py-2.5 border border-ink-blue text-ink-blue rounded-sm hover:bg-blue-50 transition-all text-sm font-medium"
-                    download="Sugam_Panthi_Resume.pdf"
-                  >
-                    Download Resume
-                  </a>
-                </div>
+                <div class="pt-4 space-y-4">
+                  <div class="border border-border-paper bg-paper-surface/70 p-4 sm:p-5">
+                    <div class="flex flex-wrap items-center justify-center gap-2 text-center text-sm uppercase tracking-[0.16em] text-ink-muted">
+                      <a
+                        href="/resume.pdf"
+                        class="text-ink-blue hover:text-ink-dark hover:underline underline-offset-4 transition-colors"
+                        target="_blank" rel="noopener noreferrer"
+                      >
+                        View Resume
+                      </a>
+                      <span class="text-border-paper">/</span>
+                      <a
+                        href="/resume.pdf"
+                        class="text-ink-blue hover:text-ink-dark hover:underline underline-offset-4 transition-colors"
+                        download="Sugam_Panthi_Resume.pdf"
+                      >
+                        Download Resume
+                      </a>
+                    </div>
+                  </div>
 
-                <div class="pt-2">
-                  <div class="flex flex-wrap items-center justify-center gap-6 lg:justify-start">
-                    <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="flex items-center gap-2 test-ink hover:text-ink-blue transition-colors text-sm">
-                      <Mail class="w-4 h-4" /><span>Sugam.Panthi@usm.edu</span>
-                    </a>
-                    <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 test-ink hover:text-ink-blue transition-colors text-sm">
-                      <Linkedin class="w-4 h-4" /><span>sugam-panthi</span>
-                    </a>
-                    <a href="https://www.github.com/vein05" aria-label="GitHub" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 test-ink hover:text-ink-blue transition-colors text-sm">
-                      <Github class="w-4 h-4" /><span>vein05</span>
-                    </a>
+                  <div class="border border-border-paper bg-paper-surface/70 p-4 sm:p-5">
+                    <div class="flex items-center justify-between gap-3">
+                      <span class="text-[11px] uppercase tracking-[0.22em] text-ink-muted">Connect</span>
+                      <div class="flex items-center gap-3">
+                        <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="inline-flex h-9 w-9 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                          <Mail class="w-4 h-4 shrink-0" />
+                        </a>
+                        <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                          <Linkedin class="w-4 h-4 shrink-0" />
+                        </a>
+                        <a href="https://www.github.com/vein05" aria-label="GitHub" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                          <Github class="w-4 h-4 shrink-0" />
+                        </a>
+                      </div>
+                    </div>
+                    <div class="mt-3">
+                      <a href="mailto:Sugam.Panthi@usm.edu" class="text-sm text-ink-muted hover:text-ink-blue transition-colors break-all">
+                        Sugam.Panthi@usm.edu
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="flex flex-col justify-center items-center lg:justify-end">
+            <div class="order-1 lg:order-2 flex flex-col justify-center items-center lg:justify-end mb-8 lg:mb-0">
               <img
                 src={netlifyImg('/images/headshot.jpeg', 'w=440&h=460&fit=cover&q=82')}
                 alt="Sugam Panthi headshot"
                 width="220"
                 height="230"
-                style="width:220px; height:230px; object-fit:cover; object-position:bottom center; opacity:0.88;"
+                style="width:min(100%, 220px); height:auto; aspect-ratio:220/230; object-fit:cover; object-position:bottom center; opacity:0.88;"
                 loading="eager"
                 fetchpriority="high"
               />
-              <span class="text-sm text-ink-muted mt-2">May 2025 | Hattiesburg, MS</span>
+              <span class="text-sm text-ink-muted mt-3 text-center">May 2025 | Hattiesburg, MS</span>
             </div>
           </div>
         </div>
@@ -190,10 +203,16 @@ const netlifyImg = (path: string, params: string) =>
         </section>
 
         <Footer client:load />
+
+        <div class="mt-10 -mx-4 sm:-mx-8 lg:-mx-12 overflow-hidden">
+          <MountainDecoration client:load mode="auto-local" />
+        </div>
       </main>
 
       <!-- Right Sidebar -->
-      <WritingSidebar client:load limit={6} />
+      <div class="hidden lg:block">
+        <WritingSidebar client:media="(min-width: 1024px)" limit={6} />
+      </div>
     </div>
   </div>
 

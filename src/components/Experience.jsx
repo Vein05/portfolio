@@ -69,11 +69,11 @@ const Experience = () => {
               
               <div className="ml-4 flex-grow">
                 <div className="">
-                  <div className="flex justify-between items-center mb-0">
-                    <span className="text-md font-semibold text-blue-500">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-0">
+                    <span className="text-base font-semibold text-blue-500">
                       {exp.title}
                     </span> 
-                    <span className="text-sm italic"> 
+                    <span className="text-xs sm:text-sm italic shrink-0"> 
                         {exp.period}
                     </span>
                   </div>
@@ -94,7 +94,7 @@ const Experience = () => {
 
                 </div>
                 
-                <ul className="text-sm ml-4 list-disc list-inside space-y-1">
+                <ul className="text-sm ml-5 list-disc list-outside space-y-1">
                   {exp.achievements.map((achievement, achievementIndex) => (
                     <li key={achievementIndex} className="text-gray-700">
                       {achievement}
