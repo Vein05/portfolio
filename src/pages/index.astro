@@ -112,8 +112,8 @@ const netlifyImg = (path: string, params: string) =>
             </p>
           </div>
 
-          <div class="flex flex-col lg:flex-row lg:items-start lg:gap-12 mt-8 pb-8 border-b border-border-paper">
-            <div class="order-2 lg:order-1 lg:flex-1">
+          <div class="mt-8 pb-8 border-b border-border-paper flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start lg:gap-12">
+            <div class="order-2 lg:order-none min-w-0">
               <div class="space-y-6">
                 <p class="text-[15px] sm:text-base lg:text-lg text-ink-dark leading-relaxed">
                   I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python</strong>. I recently completed an internship as an AI and ML intern @{" "}
@@ -125,7 +125,7 @@ const netlifyImg = (path: string, params: string) =>
                   <a href="https://www.usm.edu/" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">The University of Southern Mississippi</a>.
                 </p>
 
-                <div class="pt-4 space-y-4">
+                <div class="pt-4 space-y-4 lg:hidden">
                   <div class="border border-border-paper bg-paper-surface/70 p-4 sm:p-5">
                     <div class="flex flex-wrap items-center justify-center gap-2 text-center text-sm uppercase tracking-[0.16em] text-ink-muted">
                       <a
@@ -168,10 +168,43 @@ const netlifyImg = (path: string, params: string) =>
                     </div>
                   </div>
                 </div>
+
+                <div class="hidden lg:block pt-4">
+                  <div class="flex items-center gap-4">
+                    <a
+                      href="/resume.pdf"
+                      class="flex items-center gap-2 px-6 py-2.5 bg-ink-blue text-white rounded-sm hover:bg-opacity-90 transition-all text-sm font-medium"
+                      target="_blank" rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
+                    <a
+                      href="/resume.pdf"
+                      class="flex items-center gap-2 px-6 py-2.5 border border-ink-blue text-ink-blue rounded-sm hover:bg-blue-50 transition-all text-sm font-medium"
+                      download="Sugam_Panthi_Resume.pdf"
+                    >
+                      Download Resume
+                    </a>
+                  </div>
+
+                  <div class="pt-5">
+                    <div class="flex flex-wrap items-center gap-6">
+                      <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
+                        <Mail class="w-4 h-4" /><span>Sugam.Panthi@usm.edu</span>
+                      </a>
+                      <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
+                        <Linkedin class="w-4 h-4" /><span>sugam-panthi</span>
+                      </a>
+                      <a href="https://www.github.com/vein05" aria-label="GitHub" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
+                        <Github class="w-4 h-4" /><span>vein05</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="order-1 lg:order-2 flex flex-col justify-center items-center lg:justify-end mb-8 lg:mb-0">
+            <div class="order-1 lg:order-none flex flex-col justify-center items-center lg:items-end mb-0">
               <img
                 src={netlifyImg('/images/headshot.jpeg', 'w=440&h=460&fit=cover&q=82')}
                 alt="Sugam Panthi headshot"
@@ -204,7 +237,7 @@ const netlifyImg = (path: string, params: string) =>
 
         <Footer client:load />
 
-        <div class="mt-10 -mx-4 sm:-mx-8 lg:-mx-12 overflow-hidden">
+        <div class="mt-10 -mx-4 sm:-mx-8 overflow-hidden lg:hidden">
           <MountainDecoration client:load mode="auto-local" />
         </div>
       </main>
