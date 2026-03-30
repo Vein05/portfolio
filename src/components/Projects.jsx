@@ -95,9 +95,37 @@ const Thumb = {
       <text x="20" y="128" fontFamily="monospace" fontSize="8" fill="#6b6560" opacity="0.7">CIB Conf. · 2025 · Purdue</text>
     </svg>
   ),
+  Pali: () => (
+    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="140" fill="#edeae0"/>
+      <rect x="18" y="22" width="184" height="96" rx="6" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.3"/>
+      <rect x="28" y="34" width="164" height="10" rx="2" fill="#1a1a14" opacity="0.08"/>
+      {[0,1,2,3].map(i => (
+        <rect key={i} x={28} y={54 + i*14} width={140 - i*12} height="6" rx="2" fill="#1a1a14" opacity={0.1 + i*0.03}/>
+      ))}
+      <circle cx="180" cy="94" r="14" fill="none" stroke="#1a1a14" strokeWidth="1" opacity="0.2"/>
+      <circle cx="180" cy="94" r="6" fill="#1a1a14" opacity="0.08"/>
+      <text x="28" y="116" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.7">Memory · MCP · Qdrant</text>
+    </svg>
+  ),
 };
 
 const items = [
+  {
+    title: "Pali",
+    thumb: "Pali",
+    tag: "Open Source · Go",
+    type: "project",
+    description: "Open memory runtime for LLM apps and agent systems.",
+    link: "https://github.com/pali-mem/pali",
+    linkLabel: "View on GitHub",
+    linkIcon: "github",
+    achievements: [
+      "Local-first, multi-tenant memory runtime with REST, MCP, and dashboard surfaces for operators",
+      "Hybrid retrieval pipeline (lexical + vector) with configurable fusion and reranking",
+      "Benchmark: LoCoMo medium500 (500/231) with qdrant + ollama achieved performance_score=100.00, p95=126.509ms, search 6.624 ops/s, Top1=0.337662, Recall@5=0.515873 (2026-03-12)"
+    ]
+  },
   {
     title: "Deepseek-Go",
     thumb: "DeepseekGo",
@@ -203,106 +231,112 @@ const Projects = () => {
     document.body.appendChild(s);
   }, []);
 
-  const active = selected !== null ? items[selected] : null;
-
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6 text-ink-dark">Projects &amp; Research</h2>
 
       <div className="border border-border-paper">
         {/* Card grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-border-paper">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px bg-border-paper">
           {items.map((item, i) => {
             const ThumbComp = Thumb[item.thumb];
             const isActive = selected === i;
             return (
-              <button
-                key={i}
-                onClick={() => setSelected(isActive ? null : i)}
-                className={`group flex flex-col text-left focus:outline-none transition-colors duration-200 ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
-                aria-expanded={isActive}
-              >
-                <div className={`w-full overflow-hidden border-b transition-colors duration-200 ${isActive ? "border-ink-dark/20" : "border-border-paper group-hover:border-paper-light/10"}`} style={{ aspectRatio: "220/140" }}>
-                  {ThumbComp ? <ThumbComp /> : (
-                    <div className="w-full h-full bg-paper-surface flex items-center justify-center">
-                      <span className="text-ink-muted text-xs font-mono">[ no preview ]</span>
-                    </div>
-                  )}
-                </div>
-                <div className="p-3 flex flex-col gap-1 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <span className={`text-sm font-bold leading-tight transition-colors ${isActive ? "text-ink-blue" : "text-ink-dark group-hover:text-paper-light"}`}>
-                      {item.title}
-                    </span>
-                    <span className="text-[10px] text-ink-muted mt-0.5 shrink-0 font-mono group-hover:text-paper-light/50">
-                      {isActive ? "↑" : "↓"}
-                    </span>
+              <React.Fragment key={i}>
+                <button
+                  onClick={() => setSelected(isActive ? null : i)}
+                  className={`group flex flex-col text-left focus:outline-none transition-colors duration-200 ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
+                  aria-expanded={isActive}
+                >
+                  <div
+                    className={`w-full overflow-hidden border-b transition-colors duration-200 ${isActive ? "border-ink-dark/20" : "border-border-paper group-hover:border-paper-light/10"}`}
+                    style={{ aspectRatio: "220/140" }}
+                  >
+                    {ThumbComp ? (
+                      <ThumbComp />
+                    ) : (
+                      <div className="w-full h-full bg-paper-surface flex items-center justify-center">
+                        <span className="text-ink-muted text-xs font-mono">[ no preview ]</span>
+                      </div>
+                    )}
                   </div>
-                  <span className="text-[10px] text-ink-muted font-mono uppercase tracking-wider group-hover:text-paper-light/50">
-                    {item.tag}
-                  </span>
-                  <p className="text-xs text-ink-muted leading-snug line-clamp-2 mt-0.5 group-hover:text-paper-light/40">
-                    {item.description}
-                  </p>
-                </div>
-              </button>
+                  <div className="p-3 flex flex-col gap-1 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <span
+                        className={`text-sm font-bold leading-tight transition-colors ${isActive ? "text-ink-blue" : "text-ink-dark group-hover:text-paper-light"}`}
+                      >
+                        {item.title}
+                      </span>
+                      <span className="text-[10px] text-ink-muted mt-0.5 shrink-0 font-mono group-hover:text-paper-light/50">
+                        {isActive ? "↑" : "↓"}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-ink-muted font-mono uppercase tracking-wider group-hover:text-paper-light/50">
+                      {item.tag}
+                    </span>
+                    <p className="text-xs text-ink-muted leading-snug line-clamp-2 mt-0.5 group-hover:text-paper-light/40">
+                      {item.description}
+                    </p>
+                  </div>
+                </button>
+
+                {/* Inline expand panel */}
+                {isActive && (
+                  <div className="border-t border-ink-dark/30 bg-ink-dark px-4 sm:px-6 py-5">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
+                      <div>
+                        <h3 className="text-base font-bold text-paper-light">{item.title}</h3>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-paper-light/40">{item.tag}</span>
+                      </div>
+                      <button
+                        onClick={() => setSelected(null)}
+                        className="text-paper-light/40 hover:text-ink-red text-xs font-mono shrink-0 mt-0.5 transition-colors duration-150"
+                      >
+                        [ close ✕ ]
+                      </button>
+                    </div>
+
+                    <ul className="space-y-2 mb-5">
+                      {item.achievements.map((a, j) => (
+                        <li key={j} className="flex gap-2 text-sm text-paper-light/80 leading-relaxed">
+                          <span className="text-paper-light/30 shrink-0 mt-0.5">—</span>
+                          <span>{a}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="flex items-center gap-4 flex-wrap">
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
+                      >
+                        {item.linkIcon === "github" && <FaGithub className="h-3 w-3" />}
+                        {item.linkIcon === "paper" && <FaFileAlt className="h-3 w-3" />}
+                        {item.linkIcon === "external" && <FaExternalLinkAlt className="h-3 w-3" />}
+                        {item.linkLabel}
+                        <FaExternalLinkAlt className="h-2.5 w-2.5 opacity-50" />
+                      </a>
+                      {item.type === "research" && item.doi && (
+                        <a
+                          href={`https://plu.mx/plum/a/?doi=${encodeURIComponent(item.doi)}`}
+                          className="plumx-plum-print-popup text-xs text-paper-light/40 hover:text-ink-blue"
+                          data-hide-when-empty="true"
+                          data-doi={item.doi}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          PlumX metrics
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
             );
           })}
         </div>
-
-        {/* Group expand panel — full width, below the entire grid */}
-        {active && (
-          <div className="border-t border-ink-dark/30 bg-ink-dark px-4 sm:px-6 py-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
-              <div>
-                <h3 className="text-base font-bold text-paper-light">{active.title}</h3>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-paper-light/40">{active.tag}</span>
-              </div>
-              <button
-                onClick={() => setSelected(null)}
-                className="text-paper-light/40 hover:text-ink-red text-xs font-mono shrink-0 mt-0.5 transition-colors duration-150"
-              >
-                [ close ✕ ]
-              </button>
-            </div>
-
-            <ul className="space-y-2 mb-5">
-              {active.achievements.map((a, j) => (
-                <li key={j} className="flex gap-2 text-sm text-paper-light/80 leading-relaxed">
-                  <span className="text-paper-light/30 shrink-0 mt-0.5">—</span>
-                  <span>{a}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex items-center gap-4 flex-wrap">
-              <a
-                href={active.link}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
-              >
-                {active.linkIcon === "github" && <FaGithub className="h-3 w-3" />}
-                {active.linkIcon === "paper" && <FaFileAlt className="h-3 w-3" />}
-                {active.linkIcon === "external" && <FaExternalLinkAlt className="h-3 w-3" />}
-                {active.linkLabel}
-                <FaExternalLinkAlt className="h-2.5 w-2.5 opacity-50" />
-              </a>
-              {active.type === "research" && active.doi && (
-                <a
-                  href={`https://plu.mx/plum/a/?doi=${encodeURIComponent(active.doi)}`}
-                  className="plumx-plum-print-popup text-xs text-paper-light/40 hover:text-ink-blue"
-                  data-hide-when-empty="true"
-                  data-doi={active.doi}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  PlumX metrics
-                </a>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
