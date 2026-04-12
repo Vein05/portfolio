@@ -106,6 +106,7 @@ const items = [
   {
     title: "Pali",
     thumb: "Pali",
+    anchorId: "project-pali",
     tag: "Open Source · Go",
     type: "project",
     description: "Open memory runtime for LLM apps and agent systems.",
@@ -234,9 +235,10 @@ const Projects = () => {
                     return (
                       <button
                         key={i}
+                        id={item.anchorId}
                         type="button"
                         onClick={() => setSelected(isActive ? null : i)}
-                        className={`group flex flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-blue/40 focus-visible:ring-inset transition-colors duration-200 ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
+                        className={`group flex flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-blue/40 focus-visible:ring-inset transition-colors duration-200 ${item.anchorId ? "scroll-mt-28" : ""} ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
                         aria-expanded={isActive}
                         aria-controls={isActive ? DETAIL_PANEL_ID : undefined}
                       >

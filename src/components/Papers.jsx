@@ -74,6 +74,7 @@ const papers = [
   {
     title: "When Target Choice Changes Benchmark Conclusions in Transformed Conversational Memory",
     thumb: "TargetChoice",
+    anchorId: "research-conversational-memory",
     tag: "Research Paper",
     summary: "Shows how benchmark conclusions can change even when the ranked retrieval output stays fixed.",
     link: "/When_Target_Choice_Changes_Benchmark_Conclusions_in_Transformed_Conversational_Memory.pdf",
@@ -134,9 +135,10 @@ const Papers = () => {
                     return (
                       <button
                         key={item.title}
+                        id={item.anchorId}
                         type="button"
                         onClick={() => setSelected(isActive ? null : i)}
-                        className={`group flex flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-blue/40 focus-visible:ring-inset transition-colors duration-200 ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
+                        className={`group flex flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-blue/40 focus-visible:ring-inset transition-colors duration-200 ${item.anchorId ? "scroll-mt-28" : ""} ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
                         aria-expanded={isActive}
                         aria-controls={isActive ? DETAIL_PANEL_ID : undefined}
                       >

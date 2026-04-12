@@ -104,9 +104,9 @@ const netlifyImg = (path: string, params: string) =>
       </div>
 
       <!-- Main Content — the rest is pure React islands -->
-      <main class="w-full px-4 sm:px-8 lg:px-12 pt-5 pb-2 lg:pt-10 lg:pb-4">
+      <main class="w-full px-4 sm:px-8 lg:px-12 pt-4 pb-2 lg:pt-7 lg:pb-4">
         <div id="about" class="header-section">
-          <div class="text-center mb-8">
+          <div class="text-center mb-5">
             <p class="text-sm sm:text-base lg:text-lg text-ink-muted font-medium max-w-2xl mx-auto">
               Co-founder @{" "}
               <a href="https://magnoliaed.ai" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">MagnoliaEd</a>
@@ -115,20 +115,19 @@ const netlifyImg = (path: string, params: string) =>
             </p>
           </div>
 
-          <div class="mt-8 pb-8 border-b border-border-paper flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start lg:gap-12">
+          <div class="mt-5 pb-6 border-b border-border-paper flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start lg:gap-8">
             <div class="order-2 lg:order-none min-w-0">
-              <div class="space-y-6">
+              <div class="space-y-3">
                 <p class="text-[15px] sm:text-base lg:text-lg text-ink-dark leading-relaxed">
-                  I'm Sugam Panthi, based in Hattiesburg, Mississippi. I have experience building applications using <strong>Go and Python</strong>. I recently completed an internship as an AI and ML intern @{" "}
-                  <a href="https://prediction3d.com" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">Prediction3d</a>.
+                  I'm Sugam Panthi. I help AI with dementia ;D.
+                  <br />
+                  I'm currently building{" "}
+                  <a href="#project-pali" class="text-ink-blue hover:underline font-medium">@Pali</a>
+                  {" "}and researching{" "}
+                  <a href="#research-conversational-memory" class="text-ink-blue hover:underline font-medium">conversational memory</a>.
                 </p>
 
-                <p class="text-[15px] sm:text-base lg:text-lg text-ink-dark leading-relaxed">
-                  I'm pursuing a <span class="font-medium text-ink-dark">Bachelor's in Computer Science</span> at{" "}
-                  <a href="https://www.usm.edu/" class="text-ink-blue hover:underline" target="_blank" rel="noopener noreferrer">The University of Southern Mississippi</a>.
-                </p>
-
-                <div class="pt-4 space-y-4 lg:hidden">
+                <div class="pt-2 space-y-4 lg:hidden">
                   <div class="border border-border-paper bg-paper-surface/70 p-4 sm:p-5">
                     <div class="flex flex-wrap items-center justify-center gap-2 text-center text-sm uppercase tracking-[0.16em] text-ink-muted">
                       <a
@@ -172,7 +171,7 @@ const netlifyImg = (path: string, params: string) =>
                   </div>
                 </div>
 
-                <div class="hidden lg:block pt-4">
+                <div class="hidden lg:block pt-2">
                   <div class="flex items-center gap-4">
                     <a
                       href="/resume.pdf"
@@ -190,7 +189,7 @@ const netlifyImg = (path: string, params: string) =>
                     </a>
                   </div>
 
-                  <div class="pt-5">
+                  <div class="pt-3">
                     <div class="flex flex-wrap items-center gap-6">
                       <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
                         <Mail class="w-4 h-4" /><span>Sugam.Panthi@usm.edu</span>
@@ -222,23 +221,23 @@ const netlifyImg = (path: string, params: string) =>
           </div>
         </div>
 
-        <section id="experience" class="mt-10">
+        <section id="experience" class="mt-8">
           <Experience client:load />
         </section>
 
-        <section id="projects" class="mt-16">
+        <section id="projects" class="mt-12">
           <Projects client:only="react" />
         </section>
 
-        <section id="papers" class="mt-16">
+        <section id="papers" class="mt-12">
           <Papers client:only="react" />
         </section>
 
-        <section id="honors" class="mt-16">
+        <section id="honors" class="mt-12">
           <Honors client:only="react" />
         </section>
 
-        <section id="skills" class="mt-16">
+        <section id="skills" class="mt-12">
           <Skills client:load />
         </section>
 
