@@ -5,6 +5,7 @@ import SidebarNav, { MountainDecoration } from '../components/SidebarNav';
 import WritingSidebar from '../components/blog/WritingSidebar';
 import Experience from '../components/Experience';
 import Projects from '../components/Projects';
+import Papers from '../components/Papers';
 import Honors from '../components/Honors';
 import Skills from '../components/Skills';
 import Footer from '../components/Footer';
@@ -70,7 +71,8 @@ const netlifyImg = (path: string, params: string) =>
           { "@type": "ListItem", "position": 1, "name": "About", "url": "https://sugampanthi.com.np/#about" },
           { "@type": "ListItem", "position": 2, "name": "Experience", "url": "https://sugampanthi.com.np/#experience" },
           { "@type": "ListItem", "position": 3, "name": "Projects", "url": "https://sugampanthi.com.np/#projects" },
-          { "@type": "ListItem", "position": 4, "name": "Blog", "url": "https://sugampanthi.com.np/blog" }
+          { "@type": "ListItem", "position": 4, "name": "Papers", "url": "https://sugampanthi.com.np/#papers" },
+          { "@type": "ListItem", "position": 5, "name": "Blog", "url": "https://sugampanthi.com.np/blog" }
         ]
       }
     ]
@@ -91,6 +93,7 @@ const netlifyImg = (path: string, params: string) =>
             { id: "about", label: "About" },
             { id: "experience", label: "Experience" },
             { id: "projects", label: "Projects" },
+            { id: "papers", label: "Papers" },
             { id: "honors", label: "Honors" },
             { id: "skills", label: "Skills" },
           ]}
@@ -227,6 +230,10 @@ const netlifyImg = (path: string, params: string) =>
           <Projects client:only="react" />
         </section>
 
+        <section id="papers" class="mt-16">
+          <Papers client:only="react" />
+        </section>
+
         <section id="honors" class="mt-16">
           <Honors client:only="react" />
         </section>
@@ -251,7 +258,7 @@ const netlifyImg = (path: string, params: string) =>
 
   <!-- Active section scroll tracking — runs client-side -->
   <script>
-    const sections = ['about', 'experience', 'projects', 'honors', 'skills'];
+    const sections = ['about', 'experience', 'projects', 'papers', 'honors', 'skills'];
 
     function getActive() {
       const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
