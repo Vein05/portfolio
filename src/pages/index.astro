@@ -9,6 +9,7 @@ import Papers from '../components/Papers';
 import Honors from '../components/Honors';
 import Skills from '../components/Skills';
 import Footer from '../components/Footer';
+import GitHubContributions from '../components/GitHubContributions';
 import { Mail, Linkedin, Github } from '@lucide/astro';
 
 const currentPath = Astro.url.pathname;
@@ -119,7 +120,7 @@ const netlifyImg = (path: string, params: string) =>
             <div class="order-2 lg:order-none min-w-0">
               <div class="space-y-3">
                 <p class="text-[15px] sm:text-base lg:text-lg text-ink-dark leading-relaxed">
-                  I'm Sugam Panthi. I help AI with dementia ;D.
+                  I'm Sugam Panthi. I help AI with dementia ;D
                   <br />
                   I'm currently building{" "}
                   <a href="#project-pali" class="text-ink-blue hover:underline font-medium">@Pali</a>
@@ -148,27 +149,6 @@ const netlifyImg = (path: string, params: string) =>
                     </div>
                   </div>
 
-                  <div class="border border-border-paper bg-paper-surface/70 p-4 sm:p-5">
-                    <div class="flex items-center justify-between gap-3">
-                      <span class="text-[11px] uppercase tracking-[0.22em] text-ink-muted">Connect</span>
-                      <div class="flex items-center gap-3">
-                        <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="inline-flex h-9 w-9 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
-                          <Mail class="w-4 h-4 shrink-0" />
-                        </a>
-                        <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
-                          <Linkedin class="w-4 h-4 shrink-0" />
-                        </a>
-                        <a href="https://www.github.com/vein05" aria-label="GitHub" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
-                          <Github class="w-4 h-4 shrink-0" />
-                        </a>
-                      </div>
-                    </div>
-                    <div class="mt-3">
-                      <a href="mailto:Sugam.Panthi@usm.edu" class="text-sm text-ink-muted hover:text-ink-blue transition-colors break-all">
-                        Sugam.Panthi@usm.edu
-                      </a>
-                    </div>
-                  </div>
                 </div>
 
                 <div class="hidden lg:block pt-2">
@@ -189,34 +169,52 @@ const netlifyImg = (path: string, params: string) =>
                     </a>
                   </div>
 
-                  <div class="pt-3">
-                    <div class="flex flex-wrap items-center gap-6">
-                      <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
-                        <Mail class="w-4 h-4" /><span>Sugam.Panthi@usm.edu</span>
-                      </a>
-                      <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
-                        <Linkedin class="w-4 h-4" /><span>sugam-panthi</span>
-                      </a>
-                      <a href="https://www.github.com/vein05" aria-label="GitHub" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-ink-dark hover:text-ink-blue transition-colors text-sm">
-                        <Github class="w-4 h-4" /><span>vein05</span>
-                      </a>
-                    </div>
+                  <div class="pt-3 max-w-[min(100%,520px)]">
+                    <GitHubContributions client:media="(min-width: 1024px)" />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="order-1 lg:order-none flex flex-col justify-center items-center lg:items-end mb-0">
-              <img
-                src={netlifyImg('/images/headshot.jpeg', 'w=440&h=460&fit=cover&q=82')}
-                alt="Sugam Panthi headshot"
-                width="220"
-                height="230"
-                style="width:min(100%, 220px); height:auto; aspect-ratio:220/230; object-fit:cover; object-position:bottom center; opacity:0.88;"
-                loading="eager"
-                fetchpriority="high"
-              />
-              <span class="text-sm text-ink-muted mt-3 text-center">May 2025 | Hattiesburg, MS</span>
+            <div class="order-1 lg:order-none flex flex-col justify-center items-center lg:items-end mb-0 w-full min-w-0">
+              <div
+                class="relative mx-auto h-[230px] w-[min(100%,220px)] cursor-default rounded-sm outline-none [perspective:1000px] hover:[&_.flip-inner]:[transform:rotateY(180deg)] hover:[&_.flip-inner]:delay-200 active:[&_.flip-inner]:[transform:rotateY(180deg)] active:[&_.flip-inner]:!delay-0 focus-visible:[&_.flip-inner]:[transform:rotateY(180deg)] focus-visible:[&_.flip-inner]:!delay-0 focus-visible:ring-2 focus-visible:ring-ink-blue/45 focus-visible:ring-offset-2 focus-visible:ring-offset-paper-light motion-reduce:hover:[&_.flip-inner]:[transform:none] motion-reduce:active:[&_.flip-inner]:[transform:none] motion-reduce:focus-visible:[&_.flip-inner]:[transform:none]"
+                tabindex="0"
+                role="group"
+                aria-label="Sugam Panthi photo; hover, press, or keyboard focus to see May 2025 and Hattiesburg, MS"
+              >
+                <div class="flip-inner relative h-full w-full delay-0 transition-transform duration-500 ease-out motion-reduce:transition-none [transform-style:preserve-3d]">
+                  <div class="absolute inset-0 h-full w-full overflow-hidden rounded-sm border border-border-paper bg-paper-surface [backface-visibility:hidden]">
+                    <img
+                      src={netlifyImg('/images/headshot.jpeg', 'w=440&h=460&fit=cover&q=82')}
+                      alt=""
+                      width="220"
+                      height="230"
+                      class="h-full w-full object-cover object-bottom opacity-[0.88]"
+                      loading="eager"
+                      fetchpriority="high"
+                    />
+                  </div>
+                  <div class="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1 rounded-sm border border-border-paper bg-paper-surface px-3 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                    <span class="text-[11px] font-mono uppercase tracking-[0.14em] text-ink-muted">May 2025</span>
+                    <span class="text-sm text-ink-dark">Hattiesburg, MS</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 flex w-full max-w-[220px] flex-row items-center justify-between gap-2">
+                <a href="mailto:Sugam.Panthi@usm.edu" aria-label="Email Sugam.Panthi@usm.edu" class="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                  <Mail class="w-4 h-4 shrink-0" />
+                </a>
+                <a href="https://www.linkedin.com/in/sugam-panthi" aria-label="LinkedIn — sugam-panthi" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                  <Linkedin class="w-4 h-4 shrink-0" />
+                </a>
+                <a href="https://x.com/SugamPanthi" aria-label="X — @SugamPanthi" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                  <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                </a>
+                <a href="https://www.github.com/vein05" aria-label="GitHub — vein05" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 w-10 shrink-0 items-center justify-center border border-border-paper text-ink-dark hover:text-ink-blue hover:border-ink-blue transition-colors">
+                  <Github class="w-4 h-4 shrink-0" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
