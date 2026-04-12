@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { FaGithub, FaExternalLinkAlt, FaFileAlt } from "react-icons/fa";
+import { useState, useLayoutEffect, useRef, Fragment } from "react";
+import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import {
+  useCardGridColumns,
+  rowIndexForItem,
+  rowStartIndices,
+} from "../hooks/useCardGridColumns";
 
 // Abstract SVG thumbnails — one per project
 const Thumb = {
@@ -82,19 +87,6 @@ const Thumb = {
       <text x="18" y="120" fontFamily="monospace" fontSize="9" fill="#1a1a14" opacity="0.4">50+ users · 1k+ views</text>
     </svg>
   ),
-  ResearchPaper: () => (
-    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
-      <rect x="76" y="22" width="58" height="76" rx="2" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.35"/>
-      <rect x="76" y="22" width="58" height="13" rx="2" fill="#1a1a14" opacity="0.07"/>
-      <polyline points="118,22 134,22 134,38 118,22" fill="#edeae0" stroke="#1a1a14" strokeWidth="1" opacity="0.3"/>
-      {[0,1,2,3,4,5].map(i => (
-        <rect key={i} x="83" y={42 + i*8} width={i === 0 ? 40 : i % 3 === 0 ? 26 : 44} height="2.5" rx="1" fill="#1a1a14" opacity="0.12"/>
-      ))}
-      <text x="150" y="72" fontFamily="monospace" fontSize="22" fill="#1a1a14" opacity="0.1">♻</text>
-      <text x="20" y="128" fontFamily="monospace" fontSize="8" fill="#6b6560" opacity="0.7">CIB Conf. · 2025 · Purdue</text>
-    </svg>
-  ),
   Pali: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="140" fill="#edeae0"/>
@@ -139,23 +131,6 @@ const items = [
       "300+ stars, 100+ dependents, and 10+ collaborators on GitHub",
       "Full API coverage for Deepseek R-1, Chat V3, and Coder models including streaming conversations",
       "Comprehensive unit + functional testing with CI/CD actions for automated deployment"
-    ]
-  },
-  {
-    title: "Plastic Recycling in Construction",
-    thumb: "ResearchPaper",
-    tag: "Research Paper · 2025",
-    type: "research",
-    description: "A Comprehensive Review of Plastic Recycling in the Construction Industry: Challenges and Opportunities in the US.",
-    link: "https://docs.lib.purdue.edu/cib-conferences/vol1/iss1/63/",
-    linkLabel: "Read on Purdue eLib",
-    linkIcon: "paper",
-    doi: "10.7771/3067-4883.2081",
-    achievements: [
-      "Authors: Sugam Panthi, Fan Zhang",
-      "Published in CIB Conferences — Vol. 1, Iss. 1, p. 63 (2025)",
-      "DOI: 10.7771/3067-4883.2081",
-      "Reviews challenges and opportunities in repurposing plastic waste as construction materials across the US"
     ]
   },
   {
@@ -220,75 +195,101 @@ const items = [
   },
 ];
 
+const DETAIL_PANEL_ID = "projects-detail-panel";
+
 const Projects = () => {
   const [selected, setSelected] = useState(null);
+  const cols = useCardGridColumns(3);
+  const detailRef = useRef(null);
 
-  useEffect(() => {
-    if (document.querySelector('script[src*="cdn.plu.mx/widget-popup.js"]')) return;
-    const s = document.createElement('script');
-    s.src = 'https://cdn.plu.mx/widget-popup.js';
-    s.async = true;
-    document.body.appendChild(s);
-  }, []);
+  const activeItem = selected !== null ? items[selected] : null;
+  const selectedRow = selected !== null ? rowIndexForItem(selected, cols) : null;
+
+  useLayoutEffect(() => {
+    if (selected === null || !detailRef.current) return;
+    detailRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [selected, cols]);
+
+  const rowStarts = rowStartIndices(items.length, cols);
+  const gridColsClass = cols === 1 ? "grid-cols-1" : cols === 2 ? "grid-cols-2" : "grid-cols-3";
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6 text-ink-dark">Projects &amp; Research</h2>
+    <div className="w-full min-w-0">
+      <h2 className="text-2xl font-bold mb-6 text-ink-dark">Projects</h2>
 
-      <div className="border border-border-paper">
-        {/* Card grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-px bg-border-paper">
-          {items.map((item, i) => {
-            const ThumbComp = Thumb[item.thumb];
-            const isActive = selected === i;
+      <div className="border border-border-paper w-full min-w-0 overflow-hidden">
+        <div className="flex flex-col gap-px bg-border-paper w-full min-w-0">
+          {rowStarts.map((start, rowIdx) => {
+            const indices = [];
+            for (let k = 0; k < cols && start + k < items.length; k++) {
+              indices.push(start + k);
+            }
             return (
-              <React.Fragment key={i}>
-                <button
-                  onClick={() => setSelected(isActive ? null : i)}
-                  className={`group flex flex-col text-left focus:outline-none transition-colors duration-200 ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
-                  aria-expanded={isActive}
-                >
-                  <div
-                    className={`w-full overflow-hidden border-b transition-colors duration-200 ${isActive ? "border-ink-dark/20" : "border-border-paper group-hover:border-paper-light/10"}`}
-                    style={{ aspectRatio: "220/140" }}
-                  >
-                    {ThumbComp ? (
-                      <ThumbComp />
-                    ) : (
-                      <div className="w-full h-full bg-paper-surface flex items-center justify-center">
-                        <span className="text-ink-muted text-xs font-mono">[ no preview ]</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-3 flex flex-col gap-1 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <span
-                        className={`text-sm font-bold leading-tight transition-colors ${isActive ? "text-ink-blue" : "text-ink-dark group-hover:text-paper-light"}`}
+              <Fragment key={start}>
+                <div className={`grid w-full min-w-0 gap-px bg-border-paper ${gridColsClass}`}>
+                  {indices.map((i) => {
+                    const item = items[i];
+                    const ThumbComp = Thumb[item.thumb];
+                    const isActive = selected === i;
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setSelected(isActive ? null : i)}
+                        className={`group flex flex-col text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ink-blue/40 focus-visible:ring-inset transition-colors duration-200 ${isActive ? "bg-paper-surface" : "bg-paper-light hover:bg-ink-dark"}`}
+                        aria-expanded={isActive}
+                        aria-controls={isActive ? DETAIL_PANEL_ID : undefined}
                       >
-                        {item.title}
-                      </span>
-                      <span className="text-[10px] text-ink-muted mt-0.5 shrink-0 font-mono group-hover:text-paper-light/50">
-                        {isActive ? "↑" : "↓"}
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-ink-muted font-mono uppercase tracking-wider group-hover:text-paper-light/50">
-                      {item.tag}
-                    </span>
-                    <p className="text-xs text-ink-muted leading-snug line-clamp-2 mt-0.5 group-hover:text-paper-light/40">
-                      {item.description}
-                    </p>
-                  </div>
-                </button>
+                        <div
+                          className={`w-full overflow-hidden border-b transition-colors duration-200 ${isActive ? "border-ink-dark/20" : "border-border-paper group-hover:border-paper-light/10"}`}
+                          style={{ aspectRatio: "220/140" }}
+                        >
+                          {ThumbComp ? (
+                            <ThumbComp />
+                          ) : (
+                            <div className="w-full h-full bg-paper-surface flex items-center justify-center">
+                              <span className="text-ink-muted text-xs font-mono">[ no preview ]</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-3 flex flex-col gap-1 flex-1">
+                          <div className="flex items-start justify-between gap-2">
+                            <span
+                              className={`text-sm font-bold leading-tight transition-colors ${isActive ? "text-ink-blue" : "text-ink-dark group-hover:text-paper-light"}`}
+                            >
+                              {item.title}
+                            </span>
+                            <span className="text-[10px] text-ink-muted mt-0.5 shrink-0 font-mono group-hover:text-paper-light/50">
+                              {isActive ? "↑" : "↓"}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-ink-muted font-mono uppercase tracking-wider group-hover:text-paper-light/50">
+                            {item.tag}
+                          </span>
+                          <p className="text-xs text-ink-muted leading-snug line-clamp-2 mt-0.5 group-hover:text-paper-light/40">
+                            {item.description}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-                {/* Inline expand panel */}
-                {isActive && (
-                  <div className="border-t border-ink-dark/30 bg-ink-dark px-4 sm:px-6 py-5">
+                {activeItem && selectedRow === rowIdx && (
+                  <div
+                    ref={detailRef}
+                    id={DETAIL_PANEL_ID}
+                    role="region"
+                    aria-label={`Details for ${activeItem.title}`}
+                    className="w-full min-w-0 border-t border-ink-dark/30 bg-ink-dark px-4 sm:px-6 py-5 scroll-mt-24"
+                  >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
                       <div>
-                        <h3 className="text-base font-bold text-paper-light">{item.title}</h3>
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-paper-light/40">{item.tag}</span>
+                        <h3 className="text-base font-bold text-paper-light">{activeItem.title}</h3>
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-paper-light/40">{activeItem.tag}</span>
                       </div>
                       <button
+                        type="button"
                         onClick={() => setSelected(null)}
                         className="text-paper-light/40 hover:text-ink-red text-xs font-mono shrink-0 mt-0.5 transition-colors duration-150"
                       >
@@ -297,8 +298,8 @@ const Projects = () => {
                     </div>
 
                     <ul className="space-y-2 mb-5">
-                      {item.achievements.map((a, j) => (
-                        <li key={j} className="flex gap-2 text-sm text-paper-light/80 leading-relaxed">
+                      {activeItem.achievements.map((a, j) => (
+                        <li key={j} className="flex gap-2 text-sm text-paper-light/80 leading-relaxed break-words [overflow-wrap:anywhere]">
                           <span className="text-paper-light/30 shrink-0 mt-0.5">—</span>
                           <span>{a}</span>
                         </li>
@@ -307,33 +308,20 @@ const Projects = () => {
 
                     <div className="flex items-center gap-4 flex-wrap">
                       <a
-                        href={item.link}
+                        href={activeItem.link}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
                       >
-                        {item.linkIcon === "github" && <FaGithub className="h-3 w-3" />}
-                        {item.linkIcon === "paper" && <FaFileAlt className="h-3 w-3" />}
-                        {item.linkIcon === "external" && <FaExternalLinkAlt className="h-3 w-3" />}
-                        {item.linkLabel}
+                        {activeItem.linkIcon === "github" && <FaGithub className="h-3 w-3" />}
+                        {activeItem.linkIcon === "external" && <FaExternalLinkAlt className="h-3 w-3" />}
+                        {activeItem.linkLabel}
                         <FaExternalLinkAlt className="h-2.5 w-2.5 opacity-50" />
                       </a>
-                      {item.type === "research" && item.doi && (
-                        <a
-                          href={`https://plu.mx/plum/a/?doi=${encodeURIComponent(item.doi)}`}
-                          className="plumx-plum-print-popup text-xs text-paper-light/40 hover:text-ink-blue"
-                          data-hide-when-empty="true"
-                          data-doi={item.doi}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          PlumX metrics
-                        </a>
-                      )}
                     </div>
                   </div>
                 )}
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>
