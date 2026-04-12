@@ -648,3 +648,35 @@ body {
     background-color: #f5f0e8;
   }
 }
+
+/* react-activity-calendar tooltips — flat CSS (library ships nested rules that upset PostCSS) */
+.react-activity-calendar__tooltip {
+  width: max-content;
+  max-width: calc(100vw - 20px);
+  padding: 0.2em 0.55em;
+  border-radius: 0.25em;
+  background-color: #1a1a14;
+  color: #edeae0;
+  font-size: 13px;
+  font-family: 'Oswald', sans-serif;
+  border: 1px solid #2e2e24;
+}
+
+.react-activity-calendar__tooltip .react-activity-calendar__tooltip-arrow {
+  fill: #1a1a14;
+}
+
+.react-activity-calendar__tooltip[data-color-scheme='dark'] {
+  background-color: #edeae0;
+  color: #1a1a14;
+  border-color: #d4cfc4;
+}
+
+.react-activity-calendar__tooltip[data-color-scheme='dark'] .react-activity-calendar__tooltip-arrow {
+  fill: #edeae0;
+}
+
+/* GitHub calendar: library sets width:max-content; stretch to card width */
+.github-contributions-calendar.react-activity-calendar {
+  width: 100% !important;
+}
