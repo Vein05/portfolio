@@ -3,8 +3,6 @@ import { ActivityCalendar } from "react-activity-calendar";
 
 const USERNAME = "vein05";
 const API_URL = `https://github-contributions-api.jogruber.de/v4/${USERNAME}?y=last`;
-/** Heatmap window; totals still sum the full rolling year from the API. */
-const CHART_MONTHS = 9;
 
 /** Matches tailwind tokens: paper-surface, border-paper, ink-blue ramp */
 const paperTheme = {
@@ -12,19 +10,8 @@ const paperTheme = {
   dark: ["#edeae0", "#d4cfc4", "#93bae8", "#2563eb", "#1d4ed8"],
 };
 
-function isoDateMonthsAgo(months) {
-  const d = new Date();
-  d.setMonth(d.getMonth() - months);
-  return d.toISOString().slice(0, 10);
-}
-
 function sumCounts(activities) {
   return activities.reduce((s, a) => s + a.count, 0);
-}
-
-function sliceRecentContributions(activities, months) {
-  const cutoff = isoDateMonthsAgo(months);
-  return activities.filter((a) => a.date >= cutoff);
 }
 
 const LEGEND_BLOCK = 7;
@@ -114,7 +101,7 @@ const GitHubContributions = () => {
           throw new Error("Unexpected response");
         }
         setYearTotal(sumCounts(all));
-        setChartData(sliceRecentContributions(all, CHART_MONTHS));
+        setChartData(all);
       })
       .catch((e) => {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load activity");
