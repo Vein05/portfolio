@@ -30,4 +30,7 @@ yarn-error.log*
 # Astro
 /dist
 /.astro
+public/images/optimized/
+public/posts/images/optimized/
+public/images/.optimized/
 public/posts/images/.optimized/

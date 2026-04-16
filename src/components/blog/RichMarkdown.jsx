@@ -18,7 +18,7 @@ const SAFE_IFRAME_HOSTS = new Set([
   'loom.com',
 ]);
 const BLOG_IMAGE_PREFIX = '/posts/images/';
-const OPTIMIZED_BLOG_IMAGE_PREFIX = '/posts/images/.optimized/';
+const OPTIMIZED_BLOG_IMAGE_PREFIX = '/posts/images/optimized/';
 const RASTER_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg'];
 
 const parseKVBlock = (rawValue) => {

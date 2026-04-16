@@ -7,6 +7,7 @@ const PUBLIC_IMAGE_ROOTS = [
   path.join(ROOT, 'public', 'images'),
   path.join(ROOT, 'public', 'posts', 'images'),
 ];
+const OPTIMIZED_FOLDER_NAME = 'optimized';
 const RASTER_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg']);
 const MAX_WIDTH = 1800;
 
@@ -46,7 +47,7 @@ const toOptimizedOutputPath = (sourcePath) => {
   const imageRoot = getImageRootForPath(sourcePath);
   if (!imageRoot) return null;
 
-  const optimizedRoot = path.join(imageRoot, '.optimized');
+  const optimizedRoot = path.join(imageRoot, OPTIMIZED_FOLDER_NAME);
   const relativePath = path.relative(imageRoot, sourcePath);
   if (!relativePath || relativePath.startsWith('..')) return null;
 

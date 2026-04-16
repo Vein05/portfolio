@@ -22,3 +22,13 @@
   status = 301
 
 # SPA fallback is NOT needed — Astro generates static HTML for every route
+
+[[redirects]]
+  from = "/posts/images/.optimized/*"
+  to = "/posts/images/optimized/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/images/.optimized/*"
+  to = "/images/optimized/:splat"
+  status = 200

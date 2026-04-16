@@ -16,11 +16,11 @@ const currentPath = Astro.url.pathname;
 
 const optimizePublicImagePath = (path: string) => {
   if (!path.startsWith('/images/')) return path;
-  if (path.startsWith('/images/.optimized/')) return path;
+  if (path.startsWith('/images/optimized/')) return path;
 
   const lower = path.toLowerCase();
   if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg')) {
-    return path.replace('/images/', '/images/.optimized/').replace(/\.(png|jpe?g)$/i, '.webp');
+    return path.replace('/images/', '/images/optimized/').replace(/\.(png|jpe?g)$/i, '.webp');
   }
 
   return path;
