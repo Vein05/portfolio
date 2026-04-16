@@ -17,6 +17,9 @@ const SAFE_IFRAME_HOSTS = new Set([
   'www.loom.com',
   'loom.com',
 ]);
+const BLOG_IMAGE_PREFIX = '/posts/images/';
+const OPTIMIZED_BLOG_IMAGE_PREFIX = '/posts/images/.optimized/';
+const RASTER_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg'];
 
 const parseKVBlock = (rawValue) => {
   const lines = rawValue
@@ -37,13 +40,45 @@ const parseKVBlock = (rawValue) => {
   }, {});
 };
 
+const isRemoteImageSource = (src = '') =>
+  /^https?:\/\//i.test(src) || src.startsWith('//') || src.startsWith('data:') || src.startsWith('blob:');
+
+const toOptimizedBlogImageSource = (src = '') => {
+  const trimmed = src.trim();
+  if (!trimmed || isRemoteImageSource(trimmed)) return trimmed;
+  if (!trimmed.startsWith(BLOG_IMAGE_PREFIX)) return trimmed;
+  if (trimmed.startsWith(OPTIMIZED_BLOG_IMAGE_PREFIX)) return trimmed;
+
+  const lower = trimmed.toLowerCase();
+  const hasRasterExtension = RASTER_IMAGE_EXTENSIONS.some((extension) => lower.endsWith(extension));
+  if (!hasRasterExtension) return trimmed;
+
+  return trimmed
+    .replace(BLOG_IMAGE_PREFIX, OPTIMIZED_BLOG_IMAGE_PREFIX)
+    .replace(/\.(png|jpe?g)$/i, '.webp');
+};
+
 const normalizeImageSource = (src = '') => {
-  if (process.env.NODE_ENV !== 'production' && src.startsWith('/.netlify/images')) {
-    const params = new URLSearchParams(src.split('?')[1]);
-    return params.get('url') || src;
+  const trimmed = src.trim();
+  if (!trimmed) return '';
+
+  if (trimmed.startsWith('/.netlify/images')) {
+    if (import.meta.env.DEV) {
+      const params = new URLSearchParams(trimmed.split('?')[1] || '');
+      return params.get('url') || trimmed;
+    }
+
+    const url = new URL(trimmed, 'https://sugampanthi.com.np');
+    const original = url.searchParams.get('url');
+    if (original) {
+      url.searchParams.set('url', toOptimizedBlogImageSource(original));
+    }
+    return `${url.pathname}${url.search}`;
   }
 
-  return src;
+  if (import.meta.env.DEV) return trimmed;
+
+  return toOptimizedBlogImageSource(trimmed);
 };
 
 const getMediaLayoutClass = (layout = 'full') => {

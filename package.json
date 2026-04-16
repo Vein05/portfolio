@@ -48,11 +48,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
+    "prebuild": "node scripts/optimize-blog-images.js",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "postbuild": "npm run sitemap",
+    "postbuild": "node scripts/report-blog-images.js && pnpm run sitemap",
     "sitemap": "node scripts/generate-sitemap.js",
+    "images:optimize": "node scripts/optimize-blog-images.js",
+    "images:report": "node scripts/report-blog-images.js",
     "start:cra": "react-scripts start",
     "build:cra": "react-scripts build",
     "test": "react-scripts test",
@@ -84,7 +87,8 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "sharp": "^0.34.5"
   },
   "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
 }

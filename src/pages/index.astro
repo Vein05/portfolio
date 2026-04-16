@@ -14,9 +14,21 @@ import { Mail, Linkedin, Github } from '@lucide/astro';
 
 const currentPath = Astro.url.pathname;
 
+const optimizePublicImagePath = (path: string) => {
+  if (!path.startsWith('/images/')) return path;
+  if (path.startsWith('/images/.optimized/')) return path;
+
+  const lower = path.toLowerCase();
+  if (lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg')) {
+    return path.replace('/images/', '/images/.optimized/').replace(/\.(png|jpe?g)$/i, '.webp');
+  }
+
+  return path;
+};
+
 // Netlify Image CDN is only available on Netlify — fall back to raw path in local dev
 const netlifyImg = (path: string, params: string) =>
-  import.meta.env.DEV ? path : `/.netlify/images?url=${path}&${params}`;
+  import.meta.env.DEV ? path : `/.netlify/images?url=${optimizePublicImagePath(path)}&${params}`;
 ---
 
 <BaseLayout
