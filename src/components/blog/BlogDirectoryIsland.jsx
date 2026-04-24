@@ -3,6 +3,33 @@ import { ArrowRight, Github, Search, X } from 'lucide-react';
 import { posts } from '../../data/posts';
 import SidebarNav from '../SidebarNav';
 
+const kitchenSections = [
+  {
+    id: 'all',
+    label: 'Whole menu',
+    kicker: 'Everything',
+    description: 'Research notes, build writeups, and design decisions in one place.',
+  },
+  {
+    id: 'research',
+    label: 'Experiments',
+    kicker: 'Research',
+    description: 'Benchmarks, retrieval work, memory systems, and evaluation notes.',
+  },
+  {
+    id: 'engineering',
+    label: 'Recipes',
+    kicker: 'Engineering',
+    description: 'Implementation breakdowns, SDK decisions, release habits, and backend work.',
+  },
+  {
+    id: 'design',
+    label: 'Plating notes',
+    kicker: 'Design',
+    description: 'Interface choices, texture, typography, and the reasoning behind the site.',
+  },
+];
+
 /**
  * Astro island — the full interactive blog directory.
  * react-router-dom removed: Link → <a>, Helmet → removed (handled by Astro BaseLayout).
@@ -17,6 +44,18 @@ const BlogDirectoryIsland = () => {
 
   const categories = useMemo(
     () => ['all', ...new Set(posts.map((post) => post.category.toLowerCase()))],
+    []
+  );
+
+  const sectionCounts = useMemo(
+    () =>
+      kitchenSections.reduce((acc, section) => {
+        acc[section.id] =
+          section.id === 'all'
+            ? posts.length
+            : posts.filter((post) => post.category.toLowerCase() === section.id).length;
+        return acc;
+      }, {}),
     []
   );
 
@@ -90,12 +129,14 @@ const BlogDirectoryIsland = () => {
 
       {/* Main Content Area */}
       <main className="w-full px-6 sm:px-8 lg:px-10 py-8 lg:py-12">
-        <header className="mb-10 md:mb-12 directory-header">
+        <header className="mb-8 md:mb-10 directory-header kitchen-header">
           <div className="title-row">
             <div className="title-main">
-              <h1 className="text-4xl md:text-5xl text-ink-dark mb-3 tracking-tight">Writing</h1>
-              <p className="text-base text-ink-muted max-w-2xl">
-                Thoughts on engineering, design, and building software.
+              <span className="kitchen-eyebrow">Sugam's kitchen</span>
+              <h1 className="text-4xl md:text-5xl text-ink-dark mb-3 tracking-tight">Notes from the workbench</h1>
+              <p className="text-base text-ink-muted max-w-3xl">
+                A working shelf of research experiments, engineering recipes, and design notes. Some pieces are finished plates;
+                others show the prep, tradeoffs, and cleanup behind the work.
               </p>
             </div>
             <div className="controls-source-links title-links">
@@ -122,6 +163,28 @@ const BlogDirectoryIsland = () => {
             </div>
           </div>
         </header>
+
+        <section className="kitchen-shelf mb-5" aria-label="Writing entry points">
+          {kitchenSections.map((section) => {
+            const isActive = selectedCategory === section.id;
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => setSelectedCategory(section.id)}
+                className={`kitchen-ticket ${isActive ? 'active' : ''}`}
+                aria-pressed={isActive}
+              >
+                <span className="kitchen-ticket-kicker">{section.kicker}</span>
+                <span className="kitchen-ticket-title">
+                  {section.label}
+                  <span className="kitchen-ticket-count">{sectionCounts[section.id] || 0}</span>
+                </span>
+                <span className="kitchen-ticket-copy">{section.description}</span>
+              </button>
+            );
+          })}
+        </section>
 
         <section className="directory-controls border border-border-paper mb-5">
           <div className="controls-top-row p-4 md:p-5 border-b border-border-paper">
@@ -224,9 +287,16 @@ const BlogDirectoryIsland = () => {
               >
                 <article className="p-4 md:p-6 directory-row-inner">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-3 gap-2">
-                    <span className="text-xs uppercase tracking-wider text-ink-blue group-hover:text-ink-blue/80 font-mono">
-                      {post.category}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs uppercase tracking-wider text-ink-blue group-hover:text-ink-blue/80 font-mono">
+                        {post.category}
+                      </span>
+                      {post.series && (
+                        <span className="text-[10px] uppercase tracking-wider text-ink-muted/80 group-hover:text-paper-light/45 font-mono">
+                          Series {post.seriesOrder}
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-ink-muted group-hover:text-paper-light/60 font-mono">
                       <time dateTime={post.date}>
                         {new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}

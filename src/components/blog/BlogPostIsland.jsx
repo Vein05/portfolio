@@ -35,6 +35,21 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
           <span className="hidden sm:inline">•</span>
           <span className="text-ink-blue hidden sm:inline">{postMeta.category}</span>
         </div>
+        <div className="post-kitchen-strip" aria-label="Article context">
+          <span>
+            Type <strong>{postMeta.category}</strong>
+          </span>
+          {postMeta.status && (
+            <span>
+              State <strong>{postMeta.status.toLowerCase()}</strong>
+            </span>
+          )}
+          {postMeta.series && postMeta.seriesOrder && (
+            <span>
+              Series <strong>part {postMeta.seriesOrder}</strong>
+            </span>
+          )}
+        </div>
       </header>
 
       <RichMarkdown markdown={markdown} />

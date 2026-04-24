@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Moon, Sun } from 'lucide-react';
 
 /**
  * Astro-compatible Breadcrumb — receives `currentPath` as a prop
@@ -8,10 +8,27 @@ import { ChevronRight } from 'lucide-react';
 const BreadcrumbIsland = ({ title = null, status = null, currentPath = '/' }) => {
   const isBlog = currentPath.startsWith('/blog');
   const isHome = currentPath === '/' || currentPath === '/home';
+  const [theme, setTheme] = React.useState('daylight');
+
+  React.useEffect(() => {
+    const current = document.documentElement.dataset.theme === 'dim' ? 'dim' : 'daylight';
+    setTheme(current);
+  }, []);
+
+  const nextTheme = theme === 'dim' ? 'daylight' : 'dim';
+  const toggleTheme = () => {
+    document.documentElement.dataset.theme = nextTheme;
+    try {
+      localStorage.setItem('portfolio-theme', nextTheme);
+    } catch {
+      // Theme persistence is optional; the visual state still updates.
+    }
+    setTheme(nextTheme);
+  };
 
   return (
     <div className="breadcrumb-bar sticky top-0 z-40 w-full flex">
-      <div className="hidden lg:flex items-center flex-shrink-0 w-[240px] xl:w-[280px] px-6 py-3 border-r border-[#2e2e24]">
+      <div className="hidden lg:flex items-center flex-shrink-0 w-[240px] xl:w-[280px] px-6 py-3 border-r border-bar-border">
         <a
           href="/"
           className="text-sm uppercase tracking-widest text-paper-light font-medium whitespace-nowrap hover:text-ink-blue transition-colors"
@@ -57,25 +74,37 @@ const BreadcrumbIsland = ({ title = null, status = null, currentPath = '/' }) =>
           )}
         </nav>
 
-        {/* Status badge */}
-        {status && (
-          <div className="flex items-center space-x-2 flex-shrink-0 ml-4">
-            <span className="text-xs uppercase tracking-wider text-paper-light opacity-60">Status:</span>
-            <span className="px-2 py-0.5 text-xs uppercase tracking-wider bg-ink-blue text-white rounded-sm outline outline-1 outline-offset-1 outline-ink-blue">
-              {status}
-            </span>
-          </div>
-        )}
+        <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+          {isHome && (
+            <a
+              href="/blog"
+              className="lg:hidden flex-shrink-0 text-xs uppercase tracking-widest text-paper-light/60 hover:text-ink-blue transition-colors"
+            >
+              Blog →
+            </a>
+          )}
 
-        {/* Mobile-only Blog link — shown on home page */}
-        {isHome && (
-          <a
-            href="/blog"
-            className="lg:hidden flex-shrink-0 ml-4 text-xs uppercase tracking-widest text-paper-light/60 hover:text-ink-blue transition-colors"
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${nextTheme === 'dim' ? 'dim' : 'daylight'} theme`}
+            title={`Switch to ${nextTheme === 'dim' ? 'Dim' : 'Daylight'}`}
           >
-            Blog →
-          </a>
-        )}
+            {theme === 'dim' ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
+            <span>{theme === 'dim' ? 'Dim' : 'Daylight'}</span>
+          </button>
+
+          {/* Status badge */}
+          {status && (
+            <div className="hidden sm:flex items-center space-x-2">
+              <span className="text-xs uppercase tracking-wider text-paper-light opacity-60">Status:</span>
+              <span className="px-2 py-0.5 text-xs uppercase tracking-wider bg-ink-blue text-white rounded-sm outline outline-1 outline-offset-1 outline-ink-blue">
+                {status}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

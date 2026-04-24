@@ -5,25 +5,26 @@ module.exports = withMT({
   content: ["./src/**/*.{js,jsx,ts,tsx,astro}"],
   theme: {
     colors: {
-      main: "#E0D0C1",
+      main: "rgb(var(--color-main) / <alpha-value>)",
     },
     extend: {
       colors: {
         // Paper aesthetic design tokens
-        "paper-light": "#f5f0e8",
-        "paper-surface": "#edeae0",
-        "ink-dark": "#1a1a14",
-        "ink-muted": "#6b6560",
-        "ink-blue": "#2563eb",
-        "ink-red": "#dc2626",
-        "blue-soft": "#e7e1d2",
-        "border-paper": "#d4cfc4",
+        "paper-light": "rgb(var(--color-paper-light) / <alpha-value>)",
+        "paper-surface": "rgb(var(--color-paper-surface) / <alpha-value>)",
+        "ink-dark": "rgb(var(--color-ink-dark) / <alpha-value>)",
+        "ink-muted": "rgb(var(--color-ink-muted) / <alpha-value>)",
+        "ink-blue": "rgb(var(--color-ink-blue) / <alpha-value>)",
+        "ink-red": "rgb(var(--color-ink-red) / <alpha-value>)",
+        "blue-soft": "rgb(var(--color-blue-soft) / <alpha-value>)",
+        "border-paper": "rgb(var(--color-border-paper) / <alpha-value>)",
+        "bar-border": "rgb(var(--color-bar-border) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["Oswald", "sans-serif"],
         clash: ["Oswald", "sans-serif"],
         serif: ["Oswald", "sans-serif"],
-        mono: ["Oswald", "monospace"],
+        mono: ["Oswald", "ui-monospace", "SFMono-Regular", "monospace"],
       },
     },
   },

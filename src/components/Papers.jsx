@@ -9,10 +9,10 @@ import {
 const Thumb = {
   PlasticRecycling: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0" />
-      <rect x="74" y="20" width="72" height="84" rx="2" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.35" />
-      <rect x="74" y="20" width="72" height="14" rx="2" fill="#1a1a14" opacity="0.07" />
-      <polyline points="130,20 146,20 146,36 130,20" fill="#edeae0" stroke="#1a1a14" strokeWidth="1" opacity="0.3" />
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
+      <rect x="74" y="20" width="72" height="84" rx="2" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.35" />
+      <rect x="74" y="20" width="72" height="14" rx="2" fill="rgb(var(--color-ink-dark))" opacity="0.07" />
+      <polyline points="130,20 146,20 146,36 130,20" fill="rgb(var(--color-paper-surface))" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.3" />
       {[0, 1, 2, 3, 4].map((i) => (
         <rect
           key={i}
@@ -21,34 +21,34 @@ const Thumb = {
           width={i === 0 ? 52 : i % 2 === 0 ? 44 : 36}
           height="3"
           rx="1"
-          fill="#1a1a14"
+          fill="rgb(var(--color-ink-dark))"
           opacity={0.12 + i * 0.03}
         />
       ))}
-      <circle cx="160" cy="70" r="16" fill="none" stroke="#1a1a14" strokeWidth="1" opacity="0.22" />
-      <path d="M154 70l4-7 4 7-4 7z" fill="#1a1a14" opacity="0.1" />
-      <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="#6b6560" opacity="0.75">
+      <circle cx="160" cy="70" r="16" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.22" />
+      <path d="M154 70l4-7 4 7-4 7z" fill="rgb(var(--color-ink-dark))" opacity="0.1" />
+      <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.75">
         Construction · Recycling · US
       </text>
     </svg>
   ),
   TargetChoice: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0" />
-      <circle cx="110" cy="62" r="36" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.28" />
-      <circle cx="110" cy="62" r="24" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.22" />
-      <circle cx="110" cy="62" r="12" fill="#1a1a14" opacity="0.08" />
-      <circle cx="110" cy="62" r="4" fill="#1a1a14" opacity="0.4" />
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
+      <circle cx="110" cy="62" r="36" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.28" />
+      <circle cx="110" cy="62" r="24" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.22" />
+      <circle cx="110" cy="62" r="12" fill="rgb(var(--color-ink-dark))" opacity="0.08" />
+      <circle cx="110" cy="62" r="4" fill="rgb(var(--color-ink-dark))" opacity="0.4" />
       {[0, 1, 2].map((i) => (
         <g key={i} opacity={0.22 + i * 0.08}>
-          <line x1={44 + i * 18} y1={28 + i * 10} x2={80 + i * 10} y2={48 + i * 8} stroke="#1a1a14" strokeWidth="1" />
-          <circle cx={44 + i * 18} cy={28 + i * 10} r="3" fill="#1a1a14" />
+          <line x1={44 + i * 18} y1={28 + i * 10} x2={80 + i * 10} y2={48 + i * 8} stroke="rgb(var(--color-ink-dark))" strokeWidth="1" />
+          <circle cx={44 + i * 18} cy={28 + i * 10} r="3" fill="rgb(var(--color-ink-dark))" />
         </g>
       ))}
-      <text x="22" y="116" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.75">
+      <text x="22" y="116" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.75">
         Raw · Source · Canonical
       </text>
-      <text x="22" y="130" fontFamily="monospace" fontSize="8" fill="#6b6560" opacity="0.6">
+      <text x="22" y="130" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.6">
         Fixed-output audit
       </text>
     </svg>

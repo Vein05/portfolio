@@ -353,15 +353,15 @@ const MermaidBlock = ({ chart }) => {
           },
           themeVariables: {
             background: 'transparent',
-            primaryColor: '#edeae0',
-            primaryTextColor: '#1a1a14',
-            primaryBorderColor: '#d4cfc4',
-            lineColor: '#6b6560',
+            primaryColor: 'rgb(var(--color-paper-surface))',
+            primaryTextColor: 'rgb(var(--color-ink-dark))',
+            primaryBorderColor: 'rgb(var(--color-border-paper))',
+            lineColor: 'rgb(var(--color-ink-muted))',
             secondaryColor: 'transparent',
             tertiaryColor: 'transparent',
             edgeLabelBackground: 'transparent',
-            clusterBkg: '#edeae0',
-            clusterBorder: '#d4cfc4',
+            clusterBkg: 'rgb(var(--color-paper-surface))',
+            clusterBorder: 'rgb(var(--color-border-paper))',
           },
         });
         const { svg: rendered } = await window.mermaid.render(containerId, chart);

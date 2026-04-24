@@ -10,94 +10,94 @@ import {
 const Thumb = {
   DeepseekGo: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
       {[0,1,2,3,4,5].map(i => (
-        <text key={i} x={10 + i*34} y="75" fontFamily="monospace" fontSize="11" fill="#1a1a14" opacity={0.12 + i*0.1}>
+        <text key={i} x={10 + i*34} y="75" fontFamily="monospace" fontSize="11" fill="rgb(var(--color-ink-dark))" opacity={0.12 + i*0.1}>
           {"func()"}
         </text>
       ))}
-      <text x="18" y="42" fontFamily="monospace" fontSize="28" fontWeight="bold" fill="#1a1a14" opacity="0.7">Go</text>
-      <text x="18" y="62" fontFamily="monospace" fontSize="10" fill="#6b6560">pkg / deepseek-go</text>
+      <text x="18" y="42" fontFamily="monospace" fontSize="28" fontWeight="bold" fill="rgb(var(--color-ink-dark))" opacity="0.7">Go</text>
+      <text x="18" y="62" fontFamily="monospace" fontSize="10" fill="rgb(var(--color-ink-muted))">pkg / deepseek-go</text>
       {[0,1,2,3,4].map(i => (
-        <rect key={i} x={18 + i*36} y="90" width="28" height="3" rx="1" fill="#1a1a14" opacity={0.08 + i*0.06}/>
+        <rect key={i} x={18 + i*36} y="90" width="28" height="3" rx="1" fill="rgb(var(--color-ink-dark))" opacity={0.08 + i*0.06}/>
       ))}
       {[0,1,2,3].map(i => (
-        <rect key={i} x={18 + i*42} y="100" width="34" height="3" rx="1" fill="#1a1a14" opacity={0.06 + i*0.05}/>
+        <rect key={i} x={18 + i*42} y="100" width="34" height="3" rx="1" fill="rgb(var(--color-ink-dark))" opacity={0.06 + i*0.05}/>
       ))}
-      <circle cx="190" cy="28" r="18" fill="none" stroke="#1a1a14" strokeWidth="1" opacity="0.15"/>
-      <circle cx="190" cy="28" r="10" fill="none" stroke="#1a1a14" strokeWidth="1" opacity="0.2"/>
+      <circle cx="190" cy="28" r="18" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.15"/>
+      <circle cx="190" cy="28" r="10" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.2"/>
     </svg>
   ),
   Ripple: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
       {[0,1,2,3].map(i => (
-        <ellipse key={i} cx="110" cy="70" rx={20 + i*22} ry={12 + i*13} fill="none" stroke="#1a1a14" strokeWidth="1" opacity={0.25 - i*0.05}/>
+        <ellipse key={i} cx="110" cy="70" rx={20 + i*22} ry={12 + i*13} fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity={0.25 - i*0.05}/>
       ))}
-      <rect x="78" y="48" width="64" height="44" rx="3" fill="none" stroke="#1a1a14" strokeWidth="1.5" opacity="0.5"/>
-      <rect x="84" y="54" width="52" height="32" rx="2" fill="#1a1a14" opacity="0.07"/>
-      <text x="98" y="74" fontFamily="monospace" fontSize="9" fill="#1a1a14" opacity="0.6">3D</text>
-      <text x="18" y="125" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.7">Next.js · Go · Firebase</text>
+      <rect x="78" y="48" width="64" height="44" rx="3" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.5" opacity="0.5"/>
+      <rect x="84" y="54" width="52" height="32" rx="2" fill="rgb(var(--color-ink-dark))" opacity="0.07"/>
+      <text x="98" y="74" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-dark))" opacity="0.6">3D</text>
+      <text x="18" y="125" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Next.js · Go · Firebase</text>
     </svg>
   ),
   Cohesion: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
       {[0,1,2].map(i => (
         <g key={i}>
-          <rect x={28 + i*60} y="30" width="44" height="24" rx="2" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.4"/>
-          <rect x={28 + i*60} y="30" width="44" height="8" rx="2" fill="#1a1a14" opacity="0.08"/>
+          <rect x={28 + i*60} y="30" width="44" height="24" rx="2" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.4"/>
+          <rect x={28 + i*60} y="30" width="44" height="8" rx="2" fill="rgb(var(--color-ink-dark))" opacity="0.08"/>
         </g>
       ))}
-      <line x1="72" y1="42" x2="88" y2="42" stroke="#1a1a14" strokeWidth="1" opacity="0.3"/>
-      <line x1="132" y1="42" x2="148" y2="42" stroke="#1a1a14" strokeWidth="1" opacity="0.3"/>
+      <line x1="72" y1="42" x2="88" y2="42" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.3"/>
+      <line x1="132" y1="42" x2="148" y2="42" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.3"/>
       {[0,1,2].map(i => (
         <g key={i}>
-          <rect x={28 + i*60} y="78" width="44" height="24" rx="2" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.25"/>
-          <line x1={28 + i*60 + 22} y1="54" x2={28 + i*60 + 22} y2="78" stroke="#1a1a14" strokeWidth="1" opacity="0.2" strokeDasharray="3,3"/>
+          <rect x={28 + i*60} y="78" width="44" height="24" rx="2" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.25"/>
+          <line x1={28 + i*60 + 22} y1="54" x2={28 + i*60 + 22} y2="78" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.2" strokeDasharray="3,3"/>
         </g>
       ))}
-      <text x="18" y="125" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.7">AI · SQL · Go · Docker</text>
+      <text x="18" y="125" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">AI · SQL · Go · Docker</text>
     </svg>
   ),
   Danime: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
-      <circle cx="110" cy="58" r="32" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.3"/>
-      <circle cx="110" cy="58" r="22" fill="#1a1a14" opacity="0.06"/>
-      <text x="96" y="63" fontFamily="monospace" fontSize="13" fontWeight="bold" fill="#1a1a14" opacity="0.5">Bot</text>
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
+      <circle cx="110" cy="58" r="32" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.3"/>
+      <circle cx="110" cy="58" r="22" fill="rgb(var(--color-ink-dark))" opacity="0.06"/>
+      <text x="96" y="63" fontFamily="monospace" fontSize="13" fontWeight="bold" fill="rgb(var(--color-ink-dark))" opacity="0.5">Bot</text>
       {[0,1,2,3,4,5].map(i => {
         const angle = (i / 6) * Math.PI * 2;
-        return <circle key={i} cx={110 + Math.cos(angle)*42} cy={58 + Math.sin(angle)*42} r="3" fill="#1a1a14" opacity="0.18"/>;
+        return <circle key={i} cx={110 + Math.cos(angle)*42} cy={58 + Math.sin(angle)*42} r="3" fill="rgb(var(--color-ink-dark))" opacity="0.18"/>;
       })}
-      <text x="18" y="115" fontFamily="monospace" fontSize="10" fontWeight="bold" fill="#1a1a14" opacity="0.5">1M+ users</text>
-      <text x="18" y="128" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.7">Python · Discord API · MongoDB</text>
+      <text x="18" y="115" fontFamily="monospace" fontSize="10" fontWeight="bold" fill="rgb(var(--color-ink-dark))" opacity="0.5">1M+ users</text>
+      <text x="18" y="128" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Python · Discord API · MongoDB</text>
     </svg>
   ),
   Moksha: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
       {[0,1,2,3,4].map(i => (
-        <circle key={i} cx={44 + i*34} cy="62" r="16" fill="none" stroke="#1a1a14" strokeWidth="1" opacity={0.15 + i*0.05}/>
+        <circle key={i} cx={44 + i*34} cy="62" r="16" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity={0.15 + i*0.05}/>
       ))}
       {[0,1,2,3].map(i => (
-        <line key={i} x1={60 + i*34} y1="62" x2={78 + i*34} y2="62" stroke="#1a1a14" strokeWidth="1" opacity="0.2"/>
+        <line key={i} x1={60 + i*34} y1="62" x2={78 + i*34} y2="62" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.2"/>
       ))}
-      <text x="18" y="105" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.7">Self-help · Community · React</text>
-      <text x="18" y="120" fontFamily="monospace" fontSize="9" fill="#1a1a14" opacity="0.4">50+ users · 1k+ views</text>
+      <text x="18" y="105" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Self-help · Community · React</text>
+      <text x="18" y="120" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-dark))" opacity="0.4">50+ users · 1k+ views</text>
     </svg>
   ),
   Pali: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="#edeae0"/>
-      <rect x="18" y="22" width="184" height="96" rx="6" fill="none" stroke="#1a1a14" strokeWidth="1.2" opacity="0.3"/>
-      <rect x="28" y="34" width="164" height="10" rx="2" fill="#1a1a14" opacity="0.08"/>
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
+      <rect x="18" y="22" width="184" height="96" rx="6" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.3"/>
+      <rect x="28" y="34" width="164" height="10" rx="2" fill="rgb(var(--color-ink-dark))" opacity="0.08"/>
       {[0,1,2,3].map(i => (
-        <rect key={i} x={28} y={54 + i*14} width={140 - i*12} height="6" rx="2" fill="#1a1a14" opacity={0.1 + i*0.03}/>
+        <rect key={i} x={28} y={54 + i*14} width={140 - i*12} height="6" rx="2" fill="rgb(var(--color-ink-dark))" opacity={0.1 + i*0.03}/>
       ))}
-      <circle cx="180" cy="94" r="14" fill="none" stroke="#1a1a14" strokeWidth="1" opacity="0.2"/>
-      <circle cx="180" cy="94" r="6" fill="#1a1a14" opacity="0.08"/>
-      <text x="28" y="116" fontFamily="monospace" fontSize="9" fill="#6b6560" opacity="0.7">Memory · MCP · Qdrant</text>
+      <circle cx="180" cy="94" r="14" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.2"/>
+      <circle cx="180" cy="94" r="6" fill="rgb(var(--color-ink-dark))" opacity="0.08"/>
+      <text x="28" y="116" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Memory · MCP · Qdrant</text>
     </svg>
   ),
 };

@@ -49,7 +49,7 @@ const BlogLayout = ({ children, hideToc = false, seriesItems = [], currentSeries
         )}
 
         {/* The beautiful serif prose */}
-        <article className="blog-prose">
+        <article className="blog-prose w-full">
           {children}
         </article>
       </main>

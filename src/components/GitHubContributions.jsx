@@ -6,8 +6,8 @@ const API_URL = `https://github-contributions-api.jogruber.de/v4/${USERNAME}?y=l
 
 /** Matches tailwind tokens: paper-surface, border-paper, ink-blue ramp */
 const paperTheme = {
-  light: ["#edeae0", "#d4cfc4", "#93bae8", "#2563eb", "#1d4ed8"],
-  dark: ["#edeae0", "#d4cfc4", "#93bae8", "#2563eb", "#1d4ed8"],
+  light: ["rgb(var(--color-paper-surface))", "rgb(var(--color-border-paper))", "rgb(var(--color-sky-blue))", "rgb(var(--color-ink-blue))", "rgb(var(--color-ink-blue-strong))"],
+  dark: ["rgb(var(--color-paper-surface))", "rgb(var(--color-border-paper))", "rgb(var(--color-sky-blue))", "rgb(var(--color-ink-blue))", "rgb(var(--color-ink-blue-strong))"],
 };
 
 function sumCounts(activities) {
@@ -29,7 +29,7 @@ function ContributionIntensityLegend() {
             rx={LEGEND_RADIUS}
             ry={LEGEND_RADIUS}
             fill={fill}
-            stroke="rgba(0, 0, 0, 0.08)"
+            stroke="rgb(var(--color-ink-dark) / 0.08)"
           />
         </svg>
       ))}

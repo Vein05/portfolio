@@ -54,26 +54,26 @@ const Experience = () => {
   ];
 
   return (
-    <div className="mt-8 mb-2 pb-2  border-gray-200">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900">Experience</h2>
+    <div className="mt-8 mb-2 pb-2">
+      <h2 className="text-2xl font-bold mb-6 text-ink-dark">Experience</h2>
       
       <div className="relative">
-        <div className="absolute left-2 top-0 bottom-0 w-1 bg-black mt-1"></div>
+        <div className="absolute left-[0.6rem] top-1 bottom-0 w-px bg-ink-dark/35"></div>
         
-        <div className='flex flex-col'>
+        <div className="flex flex-col gap-5">
           {experiences.map((exp, index) => (
-            <div key={index} className="relative flex mb-3 last:mb-0">
+            <div key={index} className="relative flex">
               <div className="relative z-10 flex-shrink-0">
-                <div className="ml-1 w-3 h-3 bg-black hover:scale-125 rotate-45 mt-1 transition-all"></div>
+                <div className="ml-[0.35rem] w-2.5 h-2.5 bg-ink-dark hover:scale-125 rotate-45 mt-1.5 transition-transform"></div>
               </div>
               
-              <div className="ml-4 flex-grow">
+              <div className="ml-4 flex-grow min-w-0">
                 <div className="">
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-0">
-                    <span className="text-base font-semibold text-blue-500">
+                    <span className="text-base font-semibold text-ink-blue leading-snug">
                       {exp.title}
                     </span> 
-                    <span className="text-xs sm:text-sm italic shrink-0"> 
+                    <span className="text-xs sm:text-sm italic shrink-0 text-ink-dark/70"> 
                         {exp.period}
                     </span>
                   </div>
@@ -82,21 +82,21 @@ const Experience = () => {
                       href={exp.companyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-gray-600 italic hover:text-blue-500 transition-colors"
+                      className="text-sm text-ink-dark/65 italic hover:text-ink-blue transition-colors"
                     >
                       {exp.company}
                     </a>
                   ) : (
-                    <span className="text-sm text-gray-600 italic">
+                    <span className="text-sm text-ink-dark/65 italic">
                       {exp.company}
                     </span>
                   )}
 
                 </div>
                 
-                <ul className="text-sm ml-5 list-disc list-outside space-y-1">
+                <ul className="mt-2 text-sm ml-5 list-disc list-outside space-y-1.5 leading-relaxed">
                   {exp.achievements.map((achievement, achievementIndex) => (
-                    <li key={achievementIndex} className="text-gray-700">
+                    <li key={achievementIndex} className="text-ink-dark/75 marker:text-ink-dark/55">
                       {achievement}
                     </li>
                   ))}

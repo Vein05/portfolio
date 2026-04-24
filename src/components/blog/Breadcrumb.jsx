@@ -10,7 +10,7 @@ const Breadcrumb = ({ title, status }) => {
   return (
     <div className="breadcrumb-bar sticky top-0 z-40 w-full flex">
 
-      <div className="hidden lg:flex items-center flex-shrink-0 w-[240px] xl:w-[280px] px-6 py-3 border-r border-[#2e2e24]">
+      <div className="hidden lg:flex items-center flex-shrink-0 w-[240px] xl:w-[280px] px-6 py-3 border-r border-bar-border">
         <Link
           to="/"
           className="text-sm uppercase tracking-widest text-paper-light font-medium whitespace-nowrap hover:text-ink-blue transition-colors"
