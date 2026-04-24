@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "compression-is-a-coin-flip",
+    title: "For Strong Readers, Evidence Compression Is a Coin Flip",
+    date: "2026-04-24",
+    category: "Research",
+    status: "MATURE",
+    excerpt: "I tested twenty reader models across twelve families. For weak readers, compression rescues three rows for every one it breaks. For the strongest, the ratio collapses to 1:1.",
+    tags: ["RAG", "Compression", "Evaluation", "Scaling", "NLP"],
+    seoTitle: "For Strong Readers, Evidence Compression Is a Coin Flip | Sugam Panthi",
+    seoDescription: "Evidence compression in RAG helps weak readers reliably but becomes high-variance for strong ones. Twenty models, five methods, five domains.",
+    canonicalPath: "/blog/compression-is-a-coin-flip"
+  },
+  {
     slug: "your-memory-benchmark-is-lying-to-you",
     title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",
     date: "2026-03-22",
