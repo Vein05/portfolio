@@ -17,6 +17,11 @@
   status = 301
 
 [[redirects]]
+  from = "/mars"
+  to = "https://mars-weather-app-fawn.vercel.app/"
+  status = 301
+
+[[redirects]]
   from = "/pages/academic-qualifications"
   to = "/"
   status = 301
