@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const SITE_URL = "https://sugampanthi.com.np";
+const SITE_URL = "https://spanthi.com";
 const ROOT = path.resolve(__dirname, "..");
 const DATA_FILE = path.join(ROOT, "src", "data", "posts.js");
 const PUBLIC_SITEMAP = path.join(ROOT, "public", "sitemap.xml");

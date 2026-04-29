@@ -21,7 +21,7 @@ const slug = entry.slug;
 const postMeta = postsMeta.find((p) => p.slug === slug) ?? null;
 
 // Build series nav items
-const siteUrl = 'https://sugampanthi.com.np';
+const siteUrl = 'https://spanthi.com';
 const canonicalPath = postMeta?.canonicalPath ?? `/blog/${slug}`;
 const canonicalUrl = `${siteUrl}${canonicalPath}`;
 
@@ -58,7 +58,7 @@ const jsonLd = postMeta
       author: {
         '@type': 'Person',
         name: 'Sugam Panthi',
-        url: 'https://sugampanthi.com.np',
+        url: 'https://spanthi.com',
       },
     }
   : null;

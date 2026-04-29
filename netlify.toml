@@ -11,6 +11,13 @@
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
 
+# 301 redirect old domain → new domain
+[[redirects]]
+  from = "https://sugampanthi.com.np/*"
+  to = "https://spanthi.com/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/home"
   to = "/"

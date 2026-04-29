@@ -95,7 +95,7 @@ const normalizeImageSource = (src = '') => {
       return params.get('url') || trimmed;
     }
 
-    const url = new URL(trimmed, 'https://sugampanthi.com.np');
+    const url = new URL(trimmed, 'https://spanthi.com');
     const original = url.searchParams.get('url');
     if (original) {
       url.searchParams.set('url', toOptimizedBlogImageSource(original));
@@ -182,7 +182,7 @@ const getImageFrameStyle = (payload = {}) => {
 
 const isSafeIframeSrc = (src = '') => {
   try {
-    const base = typeof window !== 'undefined' ? window.location.origin : 'https://sugampanthi.com.np';
+    const base = typeof window !== 'undefined' ? window.location.origin : 'https://spanthi.com';
     const parsed = new URL(src, base);
     return parsed.protocol === 'https:' && SAFE_IFRAME_HOSTS.has(parsed.hostname);
   } catch {

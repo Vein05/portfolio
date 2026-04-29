@@ -5,7 +5,7 @@ import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://sugampanthi.com.np',
+  site: 'https://spanthi.com',
   integrations: [
     react(),
     // applyBaseStyles: false because we import our own full CSS with @tailwind base
