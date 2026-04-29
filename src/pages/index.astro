@@ -232,7 +232,7 @@ const netlifyImg = (path: string, params: string) =>
         </div>
 
         <section id="experience" class="mt-8">
-          <Experience client:load />
+          <Experience client:visible />
         </section>
 
         <section id="projects" class="mt-12">
@@ -248,13 +248,13 @@ const netlifyImg = (path: string, params: string) =>
         </section>
 
         <section id="skills" class="mt-12">
-          <Skills client:load />
+          <Skills client:visible />
         </section>
 
-        <Footer client:load />
+        <Footer client:visible />
 
         <div class="mt-10 -mx-4 sm:-mx-8 overflow-hidden lg:hidden">
-          <MountainDecoration client:load mode="auto-local" />
+          <MountainDecoration client:visible mode="auto-local" />
         </div>
       </main>
 

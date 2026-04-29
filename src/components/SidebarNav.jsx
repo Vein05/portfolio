@@ -1,7 +1,4 @@
 import React from 'react';
-import { gsap } from 'gsap';
-// NOTE: react-router-dom Link replaced with <a> for Astro compatibility
-// This file is used as a React island — no BrowserRouter context available.
 
 /**
  * Shared sidebar navigation with the ink-sweep active animation.
@@ -127,80 +124,85 @@ export const MountainDecoration = ({ mode = 'night' }) => {
       return undefined;
     }
 
+    const EASE = {
+      power2InOut: 'cubic-bezier(0.455, 0.03, 0.515, 0.955)',
+      power2In: 'cubic-bezier(0.55, 0.085, 0.68, 0.53)',
+      power3Out: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+      sineOut: 'cubic-bezier(0.39, 0.575, 0.565, 1)',
+      power1Out: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+    };
+
+    const setStyles = (el, styles) => {
+      for (const [k, v] of Object.entries(styles)) el.style[k] = v;
+    };
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const setDayScene = () => {
-      gsap.set(sunRef.current, { x: 0, y: 0, opacity: 1, scale: 1, transformOrigin: '32px 15px' });
-      gsap.set(sunRaysRef.current, { rotation: 0, opacity: 1, transformOrigin: '32px 15px' });
-      gsap.set(moonRef.current, { x: 0, y: 0, opacity: 0, scale: 1, transformOrigin: '162px 10.7px' });
-      gsap.set(starsRef.current, { x: 22, opacity: 0 });
+      setStyles(sunRef.current, { transform: 'translate(0px, 0px) scale(1)', opacity: '1', transformOrigin: '32px 15px' });
+      setStyles(sunRaysRef.current, { transform: 'rotate(0deg)', opacity: '1', transformOrigin: '32px 15px' });
+      setStyles(moonRef.current, { transform: 'translate(0px, 0px) scale(1)', opacity: '0', transformOrigin: '162px 10.7px' });
+      setStyles(starsRef.current, { transform: 'translateX(22px)', opacity: '0' });
     };
 
     const setNightScene = () => {
-      gsap.set(sunRef.current, { x: 108, y: 22, opacity: 0, scale: 0.9, transformOrigin: '32px 15px' });
-      gsap.set(sunRaysRef.current, { rotation: 18, opacity: 0.16, transformOrigin: '32px 15px' });
-      gsap.set(moonRef.current, { x: 0, y: 0, opacity: 1, scale: 1, transformOrigin: '162px 10.7px' });
-      gsap.set(starsRef.current, { x: 0, opacity: 1 });
+      setStyles(sunRef.current, { transform: 'translate(108px, 22px) scale(0.9)', opacity: '0', transformOrigin: '32px 15px' });
+      setStyles(sunRaysRef.current, { transform: 'rotate(18deg)', opacity: '0.16', transformOrigin: '32px 15px' });
+      setStyles(moonRef.current, { transform: 'translate(0px, 0px) scale(1)', opacity: '1', transformOrigin: '162px 10.7px' });
+      setStyles(starsRef.current, { transform: 'translateX(0px)', opacity: '1' });
     };
 
     if (!hasMountedRef.current || prefersReducedMotion) {
-      if (theme === 'dim') {
-        setNightScene();
-      } else {
-        setDayScene();
-      }
+      if (theme === 'dim') setNightScene();
+      else setDayScene();
       hasMountedRef.current = true;
       return undefined;
     }
 
-    const timeline = gsap.timeline({
-      defaults: { ease: 'power2.inOut' },
-    });
-    let moonTween;
+    const animations = [];
+    const run = (el, keyframes, opts) => {
+      const a = el.animate(keyframes, { fill: 'forwards', ...opts });
+      animations.push(a);
+      return a;
+    };
 
     if (theme === 'dim') {
-      timeline
-        .to(sunRaysRef.current, { rotation: 18, opacity: 0.16, duration: 0.92 }, 0)
-        .to(sunRef.current, { x: 124, y: 26, scale: 0.92, duration: 1.32, ease: 'power2.inOut' }, 0)
-        .to(sunRef.current, { opacity: 0, duration: 0.58, ease: 'power2.in' }, 0.72)
-        .fromTo(
-          starsRef.current,
-          { x: -24, opacity: 0 },
-          { x: 0, opacity: 1, duration: 1.08, ease: 'sine.out' },
-          0.24,
-        );
-      moonTween = gsap.to(moonRef.current, {
-        opacity: 1,
-        delay: 0.5,
-        duration: 0.85,
-        ease: 'sine.out',
-      });
+      // Day → Night
+      run(sunRaysRef.current,
+        [{ transform: 'rotate(0deg)', opacity: 1 }, { transform: 'rotate(18deg)', opacity: 0.16 }],
+        { duration: 920, easing: EASE.power2InOut });
+      run(sunRef.current,
+        [{ transform: 'translate(0px, 0px) scale(1)' }, { transform: 'translate(124px, 26px) scale(0.92)' }],
+        { duration: 1320, easing: EASE.power2InOut });
+      run(sunRef.current,
+        [{ opacity: 1 }, { opacity: 0 }],
+        { duration: 580, easing: EASE.power2In, delay: 720, composite: 'accumulate' });
+      run(starsRef.current,
+        [{ transform: 'translateX(-24px)', opacity: 0 }, { transform: 'translateX(0px)', opacity: 1 }],
+        { duration: 1080, easing: EASE.sineOut, delay: 240 });
+      run(moonRef.current,
+        [{ opacity: 0 }, { opacity: 1 }],
+        { duration: 850, easing: EASE.sineOut, delay: 500 });
     } else {
-      timeline
-        .to(starsRef.current, { x: 24, opacity: 0, duration: 0.58 }, 0)
-        .fromTo(
-          sunRef.current,
-          { x: -42, y: 18, opacity: 0, scale: 0.9, transformOrigin: '32px 15px' },
-          { x: 0, y: 0, opacity: 1, scale: 1, duration: 1.06, ease: 'power3.out' },
-          0.1,
-        )
-        .fromTo(
-          sunRaysRef.current,
-          { rotation: -24, opacity: 0.2, transformOrigin: '32px 15px' },
-          { rotation: 0, opacity: 1, duration: 1.12, ease: 'power3.out' },
-          0.14,
-        );
-      moonTween = gsap.to(moonRef.current, {
-        opacity: 0,
-        duration: 0.24,
-        ease: 'power1.out',
-      });
+      // Night → Day
+      run(starsRef.current,
+        [{ transform: 'translateX(0px)', opacity: 1 }, { transform: 'translateX(24px)', opacity: 0 }],
+        { duration: 580, easing: EASE.power2InOut });
+      run(sunRef.current,
+        [{ transform: 'translate(-42px, 18px) scale(0.9)', opacity: 0 }, { transform: 'translate(0px, 0px) scale(1)', opacity: 1 }],
+        { duration: 1060, easing: EASE.power3Out, delay: 100 });
+      run(sunRaysRef.current,
+        [{ transform: 'rotate(-24deg)', opacity: 0.2 }, { transform: 'rotate(0deg)', opacity: 1 }],
+        { duration: 1120, easing: EASE.power3Out, delay: 140 });
+      run(moonRef.current,
+        [{ opacity: 1 }, { opacity: 0 }],
+        { duration: 240, easing: EASE.power1Out });
     }
 
     hasMountedRef.current = true;
 
     return () => {
-      timeline.kill();
-      moonTween?.kill();
+      for (const a of animations) a.cancel();
     };
   }, [theme]);
 

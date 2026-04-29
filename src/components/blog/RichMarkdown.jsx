@@ -1,8 +1,35 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
+import rehypeHighlightLite from '../../lib/rehype-highlight-lite';
+import langGo from 'highlight.js/lib/languages/go';
+import langBash from 'highlight.js/lib/languages/bash';
+import langJson from 'highlight.js/lib/languages/json';
+import langCss from 'highlight.js/lib/languages/css';
+import langJavascript from 'highlight.js/lib/languages/javascript';
+import langXml from 'highlight.js/lib/languages/xml';
+import langPlaintext from 'highlight.js/lib/languages/plaintext';
+import langApache from 'highlight.js/lib/languages/apache';
 import { Copy, Check, AlertTriangle } from 'lucide-react';
+
+const rehypeHighlightOptions = {
+  languages: {
+    go: langGo,
+    bash: langBash,
+    json: langJson,
+    css: langCss,
+    javascript: langJavascript,
+    xml: langXml,
+    plaintext: langPlaintext,
+    apache: langApache,
+  },
+  aliases: {
+    javascript: ['js', 'jsx'],
+    xml: ['html'],
+    bash: ['sh', 'shell'],
+    plaintext: ['txt', 'text'],
+  },
+};
 
 const MERMAID_SCRIPT_ID = 'mermaid-cdn-script';
 const MERMAID_SCRIPT_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
@@ -192,6 +219,92 @@ const CopyableCodeBlock = ({ children, ...props }) => {
   );
 };
 
+const WHITE_THRESHOLD = 240;
+const EDGE_SAMPLE_RATIO = 0.8;
+
+const hasWhiteBackground = (img) => {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  ctx.drawImage(img, 0, 0);
+
+  const w = canvas.width;
+  const h = canvas.height;
+  const edgePixels = [];
+
+  // sample top, bottom, left, right edges (every 4th pixel for speed)
+  for (let x = 0; x < w; x += 4) {
+    edgePixels.push([x, 0], [x, h - 1]);
+  }
+  for (let y = 0; y < h; y += 4) {
+    edgePixels.push([0, y], [w - 1, y]);
+  }
+
+  let whiteCount = 0;
+  for (const [x, y] of edgePixels) {
+    const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+    if (r >= WHITE_THRESHOLD && g >= WHITE_THRESHOLD && b >= WHITE_THRESHOLD) whiteCount++;
+  }
+
+  return whiteCount / edgePixels.length >= EDGE_SAMPLE_RATIO;
+};
+
+const stripWhiteToTransparent = (img) => {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  ctx.drawImage(img, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  const t = WHITE_THRESHOLD;
+
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i] >= t && data[i + 1] >= t && data[i + 2] >= t) {
+      data[i + 3] = 0;
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+  return canvas.toDataURL('image/png');
+};
+
+const TransparentWhiteImage = ({ src, alt, className, style }) => {
+  const [finalSrc, setFinalSrc] = useState(src);
+  const [isTransparent, setIsTransparent] = useState(false);
+  const processed = useRef(false);
+
+  const handleLoad = (e) => {
+    if (processed.current) return;
+    const img = e.target;
+    try {
+      if (hasWhiteBackground(img)) {
+        processed.current = true;
+        setFinalSrc(stripWhiteToTransparent(img));
+        setIsTransparent(true);
+      }
+    } catch {
+      // canvas tainted — keep original
+    }
+  };
+
+  const isRemote = /^https?:\/\//i.test(src);
+
+  return (
+    <img
+      src={finalSrc}
+      alt={alt ?? ''}
+      className={`${className}${isTransparent ? ' !border-transparent' : ''}`}
+      style={style}
+      loading="lazy"
+      decoding="async"
+      crossOrigin={isRemote ? 'anonymous' : undefined}
+      onLoad={handleLoad}
+    />
+  );
+};
+
 const MediaFigure = ({ children, caption, layout = 'full', width }) => (
   <figure
     className={`my-8 ${width ? 'mx-auto' : getMediaLayoutClass(layout)}`}
@@ -206,12 +319,10 @@ const MarkdownImage = ({ src, alt, title }) => {
   const resolvedSrc = normalizeImageSource(src || '');
   return (
     <MediaFigure caption={title}>
-      <img
+      <TransparentWhiteImage
         src={resolvedSrc}
         alt={alt ?? ''}
         className="w-full rounded-sm border border-border-paper"
-        loading="lazy"
-        decoding="async"
       />
     </MediaFigure>
   );
@@ -224,13 +335,11 @@ const RichImageBlock = ({ payload }) => {
 
   return (
     <MediaFigure caption={payload.caption} layout={payload.layout} width={payload.width}>
-      <img
+      <TransparentWhiteImage
         src={src}
         alt={payload.alt || ''}
         className="w-full rounded-sm border border-border-paper"
         style={imageStyle}
-        loading="lazy"
-        decoding="async"
       />
     </MediaFigure>
   );
@@ -342,6 +451,11 @@ const MermaidBlock = ({ chart }) => {
           throw new Error('Mermaid library unavailable.');
         }
 
+        const cssVar = (name) => {
+          const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+          return raw ? `rgb(${raw})` : '#666';
+        };
+
         window.mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
@@ -353,15 +467,15 @@ const MermaidBlock = ({ chart }) => {
           },
           themeVariables: {
             background: 'transparent',
-            primaryColor: 'rgb(var(--color-paper-surface))',
-            primaryTextColor: 'rgb(var(--color-ink-dark))',
-            primaryBorderColor: 'rgb(var(--color-border-paper))',
-            lineColor: 'rgb(var(--color-ink-muted))',
+            primaryColor: cssVar('--color-paper-surface'),
+            primaryTextColor: cssVar('--color-ink-dark'),
+            primaryBorderColor: cssVar('--color-border-paper'),
+            lineColor: cssVar('--color-ink-muted'),
             secondaryColor: 'transparent',
             tertiaryColor: 'transparent',
             edgeLabelBackground: 'transparent',
-            clusterBkg: 'rgb(var(--color-paper-surface))',
-            clusterBorder: 'rgb(var(--color-border-paper))',
+            clusterBkg: cssVar('--color-paper-surface'),
+            clusterBorder: cssVar('--color-border-paper'),
           },
         });
         const { svg: rendered } = await window.mermaid.render(containerId, chart);
@@ -469,13 +583,11 @@ const TextAndImageBlock = ({ payload }) => {
           </div>
         </div>
         <div className={imageOrderClass}>
-          <img
+          <TransparentWhiteImage
             src={src}
             alt={payload.alt || ''}
             className="w-full rounded-sm border border-border-paper"
             style={imageStyle}
-            loading="lazy"
-            decoding="async"
           />
           {payload.caption ? (
             <figcaption className="mt-2 text-sm text-ink-muted italic">{payload.caption}</figcaption>
@@ -526,7 +638,7 @@ const RichCode = ({ inline, className, children, ...props }) => {
 const RichMarkdown = ({ markdown }) => (
   <ReactMarkdown
     remarkPlugins={[remarkGfm]}
-    rehypePlugins={[rehypeHighlight]}
+    rehypePlugins={[[rehypeHighlightLite, rehypeHighlightOptions]]}
     components={{
       pre: ({ children }) => <>{children}</>,
       code: RichCode,

@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect, useRef, Fragment } from "react";
-import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { Github, ExternalLink } from "lucide-react";
 import {
   useCardGridColumns,
   rowIndexForItem,
@@ -315,10 +315,10 @@ const Projects = () => {
                         rel="noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
                       >
-                        {activeItem.linkIcon === "github" && <FaGithub className="h-3 w-3" />}
-                        {activeItem.linkIcon === "external" && <FaExternalLinkAlt className="h-3 w-3" />}
+                        {activeItem.linkIcon === "github" && <Github className="h-3 w-3" />}
+                        {activeItem.linkIcon === "external" && <ExternalLink className="h-3 w-3" />}
                         {activeItem.linkLabel}
-                        <FaExternalLinkAlt className="h-2.5 w-2.5 opacity-50" />
+                        <ExternalLink className="h-2.5 w-2.5 opacity-50" />
                       </a>
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState, useLayoutEffect, useRef, Fragment } from "react";
-import { FaExternalLinkAlt, FaFileAlt } from "react-icons/fa";
+import { ExternalLink, FileText } from "lucide-react";
 import {
   useCardGridColumns,
   rowIndexForItem,
@@ -219,9 +219,9 @@ const Papers = () => {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
                       >
-                        {activeItem.linkIcon === "paper" ? <FaFileAlt className="h-3 w-3" /> : <FaExternalLinkAlt className="h-3 w-3" />}
+                        {activeItem.linkIcon === "paper" ? <FileText className="h-3 w-3" /> : <ExternalLink className="h-3 w-3" />}
                         {activeItem.linkLabel}
-                        <FaExternalLinkAlt className="h-2.5 w-2.5 opacity-50" />
+                        <ExternalLink className="h-2.5 w-2.5 opacity-50" />
                       </a>
                       {activeItem.doi && (
                         <a

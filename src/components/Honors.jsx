@@ -1,15 +1,15 @@
 import React from 'react';
-import { FaTrophy, FaGraduationCap, FaCode } from 'react-icons/fa';
+import { Trophy, GraduationCap, Code } from 'lucide-react';
 
 const typeConfig = {
   Winner: {
-    icon: FaTrophy,
+    icon: Trophy,
   },
   Scholar: {
-    icon: FaGraduationCap,
+    icon: GraduationCap,
   },
   Developer: {
-    icon: FaCode,
+    icon: Code,
   },
 };
 

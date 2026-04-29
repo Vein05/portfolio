@@ -34,3 +34,7 @@ public/images/optimized/
 public/posts/images/optimized/
 public/images/.optimized/
 public/posts/images/.optimized/
+
+# Codex local artifacts
+.codex/
+.codex-ui-screens/
