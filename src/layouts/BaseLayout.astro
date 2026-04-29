@@ -11,12 +11,12 @@ export interface Props {
 }
 
 const {
-  title = 'Sugam Panthi',
+  title = 'Sugam Panthi — Software Engineer, Researcher & Writer',
   description = "Portfolio of Sugam Panthi — software engineer, researcher, and writer based in Hattiesburg, MS.",
   canonical = 'https://spanthi.com',
   ogTitle,
   ogUrl,
-  ogImage = 'https://spanthi.com/images/optimized/headshot.webp',
+  ogImage = 'https://spanthi.com/images/headshot.jpeg',
 } = Astro.props;
 ---
 
@@ -48,8 +48,12 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={ogUrl ?? canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="440" />
+    <meta property="og:image:height" content="460" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@vein05" />
+    <meta name="twitter:site" content="@SugamPanthi" />
+    <meta name="twitter:creator" content="@SugamPanthi" />
     <meta name="twitter:title" content={ogTitle ?? title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
