@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import TableOfContents from './TableOfContents';
+import Pantry from './Pantry';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 
-const BlogLayout = ({ children, hideToc = false, seriesItems = [], currentSeriesId = '' }) => {
+const BlogLayout = ({ children, hideToc = false, seriesItems = [], currentSeriesId = '', pantryIngredients = [] }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
 
@@ -25,10 +26,11 @@ const BlogLayout = ({ children, hideToc = false, seriesItems = [], currentSeries
       {/* Left Sidebar (Desktop only) */}
       <aside className="sidebar-panel hidden lg:block border-r border-border-paper sticky top-[3.5rem] h-[calc(100vh-3.5rem)] overflow-y-auto">
         {!hideToc && <TableOfContents seriesItems={seriesItems} currentSeriesId={currentSeriesId} />}
+        {pantryIngredients.length > 0 && <Pantry ingredients={pantryIngredients} />}
       </aside>
 
       {/* Main Content Area */}
-      <main className="body-container w-full px-6 sm:px-10 py-6 lg:py-6">
+      <main className="body-container w-full px-6 sm:px-10 py-4 lg:py-4">
         
         {/* Mobile ToC Collapsible */}
         {isMobile && !hideToc && (

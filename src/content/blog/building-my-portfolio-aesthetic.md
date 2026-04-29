@@ -2,7 +2,7 @@
 title: "Building My Portfolio Aesthetic"
 date: "2024-10-25"
 category: "Design"
-status: "MATURE"
+status: "fermented"
 ---
 
 # Designing with Texture

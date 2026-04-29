@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import BlogLayout from './BlogLayout';
 import RichMarkdown from './RichMarkdown';
+import KitchenSprite from './KitchenSprite';
 
 /**
  * Astro island — renders the blog post body.
  * All data (markdown string, post meta, series nav) is passed as props from the Astro page.
  * No react-router-dom, no fetch — Astro handles the markdown at build time.
  */
-const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], slug = '' }) => {
+const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], slug = '', pantryIngredients = [] }) => {
   const [isLoading] = useState(false);
 
   if (!postMeta) {
@@ -23,32 +24,58 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
   }
 
   return (
-    <BlogLayout hideToc={isLoading} seriesItems={seriesNavItems} currentSeriesId={slug}>
-      <header className="mb-12 md:mb-16">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl text-ink-dark mb-6 leading-[1.15] tracking-tight">
-          {postMeta.title}
-        </h1>
-        <div className="flex items-center gap-4 text-sm uppercase tracking-wider text-ink-muted">
-          <time dateTime={postMeta.date}>
-            {new Date(postMeta.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
-          </time>
-          <span className="hidden sm:inline">•</span>
-          <span className="text-ink-blue hidden sm:inline">{postMeta.category}</span>
+    <BlogLayout hideToc={isLoading} seriesItems={seriesNavItems} currentSeriesId={slug} pantryIngredients={pantryIngredients}>
+      <header className="mb-12 md:mb-16 relative">
+        <div className="md:pr-28">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl text-ink-dark mb-6 leading-[1.15] tracking-tight">
+            {postMeta.title}
+          </h1>
+          <div className="flex items-center gap-4 text-sm uppercase tracking-wider text-ink-muted">
+            <time dateTime={postMeta.date}>
+              {new Date(postMeta.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
+            </time>
+            <span className="hidden sm:inline">•</span>
+            <span className="text-ink-blue hidden sm:inline">{postMeta.category}</span>
+          </div>
         </div>
-        <div className="post-kitchen-strip" aria-label="Article context">
-          <span>
-            Type <strong>{postMeta.category}</strong>
-          </span>
+        {postMeta.status && (
+          <div className="hidden md:flex flex-col items-center gap-1.5 absolute top-0 right-0">
+            <KitchenSprite status={postMeta.status.toLowerCase()} size={72} />
+            <div className="post-kitchen-strip" aria-label="Article context">
+              <span>
+                Type <strong>{postMeta.category}</strong>
+              </span>
+              <span>
+                State <strong>{postMeta.status.toLowerCase()}</strong>
+              </span>
+              {postMeta.series && postMeta.seriesOrder && (
+                <span>
+                  Series <strong>part {postMeta.seriesOrder}</strong>
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+        {/* Mobile fallback — sprite + strip below title */}
+        <div className="md:hidden flex items-center gap-3 mt-4">
           {postMeta.status && (
-            <span>
-              State <strong>{postMeta.status.toLowerCase()}</strong>
-            </span>
+            <KitchenSprite status={postMeta.status.toLowerCase()} size={40} />
           )}
-          {postMeta.series && postMeta.seriesOrder && (
+          <div className="post-kitchen-strip" aria-label="Article context">
             <span>
-              Series <strong>part {postMeta.seriesOrder}</strong>
+              Type <strong>{postMeta.category}</strong>
             </span>
-          )}
+            {postMeta.status && (
+              <span>
+                State <strong>{postMeta.status.toLowerCase()}</strong>
+              </span>
+            )}
+            {postMeta.series && postMeta.seriesOrder && (
+              <span>
+                Series <strong>part {postMeta.seriesOrder}</strong>
+              </span>
+            )}
+          </div>
         </div>
       </header>
 

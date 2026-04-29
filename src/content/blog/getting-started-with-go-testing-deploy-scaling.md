@@ -2,7 +2,7 @@
 title: "Getting Started with Go for Web Services (Part 3): Testing, Deployment, Scaling"
 date: "2024-11-07"
 category: "Engineering"
-status: "MATURE"
+status: "fermented"
 ---
 
 # Getting Started with Go for Web Services (Part 3): Testing, Deployment, Scaling

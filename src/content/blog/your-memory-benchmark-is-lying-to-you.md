@@ -2,7 +2,7 @@
 title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)"
 date: "2026-03-22"
 category: "Research"
-status: "MATURE"
+status: "plated"
 ---
 
 ```textandimage

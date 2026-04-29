@@ -2,7 +2,7 @@
 title: "Creating the Most Popular Deepseek API Client in Go (Part 1): Why I Built deepseek-go"
 date: "2026-03-03"
 category: "Engineering"
-status: "MATURE"
+status: "plated"
 ---
 
 # Creating the Most Popular Deepseek API Client in Go (Part 1): Why I Built deepseek-go

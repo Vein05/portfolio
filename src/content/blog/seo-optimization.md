@@ -2,7 +2,7 @@
 title: "SEO Optimization"
 date: "2026-03-03"
 category: "Engineering"
-status: "MATURE"
+status: "cooking"
 ---
 
 This is a practical write-up of the SEO work I implemented for [playimposter.xyz](https://www.playimposter.xyz/), a browser-based social deduction party game.

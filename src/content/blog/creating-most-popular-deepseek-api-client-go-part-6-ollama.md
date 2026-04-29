@@ -2,7 +2,7 @@
 title: "Creating the Most Popular Deepseek API Client in Go (Part 6): Ollama Integration"
 date: "2026-03-03"
 category: "Engineering"
-status: "MATURE"
+status: "plated"
 ---
 
 # Creating the Most Popular Deepseek API Client in Go (Part 6): Ollama Integration

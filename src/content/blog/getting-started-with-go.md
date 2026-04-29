@@ -2,7 +2,7 @@
 title: "Getting Started with Go for Web Services (Part 1): Foundations"
 date: "2024-11-05"
 category: "Engineering"
-status: "MATURE"
+status: "fermented"
 ---
 
 # Getting Started with Go for Web Services (Part 1): Foundations

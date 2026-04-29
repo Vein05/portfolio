@@ -1,6 +1,6 @@
 import React from "react";
 
-const LAST_UPDATED = "March 2, 2026";
+const LAST_UPDATED = "April 28, 2026";
 
 const Footer = () => {
   return (

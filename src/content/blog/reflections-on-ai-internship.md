@@ -2,7 +2,7 @@
 title: "Reflections on my AI/ML Internship"
 date: "2024-12-10"
 category: "Career"
-status: "DRAFT"
+status: "cooking"
 ---
 
 # Interning at Prediction3d

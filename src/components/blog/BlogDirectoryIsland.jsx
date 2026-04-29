@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Github, Search, X } from 'lucide-react';
 import { posts } from '../../data/posts';
 import SidebarNav from '../SidebarNav';
+import KitchenSprite from './KitchenSprite';
+import Pantry from './Pantry';
 
 const kitchenSections = [
   {
@@ -74,8 +76,14 @@ const BlogDirectoryIsland = () => {
 
   const normalizedQuery = query.trim().toLowerCase();
 
+  const rawPosts = useMemo(
+    () => posts.filter((post) => post.status === 'raw').sort((a, b) => new Date(b.date) - new Date(a.date)),
+    []
+  );
+
   const visiblePosts = useMemo(() => {
     const base = posts.filter((post) => {
+      if (post.status === 'raw') return false;
       const matchesCategory =
         selectedCategory === 'all' || post.category.toLowerCase() === selectedCategory;
       const matchesTag =
@@ -115,6 +123,7 @@ const BlogDirectoryIsland = () => {
       <div className="sidebar-panel hidden lg:flex flex-col border-r border-border-paper sticky top-[3.5rem] h-[calc(100vh-3.5rem)]">
         <SidebarNav
           title="Categories"
+          grow={false}
           items={categories.map((category) => ({
             id: category,
             label: category === 'all' ? 'All Posts' : category,
@@ -124,6 +133,11 @@ const BlogDirectoryIsland = () => {
             event.preventDefault();
             setSelectedCategory(item.id);
           }}
+        />
+        <Pantry
+          ingredients={topTags.map(([tag, count]) => ({ tag, count }))}
+          onTagClick={(tag) => setSelectedTag(selectedTag === tag ? 'all' : tag)}
+          activeTag={selectedTag === 'all' ? null : selectedTag}
         />
       </div>
 
@@ -277,12 +291,33 @@ const BlogDirectoryIsland = () => {
           </div>
         </section>
 
+        {rawPosts.length > 0 && (
+          <section className="cutting-board mb-5" aria-label="Cutting board — raw ideas">
+            <div className="cutting-board-header">
+              <KitchenSprite status="raw" size={24} />
+              <span className="cutting-board-title">Cutting board</span>
+              <span className="cutting-board-subtitle">Raw ideas, half-formed thoughts</span>
+            </div>
+            <div className="cutting-board-items">
+              {rawPosts.map((post) => (
+                <a key={post.slug} href={`/blog/${post.slug}`} className="cutting-board-item group">
+                  <span className="cutting-board-item-title group-hover:text-ink-blue transition-colors duration-200">{post.title}</span>
+                  <span className="cutting-board-item-date">
+                    {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
         <div className="border border-border-paper directory-list directory-grid">
           {visiblePosts.length > 0 ? (
             visiblePosts.map((post) => (
               <a
                 key={post.slug}
                 href={`/blog/${post.slug}`}
+                data-status={post.status || 'plated'}
                 className="group block bg-paper-light transition-all duration-300 directory-row directory-card"
               >
                 <article className="p-4 md:p-6 directory-row-inner">
@@ -301,11 +336,7 @@ const BlogDirectoryIsland = () => {
                       <time dateTime={post.date}>
                         {new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}
                       </time>
-                      {post.status && (
-                        <span className="px-2 py-0.5 border border-border-paper group-hover:border-paper-light/35 text-ink-muted group-hover:text-paper-light/70">
-                          {post.status}
-                        </span>
-                      )}
+                      <KitchenSprite status={post.status || 'plated'} size={40} />
                     </div>
                   </div>
 

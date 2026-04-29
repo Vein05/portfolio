@@ -976,6 +976,7 @@ h6,
     margin: 1.5rem 0;
   }
 
+
   .blog-prose figure {
     margin: 2rem 0;
   }
@@ -1037,6 +1038,240 @@ h6,
   .blog-prose tr:nth-child(even) td {
     background-color: rgb(var(--color-paper-light));
   }
+}
+
+/* ── Kitchen Sprite Animations ───────────────── */
+
+.kitchen-sprite {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kitchen-sprite img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  mix-blend-mode: multiply;
+  transition: filter 280ms ease;
+}
+
+.directory-row:hover .kitchen-sprite img,
+.directory-row:focus-visible .kitchen-sprite img {
+  filter: invert(1) brightness(1.8);
+  mix-blend-mode: normal;
+}
+
+
+/* Cutting board — raw ideas section */
+.cutting-board {
+  border: 1px dashed rgb(var(--color-border-paper));
+  background: rgb(var(--color-paper-surface) / 0.35);
+}
+
+.cutting-board-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-bottom: 1px dashed rgb(var(--color-border-paper));
+}
+
+.cutting-board-title {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--color-ink-dark));
+}
+
+.cutting-board-subtitle {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: rgb(var(--color-ink-muted));
+}
+
+.cutting-board-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.cutting-board-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px dashed rgb(var(--color-border-paper) / 0.5);
+  text-decoration: none;
+  transition: background 180ms ease;
+}
+
+.cutting-board-item:last-child {
+  border-bottom: 0;
+}
+
+.cutting-board-item:hover {
+  background: rgb(var(--color-paper-white) / 0.5);
+}
+
+.cutting-board-item-title {
+  font-size: 0.92rem;
+  color: rgb(var(--color-ink-dark));
+  line-height: 1.3;
+}
+
+.cutting-board-item-date {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--color-ink-muted));
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Pantry — hand-drawn shelf with item images */
+.pantry {
+  border-top: 1px solid rgb(var(--color-border-paper));
+  padding: 0.8rem 0 0;
+}
+
+.pantry-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.2rem;
+  padding: 0 1rem;
+}
+
+.pantry-title {
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--color-ink-dark));
+}
+
+/* Each shelf unit: image is the positioning context */
+.pantry-shelf-unit {
+  position: relative;
+  width: 100%;
+}
+
+.pantry-shelf-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Plank rows positioned absolutely on the shelf image */
+.pantry-plank {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  z-index: 2;
+}
+
+/* Top plank — items sit on the upper shelf surface */
+.pantry-plank-top {
+  bottom: 65%;
+}
+
+/* Bottom plank — items sit on the lower shelf surface */
+.pantry-plank-bottom {
+  bottom: 23%;
+}
+
+.pantry-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 180ms ease;
+}
+
+.pantry-item-img {
+  display: block;
+  pointer-events: none;
+  transition: filter 180ms ease;
+  border: 0;
+}
+
+.pantry-item:hover {
+  transform: translateY(-4px) rotate(0deg) !important;
+}
+
+.pantry-item:hover .pantry-item-img {
+  filter: drop-shadow(0 2px 5px rgb(0 0 0 / 0.2));
+}
+
+.pantry-item.active .pantry-item-img {
+  filter: drop-shadow(0 0 6px rgb(var(--color-ink-blue) / 0.4));
+}
+
+.pantry-item-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.28rem 0.5rem;
+  background: rgb(var(--color-ink-dark));
+  color: rgb(var(--color-paper-light));
+  font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 10;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.pantry-item-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: rgb(var(--color-ink-dark));
+}
+
+.pantry-item-count {
+  opacity: 0.5;
+  font-size: 0.48rem;
+}
+
+/* Kitchen atmosphere — card state tints */
+.directory-card[data-status="raw"] {
+  border-style: dashed;
+}
+
+.directory-card[data-status="cooking"] {
+  background: linear-gradient(135deg, rgb(var(--color-paper-light)) 85%, rgb(245 225 200 / 0.5));
+}
+
+.directory-card[data-status="fermented"] {
+  background: linear-gradient(135deg, rgb(var(--color-paper-light)) 85%, rgb(240 220 180 / 0.4));
 }
 
 /* react-activity-calendar tooltips — flat CSS (library ships nested rules that upset PostCSS) */

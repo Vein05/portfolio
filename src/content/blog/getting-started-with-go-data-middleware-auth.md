@@ -2,7 +2,7 @@
 title: "Getting Started with Go for Web Services (Part 2): Data, Middleware, Auth"
 date: "2024-11-06"
 category: "Engineering"
-status: "MATURE"
+status: "fermented"
 ---
 
 # Getting Started with Go for Web Services (Part 2): Data, Middleware, Auth

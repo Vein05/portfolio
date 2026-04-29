@@ -109,6 +109,17 @@ const faqJsonLd = faqs.length > 0
     }
   : null;
 
+// Build pantry ingredients — shared tags with other posts
+const pantryIngredients = (postMeta?.tags ?? [])
+  .map((tag: string) => {
+    const dishes = postsMeta
+      .filter((p) => p.slug !== slug && p.status !== 'raw' && p.tags?.some((t: string) => t.toLowerCase() === tag.toLowerCase()))
+      .slice(0, 3)
+      .map((p) => ({ slug: p.slug, title: p.title.length > 50 ? p.title.slice(0, 48) + '…' : p.title }));
+    return { tag, dishes };
+  })
+  .filter((item: { dishes: unknown[] }) => item.dishes.length > 0);
+
 const title = postMeta?.seoTitle ?? `${entry.data.title} - Sugam Panthi`;
 const description = postMeta?.seoDescription ?? postMeta?.excerpt ?? entry.data.title;
 const currentPath = Astro.url.pathname;
@@ -152,6 +163,7 @@ const currentPath = Astro.url.pathname;
       postMeta={postMeta}
       seriesNavItems={seriesNavItems}
       slug={slug}
+      pantryIngredients={pantryIngredients}
     />
   </div>
 </BaseLayout>

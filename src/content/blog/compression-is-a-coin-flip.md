@@ -2,7 +2,7 @@
 title: "For Strong Readers, Evidence Compression Is a Coin Flip"
 date: "2026-04-24"
 category: "Research"
-status: "MATURE"
+status: "plated"
 ---
 
 ```textandimage

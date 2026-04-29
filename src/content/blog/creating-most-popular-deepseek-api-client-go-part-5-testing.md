@@ -2,7 +2,7 @@
 title: "Creating the Most Popular Deepseek API Client in Go (Part 5): My Testing Strategy in Go"
 date: "2026-03-03"
 category: "Engineering"
-status: "MATURE"
+status: "plated"
 ---
 
 # Creating the Most Popular Deepseek API Client in Go (Part 5): My Testing Strategy in Go

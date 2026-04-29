@@ -81,12 +81,13 @@ const TableOfContents = ({ seriesItems = [], currentSeriesId = '' }) => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex flex-col">
       <SidebarNav
         title="Contents"
         items={items}
         activeId={activeId}
         onItemClick={handleClick}
+        grow={false}
       />
       {seriesItems.length > 0 && (
         <div className="mt-auto border-t border-border-paper/80">
