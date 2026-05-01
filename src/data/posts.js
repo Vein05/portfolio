@@ -1,28 +1,19 @@
 export const posts = [
-  {
-    slug: "compression-is-a-coin-flip",
-    title: "For Strong Readers, Evidence Compression Is a Coin Flip",
-    date: "2026-04-24",
-    category: "Research",
-    status: "plated",
-    excerpt: "I tested twenty reader models across twelve families. For weak readers, compression rescues three rows for every one it breaks. For the strongest, the ratio collapses to 1:1.",
-    tags: ["RAG", "Compression", "Evaluation", "Scaling", "NLP"],
-    seoTitle: "For Strong Readers, Evidence Compression Is a Coin Flip | Sugam Panthi",
-    seoDescription: "Evidence compression in RAG helps weak readers reliably but becomes high-variance for strong ones. Twenty models, five methods, five domains.",
-    canonicalPath: "/blog/compression-is-a-coin-flip"
-  },
-  {
-    slug: "your-memory-benchmark-is-lying-to-you",
-    title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",
-    date: "2026-03-22",
-    category: "Research",
-    status: "plated",
-    excerpt: "A benchmark can score the same ranked list as both a hit and a miss depending only on which stored memory representation it treats as correct.",
-    tags: ["Retrieval", "Evaluation", "Memory Systems", "Benchmarking", "NLP"],
-    seoTitle: "Your Memory Benchmark Is Lying To You | Sugam Panthi",
-    seoDescription: "Why transformed conversational memory benchmarks can flip results without changing the ranked list, and why target definitions must be explicit.",
-    canonicalPath: "/blog/your-memory-benchmark-is-lying-to-you"
-  },
+  // HIDDEN FOR DOUBLE-BLIND REVIEW — re-enable after camera-ready
+  // {
+  //   slug: "compression-is-a-coin-flip",
+  //   title: "For Strong Readers, Evidence Compression Is a Coin Flip",
+  //   date: "2026-04-24",
+  //   category: "Research",
+  //   status: "plated",
+  // },
+  // {
+  //   slug: "your-memory-benchmark-is-lying-to-you",
+  //   title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",
+  //   date: "2026-03-22",
+  //   category: "Research",
+  //   status: "plated",
+  // },
   {
     slug: "seo-optimization",
     title: "SEO Optimization",

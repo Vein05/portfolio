@@ -7,7 +7,8 @@ import { posts as postsMeta } from '../../data/posts.js';
 
 export async function getStaticPaths() {
   const entries = await getCollection('blog');
-  return entries.map((entry) => ({
+  const visible = entries.filter((e) => e.data.status !== 'draft');
+  return visible.map((entry) => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
