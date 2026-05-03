@@ -16,14 +16,14 @@ export const posts = [
   // },
   {
     slug: "every-voice-ai-forgets-what-you-heard",
-    title: "Every Voice AI Forgets What You Heard. Here's the Bug.",
+    title: "Voice AI Can Stop Talking. It Still Needs Heard State.",
     date: "2026-05-03",
     category: "Research",
     status: "cooking",
-    excerpt: "A technical bug report on voice-agent interruptions: generated audio races ahead of playback, frameworks cancel instead of preserving heard state, and the conversation drifts away from what the user actually experienced.",
+    excerpt: "A protocol proposal for voice-agent interruptions: generated audio races ahead of playback, current stacks expose cancellation and truncation, and agents still need first-class heard state and resumable threads.",
     tags: ["Voice AI", "Realtime", "Agents", "OpenAI", "LiveKit", "Pipecat", "Protocol Design"],
-    seoTitle: "Every Voice AI Forgets What You Heard. Here's the Bug. | Sugam Panthi",
-    seoDescription: "Why voice AI agents lose their place after interruption: generated audio runs ahead of playback, frameworks cancel state, and agents forget what users actually heard.",
+    seoTitle: "Voice AI Can Stop Talking. It Still Needs Heard State. | Sugam Panthi",
+    seoDescription: "Why voice-agent interruption needs more than cancellation: generated audio runs ahead of playback, and agents need heard cursors, interruption dispositions, and resumable threads.",
     canonicalPath: "/blog/every-voice-ai-forgets-what-you-heard"
   },
   {

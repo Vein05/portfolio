@@ -1,5 +1,5 @@
 ---
-title: "Every Voice AI Forgets What You Heard. Here's the Bug."
+title: "Voice AI Can Stop Talking. It Still Needs Heard State."
 date: "2026-05-03"
 category: "Research"
 status: "cooking"
@@ -19,11 +19,34 @@ And the spell breaks.
 
 Sometimes it starts over. Sometimes it skips ahead. Sometimes it says "as I was saying" and continues from a place you never heard. The strange part is that the model is not confused in the usual way. It did not fail to understand your words. It failed to remember the shared state of the conversation.
 
-It does not know what actually reached your ears.
+It does not know what actually reached your ears, or what thread should be resumed from there.
 
-That is the bug.
+That is the failure mode this piece is about.
 
-## The Bug Is Not Interruption
+More precisely: voice agents can stop speaking, but most current stacks do not expose a first-class model of what was heard, what was merely generated, and what conversational thread should be resumed.
+
+## The Go-Back Test
+
+I do not care only whether a system claims to support barge-in. I care whether it passes the go-back test.
+
+Here is the simplest version:
+
+1. Ask the agent to explain something for a minute.
+2. Interrupt with a side question.
+3. Let it answer.
+4. Say: "Okay, go back."
+
+If it restarts, it failed.
+
+If it skips ahead to content you never heard, it failed.
+
+If it says "as I was saying" but has no idea where that was, it failed.
+
+The passing behavior is specific: it should answer the side question, then resume the original explanation from the last position you actually heard.
+
+That is not a personality feature. It is not a better prompt. It is conversation state.
+
+## The Missing Piece Is Not Barge-In
 
 Voice agents already know how to stop talking.
 
@@ -33,7 +56,7 @@ The harder half is knowing what the interruption did to the conversation.
 
 When a human is interrupted, the old thread does not disappear. It is suspended. If I am explaining transformers and you ask "what's attention?", we both know the original explanation is still sitting there. After the side question, "go back" has a clear meaning.
 
-Most voice AI stacks do not have that object. They have a stream, a buffer, and a cancellation signal.
+Many voice AI stacks do not expose that object directly. They expose streams, buffers, cancellation, and transcript repair hooks.
 
 So the moment you interrupt, the system has to guess which world it is in:
 
@@ -42,7 +65,7 @@ So the moment you interrupt, the system has to guess which world it is in:
 - Was this a side question, a correction, a redirect, or just "uh huh"?
 - Is there something to resume?
 
-Without those answers, "interruption" becomes a destructive operation. The agent kills the current response and starts a new turn. That feels responsive in the moment, but it quietly corrupts the conversation.
+Without those answers, "interruption" tends to become a destructive operation. The agent cancels the current response and starts a new turn. That feels responsive in the moment, but it can quietly corrupt the conversation.
 
 ## Why It Happens
 
@@ -78,20 +101,22 @@ I call that drift **context desync**.
 src: /posts/images/every-voice-ai-forgets-what-you-heard/desync-staircase.png
 alt: Context desync grows with each interruption across OpenAI Realtime, LiveKit Agents, Pipecat, and ICP
 layout: wide
-caption: In a five-interruption paper-explanation scenario, cancel-and-restart strategies accumulate context drift. The exact direction differs by framework, but the user and server stop agreeing on what was heard.
+caption: In a five-interruption paper-explanation scenario, cancel-and-restart strategies can accumulate context drift. The exact direction differs by stack, but the user and server can stop agreeing on what was heard.
 ```
 
 This is why the failure feels so uncanny. The agent is not merely losing a response. It is losing common ground.
 
-## The Receipts
+## Evidence From Current Stacks
 
-This problem shows up differently in different frameworks, but the shape is the same: interruption is treated as cancellation first, and state repair second.
+This problem shows up differently across frameworks. The point is not that these projects are careless. Most of them have reasonable mechanisms for barge-in, truncation, cancellation, or transcript repair.
 
-### OpenAI Realtime: The Transcript Gets Wiped
+The architectural gap is narrower and more interesting: interruption is usually exposed first as cancellation or truncation. A first-class resumable thread model is still left to the application.
 
-OpenAI's Realtime API has the clearest statement of the underlying problem. The docs for `conversation.item.truncate` say the server can produce audio faster than realtime, so the client uses truncation when audio has been sent but not yet played. The same docs say truncation removes the server-side text transcript so the context does not contain text the user did not hear.
+### OpenAI Realtime: Truncation Solves One Layer
 
-That is the right concern. The implementation, though, exposes the tradeoff.
+OpenAI's Realtime API has the clearest statement of the underlying timing issue. The docs for `conversation.item.truncate` say the server can produce audio faster than realtime, so the client uses truncation when audio has been sent but not yet played. The same docs say truncation removes the server-side text transcript so the context does not contain text the user did not hear.
+
+That is the right concern. OpenAI Realtime exposes truncation to prevent generated-but-unheard content from remaining in context. But the abstraction is still item/audio truncation rather than a first-class heard cursor plus a resumable thread model.
 
 In the reference `openai-realtime-api-beta` conversation handler, truncation does this:
 
@@ -106,25 +131,23 @@ In the reference `openai-realtime-api-beta` conversation handler, truncation doe
 }
 ```
 
-The important line is not subtle:
+The relevant line is:
 
 ```javascript
 item.formatted.transcript = '';
 ```
 
-That avoids one kind of lie: keeping text the user never heard. But it creates another problem for anyone trying to maintain a text history, show a transcript, or resume from the heard position. The system knows where the audio was cut. It does not preserve the words up to that point as a resumable conversational object.
+That is a conservative move: avoid keeping text the user may not have heard. But an application that wants a transcript, a text history, or a resumable parent thread still has to build extra machinery. The system knows where the audio was cut. It does not, by itself, expose "the parent explanation is suspended at this heard cursor."
 
-The community reports are exactly what you would expect from that design. One developer reported that the transcript could contain "5-10 seconds" the user did not hear, making the next response feel disjointed. Another asked whether they were really supposed to delete the entire assistant text after `TRUNCATE`, then described the workaround: truncate the audio, re-transcribe the remaining audio, and rewrite the assistant message.
+The community reports show why that boundary matters. One developer reported that the transcript could contain "5-10 seconds" the user did not hear, making the next response feel disjointed. Another asked whether they were really supposed to delete the entire assistant text after `TRUNCATE`, then described the workaround: truncate the audio, re-transcribe the remaining audio, and rewrite the assistant message.
 
 That is a lot of machinery to recover the most basic fact in a voice conversation: what did the user hear?
 
-### LiveKit: The Inverse Desync
+### LiveKit: Repairing Heard History Is Hard
 
-LiveKit is more aware of this problem than most frameworks. Its current docs explicitly describe truncating conversation history to the portion of speech the user heard.
+LiveKit is explicit about the right target. Its current docs describe truncating conversation history to the portion of speech the user heard.
 
-That is the right target.
-
-The interesting evidence is LiveKit issue #5038, because it shows the inverse failure mode. The report describes a case where the user heard part of a response, but the response never made it into `chat_ctx`.
+The interesting evidence is LiveKit issue #5038, because it shows how easy the bookkeeping can be even when the target is correct. The report describes a case where the user heard part of a response, but the response never made it into `chat_ctx`.
 
 The core cleanup path in the report comes down to this:
 
@@ -133,13 +156,13 @@ else:
     forwarded_text = ""
 ```
 
-That branch overwrote generated text when the first audio frame future had not resolved. The result: no `conversation_item_added` event, no committed assistant message, and a conversation history that forgot speech the user heard.
+That branch overwrote generated text when the first audio frame future had not resolved. The reported result: no `conversation_item_added` event, no committed assistant message, and a conversation history that forgot speech the user heard.
 
-OpenAI's failure mode can make the agent believe you heard too much. This LiveKit bug made it believe you heard nothing.
+One failure mode can make the agent believe you heard too much. The LiveKit report shows the opposite: the agent can lose speech the user did hear.
 
 Both are context desync.
 
-### Pipecat: The Interruption Has No State
+### Pipecat: Interruption Is A Stop Signal
 
 Pipecat makes the design gap visible in one small class:
 
@@ -150,27 +173,27 @@ class InterruptionFrame(SystemFrame):
     pass
 ```
 
-That frame can interrupt a pipeline. It cannot say where the audio stopped. It cannot say what was heard. It cannot say whether the interruption was a side question, correction, redirect, or backchannel.
+That frame can interrupt a pipeline. It is not trying to say where the audio stopped, what was heard, or whether the interruption was a side question, correction, redirect, or backchannel.
 
-That is not a criticism of the class by itself. A pipeline frame should be small. But if the surrounding system never adds the missing state, then all interruption types collapse into the same event.
+That is not a criticism of the class by itself. A pipeline frame should be small. The design question is what surrounds it. If the surrounding system never adds heard state and interruption disposition, then all interruption types collapse into the same event.
 
 Pipecat issue #2791 described the practical result: interrupt a counting bot after "5", and the partial spoken text may not be added to LLM context, so the next turn starts over as if the spoken part never happened.
 
-Again, the problem is not audio cancellation. The problem is shared state.
+Again, the problem is not audio cancellation. The problem is the shared state model above cancellation.
 
-### Vocode: Cancel The Stack
+### Vocode: Fast Cancellation, Not Resume Semantics
 
 Vocode has the same broad shape. Its interruption path broadcasts interrupts, calls the output device interruption, cancels the current agent task, and cancels response workers.
 
-That is a reasonable way to stop a voice pipeline quickly. It is not a resume model. There is no first-class notion of "hold this explanation at the heard cursor, answer the child question, then return."
+That is a reasonable way to stop a voice pipeline quickly. It is not a resume model. It does not expose a first-class notion of "hold this explanation at the heard cursor, answer the child question, then return."
 
-The stack stops. The thread is gone.
+The stack stops. A resumable parent thread is left to application code.
 
 ## The Pattern
 
-Once you look across the implementations, the shared assumption is visible:
+Once you look across the implementations, a common abstraction boundary is visible:
 
-> An interruption means the current response should be cancelled.
+> An interruption is primarily a cancellation or truncation event.
 
 But that is only sometimes true.
 
@@ -184,9 +207,9 @@ flowchart TD
   B --> R["Resume from heard cursor"]
 ```
 
-Treating all four as the same event is the core design mistake.
+Treating all four as the same event is the abstraction gap.
 
-Humans do not do this. If I ask a side question, you do not burn the original explanation to the ground. You hold it in working memory. After the side question resolves, you resume with a tiny bridge:
+Humans do not do this. If I ask a side question, you do not discard the original explanation. You hold it in working memory. After the side question resolves, you resume with a tiny bridge:
 
 > Right. So as I was saying, each attention head learns a different relation...
 
@@ -196,7 +219,7 @@ Voice agents need the same state operation.
 
 ## What Fixing It Looks Like
 
-I built Interupt around a small protocol idea: interruption should not be a destroy signal. It should be a state transition.
+I built Interupt around a small protocol idea: interruption should not only be a stop signal. It should be a state transition.
 
 The protocol has three pieces.
 
@@ -210,12 +233,12 @@ Third, the conversation becomes a tree. A branch holds the parent thread, create
 src: /posts/images/every-voice-ai-forgets-what-you-heard/icp-infographic.png
 alt: Side-by-side comparison of cancel-and-restart interruption handling and ICP protocol handling
 layout: wide
-caption: The same side question under cancel-and-restart versus ICP. The important move is not the classification label; it is holding the parent thread at the heard cursor instead of destroying it.
+caption: The same side question under cancel-and-restart versus ICP. The important move is not the classification label; it is holding the parent thread at the heard cursor instead of discarding it.
 ```
 
 In the demo, that state is visible. The orb changes color when the agent branches. The answer happens in the child thread. Then the parent resumes from where playback was confirmed, not from where generation had raced ahead.
 
-That is the behavior voice agents should have had from the beginning.
+That is the behavior I want voice-agent stacks to make easy.
 
 ## The Tradeoff
 
@@ -227,26 +250,7 @@ Typed interruption also adds classification latency. In my evaluation, I model i
 
 The bigger cost is architectural. A voice agent has to stop treating conversation history as a flat list of completed messages. It needs a live representation of conversational focus: what is active, what is held, what was heard, and what can be resumed.
 
-That sounds heavier until you compare it with the alternative: every interruption slowly moves the system into a different conversation than the one the user experienced.
-
-## The Test Every Voice Agent Should Pass
-
-Here is the simplest test:
-
-1. Ask the agent to explain something for a minute.
-2. Interrupt with a side question.
-3. Let it answer.
-4. Say: "Okay, go back."
-
-If it restarts, it failed.
-
-If it skips ahead to content you never heard, it failed.
-
-If it says "as I was saying" but has no idea where that was, it failed.
-
-The passing behavior is specific: it should answer the side question, then resume the original explanation from the last position you actually heard.
-
-That is not a personality feature. It is not a better prompt. It is conversation state.
+That sounds heavier until you compare it with the alternative: every interruption can move the system into a different conversation than the one the user experienced.
 
 ## Links
 

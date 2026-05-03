@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BlogLayout from './BlogLayout';
 import RichMarkdown from './RichMarkdown';
 import KitchenSprite from './KitchenSprite';
+import { Check, Copy } from 'lucide-react';
 
 /**
  * Astro island — renders the blog post body.
@@ -10,6 +11,30 @@ import KitchenSprite from './KitchenSprite';
  */
 const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], slug = '', pantryIngredients = [] }) => {
   const [isLoading] = useState(false);
+  const [markdownCopied, setMarkdownCopied] = useState(false);
+
+  const handleCopyMarkdown = async () => {
+    try {
+      await navigator.clipboard.writeText(markdown);
+      setMarkdownCopied(true);
+      window.setTimeout(() => setMarkdownCopied(false), 1800);
+    } catch {
+      setMarkdownCopied(false);
+    }
+  };
+
+  const copyMarkdownButton = (
+    <button
+      type="button"
+      className="post-copy-markdown-btn"
+      onClick={handleCopyMarkdown}
+      aria-label="Copy post markdown"
+      title="Copy post markdown"
+    >
+      {markdownCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+      <span>{markdownCopied ? 'Copied' : 'Markdown'}</span>
+    </button>
+  );
 
   if (!postMeta) {
     return (
@@ -26,7 +51,7 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
   return (
     <BlogLayout hideToc={isLoading} seriesItems={seriesNavItems} currentSeriesId={slug} pantryIngredients={pantryIngredients}>
       <header className="mb-12 md:mb-16 relative">
-        <div className="md:pr-28">
+        <div className="md:pr-52">
           <h1 className="text-4xl md:text-5xl lg:text-6xl text-ink-dark mb-6 leading-[1.15] tracking-tight">
             {postMeta.title}
           </h1>
@@ -38,26 +63,32 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
             <span className="text-ink-blue hidden sm:inline">{postMeta.category}</span>
           </div>
         </div>
-        {postMeta.status && (
-          <div className="hidden md:flex flex-col items-center gap-1.5 absolute top-0 right-0">
-            <KitchenSprite status={postMeta.status.toLowerCase()} size={72} />
-            <div className="post-kitchen-strip" aria-label="Article context">
-              <span>
-                Type <strong>{postMeta.category}</strong>
-              </span>
-              <span>
-                State <strong>{postMeta.status.toLowerCase()}</strong>
-              </span>
-              {postMeta.series && postMeta.seriesOrder && (
+        <div className="hidden md:flex flex-col items-end gap-3 absolute top-0 right-0">
+          {postMeta.status && (
+            <div className="flex flex-col items-center gap-1.5">
+              <div className="post-header-action-row">
+                <KitchenSprite status={postMeta.status.toLowerCase()} size={72} />
+                {copyMarkdownButton}
+              </div>
+              <div className="post-kitchen-strip" aria-label="Article context">
                 <span>
-                  Series <strong>part {postMeta.seriesOrder}</strong>
+                  Type <strong>{postMeta.category}</strong>
                 </span>
-              )}
+                <span>
+                  State <strong>{postMeta.status.toLowerCase()}</strong>
+                </span>
+                {postMeta.series && postMeta.seriesOrder && (
+                  <span>
+                    Series <strong>part {postMeta.seriesOrder}</strong>
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+          {!postMeta.status && copyMarkdownButton}
+        </div>
         {/* Mobile fallback — compact metadata strip */}
-        <div className="md:hidden mt-4">
+        <div className="md:hidden mt-4 flex items-start justify-start gap-3">
           <div className="post-kitchen-strip post-kitchen-strip--mobile" aria-label="Article context">
             <span>
               Type <strong>{postMeta.category}</strong>
@@ -78,6 +109,7 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
               </span>
             )}
           </div>
+          {copyMarkdownButton}
         </div>
       </header>
 
