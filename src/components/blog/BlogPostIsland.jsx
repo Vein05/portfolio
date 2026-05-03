@@ -56,12 +56,9 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
             </div>
           </div>
         )}
-        {/* Mobile fallback — sprite + strip below title */}
-        <div className="md:hidden flex items-center gap-3 mt-4">
-          {postMeta.status && (
-            <KitchenSprite status={postMeta.status.toLowerCase()} size={40} />
-          )}
-          <div className="post-kitchen-strip" aria-label="Article context">
+        {/* Mobile fallback — compact metadata strip */}
+        <div className="md:hidden mt-4">
+          <div className="post-kitchen-strip post-kitchen-strip--mobile" aria-label="Article context">
             <span>
               Type <strong>{postMeta.category}</strong>
             </span>
@@ -73,6 +70,11 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
             {postMeta.series && postMeta.seriesOrder && (
               <span>
                 Series <strong>part {postMeta.seriesOrder}</strong>
+              </span>
+            )}
+            {postMeta.status && (
+              <span className="post-kitchen-sprite-cell" aria-hidden="true">
+                <KitchenSprite status={postMeta.status.toLowerCase()} size={32} />
               </span>
             )}
           </div>

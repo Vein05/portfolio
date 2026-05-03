@@ -15,6 +15,18 @@ export const posts = [
   //   status: "plated",
   // },
   {
+    slug: "every-voice-ai-forgets-what-you-heard",
+    title: "Every Voice AI Forgets What You Heard. Here's the Bug.",
+    date: "2026-05-03",
+    category: "Research",
+    status: "cooking",
+    excerpt: "A technical bug report on voice-agent interruptions: generated audio races ahead of playback, frameworks cancel instead of preserving heard state, and the conversation drifts away from what the user actually experienced.",
+    tags: ["Voice AI", "Realtime", "Agents", "OpenAI", "LiveKit", "Pipecat", "Protocol Design"],
+    seoTitle: "Every Voice AI Forgets What You Heard. Here's the Bug. | Sugam Panthi",
+    seoDescription: "Why voice AI agents lose their place after interruption: generated audio runs ahead of playback, frameworks cancel state, and agents forget what users actually heard.",
+    canonicalPath: "/blog/every-voice-ai-forgets-what-you-heard"
+  },
+  {
     slug: "seo-optimization",
     title: "SEO Optimization",
     date: "2026-03-03",

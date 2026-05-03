@@ -36,5 +36,6 @@ public/images/.optimized/
 public/posts/images/.optimized/
 
 # Codex local artifacts
+AGENTS.md
 .codex/
 .codex-ui-screens/

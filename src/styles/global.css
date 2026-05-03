@@ -21,6 +21,8 @@
   --color-sky-blue: 14 165 233;
   --color-code-dark: 26 26 20;
   --texture-opacity: 1;
+  --body-texture-wash: 0.9;
+  --panel-texture-wash: 0.82;
   --page-shadow: 0 0 60px rgb(0 0 0 / 0.05);
   --sidebar-shadow: inset -4px 0 12px rgb(0 0 0 / 0.04), inset 0 0 40px rgb(0 0 0 / 0.05);
   --paper-inset-shadow: inset 0 0 30px rgb(0 0 0 / 0.03);
@@ -44,6 +46,8 @@
   --color-sky-blue: 2 132 199;
   --color-code-dark: 23 23 18;
   --texture-opacity: 0.9;
+  --body-texture-wash: 0.84;
+  --panel-texture-wash: 0.76;
   --page-shadow: 0 0 60px rgb(0 0 0 / 0.08);
   --sidebar-shadow: inset -4px 0 12px rgb(0 0 0 / 0.06), inset 0 0 44px rgb(0 0 0 / 0.08);
   --paper-inset-shadow: inset 0 0 30px rgb(0 0 0 / 0.04);
@@ -86,30 +90,36 @@ h6,
   /* Left/right gutters + sidebar panels */
   .noise-panel {
     background-color: rgb(var(--color-paper-light));
-    background-image: url('/images/noise.webp');
-    background-repeat: repeat;
+    background-image:
+      linear-gradient(rgb(var(--color-paper-light) / var(--panel-texture-wash)), rgb(var(--color-paper-light) / var(--panel-texture-wash))),
+      url('/images/noise.webp');
+    background-repeat: repeat, repeat;
     box-shadow: var(--paper-inset-shadow);
   }
 
   /* Sidebar nav panel — darker tint + stronger inset shadow for weight */
   .sidebar-panel {
     background-color: rgb(var(--color-sidebar-paper));
-    background-image: url('/images/noise.webp');
-    background-repeat: repeat;
+    background-image:
+      linear-gradient(rgb(var(--color-sidebar-paper) / var(--panel-texture-wash)), rgb(var(--color-sidebar-paper) / var(--panel-texture-wash))),
+      url('/images/noise.webp');
+    background-repeat: repeat, repeat;
     box-shadow: var(--sidebar-shadow);
   }
 
 .body-container {
   box-shadow: var(--page-shadow);
   background-color: rgb(var(--color-paper-light));
-  background-image: url('/images/noise.webp');
-  background-repeat: repeat;
-  background-attachment: scroll;
+  background-image:
+    linear-gradient(rgb(var(--color-paper-light) / var(--body-texture-wash)), rgb(var(--color-paper-light) / var(--body-texture-wash))),
+    url('/images/noise.webp');
+  background-repeat: repeat, repeat;
+  background-attachment: scroll, scroll;
 }
 
 @media (min-width: 1024px) {
   .body-container {
-    background-attachment: fixed;
+    background-attachment: fixed, fixed;
   }
 }
 
@@ -302,6 +312,21 @@ h6,
   .post-kitchen-strip strong {
     color: rgb(var(--color-ink-dark));
     font-weight: 600;
+  }
+
+  .post-kitchen-strip--mobile {
+    margin-top: 0;
+  }
+
+  .post-kitchen-strip .post-kitchen-sprite-cell {
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    padding: 0.18rem 0.42rem;
+  }
+
+  .post-kitchen-sprite-cell .kitchen-sprite {
+    flex: 0 0 auto;
   }
 
   .directory-controls {
