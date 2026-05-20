@@ -100,6 +100,22 @@ const Thumb = {
       <text x="28" y="116" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Memory · MCP · Qdrant</text>
     </svg>
   ),
+  Costumary: () => (
+    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
+      <rect x="18" y="22" width="184" height="96" rx="4" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.2"/>
+      {[0,1,2].map(i => (
+        <rect key={i} x={28 + i*58} y="32" width="48" height="36" rx="3" fill="rgb(var(--color-ink-dark))" opacity={0.05 + i*0.02}/>
+      ))}
+      {[0,1].map(i => (
+        <rect key={i} x={28 + i*90} y="76" width="80" height="6" rx="2" fill="rgb(var(--color-ink-dark))" opacity={0.08 + i*0.04}/>
+      ))}
+      <rect x="28" y="90" width="60" height="6" rx="2" fill="rgb(var(--color-ink-dark))" opacity="0.06"/>
+      <rect x="28" y="104" width="40" height="4" rx="1" fill="rgb(var(--color-ink-dark))" opacity="0.1"/>
+      <text x="76" y="107" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.5">$</text>
+      <text x="18" y="132" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Next.js · FastAPI · AI</text>
+    </svg>
+  ),
 };
 
 const items = [
@@ -192,6 +208,21 @@ const items = [
       "React JS + Tailwind CSS frontend with Firebase community forum backend",
       "Google Auth login — 50+ users, 1,000+ page views",
       "OpenSource teen-focused self-help platform with guides, testimonials, and community support"
+    ]
+  },
+  {
+    title: "Costumary",
+    thumb: "Costumary",
+    tag: "Full Stack · SaaS",
+    type: "project",
+    description: "Craft build journal for makers — references, materials, budgets, and build logs.",
+    link: "https://www.costumary.com",
+    linkLabel: "View Live",
+    linkIcon: "external",
+    achievements: [
+      "Visual workspace with drag-and-drop reference boards, material tracking, and budget management",
+      "Next.js + FastAPI stack with Supabase, AI assistant, and 10 craft vertical landing pages",
+      "Content-driven SEO with 23 long-form guides covering cosplay, sewing, miniatures, and prop making"
     ]
   },
 ];
