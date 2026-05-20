@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState, lazy, Suspense } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlightLite from '../../lib/rehype-highlight-lite';
@@ -30,6 +30,9 @@ const rehypeHighlightOptions = {
     plaintext: ['txt', 'text'],
   },
 };
+
+const GsapChoreographyDemo = lazy(() => import('./GsapChoreographyDemo'));
+const GsapReferenceBoardDemo = lazy(() => import('./GsapReferenceBoardDemo'));
 
 const MERMAID_SCRIPT_ID = 'mermaid-cdn-script';
 const MERMAID_SCRIPT_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
@@ -203,18 +206,47 @@ const CopyableCodeBlock = ({ children, ...props }) => {
   };
 
   return (
-    <div className="relative group/code my-6 w-fit max-w-full min-w-[min(100%,32rem)]">
-      <pre ref={ref} {...props} className="!my-0">
+    <div className="my-6 w-fit max-w-full min-w-[min(100%,32rem)] mx-auto">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '8px 12px',
+        background: '#2a2825',
+        borderRadius: '8px 8px 0 0',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
+          <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
+        </div>
+        <div style={{ flex: 1 }} />
+        <button
+          onClick={handleCopy}
+          aria-label="Copy code"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 5,
+            padding: '3px 8px',
+            fontSize: 10,
+            fontFamily: 'monospace',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            borderRadius: 3,
+            border: 'none',
+            background: copied ? 'rgba(80,200,120,0.2)' : 'rgba(255,255,255,0.08)',
+            color: copied ? 'rgba(80,200,120,0.9)' : 'rgba(255,255,255,0.55)',
+            cursor: 'pointer',
+          }}
+        >
+          {copied ? <Check style={{ width: 11, height: 11 }} /> : <Copy style={{ width: 11, height: 11 }} />}
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <pre ref={ref} {...props} className="!my-0" style={{ borderRadius: '0 0 6px 6px' }}>
         {children}
       </pre>
-      <button
-        onClick={handleCopy}
-        aria-label="Copy code"
-        className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 text-[10px] font-mono uppercase tracking-wider rounded opacity-0 group-hover/code:opacity-100 transition-opacity duration-150 bg-white/10 hover:bg-white/20 text-white/60 hover:text-white"
-      >
-        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-        {copied ? 'Copied' : 'Copy'}
-      </button>
     </div>
   );
 };
@@ -615,6 +647,26 @@ const RichCode = ({ inline, className, children, ...props }) => {
 
   if (language === 'mermaid') {
     return <MermaidBlock chart={rawCode} />;
+  }
+
+  if (language === 'gsap-demo') {
+    return (
+      <div className="my-10" style={{ maxWidth: 780, margin: '2.5rem auto' }}>
+        <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
+          <GsapChoreographyDemo />
+        </Suspense>
+      </div>
+    );
+  }
+
+  if (language === 'gsap-board-demo') {
+    return (
+      <div className="my-10" style={{ maxWidth: 920, margin: '2.5rem auto' }}>
+        <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
+          <GsapReferenceBoardDemo />
+        </Suspense>
+      </div>
+    );
   }
 
   if (['image', 'video', 'iframe', 'youtube', 'textandimage', 'twoimages'].includes(language)) {
