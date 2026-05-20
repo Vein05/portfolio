@@ -5,7 +5,7 @@ export const posts = [
     date: "2026-05-20",
     category: "Engineering",
     status: "plated",
-    excerpt: "A 15-second hero video was 3.4 MB, letterboxed on phones, and ignored prefers-reduced-motion. I replaced it with a scripted GSAP animation — one timeline, cursor choreography, scene transitions, 45 KB gzipped.",
+    excerpt: "A 15-second hero video was 3.4 MB, letterboxed on phones, and ignored prefers-reduced-motion. I replaced it with a scripted GSAP animation — one timeline, cursor choreography, scene transitions, under 40 KB gzipped.",
     tags: ["GSAP", "Animation", "React", "Frontend", "Performance"],
     seoTitle: "Scripted product demos with GSAP instead of video | Sugam Panthi",
     seoDescription: "How to build a scripted product walkthrough animation with GSAP: timeline architecture, cursor choreography, click feedback, scene transitions, and responsive scaling — no video files.",

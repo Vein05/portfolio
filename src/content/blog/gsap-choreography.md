@@ -7,7 +7,7 @@ status: "plated"
 
 I was exporting a 15-second screen recording of the product for the landing page when the file hit 3.4 MB. On a phone it would letterbox. If the user had `prefers-reduced-motion` enabled, it would just... play anyway. I could not theme it, could not pause it at a specific scene, could not scrub to the materials tab when a user scrolled there. A video is a frozen artifact. The product it was supposed to show off is alive.
 
-So I deleted the MP4 and built the walkthrough as a scripted GSAP animation. Pure DOM. No video file. 45 KB gzipped. Every element in the animation is a real element on the page, styled with the same tokens as the rest of the site.
+So I deleted the MP4 and built the walkthrough as a scripted GSAP animation. Pure DOM. No video file. Under 40 KB gzipped. Every element in the animation is a real element on the page, styled with the same tokens as the rest of the site.
 
 Here is a simplified version of the result. Pause it below.
 
@@ -83,7 +83,7 @@ List items use a tighter stagger, 60ms, because they are simpler shapes arriving
 
 The most counterintuitive rule: after every major action, do nothing. After the cards appear, there is 1.4 seconds of dead time before the cursor moves again. After the overlay appears, it sits for a full second. Viewers need time to register what changed. Removing the pauses makes the animation faster but incomprehensible.
 
-The typed text uses `ease: "none"` — constant speed. This is one of the rare cases where linear motion is correct. Eased typing looks like someone accelerating through a sentence.
+The typed text uses `ease: "none"`, constant speed. This is one of the rare cases where linear motion is correct. Eased typing looks like someone accelerating through a sentence.
 
 ## The loop trap
 
@@ -100,7 +100,7 @@ tl.add(() => {
 }, 0);
 ```
 
-Miss one property and you see it immediately on the second loop. I missed `rotation` the first time and the cards snapped to their tilted positions before animating — a subtle jump that took twenty minutes to find.
+Miss one property and you see it immediately on the second loop. I missed `rotation` the first time and the cards snapped to their tilted positions before animating. A subtle jump that took twenty minutes to find.
 
 ## The architecture that makes this maintainable
 
@@ -122,17 +122,46 @@ Responsive scaling is a CSS transform from a fixed design width. The container h
 
 ## And you can get crazy with it
 
-The simple demo above teaches the mechanics. Here is what happens when you push it — three users, one moodboard, everything choreographed on a single timeline. Click pause, restart, poke around.
+The simple demo above teaches the mechanics. Here is what happens when you push it. Three users, one moodboard, everything choreographed on a single timeline. Click pause, restart, poke around.
 
 ```gsap-board-demo
 ```
+
+## When this makes sense and when it does not
+
+I am not going to pretend this replaces video everywhere. It does not.
+
+If your product demo involves real user data, logged-in dashboards, or workflows that change weekly, record a video. Scripting a timeline that mirrors a live product exactly is maintenance you do not want. Every time the UI changes, the animation breaks. A screen recording takes five minutes to redo.
+
+If you are showing a physical product, a person talking, or anything outside the browser, video. Obviously. GSAP animates DOM elements, not reality.
+
+If your team does not have someone comfortable reading a 400-line timeline file, video. This approach has a learning curve. The demos in this article took real engineering time, not drag-and-drop. Or an agent on your behalf.
+
+Where it works: product walkthroughs of a stable UI that you want to feel alive. Onboarding sequences where you need the cursor to hit exact targets. Landing pages where the hero asset is the heaviest thing on the page.
+
+Here is the math. I measured the actual production build for the demos in this article:
+
+| Approach | Raw | Compressed | Notes |
+|----------|-----|------------|-------|
+| GSAP core (gsap.min.js) | 73 KB | 28 KB gzip | Shared across all animations on the page |
+| One demo component | 20 KB | 5.5 KB gzip | The simple task app above |
+| Both demos together | 115 KB | 37 KB gzip | Everything in this article |
+| 15s 1080p MP4 (H.264, optimized) | 2-4 MB | Does not compress further | Already codec-compressed |
+| 15s 1080p GIF | 8-15 MB | Does not compress further | GIF is the worst option by far |
+| 15s 1080p WebM (VP9) | 1-2 MB | Does not compress further | Best video codec, still 30x larger |
+
+The full production animation at costumary.com, four scenes with multi-cursor collaboration, sidebar morphing, and typed AI prompts, ships under 40 KB gzipped. A screen recording of the same walkthrough was 3.4 MB as an MP4. That is roughly 85x heavier for content that cannot pause at a labeled scene, cannot respond to `prefers-reduced-motion`, and cannot adapt to the user's viewport.
+
+The GIF option is worth mentioning because people still try it. A 15-second GIF of a product walkthrough is easily 10 MB. It has no pause button, no accessibility, no scrubbing, and it loops whether the user wants it to or not. The only thing a GIF has going for it is that it autoplays everywhere. GSAP also autoplays everywhere, at 0.3% of the file size.
+
+The real test is whether the animation needs to change with the product. If it does, you will curse this approach within a month. If the animation *is* the product's story and the story is stable, it is worth the effort.
 
 ## The production version
 
 The [costumary.com](https://www.costumary.com) hero runs four scenes: a drag-and-drop reference import with progress bars, a multi-cursor collaboration sequence where three users work simultaneously, a sidebar that collapses from labeled nav to icon-only while the workspace expands, and an AI assistant that receives a typed question and streams a contextual response. It supports `prefers-reduced-motion` with a static fallback state and has play/pause/restart controls.
 
-Same architecture. Same click helper. Same label convention. Forty-five kilobytes where a video would have been three megabytes.
+Same architecture. Same click helper. Same label convention. Under 40 KB where a video would have been three megabytes.
 
 ## For agents
 
-If you build with Claude Code, Cursor, or similar — you can get the skill here: [gsap-choreography](https://github.com/Costumary/gsap-choreography).
+If you build with Claude Code, Cursor, or similar, you can get the skill here: [gsap-choreography](https://github.com/Costumary/gsap-choreography).
