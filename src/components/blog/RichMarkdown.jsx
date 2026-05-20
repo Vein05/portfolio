@@ -661,7 +661,7 @@ const RichCode = ({ inline, className, children, ...props }) => {
 
   if (language === 'gsap-board-demo') {
     return (
-      <div className="my-10" style={{ maxWidth: 920, margin: '2.5rem auto' }}>
+      <div className="my-10" style={{ maxWidth: 1100, margin: '2.5rem auto' }}>
         <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
           <GsapReferenceBoardDemo />
         </Suspense>

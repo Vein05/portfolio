@@ -122,7 +122,7 @@ Responsive scaling is a CSS transform from a fixed design width. The container h
 
 ## And you can get crazy with it
 
-The simple demo above teaches the mechanics. Here is what happens when you push it. Three users, one moodboard, everything choreographed on a single timeline. Click pause, restart, poke around.
+Three designers, one canvas, nobody waiting for a turn.
 
 ```gsap-board-demo
 ```
