@@ -453,6 +453,32 @@ const GsapReferenceBoardDemo = () => {
     const ALEX_OFF = { x: 1140, y: 680 };
     const FRANCIS_OFF = { x: 550, y: -40 };
 
+    const measure = (el) => {
+      const frame = root.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      const s = scale || 1;
+      return {
+        x: Math.round((r.left + r.width / 2 - frame.left) / s),
+        y: Math.round((r.top + r.height / 2 - frame.top) / s),
+      };
+    };
+    const measureCorner = (el) => {
+      const frame = root.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      const s = scale || 1;
+      return {
+        x: Math.round((r.right - frame.left) / s),
+        y: Math.round((r.bottom - frame.top) / s),
+      };
+    };
+
+    const recipePos = measure(recipe);
+    const recipeTitle = { x: recipePos.x - 20, y: recipePos.y - 120 };
+    const profileImagePos = q("[data-ligma-profile-image]")[0] ? measure(q("[data-ligma-profile-image]")[0]) : { x: 500, y: 250 };
+    const detailCorner = measureCorner(detail);
+    const fillSwatchPos = fillSwatch ? measure(fillSwatch) : { x: 980, y: 400 };
+    const stickyDropPos = { x: profileImagePos.x - 20, y: profileImagePos.y + 180 };
+
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.75, defaults: { ease: "power3.out" } });
     tlRef.current = tl;
 
@@ -486,56 +512,53 @@ const GsapReferenceBoardDemo = () => {
       counter.x = 0;
     }, 0);
 
-    // === BEAT 1 (0-3s): All cursors enter from edges ===
+    // === BEAT 1: All cursors enter, land on their targets ===
     tl.addLabel("enter", "+=0.3");
-    tl.to(xi, { x: 280, y: 240, duration: 1.1, ease: "power2.out" }, "enter");
-    tl.to(alex, { x: 720, y: 320, duration: 1.2, ease: "power2.out" }, "enter+=0.15");
-    tl.to(francis, { x: 480, y: 180, duration: 1.0, ease: "power2.out" }, "enter+=0.3");
+    tl.to(xi, { x: recipePos.x, y: recipePos.y, duration: 1.1, ease: "power2.out" }, "enter");
+    tl.to(alex, { x: detailCorner.x, y: detailCorner.y, duration: 1.2, ease: "power2.out" }, "enter+=0.15");
+    tl.to(francis, { x: profileImagePos.x, y: profileImagePos.y, duration: 1.0, ease: "power2.out" }, "enter+=0.3");
     tl.to({}, { duration: 0.6 }, "enter+=1.3");
 
-    // === BEAT 2 (3-7s): Xi selects recipe, Alex grabs resize, Francis opens crop ===
+    // === BEAT 2: Xi selects recipe, Alex grabs resize, Francis opens crop ===
     tl.addLabel("actions", "enter+=2.0");
 
-    // Xi: select recipe card
-    tl.to(xi, { x: 300, y: 240, duration: 0.5, ease: "power2.out" }, "actions");
-    tl.addLabel("xiSelect", "actions+=0.55");
-    click(xi, rippleXi, { x: 300, y: 240 }, "xiSelect");
+    // Xi: click on recipe card center
+    tl.addLabel("xiSelect", "actions+=0.15");
+    click(xi, rippleXi, recipePos, "xiSelect");
     tl.to(selection, { autoAlpha: 1, duration: 0.2 }, "xiSelect+=0.1");
 
-    // Xi: drag recipe card
+    // Xi: drag recipe card left+up
     tl.addLabel("xiDrag", "xiSelect+=0.6");
-    tl.to(xi, { x: 260, y: 200, duration: 0.7, ease: "power2.inOut" }, "xiDrag");
+    tl.to(xi, { x: recipePos.x - 35, y: recipePos.y - 20, duration: 0.7, ease: "power2.inOut" }, "xiDrag");
     tl.to(recipe, { left: 175, top: 60, duration: 0.7, ease: "power2.inOut" }, "xiDrag+=0.05");
 
-    // Alex: move to detail card corner, show resize handle
-    tl.to(alex, { x: 738, y: 348, duration: 0.7, ease: "power2.out" }, "actions+=0.3");
-    tl.addLabel("alexResize", "actions+=1.1");
+    // Alex: already at detail corner, show resize handle
+    tl.addLabel("alexResize", "actions+=0.5");
     tl.to(resizeHandle, { autoAlpha: 1, duration: 0.15 }, "alexResize");
 
-    // Alex: drag to resize
+    // Alex: drag to resize (corner moves 20px out)
     tl.addLabel("alexDrag", "alexResize+=0.4");
-    tl.to(alex, { x: 758, y: 368, duration: 0.8, ease: "power2.inOut" }, "alexDrag");
+    tl.to(alex, { x: detailCorner.x + 20, y: detailCorner.y + 14, duration: 0.8, ease: "power2.inOut" }, "alexDrag");
     tl.to(detail, { scaleX: 1.08, scaleY: 1.06, duration: 0.8, ease: "power2.inOut" }, "alexDrag+=0.05");
 
-    // Francis: open crop on profile
-    tl.to(francis, { x: 498, y: 260, duration: 0.6, ease: "power2.out" }, "actions+=0.2");
-    tl.addLabel("francisCrop", "actions+=0.9");
-    click(francis, rippleFrancis, { x: 498, y: 260 }, "francisCrop");
+    // Francis: already on profile image, click to crop
+    tl.addLabel("francisCrop", "actions+=0.4");
+    click(francis, rippleFrancis, profileImagePos, "francisCrop");
     tl.to(cropOverlay, { autoAlpha: 1, duration: 0.25 }, "francisCrop+=0.1");
 
-    // Francis: adjust crop
+    // Francis: adjust crop by nudging cursor
     tl.addLabel("francisAdjust", "francisCrop+=0.6");
-    tl.to(francis, { x: 510, y: 250, duration: 0.5, ease: "power2.out" }, "francisAdjust");
+    tl.to(francis, { x: profileImagePos.x + 12, y: profileImagePos.y - 10, duration: 0.5, ease: "power2.out" }, "francisAdjust");
     tl.to(cropOverlay, { inset: 18, duration: 0.5, ease: "power2.inOut" }, "francisAdjust+=0.1");
 
-    // === BEAT 3 (7-11s): Xi types, Alex goes to sidebar, Francis drops sticky ===
+    // === BEAT 3: Xi types, Alex goes to color swatch, Francis drops sticky ===
     tl.addLabel("beat3", "xiDrag+=1.2");
 
-    // Xi: move to text in recipe, start typing
+    // Xi: move to recipe title text area
     tl.to(selection, { autoAlpha: 0, duration: 0.15 }, "beat3");
-    tl.to(xi, { x: 245, y: 158, duration: 0.5, ease: "power2.out" }, "beat3");
+    tl.to(xi, { x: recipeTitle.x, y: recipeTitle.y, duration: 0.5, ease: "power2.out" }, "beat3");
     tl.addLabel("xiType", "beat3+=0.6");
-    click(xi, rippleXi, { x: 245, y: 158 }, "xiType");
+    click(xi, rippleXi, recipeTitle, "xiType");
     tl.to(textCursor, { autoAlpha: 1, duration: 0.1 }, "xiType+=0.1");
 
     // Xi: type text
@@ -546,11 +569,11 @@ const GsapReferenceBoardDemo = () => {
       onUpdate: () => { if (typedText) typedText.textContent = typedString.slice(0, Math.round(counter.x)); },
     }, "typing+=0.05");
 
-    // Alex: finish resize, move to properties panel
+    // Alex: finish resize, move to fill swatch in properties panel
     tl.to(resizeHandle, { autoAlpha: 0, duration: 0.15 }, "beat3");
-    tl.to(alex, { x: 980, y: 460, duration: 0.8, ease: "power2.out" }, "beat3+=0.2");
+    tl.to(alex, { x: fillSwatchPos.x, y: fillSwatchPos.y, duration: 0.8, ease: "power2.out" }, "beat3+=0.2");
     tl.addLabel("alexColor", "beat3+=1.1");
-    click(alex, rippleAlex, { x: 980, y: 460 }, "alexColor");
+    click(alex, rippleAlex, fillSwatchPos, "alexColor");
 
     // Alex: color swatch changes
     tl.add(() => {
@@ -559,14 +582,14 @@ const GsapReferenceBoardDemo = () => {
       if (detailGradient) gsap.to(detailGradient, { background: `linear-gradient(135deg, ${MAUVE}, #c9a0b4, #e0c8d8)`, duration: 0.5 });
     }, "alexColor+=0.15");
 
-    // Francis: finish crop, move to drop sticky
+    // Francis: finish crop, move down to drop sticky below profile
     tl.to(cropOverlay, { autoAlpha: 0, duration: 0.2 }, "beat3+=0.1");
-    tl.to(francis, { x: 490, y: 440, duration: 0.7, ease: "power2.out" }, "beat3+=0.4");
+    tl.to(francis, { x: stickyDropPos.x, y: stickyDropPos.y, duration: 0.7, ease: "power2.out" }, "beat3+=0.4");
     tl.addLabel("francisSticky", "beat3+=1.2");
-    click(francis, rippleFrancis, { x: 490, y: 440 }, "francisSticky");
+    click(francis, rippleFrancis, stickyDropPos, "francisSticky");
     tl.to(sticky, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, "francisSticky+=0.12");
 
-    // === BEAT 4 (15-18s): Settle ===
+    // === BEAT 4: Settle ===
     tl.addLabel("settle", "francisSticky+=1.5");
     tl.to(textCursor, { autoAlpha: 0, duration: 0.2 }, "settle");
 
@@ -574,9 +597,10 @@ const GsapReferenceBoardDemo = () => {
     tl.to([xi, alex, francis], { scale: 1.12, duration: 0.2, ease: "power2.out" }, "settle+=0.3");
     tl.to([xi, alex, francis], { scale: 1, duration: 0.25, ease: "power2.inOut" }, "settle+=0.5");
 
-    tl.to(xi, { x: 300, y: 300, duration: 0.6, ease: "power2.out" }, "settle+=0.8");
-    tl.to(alex, { x: 800, y: 250, duration: 0.6, ease: "power2.out" }, "settle+=0.9");
-    tl.to(francis, { x: 500, y: 380, duration: 0.6, ease: "power2.out" }, "settle+=1.0");
+    // Cursors settle to resting positions near their last targets
+    tl.to(xi, { x: recipePos.x + 30, y: recipePos.y + 40, duration: 0.6, ease: "power2.out" }, "settle+=0.8");
+    tl.to(alex, { x: detailCorner.x - 60, y: detailCorner.y - 80, duration: 0.6, ease: "power2.out" }, "settle+=0.9");
+    tl.to(francis, { x: stickyDropPos.x + 20, y: stickyDropPos.y - 30, duration: 0.6, ease: "power2.out" }, "settle+=1.0");
 
     tl.to({}, { duration: 1.2 }, "settle+=1.6");
 
