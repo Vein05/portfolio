@@ -53,10 +53,17 @@ const jsonLd = postMeta
       '@type': 'BlogPosting',
       headline: postMeta.seoTitle ?? postMeta.title,
       datePublished: postMeta.date,
+      dateModified: postMeta.date,
       description: postMeta.seoDescription ?? postMeta.excerpt,
       mainEntityOfPage: canonicalUrl,
       keywords: postMeta.tags?.join(', '),
+      ...(postMeta.ogImage ? { image: postMeta.ogImage } : {}),
       author: {
+        '@type': 'Person',
+        name: 'Sugam Panthi',
+        url: 'https://spanthi.com',
+      },
+      publisher: {
         '@type': 'Person',
         name: 'Sugam Panthi',
         url: 'https://spanthi.com',
@@ -132,6 +139,9 @@ const currentPath = Astro.url.pathname;
   canonical={canonicalUrl}
   ogTitle={postMeta?.seoTitle ?? postMeta?.title ?? entry.data.title}
   ogUrl={canonicalUrl}
+  ogImage={postMeta?.ogImage ?? undefined}
+  ogType="article"
+  publishedTime={postMeta?.date}
 >
   <!-- Extra SEO head tags injected server-side -->
   {postMeta?.tags && <meta slot="head" name="keywords" content={postMeta.tags.join(', ')} />}

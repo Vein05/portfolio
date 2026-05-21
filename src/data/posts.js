@@ -9,6 +9,7 @@ export const posts = [
     tags: ["GSAP", "Animation", "React", "Frontend", "Performance"],
     seoTitle: "Scripted product demos with GSAP instead of video | Sugam Panthi",
     seoDescription: "How to build a scripted product walkthrough animation with GSAP: timeline architecture, cursor choreography, click feedback, scene transitions, and responsive scaling — no video files.",
+    ogImage: "https://spanthi.com/posts/images/gsap-choreography/og.png",
     canonicalPath: "/blog/gsap-choreography"
   },
   // HIDDEN FOR DOUBLE-BLIND REVIEW — re-enable after camera-ready

@@ -8,6 +8,8 @@ export interface Props {
   ogTitle?: string;
   ogUrl?: string;
   ogImage?: string;
+  ogType?: string;
+  publishedTime?: string;
 }
 
 const {
@@ -17,6 +19,8 @@ const {
   ogTitle,
   ogUrl,
   ogImage = 'https://spanthi.com/images/headshot.jpeg',
+  ogType = 'website',
+  publishedTime,
 } = Astro.props;
 ---
 
@@ -43,14 +47,28 @@ const {
     <link rel="canonical" href={canonical} />
     <meta name="author" content="Sugam Panthi" />
     <meta property="og:site_name" content="Sugam Panthi" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     <meta property="og:title" content={ogTitle ?? title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={ogUrl ?? canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="440" />
-    <meta property="og:image:height" content="460" />
+    {ogImage.endsWith('.png') ? (
+      <meta property="og:image:type" content="image/png" />
+    ) : (
+      <meta property="og:image:type" content="image/jpeg" />
+    )}
+    {ogImage.includes('headshot') ? (
+      <>
+        <meta property="og:image:width" content="440" />
+        <meta property="og:image:height" content="460" />
+      </>
+    ) : (
+      <>
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+      </>
+    )}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@SugamPanthi" />
     <meta name="twitter:creator" content="@SugamPanthi" />
