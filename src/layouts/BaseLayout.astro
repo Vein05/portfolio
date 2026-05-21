@@ -53,7 +53,9 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={ogUrl ?? canonical} />
     <meta property="og:image" content={ogImage} />
-    {ogImage.endsWith('.png') ? (
+    {ogImage.endsWith('.webp') ? (
+      <meta property="og:image:type" content="image/webp" />
+    ) : ogImage.endsWith('.png') ? (
       <meta property="og:image:type" content="image/png" />
     ) : (
       <meta property="og:image:type" content="image/jpeg" />
