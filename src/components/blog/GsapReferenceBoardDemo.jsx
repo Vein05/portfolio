@@ -16,6 +16,7 @@ const SELECT_BLUE = "#4d90fe";
 const CURSOR_XI = "#4d90fe";
 const CURSOR_ALEX = "#34a853";
 const CURSOR_FRANCIS = "#ea4335";
+const CURSOR_MIA = "#9b59b6";
 const MAUVE = "#b48ea0";
 const MAUVE_LIGHT = "#d4b8c8";
 const PINK_CARD = "#c9a0b4";
@@ -323,6 +324,39 @@ function StickyNote() {
   );
 }
 
+function PastedImage() {
+  return (
+    <div data-ligma-pasted style={{
+      position: "absolute", left: 220, top: 430, width: 140, height: 100,
+      borderRadius: 10, overflow: "hidden", zIndex: 15,
+      boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+      visibility: "hidden", opacity: 0,
+    }}>
+      <div style={{
+        width: "100%", height: "100%",
+        background: `linear-gradient(140deg, #6a5acd, #9b59b6, #e8b4d8)`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <circle cx="8.5" cy="8.5" r="1.5" fill="rgba(255,255,255,0.5)" />
+          <path d="M21 15l-5-5L5 21" />
+        </svg>
+      </div>
+      <div data-ligma-paste-crop style={{
+        position: "absolute", inset: 8,
+        border: "1.5px dashed rgba(255,255,255,0.8)",
+        borderRadius: 3, visibility: "hidden", opacity: 0,
+      }}>
+        <div style={{ position: "absolute", top: -3, left: -3, width: 6, height: 6, background: "#fff", borderRadius: 1 }} />
+        <div style={{ position: "absolute", top: -3, right: -3, width: 6, height: 6, background: "#fff", borderRadius: 1 }} />
+        <div style={{ position: "absolute", bottom: -3, left: -3, width: 6, height: 6, background: "#fff", borderRadius: 1 }} />
+        <div style={{ position: "absolute", bottom: -3, right: -3, width: 6, height: 6, background: "#fff", borderRadius: 1 }} />
+      </div>
+    </div>
+  );
+}
+
 function BottomToolbar() {
   const tools = [
     { id: "cursor", shape: "arrow" },
@@ -449,9 +483,15 @@ const GsapReferenceBoardDemo = () => {
     const fillHex = q("[data-ligma-fill-hex]")[0];
     const detailGradient = q("[data-ligma-detail-gradient]")[0];
 
+    const mia = q('[data-ligma-cursor="mia"]')[0];
+    const rippleMia = q('[data-ligma-ripple="mia"]')[0];
+    const pasted = q("[data-ligma-pasted]")[0];
+    const pasteCrop = q("[data-ligma-paste-crop]")[0];
+
     const XI_OFF = { x: -40, y: 340 };
     const ALEX_OFF = { x: 1140, y: 680 };
     const FRANCIS_OFF = { x: 550, y: -40 };
+    const MIA_OFF = { x: -40, y: 680 };
 
     const measure = (el) => {
       const frame = root.getBoundingClientRect();
@@ -497,7 +537,10 @@ const GsapReferenceBoardDemo = () => {
       gsap.set(xi, { x: XI_OFF.x, y: XI_OFF.y, scale: 1, autoAlpha: 1 });
       gsap.set(alex, { x: ALEX_OFF.x, y: ALEX_OFF.y, scale: 1, autoAlpha: 1 });
       gsap.set(francis, { x: FRANCIS_OFF.x, y: FRANCIS_OFF.y, scale: 1, autoAlpha: 1 });
-      gsap.set([rippleXi, rippleAlex, rippleFrancis], { autoAlpha: 0, scale: 0 });
+      gsap.set(mia, { x: MIA_OFF.x, y: MIA_OFF.y, scale: 1, autoAlpha: 1 });
+      gsap.set([rippleXi, rippleAlex, rippleFrancis, rippleMia], { autoAlpha: 0, scale: 0 });
+      gsap.set(pasted, { autoAlpha: 0, scale: 0.85, y: 20 });
+      gsap.set(pasteCrop, { autoAlpha: 0 });
       gsap.set(selection, { autoAlpha: 0 });
       gsap.set(cropOverlay, { autoAlpha: 0, inset: 12 });
       gsap.set(sticky, { autoAlpha: 0, y: 16, scale: 0.9 });
@@ -512,97 +555,118 @@ const GsapReferenceBoardDemo = () => {
       counter.x = 0;
     }, 0);
 
-    // === BEAT 1: All cursors enter, land on their targets ===
+    // === BEAT 1: All cursors enter — Xi deliberate, Alex fast, Francis fastest ===
     tl.addLabel("enter", "+=0.3");
-    tl.to(xi, { x: recipePos.x, y: recipePos.y, duration: 1.1, ease: "power2.out" }, "enter");
-    tl.to(alex, { x: detailCorner.x, y: detailCorner.y, duration: 1.2, ease: "power2.out" }, "enter+=0.15");
-    tl.to(francis, { x: profileImagePos.x, y: profileImagePos.y, duration: 1.0, ease: "power2.out" }, "enter+=0.3");
-    tl.to({}, { duration: 0.6 }, "enter+=1.3");
+    tl.to(xi, { x: recipePos.x, y: recipePos.y, duration: 0.9, ease: "power2.out" }, "enter");
+    tl.to(alex, { x: detailCorner.x, y: detailCorner.y, duration: 0.55, ease: "power3.out" }, "enter+=0.1");
+    tl.to(francis, { x: profileImagePos.x, y: profileImagePos.y, duration: 0.45, ease: "power3.out" }, "enter+=0.2");
+    const pastedPos = { x: 290, y: 470 };
+    tl.to(mia, { x: pastedPos.x, y: pastedPos.y, duration: 0.5, ease: "power3.out" }, "enter+=0.25");
+    tl.to({}, { duration: 0.4 }, "enter+=1.0");
 
     // === BEAT 2: Xi selects recipe, Alex grabs resize, Francis opens crop ===
-    tl.addLabel("actions", "enter+=2.0");
+    tl.addLabel("actions", "enter+=1.4");
 
-    // Xi: click on recipe card center
+    // Xi: click on recipe card center (deliberate)
     tl.addLabel("xiSelect", "actions+=0.15");
     click(xi, rippleXi, recipePos, "xiSelect");
-    tl.to(selection, { autoAlpha: 1, duration: 0.2 }, "xiSelect+=0.1");
+    tl.to(selection, { autoAlpha: 1, duration: 0.18 }, "xiSelect+=0.1");
 
     // Xi: drag recipe card left+up
-    tl.addLabel("xiDrag", "xiSelect+=0.6");
-    tl.to(xi, { x: recipePos.x - 35, y: recipePos.y - 20, duration: 0.7, ease: "power2.inOut" }, "xiDrag");
-    tl.to(recipe, { left: 175, top: 60, duration: 0.7, ease: "power2.inOut" }, "xiDrag+=0.05");
+    tl.addLabel("xiDrag", "xiSelect+=0.5");
+    tl.to(xi, { x: recipePos.x - 35, y: recipePos.y - 20, duration: 0.6, ease: "power2.inOut" }, "xiDrag");
+    tl.to(recipe, { left: 175, top: 60, duration: 0.6, ease: "power2.inOut" }, "xiDrag+=0.05");
 
-    // Alex: already at detail corner, show resize handle
-    tl.addLabel("alexResize", "actions+=0.5");
-    tl.to(resizeHandle, { autoAlpha: 1, duration: 0.15 }, "alexResize");
+    // Alex: already at detail corner, snap to resize (fast worker)
+    tl.addLabel("alexResize", "actions+=0.2");
+    tl.to(resizeHandle, { autoAlpha: 1, duration: 0.1 }, "alexResize");
 
-    // Alex: drag to resize (corner moves 20px out)
-    tl.addLabel("alexDrag", "alexResize+=0.4");
-    tl.to(alex, { x: detailCorner.x + 20, y: detailCorner.y + 14, duration: 0.8, ease: "power2.inOut" }, "alexDrag");
-    tl.to(detail, { scaleX: 1.08, scaleY: 1.06, duration: 0.8, ease: "power2.inOut" }, "alexDrag+=0.05");
+    // Alex: quick decisive resize drag
+    tl.addLabel("alexDrag", "alexResize+=0.2");
+    tl.to(alex, { x: detailCorner.x + 20, y: detailCorner.y + 14, duration: 0.4, ease: "power2.inOut" }, "alexDrag");
+    tl.to(detail, { scaleX: 1.08, scaleY: 1.06, duration: 0.4, ease: "power2.inOut" }, "alexDrag+=0.03");
 
-    // Francis: already on profile image, click to crop
-    tl.addLabel("francisCrop", "actions+=0.4");
+    // Francis: already on profile image, instant click to crop (fastest)
+    tl.addLabel("francisCrop", "actions+=0.1");
     click(francis, rippleFrancis, profileImagePos, "francisCrop");
-    tl.to(cropOverlay, { autoAlpha: 1, duration: 0.25 }, "francisCrop+=0.1");
+    tl.to(cropOverlay, { autoAlpha: 1, duration: 0.18 }, "francisCrop+=0.08");
 
-    // Francis: adjust crop by nudging cursor
-    tl.addLabel("francisAdjust", "francisCrop+=0.6");
-    tl.to(francis, { x: profileImagePos.x + 12, y: profileImagePos.y - 10, duration: 0.5, ease: "power2.out" }, "francisAdjust");
-    tl.to(cropOverlay, { inset: 18, duration: 0.5, ease: "power2.inOut" }, "francisAdjust+=0.1");
+    // Francis: quick crop nudge
+    tl.addLabel("francisAdjust", "francisCrop+=0.35");
+    tl.to(francis, { x: profileImagePos.x + 12, y: profileImagePos.y - 10, duration: 0.25, ease: "power3.out" }, "francisAdjust");
+    tl.to(cropOverlay, { inset: 18, duration: 0.3, ease: "power2.inOut" }, "francisAdjust+=0.05");
 
-    // === BEAT 3: Xi types, Alex goes to color swatch, Francis drops sticky ===
-    tl.addLabel("beat3", "xiDrag+=1.2");
+    // Mia: paste image in bottom-left (fast)
+    tl.addLabel("miaPaste", "actions+=0.3");
+    click(mia, rippleMia, pastedPos, "miaPaste");
+    tl.to(pasted, { autoAlpha: 1, scale: 1, y: 0, duration: 0.3, ease: "back.out(1.6)" }, "miaPaste+=0.1");
 
-    // Xi: move to recipe title text area
-    tl.to(selection, { autoAlpha: 0, duration: 0.15 }, "beat3");
-    tl.to(xi, { x: recipeTitle.x, y: recipeTitle.y, duration: 0.5, ease: "power2.out" }, "beat3");
-    tl.addLabel("xiType", "beat3+=0.6");
+    // Mia: open crop on pasted image
+    tl.addLabel("miaCrop", "miaPaste+=0.7");
+    tl.to(mia, { x: pastedPos.x + 30, y: pastedPos.y - 20, duration: 0.25, ease: "power3.out" }, "miaCrop");
+    click(mia, rippleMia, { x: pastedPos.x + 30, y: pastedPos.y - 20 }, "miaCrop");
+    tl.to(pasteCrop, { autoAlpha: 1, duration: 0.2 }, "miaCrop+=0.1");
+
+    // Mia: nudge crop handles
+    tl.to(mia, { x: pastedPos.x + 50, y: pastedPos.y - 30, duration: 0.3, ease: "power2.inOut" }, "miaCrop+=0.5");
+    tl.to(pasteCrop, { inset: 14, duration: 0.3, ease: "power2.inOut" }, "miaCrop+=0.55");
+
+    // === BEAT 3: Xi types, Alex zips to sidebar, Francis drops sticky ===
+    tl.addLabel("beat3", "xiDrag+=0.8");
+
+    // Xi: move to recipe title text area (still deliberate)
+    tl.to(selection, { autoAlpha: 0, duration: 0.12 }, "beat3");
+    tl.to(xi, { x: recipeTitle.x, y: recipeTitle.y, duration: 0.45, ease: "power2.out" }, "beat3");
+    tl.addLabel("xiType", "beat3+=0.5");
     click(xi, rippleXi, recipeTitle, "xiType");
-    tl.to(textCursor, { autoAlpha: 1, duration: 0.1 }, "xiType+=0.1");
+    tl.to(textCursor, { autoAlpha: 1, duration: 0.08 }, "xiType+=0.08");
 
     // Xi: type text
-    tl.addLabel("typing", "xiType+=0.3");
+    tl.addLabel("typing", "xiType+=0.2");
     tl.add(() => { if (typedText) typedText.textContent = ""; counter.x = 0; }, "typing");
     tl.to(counter, {
-      x: typedString.length, duration: 1.2, ease: "none",
+      x: typedString.length, duration: 0.9, ease: "none",
       onUpdate: () => { if (typedText) typedText.textContent = typedString.slice(0, Math.round(counter.x)); },
     }, "typing+=0.05");
 
-    // Alex: finish resize, move to fill swatch in properties panel
-    tl.to(resizeHandle, { autoAlpha: 0, duration: 0.15 }, "beat3");
-    tl.to(alex, { x: fillSwatchPos.x, y: fillSwatchPos.y, duration: 0.8, ease: "power2.out" }, "beat3+=0.2");
-    tl.addLabel("alexColor", "beat3+=1.1");
+    // Alex: zip across to fill swatch (fast, decisive)
+    tl.to(resizeHandle, { autoAlpha: 0, duration: 0.1 }, "beat3");
+    tl.to(alex, { x: fillSwatchPos.x, y: fillSwatchPos.y, duration: 0.4, ease: "power3.out" }, "beat3+=0.1");
+    tl.addLabel("alexColor", "beat3+=0.55");
     click(alex, rippleAlex, fillSwatchPos, "alexColor");
 
     // Alex: color swatch changes
     tl.add(() => {
-      if (fillSwatch) gsap.to(fillSwatch, { background: "#b48ea0", duration: 0.3 });
+      if (fillSwatch) gsap.to(fillSwatch, { background: "#b48ea0", duration: 0.25 });
       if (fillHex) fillHex.textContent = "#B48EA0";
-      if (detailGradient) gsap.to(detailGradient, { background: `linear-gradient(135deg, ${MAUVE}, #c9a0b4, #e0c8d8)`, duration: 0.5 });
-    }, "alexColor+=0.15");
+      if (detailGradient) gsap.to(detailGradient, { background: `linear-gradient(135deg, ${MAUVE}, #c9a0b4, #e0c8d8)`, duration: 0.4 });
+    }, "alexColor+=0.1");
 
-    // Francis: finish crop, move down to drop sticky below profile
-    tl.to(cropOverlay, { autoAlpha: 0, duration: 0.2 }, "beat3+=0.1");
-    tl.to(francis, { x: stickyDropPos.x, y: stickyDropPos.y, duration: 0.7, ease: "power2.out" }, "beat3+=0.4");
-    tl.addLabel("francisSticky", "beat3+=1.2");
+    // Francis: done cropping, dart down to drop sticky (fastest)
+    tl.to(cropOverlay, { autoAlpha: 0, duration: 0.15 }, "beat3+=0.05");
+    tl.to(francis, { x: stickyDropPos.x, y: stickyDropPos.y, duration: 0.3, ease: "power3.out" }, "beat3+=0.15");
+    tl.addLabel("francisSticky", "beat3+=0.5");
     click(francis, rippleFrancis, stickyDropPos, "francisSticky");
-    tl.to(sticky, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, "francisSticky+=0.12");
+    tl.to(sticky, { autoAlpha: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, "francisSticky+=0.1");
+
+    // Mia: close crop, settle
+    tl.to(pasteCrop, { autoAlpha: 0, duration: 0.15 }, "beat3+=0.8");
 
     // === BEAT 4: Settle ===
-    tl.addLabel("settle", "francisSticky+=1.5");
-    tl.to(textCursor, { autoAlpha: 0, duration: 0.2 }, "settle");
+    tl.addLabel("settle", "typing+=1.2");
+    tl.to(textCursor, { autoAlpha: 0, duration: 0.15 }, "settle");
 
     // Presence pulse
-    tl.to([xi, alex, francis], { scale: 1.12, duration: 0.2, ease: "power2.out" }, "settle+=0.3");
-    tl.to([xi, alex, francis], { scale: 1, duration: 0.25, ease: "power2.inOut" }, "settle+=0.5");
+    tl.to([xi, alex, francis, mia], { scale: 1.1, duration: 0.15, ease: "power2.out" }, "settle+=0.2");
+    tl.to([xi, alex, francis, mia], { scale: 1, duration: 0.2, ease: "power2.inOut" }, "settle+=0.35");
 
-    // Cursors settle to resting positions near their last targets
-    tl.to(xi, { x: recipePos.x + 30, y: recipePos.y + 40, duration: 0.6, ease: "power2.out" }, "settle+=0.8");
-    tl.to(alex, { x: detailCorner.x - 60, y: detailCorner.y - 80, duration: 0.6, ease: "power2.out" }, "settle+=0.9");
-    tl.to(francis, { x: stickyDropPos.x + 20, y: stickyDropPos.y - 30, duration: 0.6, ease: "power2.out" }, "settle+=1.0");
+    // Cursors settle near their last targets
+    tl.to(xi, { x: recipePos.x + 30, y: recipePos.y + 40, duration: 0.5, ease: "power2.out" }, "settle+=0.5");
+    tl.to(alex, { x: detailCorner.x - 60, y: detailCorner.y - 80, duration: 0.3, ease: "power3.out" }, "settle+=0.55");
+    tl.to(francis, { x: stickyDropPos.x + 20, y: stickyDropPos.y - 30, duration: 0.25, ease: "power3.out" }, "settle+=0.6");
+    tl.to(mia, { x: pastedPos.x - 20, y: pastedPos.y + 20, duration: 0.3, ease: "power3.out" }, "settle+=0.58");
 
-    tl.to({}, { duration: 1.2 }, "settle+=1.6");
+    tl.to({}, { duration: 1.0 }, "settle+=1.0");
 
   }, { scope: rootRef, dependencies: [prefersReduced, scale] });
 
@@ -652,12 +716,15 @@ const GsapReferenceBoardDemo = () => {
           <RightSidebar />
         </div>
 
+        <PastedImage />
         <CursorSVG id="xi" fill={CURSOR_XI} label="Xi" />
         <CursorSVG id="alex" fill={CURSOR_ALEX} label="Alex" />
         <CursorSVG id="francis" fill={CURSOR_FRANCIS} label="Francis" />
+        <CursorSVG id="mia" fill={CURSOR_MIA} label="Mia" />
         <RippleCircle id="xi" color={CURSOR_XI} />
         <RippleCircle id="alex" color={CURSOR_ALEX} />
         <RippleCircle id="francis" color={CURSOR_FRANCIS} />
+        <RippleCircle id="mia" color={CURSOR_MIA} />
 
         <div style={{
           position: "absolute", bottom: 8, right: 8, zIndex: 60,
