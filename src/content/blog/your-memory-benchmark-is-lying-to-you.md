@@ -1,8 +1,8 @@
 ---
 title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)"
-date: "2026-03-22"
+date: "2026-05-22"
 category: "Research"
-status: "draft"
+status: "plated"
 ---
 
 ```textandimage
@@ -247,4 +247,4 @@ That choice needs to be explicit.
 
 ## End
 
-The full paper is in the works.
+This post is the public companion to our arXiv paper, [Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks](https://arxiv.org/abs/2605.24060), by Sugam Panthi and Rabab Abdelfattah.

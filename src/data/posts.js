@@ -20,13 +20,18 @@ export const posts = [
   //   category: "Research",
   //   status: "plated",
   // },
-  // {
-  //   slug: "your-memory-benchmark-is-lying-to-you",
-  //   title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",
-  //   date: "2026-03-22",
-  //   category: "Research",
-  //   status: "plated",
-  // },
+  {
+    slug: "your-memory-benchmark-is-lying-to-you",
+    title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",
+    date: "2026-05-22",
+    category: "Research",
+    status: "plated",
+    excerpt: "A public companion to our arXiv paper on LLM memory evaluation: the same ranked list can produce different winners when Raw, Source, and Canonical scoring targets are swapped.",
+    tags: ["LLM Memory", "Evaluation", "Information Retrieval", "Benchmarks", "LongMemEval", "LoCoMo", "TIAP"],
+    seoTitle: "LLM Memory Benchmarks and Scoring Targets | Sugam Panthi",
+    seoDescription: "A technical essay based on Same Ranking, Different Winner: how Raw, Source, and Canonical scoring targets change LLM memory benchmark conclusions on LoCoMo and LongMemEval-S.",
+    canonicalPath: "/blog/your-memory-benchmark-is-lying-to-you"
+  },
   {
     slug: "every-voice-ai-forgets-what-you-heard",
     title: "Voice AI Can Stop Talking. It Still Needs Heard State.",
