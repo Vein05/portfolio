@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "gsap-choreography-part-2",
+    title: "Scripted product demos with GSAP, part two: the camera",
+    date: "2026-05-26",
+    category: "Engineering",
+    status: "plated",
+    excerpt: "Part one replaced a 3.4 MB video with 40 KB of DOM animation. Part two adds a camera: zoom into the action, pan to follow the cursor, pull back for scene changes. Plus the SEO, accessibility, and agent arguments I skipped the first time.",
+    tags: ["GSAP", "Animation", "React", "Frontend", "Performance", "SEO", "Accessibility"],
+    seoTitle: "GSAP product demos part 2: pan-zoom camera, SEO, and accessibility | Sugam Panthi",
+    seoDescription: "How to add cinematic zoom and pan to GSAP product demo animations: zoom wrapper architecture, pan math, easing philosophy, SEO indexing, accessibility, and the AI agent workflow.",
+    canonicalPath: "/blog/gsap-choreography-part-2"
+  },
+  {
     slug: "gsap-choreography",
     title: "Scripted product demos with GSAP instead of video",
     date: "2026-05-20",

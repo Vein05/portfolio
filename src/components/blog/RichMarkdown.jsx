@@ -33,6 +33,11 @@ const rehypeHighlightOptions = {
 
 const GsapChoreographyDemo = lazy(() => import('./GsapChoreographyDemo'));
 const GsapReferenceBoardDemo = lazy(() => import('./GsapReferenceBoardDemo'));
+const GsapPanZoomDemos = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.ZoomPanDemo })));
+const GsapCursorCompare = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.CursorCompareDemo })));
+const GsapEasingCompare = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.EasingCompareDemo })));
+const GsapLiveCodeBlock = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.LiveCodeBlock })));
+const GsapStressTest = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.StressTestDemo })));
 
 const MERMAID_SCRIPT_ID = 'mermaid-cdn-script';
 const MERMAID_SCRIPT_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
@@ -46,6 +51,8 @@ const SAFE_IFRAME_HOSTS = new Set([
   'codesandbox.io',
   'www.loom.com',
   'loom.com',
+  'costumary.com',
+  'www.costumary.com',
 ]);
 const BLOG_IMAGE_PREFIX = '/posts/images/';
 const OPTIMIZED_BLOG_IMAGE_PREFIX = '/posts/images/optimized/';
@@ -666,6 +673,40 @@ const RichCode = ({ inline, className, children, ...props }) => {
           <GsapReferenceBoardDemo />
         </Suspense>
       </div>
+    );
+  }
+
+  if (language === 'gsap-live:zoom-pan') {
+    return (
+      <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
+        <GsapLiveCodeBlock code={rawCode}>
+          <GsapPanZoomDemos />
+        </GsapLiveCodeBlock>
+      </Suspense>
+    );
+  }
+
+  if (language === 'gsap-cursor-compare') {
+    return (
+      <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
+        <GsapCursorCompare />
+      </Suspense>
+    );
+  }
+
+  if (language === 'gsap-easing-compare') {
+    return (
+      <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
+        <GsapEasingCompare />
+      </Suspense>
+    );
+  }
+
+  if (language === 'gsap-stress-test') {
+    return (
+      <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading demo...</div>}>
+        <GsapStressTest />
+      </Suspense>
     );
   }
 
