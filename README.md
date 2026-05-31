@@ -75,3 +75,5 @@ graph TD
   A --> B
 ```
 ~~~
+
+> Built with React & Tailwind.
