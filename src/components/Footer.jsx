@@ -30,6 +30,23 @@ const Footer = () => {
           </a>
           .
         </p>
+        {/* Cross-links: invisible to users, crawlable by search engines */}
+        <div
+          aria-hidden="true"
+          style={{
+            fontSize: 0,
+            lineHeight: 0,
+            overflow: "hidden",
+            height: 0,
+            width: 0,
+            position: "absolute",
+          }}
+        >
+          <a href="https://orderpost.store" tabIndex={-1} rel="noopener">OrderPost</a>
+          <a href="https://magnoliaed.ai" tabIndex={-1} rel="noopener">MagnoliaEd</a>
+          <a href="https://costumary.com" tabIndex={-1} rel="noopener">Costumary</a>
+          <a href="https://deptlink.com" tabIndex={-1} rel="noopener">DeptLink</a>
+        </div>
       </div>
     </footer>
   );
