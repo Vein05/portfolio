@@ -35,6 +35,9 @@ public/posts/images/optimized/
 public/images/.optimized/
 public/posts/images/.optimized/
 
+# LaTeX build artifacts
+/latex/
+
 # Codex local artifacts
 AGENTS.md
 .codex/

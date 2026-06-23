@@ -53,22 +53,52 @@ const Thumb = {
       </text>
     </svg>
   ),
+  ReaderScaling: () => (
+    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
+      {[0, 1, 2, 3].map((i) => (
+        <rect
+          key={i}
+          x={40 + i * 38}
+          y={90 - [30, 52, 44, 60][i]}
+          width="24"
+          height={[30, 52, 44, 60][i]}
+          rx="2"
+          fill="rgb(var(--color-ink-dark))"
+          opacity={0.08 + i * 0.06}
+        />
+      ))}
+      <line x1="32" y1="92" x2="196" y2="92" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.25" />
+      <path d="M38 78 Q70 42, 100 56 T164 34" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.4" opacity="0.3" strokeDasharray="4 3" />
+      {[0, 1, 2, 3].map((i) => (
+        <circle key={i} cx={52 + i * 38} cy={[78, 56, 62, 46][i]} r="3" fill="rgb(var(--color-ink-dark))" opacity={0.25 + i * 0.06} />
+      ))}
+      <text x="22" y="116" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.75">
+        RAG · Compression · Readers
+      </text>
+      <text x="22" y="130" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.6">
+        Reader scaling audit
+      </text>
+    </svg>
+  ),
 };
 
 const papers = [
   {
-    title: "A Comprehensive Review of Plastic Recycling in the Construction Industry: Challenges and Opportunities in the US",
-    thumb: "PlasticRecycling",
-    tag: "Research Paper · 2025",
-    summary: "A review of plastic recycling pathways and the main barriers to construction reuse in the US.",
-    link: "https://docs.lib.purdue.edu/cib-conferences/vol1/iss1/63/",
-    linkLabel: "Read on Purdue eLib",
+    title: "Fixed RAG Compression Collapses Measured Reader Scaling",
+    thumb: "ReaderScaling",
+    anchorId: "research-rag-compression",
+    tag: "Research Paper · arXiv 2026",
+    summary: "Shows that fixed RAG compression can raise average accuracy while hiding reader upgrades and reversing model rankings across 20 readers and ten domain-method settings.",
+    link: "https://arxiv.org/abs/2606.21807",
+    linkLabel: "Read on arXiv",
     linkIcon: "external",
-    doi: "10.7771/3067-4883.2081",
+    doi: "10.48550/arXiv.2606.21807",
     details: [
-      "Authors: Sugam Panthi, Fan Zhang",
-      "Published in CIB Conferences — Vol. 1, Iss. 1, p. 63",
-      "DOI: 10.7771/3067-4883.2081",
+      "Authors: Sugam Panthi, Rabab Abdelfattah",
+      "Submitted to arXiv on June 19, 2026",
+      "Evaluates compression–reader interaction across 20 readers and 10 domain-method settings",
+      "Benchmarked on four QA datasets and one summarization dataset",
     ],
   },
   {
@@ -86,6 +116,21 @@ const papers = [
       "Submitted to arXiv on May 22, 2026",
       "TIAP fixed-output audit over Raw, Source, and Canonical scoring targets",
       "Evaluates target non-invariance on LoCoMo, LongMemEval-S, Mem0, and MemoryOS",
+    ],
+  },
+  {
+    title: "A Comprehensive Review of Plastic Recycling in the Construction Industry: Challenges and Opportunities in the US",
+    thumb: "PlasticRecycling",
+    tag: "Research Paper · 2025",
+    summary: "A review of plastic recycling pathways and the main barriers to construction reuse in the US.",
+    link: "https://docs.lib.purdue.edu/cib-conferences/vol1/iss1/63/",
+    linkLabel: "Read on Purdue eLib",
+    linkIcon: "external",
+    doi: "10.7771/3067-4883.2081",
+    details: [
+      "Authors: Sugam Panthi, Fan Zhang",
+      "Published in CIB Conferences — Vol. 1, Iss. 1, p. 63",
+      "DOI: 10.7771/3067-4883.2081",
     ],
   },
 ];
