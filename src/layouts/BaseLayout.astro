@@ -105,6 +105,18 @@ const {
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
       />
     </noscript>
+    <link rel="preconnect" href="https://orec.live" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "relatedLink": [
+        "https://orec.live",
+        "https://orec.live/tools",
+        "https://orec.live/recorder",
+        "https://orec.live/tools/waveform-generator",
+        "https://orec.live/tools/bpm-detector",
+      ],
+    })} />
     <slot name="head" />
   </head>
   <body>
