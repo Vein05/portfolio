@@ -24,14 +24,55 @@ export const posts = [
     ogImage: "https://spanthi.com/posts/images/gsap-choreography/og.webp",
     canonicalPath: "/blog/gsap-choreography"
   },
-  // HIDDEN FOR DOUBLE-BLIND REVIEW — re-enable after camera-ready
-  // {
-  //   slug: "compression-is-a-coin-flip",
-  //   title: "For Strong Readers, Evidence Compression Is a Coin Flip",
-  //   date: "2026-04-24",
-  //   category: "Research",
-  //   status: "plated",
-  // },
+  {
+    slug: "compression-is-a-coin-flip",
+    title: "For Strong Readers, Evidence Compression Is a Coin Flip",
+    date: "2026-04-24",
+    category: "Research",
+    status: "plated",
+    excerpt: "A public companion to the SIEVE compression study: reader-blind evidence compression rescues weak reader models but is a coin flip for strong ones. The help-to-damage ratio collapses from 3:1 to 1:1, and 15% of answers the reader already got right get broken.",
+    tags: ["LLM Memory", "RAG", "Evidence Compression", "Evaluation", "SIEVE", "LongMemEval", "HotpotQA"],
+    seoTitle: "Evidence Compression Is Reader-Dependent | Sugam Panthi",
+    seoDescription: "Based on the SIEVE study: post-retrieval evidence compression helps small reader models but is a coin flip for strong ones, and breaks about 15% of answers they already got right.",
+    canonicalPath: "/blog/compression-is-a-coin-flip"
+  },
+  // TEMP PREVIEW ENTRIES — remove and set md status back to "draft" before commit
+  {
+    slug: "where-does-the-paste-end",
+    title: "Where Does the Paste End? When Models Edit Your Afterthought Into Your Document",
+    date: "2026-08-17",
+    category: "Research",
+    status: "cooking",
+    excerpt: "Across 19 models, bare paste seams absorb typed afterthoughts at rates from 8% to 68%. Whitespace does not help; provenance markup does, and matching the artifact’s voice makes the failure sharply worse.",
+    tags: ["LLMs", "Prompting", "Evaluation", "SEAM", "Human–AI Interaction"],
+    seoTitle: "LLM Paste Boundaries: Instruction Absorption | Sugam Panthi",
+    seoDescription: "Why LLMs absorb text typed after a paste, what a 19-model study found, and why provenance markup works better than blank lines.",
+    canonicalPath: "/blog/where-does-the-paste-end"
+  },
+  {
+    slug: "agents-believe-tools-that-lie",
+    title: "Agents Believe Tools That Lie. A Receipt Helps Them Recover.",
+    date: "2026-08-17",
+    category: "Research",
+    status: "cooking",
+    excerpt: "Silent tool failures look like valid answers, so agents build on them. Across five models, a nonbinding monitor helped most when its receipt exposed another route—not merely a better diagnosis.",
+    tags: ["Agents", "Tool Use", "LLMs", "Outcome Monitors", "Runtime Verification"],
+    seoTitle: "Silent Tool Failures in AI Agents | Sugam Panthi",
+    seoDescription: "Why AI agents trust plausible but corrupted tool results, and how outcome-monitor receipts improved recovery across five models and two environments.",
+    canonicalPath: "/blog/agents-believe-tools-that-lie"
+  },
+  {
+    slug: "aspect-persistence-eternal-present-memory",
+    title: "Eternal-Present Memory: Why Your Assistant Thinks You Still Live Where You Were Only Visiting",
+    date: "2026-08-17",
+    category: "Research",
+    status: "cooking",
+    excerpt: "An initial 2,000-call LAPSE pilot found that consolidation selectively rewrote temporary forms into standing facts, while date stamps and a one-line preservation instruction barely changed later behavior.",
+    tags: ["LLM Memory", "Temporal Reasoning", "LAPSE", "Memory Consolidation"],
+    seoTitle: "Temporal Memory Consolidation in LLMs | Sugam Panthi",
+    seoDescription: "A 2,000-call LAPSE pilot on how LLM memory consolidation rewrites temporary statements, ignores validity, and preserves stale facts.",
+    canonicalPath: "/blog/aspect-persistence-eternal-present-memory"
+  },
   {
     slug: "your-memory-benchmark-is-lying-to-you",
     title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)",

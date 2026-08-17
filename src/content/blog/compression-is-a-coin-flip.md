@@ -2,7 +2,7 @@
 title: "For Strong Readers, Evidence Compression Is a Coin Flip"
 date: "2026-04-24"
 category: "Research"
-status: "draft"
+status: "plated"
 ---
 
 ```textandimage
@@ -114,3 +114,9 @@ If you are deploying a RAG system with evidence compression, the current evaluat
 Report gains and damage separately. Test across at least two reader scales. Break results down by question type. The interaction is real, it replicates across five domains, and it holds for both trained and untrained compressors.
 
 The paper is under review. Code and data will be released on publication.
+
+## Cite this
+
+```bibtex
+key: rag-compression
+```

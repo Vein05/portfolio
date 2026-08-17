@@ -71,51 +71,19 @@ const jsonLd = postMeta
     }
   : null;
 
-// FAQPage JSON-LD — auto-extracted from any heading that starts with "FAQ:"
-const extractFaqs = (body: string) => {
-  const lines = body.split('\n');
-  const faqs: { question: string; answer: string }[] = [];
-  let currentQuestion: string | null = null;
-  let answerLines: string[] = [];
-
-  const headingRe = /^#{1,4}\s+(.+)$/;
-
-  for (const line of lines) {
-    const match = line.match(headingRe);
-    if (match) {
-      // Save previous FAQ before starting new one
-      if (currentQuestion) {
-        faqs.push({ question: currentQuestion, answer: answerLines.join(' ').trim().slice(0, 500) });
-        answerLines = [];
-      }
-      const text = match[1].trim();
-      currentQuestion = text.startsWith('FAQ:') ? text.replace(/^FAQ:\s*/, '') : null;
-    } else if (currentQuestion && line.trim()) {
-      // Skip code fences and custom blocks inside answers
-      if (!line.startsWith('```') && !line.startsWith('~~~')) {
-        answerLines.push(line.trim());
-      }
-    }
-  }
-  // Flush last
-  if (currentQuestion) {
-    faqs.push({ question: currentQuestion, answer: answerLines.join(' ').trim().slice(0, 500) });
-  }
-  return faqs;
+// BreadcrumbList is a Google-supported rich-result type and matches the
+// visible Home → Blog → Post hierarchy. Visible FAQs remain ordinary article
+// content; FAQPage rich results are restricted to authoritative health and
+// government sites, so blog posts deliberately do not emit that schema.
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+    { '@type': 'ListItem', position: 3, name: postMeta?.title ?? entry.data.title, item: canonicalUrl },
+  ],
 };
-
-const faqs = extractFaqs(entry.body);
-const faqJsonLd = faqs.length > 0
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faqs.map(({ question, answer }) => ({
-        '@type': 'Question',
-        name: question,
-        acceptedAnswer: { '@type': 'Answer', text: answer },
-      })),
-    }
-  : null;
 
 // Build pantry ingredients — shared tags with other posts
 const pantryIngredients = (postMeta?.tags ?? [])
@@ -144,11 +112,10 @@ const currentPath = Astro.url.pathname;
   publishedTime={postMeta?.date}
 >
   <!-- Extra SEO head tags injected server-side -->
-  {postMeta?.tags && <meta slot="head" name="keywords" content={postMeta.tags.join(', ')} />}
   {prevSeriesPost && <link slot="head" rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}`} />}
   {nextSeriesPost && <link slot="head" rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}`} />}
   {jsonLd && <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
-  {faqJsonLd && <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />}
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 
   <div class="min-h-screen bg-paper-light">
     <BreadcrumbIsland

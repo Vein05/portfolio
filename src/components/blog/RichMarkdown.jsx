@@ -11,6 +11,7 @@ import langXml from 'highlight.js/lib/languages/xml';
 import langPlaintext from 'highlight.js/lib/languages/plaintext';
 import langApache from 'highlight.js/lib/languages/apache';
 import { Copy, Check, AlertTriangle } from 'lucide-react';
+import { citations } from '../../data/citations';
 
 const rehypeHighlightOptions = {
   languages: {
@@ -38,6 +39,7 @@ const GsapCursorCompare = lazy(() => import('./GsapPanZoomDemos').then(m => ({ d
 const GsapEasingCompare = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.EasingCompareDemo })));
 const GsapLiveCodeBlock = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.LiveCodeBlock })));
 const GsapStressTest = lazy(() => import('./GsapPanZoomDemos').then(m => ({ default: m.StressTestDemo })));
+const ResearchChart = lazy(() => import('./ResearchCharts'));
 
 const MERMAID_SCRIPT_ID = 'mermaid-cdn-script';
 const MERMAID_SCRIPT_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
@@ -253,6 +255,89 @@ const CopyableCodeBlock = ({ children, ...props }) => {
       </div>
       <pre ref={ref} {...props} className="!my-0" style={{ borderRadius: '0 0 6px 6px' }}>
         {children}
+      </pre>
+    </div>
+  );
+};
+
+// Renders a BibTeX citation box for blog posts. Usage inside a post:
+//   ```bibtex
+//   key: rag-compression
+//   ```
+// A single `key:` line pulls the shared entry from src/data/citations.js.
+// Anything else in the block is treated as raw BibTeX and rendered verbatim,
+// so posts can cite papers not yet in the shared source.
+const CiteBlock = ({ raw }) => {
+  const [copied, setCopied] = useState(false);
+  const trimmed = raw.trim();
+  const keyMatch = trimmed.match(/^key:\s*([\w-]+)$/);
+
+  let bibtex = trimmed;
+  let label = null;
+  if (keyMatch) {
+    const entry = citations[keyMatch[1]];
+    if (entry) {
+      bibtex = entry.bibtex;
+      label = entry.label;
+    } else {
+      bibtex = `% Unknown citation key: ${keyMatch[1]}`;
+    }
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(bibtex).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <div className="my-6 w-fit max-w-full min-w-[min(100%,32rem)] mx-auto">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '8px 12px',
+        background: '#2a2825',
+        borderRadius: '8px 8px 0 0',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+      }}>
+        <span style={{
+          fontSize: 10,
+          fontFamily: 'monospace',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          color: 'rgba(255,255,255,0.45)',
+        }}>
+          Cite this{label ? ` · ${label}` : ''}
+        </span>
+        <div style={{ flex: 1 }} />
+        <button
+          onClick={handleCopy}
+          aria-label="Copy BibTeX"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 5,
+            padding: '3px 8px',
+            fontSize: 10,
+            fontFamily: 'monospace',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            borderRadius: 3,
+            border: 'none',
+            background: copied ? 'rgba(80,200,120,0.2)' : 'rgba(255,255,255,0.08)',
+            color: copied ? 'rgba(80,200,120,0.9)' : 'rgba(255,255,255,0.55)',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {copied ? <Check style={{ width: 11, height: 11 }} /> : <Copy style={{ width: 11, height: 11 }} />}
+          {copied ? 'Copied' : 'BibTeX'}
+        </button>
+      </div>
+      <pre className="!my-0" style={{ borderRadius: '0 0 6px 6px' }}>
+        <code>{bibtex}</code>
       </pre>
     </div>
   );
@@ -654,6 +739,19 @@ const RichCode = ({ inline, className, children, ...props }) => {
 
   if (language === 'mermaid') {
     return <MermaidBlock chart={rawCode} />;
+  }
+
+  if (language === 'bibtex') {
+    return <CiteBlock raw={rawCode} />;
+  }
+
+  if (language === 'chart') {
+    const payload = parseKVBlock(rawCode);
+    return (
+      <Suspense fallback={<div className="p-8 text-center text-ink-muted text-sm">Loading chart...</div>}>
+        <ResearchChart type={payload.type} />
+      </Suspense>
+    );
   }
 
   if (language === 'gsap-demo') {

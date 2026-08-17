@@ -1,10 +1,11 @@
 import { useEffect, useState, useLayoutEffect, useRef, Fragment } from "react";
-import { ExternalLink, FileText } from "lucide-react";
+import { ExternalLink, FileText, Copy, Check } from "lucide-react";
 import {
   useCardGridColumns,
   rowIndexForItem,
   rowStartIndices,
 } from "../hooks/useCardGridColumns";
+import { citations } from "../data/citations";
 
 const Thumb = {
   PlasticRecycling: () => (
@@ -88,6 +89,7 @@ const papers = [
     title: "Fixed RAG Compression Collapses Measured Reader Scaling",
     thumb: "ReaderScaling",
     anchorId: "research-rag-compression",
+    citeKey: "rag-compression",
     tag: "Research Paper · arXiv 2026",
     summary: "Shows that fixed RAG compression can raise average accuracy while hiding reader upgrades and reversing model rankings across 20 readers and ten domain-method settings.",
     link: "https://arxiv.org/abs/2606.21807",
@@ -105,6 +107,7 @@ const papers = [
     title: "Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks",
     thumb: "TargetChoice",
     anchorId: "research-conversational-memory",
+    citeKey: "memory-targets",
     tag: "Research Paper · arXiv 2026",
     summary: "Shows how LLM memory benchmark conclusions can flip when the ranked retrieval output stays fixed and only the credited scoring target changes.",
     link: "https://arxiv.org/abs/2605.24060",
@@ -121,6 +124,7 @@ const papers = [
   {
     title: "A Comprehensive Review of Plastic Recycling in the Construction Industry: Challenges and Opportunities in the US",
     thumb: "PlasticRecycling",
+    citeKey: "plastic-recycling",
     tag: "Research Paper · 2025",
     summary: "A review of plastic recycling pathways and the main barriers to construction reuse in the US.",
     link: "https://docs.lib.purdue.edu/cib-conferences/vol1/iss1/63/",
@@ -139,13 +143,24 @@ const DETAIL_PANEL_ID = "papers-detail-panel";
 
 const Papers = () => {
   const [selected, setSelected] = useState(null);
+  const [copiedCite, setCopiedCite] = useState(false);
   const cols = useCardGridColumns(2);
   const detailRef = useRef(null);
 
   const activeItem = selected !== null ? papers[selected] : null;
+  const activeBibtex = activeItem?.citeKey ? citations[activeItem.citeKey]?.bibtex : null;
+
+  const handleCopyCite = () => {
+    if (!activeBibtex) return;
+    navigator.clipboard.writeText(activeBibtex).then(() => {
+      setCopiedCite(true);
+      setTimeout(() => setCopiedCite(false), 2000);
+    });
+  };
   const selectedRow = selected !== null ? rowIndexForItem(selected, cols) : null;
 
   useLayoutEffect(() => {
+    setCopiedCite(false);
     if (selected === null || !detailRef.current) return;
     detailRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [selected, cols]);
@@ -281,6 +296,17 @@ const Papers = () => {
                         >
                           PlumX metrics
                         </a>
+                      )}
+                      {activeBibtex && (
+                        <button
+                          type="button"
+                          onClick={handleCopyCite}
+                          aria-label="Copy BibTeX citation"
+                          className={`inline-flex items-center gap-1.5 text-xs transition-colors ${copiedCite ? "text-green-400" : "text-paper-light/40 hover:text-ink-blue"}`}
+                        >
+                          {copiedCite ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                          {copiedCite ? "Copied" : "Copy BibTeX"}
+                        </button>
                       )}
                     </div>
                   </div>
