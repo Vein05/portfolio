@@ -1,6 +1,6 @@
 ---
 title: "Agents Believe Tools That Lie. A Receipt Helps Them Recover."
-date: "2026-08-17"
+date: "2026-08-09"
 category: "Research"
 status: "cooking"
 ---

@@ -1,6 +1,6 @@
 ---
 title: "Where Does the Paste End? When Models Edit Your Afterthought Into Your Document"
-date: "2026-08-17"
+date: "2026-08-15"
 category: "Research"
 status: "cooking"
 ---

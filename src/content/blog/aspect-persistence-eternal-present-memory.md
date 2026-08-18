@@ -1,6 +1,6 @@
 ---
 title: "Eternal-Present Memory: Why Your Assistant Thinks You Still Live Where You Were Only Visiting"
-date: "2026-08-17"
+date: "2026-08-03"
 category: "Research"
 status: "cooking"
 ---

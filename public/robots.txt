@@ -1,5 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Disallow:
-Sitemap: https://spanthi.com/sitemap.xml
 Sitemap: https://spanthi.com/sitemap-index.xml
+# AI answer engines: machine-readable site index
+# https://spanthi.com/llms.txt

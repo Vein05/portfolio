@@ -28,8 +28,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "postbuild": "node scripts/report-blog-images.js && pnpm run sitemap",
-    "sitemap": "node scripts/generate-sitemap.js",
+    "postbuild": "node scripts/report-blog-images.js",
     "images:optimize": "node scripts/optimize-blog-images.js",
     "images:report": "node scripts/report-blog-images.js"
   },

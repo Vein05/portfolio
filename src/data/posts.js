@@ -36,11 +36,22 @@ export const posts = [
     seoDescription: "Based on the SIEVE study: post-retrieval evidence compression helps small reader models but is a coin flip for strong ones, and breaks about 15% of answers they already got right.",
     canonicalPath: "/blog/compression-is-a-coin-flip"
   },
-  // TEMP PREVIEW ENTRIES — remove and set md status back to "draft" before commit
+  {
+    slug: "a-number-you-cant-trace-is-a-rumor",
+    title: "A Number You Can't Trace Is a Rumor. Here's the Machinery That Traces Mine.",
+    date: "2026-08-18",
+    category: "Research",
+    status: "cooking",
+    excerpt: "The bookkeeping discipline behind eight concurrent paper projects: every number traces to a scorer version and run, kill criteria precede spend, expensive runs pass a gate, logs are append-only, and no detector output is believed before a manual audit.",
+    tags: ["Research Workflow", "Reproducibility", "Provenance", "Experiment Tracking", "Research Engineering"],
+    seoTitle: "Research Provenance: Rules That Keep Numbers Traceable | Sugam Panthi",
+    seoDescription: "The bookkeeping rules behind running eight paper projects at once: trace every number to a scorer version and run, gate expensive runs, keep append-only logs, and audit detectors before you believe them.",
+    canonicalPath: "/blog/a-number-you-cant-trace-is-a-rumor"
+  },
   {
     slug: "where-does-the-paste-end",
     title: "Where Does the Paste End? When Models Edit Your Afterthought Into Your Document",
-    date: "2026-08-17",
+    date: "2026-08-15",
     category: "Research",
     status: "cooking",
     excerpt: "Across 19 models, bare paste seams absorb typed afterthoughts at rates from 8% to 68%. Whitespace does not help; provenance markup does, and matching the artifact’s voice makes the failure sharply worse.",
@@ -52,7 +63,7 @@ export const posts = [
   {
     slug: "agents-believe-tools-that-lie",
     title: "Agents Believe Tools That Lie. A Receipt Helps Them Recover.",
-    date: "2026-08-17",
+    date: "2026-08-09",
     category: "Research",
     status: "cooking",
     excerpt: "Silent tool failures look like valid answers, so agents build on them. Across five models, a nonbinding monitor helped most when its receipt exposed another route—not merely a better diagnosis.",
@@ -64,7 +75,7 @@ export const posts = [
   {
     slug: "aspect-persistence-eternal-present-memory",
     title: "Eternal-Present Memory: Why Your Assistant Thinks You Still Live Where You Were Only Visiting",
-    date: "2026-08-17",
+    date: "2026-08-03",
     category: "Research",
     status: "cooking",
     excerpt: "An initial 2,000-call LAPSE pilot found that consolidation selectively rewrote temporary forms into standing facts, while date stamps and a one-line preservation instruction barely changed later behavior.",
