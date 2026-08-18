@@ -11,7 +11,7 @@ It is in a table. It is doing real work: it is the reason a claim in the abstrac
 
 That is the failure I have organized an entire research workflow around not repeating. Not a clever failure. A bookkeeping failure, the kind nobody writes papers about and everybody has.
 
-I run eight concurrent paper projects as an undergrad; two of them are now published at EMNLP 2025 Findings ([the compression one](/blog/compression-is-a-coin-flip), [the benchmark one](/blog/your-memory-benchmark-is-lying-to-you)). What keeps the rest from collapsing into a heap of half-remembered results is not intelligence or tooling. It is a small set of boring rules, each one scar tissue from a specific time the absence of that rule cost me something. This is the machinery, and the mistakes that forced each piece of it.
+I run concurrent paper projects as an undergrad. What keeps them from collapsing into a heap of half-remembered results is not intelligence or tooling. It is a small set of boring rules, each one scar tissue from a specific time the absence of that rule cost me something. This is the machinery, and the mistakes that forced each piece of it.
 
 ## A number that can't trace to a version is a rumor
 
