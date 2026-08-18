@@ -587,6 +587,176 @@ export const LapseTimeBombDiagram = () => {
   );
 };
 
+// --- PROVENANCE: the trace chain concept diagram ---------------------------
+export const TraceChainDiagram = () => {
+  const W = 640, H = 288;
+  const box = (x, y, w, h) => `M${x},${y} h${w} v${h} h${-w} Z`;
+  return (
+    <ChartCard
+      kicker="Provenance · the trace chain"
+      title="Every number in the paper resolves to a command"
+      caption="The trace test, using a real value from an internal scoring audit. A table cell points to a ledger row, the row carries the run ID and scorer version, and the reproducer regenerates the value from frozen outputs. If any link is missing, the number is a rumor with good posture."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Flow: a paper table cell links to a results-ledger row, which links to a run ID and scorer version, which link to the exact command that reproduces the value.">
+        <defs>
+          <marker id="tc-arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill={muted} />
+          </marker>
+        </defs>
+        {/* Box 1: the paper table cell */}
+        <g fontFamily="monospace">
+          <path d={box(20, 30, 176, 84)} fill={surface} stroke={border} strokeWidth="1.5" />
+          <text x="32" y="52" fontSize="10" fill={muted}>PAPER · TABLE 3</text>
+          <text x="32" y="78" fontSize="14" fontWeight="700" fill={ink}>&minus;39.744</text>
+          <text x="32" y="98" fontSize="9" fill={muted}>never hand-copied</text>
+        </g>
+        <line x1={196} y1={72} x2={252} y2={72} stroke={muted} strokeWidth="1.5" markerEnd="url(#tc-arrow)" />
+        <text x={224} y={62} textAnchor="middle" fontFamily="monospace" fontSize="9" fill={muted}>points to</text>
+
+        {/* Box 2: the ledger row */}
+        <g fontFamily="monospace">
+          <path d={box(260, 18, 224, 110)} fill={surface} stroke={blue} strokeWidth="1.5" />
+          <text x="272" y="40" fontSize="10" fill={blue}>RESULTS LEDGER · ONE ROW</text>
+          <text x="272" y="62" fontSize="11" fill={ink}>run_id: mhrag_think_0810</text>
+          <text x="272" y="80" fontSize="11" fill={ink}>scorer: v3 (frozen SHA)</text>
+          <text x="272" y="98" fontSize="11" fill={ink}>date: 2026-08-10</text>
+          <text x="272" y="116" fontSize="9" fill={muted}>one ledger per project</text>
+        </g>
+        <line x1={372} y1={128} x2={372} y2={168} stroke={muted} strokeWidth="1.5" markerEnd="url(#tc-arrow)" />
+        <text x={384} y={152} fontFamily="monospace" fontSize="9" fill={muted}>regenerates via</text>
+
+        {/* Box 3: the reproducer */}
+        <g fontFamily="monospace">
+          <path d={box(140, 176, 464, 62)} fill={surface} stroke={border} strokeWidth="1.5" />
+          <text x="154" y="198" fontSize="10" fill={muted}>REPRODUCER (frozen run outputs in)</text>
+          <text x="154" y="222" fontSize="11.5" fill={ink}>$ python tools/audit_scoring_artifact.py &rarr; &minus;39.744</text>
+        </g>
+        <text x={(20 + 604) / 2} y="270" textAnchor="middle" fontFamily="monospace" fontSize="10" fontWeight="700" fill={ink}>
+          the test: table cell to command in under a minute
+        </text>
+      </svg>
+    </ChartCard>
+  );
+};
+
+// --- PROVENANCE: smoke-gate catches, one overnight sweep -------------------
+export const SmokeGateCatchesChart = () => {
+  const catches = [
+    {
+      name: 'TAG LEAKAGE',
+      detail1: 'answer tags inside the',
+      detail2: 'reasoning channel',
+      fix: 'scorer amended pre-outcome',
+    },
+    {
+      name: 'CAP SATURATION',
+      detail1: 'parse gate 6/10: 4 rows',
+      detail2: 'hit the 4,352-token cap',
+      fix: 'raised once + no-chase rule',
+    },
+    {
+      name: 'MEMORY MISS',
+      detail1: 'KV cache 9.76 GiB free',
+      detail2: 'vs 10.32 GiB required',
+      fix: 'caught at engine init, $0 spent',
+    },
+  ];
+  const W = 680, H = 320;
+  const box = (x, y, w, h) => `M${x},${y} h${w} v${h} h${-w} Z`;
+  const slot = 220, bx0 = 12, by = 84, bw = 204, bh = 118;
+  return (
+    <ChartCard
+      kicker="Cost gates · one overnight sweep"
+      title="Three catches in one night, each before money was spent"
+      caption="A scaling sweep of roughly 3,600 scored calls across 0.6B to 32B checkpoints, 2026-08-05. Every stage ran a ten-item smoke test before its full run. All three failures were caught at the smoke or engine-init stage; total overhead was about 50 smoke calls and 25 minutes, against rescoring or rerunning 3,600 calls if any had shipped."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Three smoke-test catches in one overnight run: answer-tag leakage, reasoning-token cap saturation, and a KV-cache memory miss, each caught before the paid run. Total overhead about 50 smoke calls and 25 minutes, protecting a 3,600-call sweep.">
+        {/* timeline */}
+        <line x1="24" y1="52" x2="656" y2="52" stroke={border} strokeWidth="1.5" />
+        <text x="24" y="32" fontFamily="monospace" fontSize="10" fill={muted}>ONE NIGHT, THREE GATES FIRED</text>
+        {catches.map((c, i) => {
+          const x = bx0 + i * slot;
+          const cx = x + bw / 2;
+          return (
+            <g key={c.name} fontFamily="monospace">
+              <circle cx={cx} cy={52} r="5" fill={red} />
+              <line x1={cx} y1={57} x2={cx} y2={by} stroke={muted} strokeWidth="1" strokeDasharray="3 3" />
+              <path d={box(x, by, bw, bh)} fill={surface} stroke={red} strokeWidth="1.5" />
+              <text x={x + 12} y={by + 24} fontSize="10.5" fontWeight="700" fill={red}>{c.name}</text>
+              <text x={x + 12} y={by + 46} fontSize="10.5" fill={ink}>{c.detail1}</text>
+              <text x={x + 12} y={by + 62} fontSize="10.5" fill={ink}>{c.detail2}</text>
+              <text x={x + 12} y={by + 92} fontSize="9" fill={blue}>&rarr; {c.fix}</text>
+            </g>
+          );
+        })}
+        {/* cost comparison strip */}
+        <g fontFamily="monospace">
+          <text x="24" y="238" fontSize="10" fill={muted}>COST OF THE GATES</text>
+          <rect x="24" y="246" width="10" height="16" fill={blue} opacity="0.85" />
+          <text x="42" y="259" fontSize="11" fontWeight="700" fill={ink}>~50 smoke calls · ~25 min</text>
+          <text x="24" y="288" fontSize="10" fill={muted}>COST IF ONE SHIPPED</text>
+          <rect x="24" y="296" width="620" height="16" fill={red} opacity="0.75" />
+          <text x="278" y="309" fontSize="11" fontWeight="700" fill={surface}>rescore or rerun ~3,600 calls</text>
+        </g>
+      </svg>
+    </ChartCard>
+  );
+};
+
+// --- PROVENANCE: the sign-flip that was a scoring artifact -----------------
+export const SignFlipAuditChart = () => {
+  const rows = [
+    { label: 'correct verdict, verbose', n: 115, pct: 65.0, color: red, note: 'scoring artifact' },
+    { label: 'genuine wrong verdict', n: 36, pct: 20.3, color: '#b07a24', note: 'real damage' },
+    { label: 'no verdict committed', n: 21, pct: 11.9, color: muted, note: 'real change' },
+    { label: 'ambiguous', n: 5, pct: 2.8, color: border, note: '' },
+  ];
+  const W = 680, H = 332;
+  const x0 = 34, x1 = 646;
+  const scale = (v) => (v / 100) * (x1 - x0);
+  return (
+    <ChartCard
+      kicker="Manual audit · reasoning-toggle experiment"
+      title="The 40-point reasoning collapse was the scorer, not the model"
+      caption="Yes/no subgroup of a multi-hop QA benchmark, n=130 items, 177 damaged seed-pairs read by hand. Strict exact match against a one-token gold scored the toggle at −39.7 points; a scorer that extracts the verdict from the sentence scores the same frozen outputs at −0.0. Token-F1 co-moved (mean 0.077 on damaged rows) because it shares the failure mode, so metric agreement was the artifact's signature, not a check."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Under strict exact match the reasoning toggle loses 39.7 points; under verdict extraction the effect is 0. Of 177 damaged rows read by hand, 65 percent were correct but verbose answers, 20.3 percent genuine wrong verdicts, 11.9 percent committed no verdict, and 2.8 percent were ambiguous.">
+        {/* top: the effect under two scorers */}
+        <g fontFamily="monospace">
+          <text x={x0} y="30" fontSize="10" fill={muted}>MEASURED EFFECT OF THE REASONING TOGGLE</text>
+          <text x={x0} y="58" fontSize="11" fill={ink}>strict exact match</text>
+          <rect x={x0 + 210} y="44" width={scale(39.7 * 0.9)} height="20" fill={red} opacity="0.85" />
+          <text x={x0 + 218 + scale(39.7 * 0.9)} y="59" fontSize="12" fontWeight="700" fill={red}>&minus;39.7 pts</text>
+          <text x={x0} y="90" fontSize="11" fill={ink}>verdict extraction</text>
+          <rect x={x0 + 210} y="78" width="3" height="20" fill={blue} opacity="0.9" />
+          <text x={x0 + 222} y="93" fontSize="12" fontWeight="700" fill={blue}>&minus;0.0 pts · same outputs</text>
+        </g>
+        <line x1={x0} y1="112" x2={x1} y2="112" stroke={border} strokeWidth="1" />
+        {/* bottom: the 177 damage rows, read by hand */}
+        <g fontFamily="monospace">
+          <text x={x0} y="138" fontSize="10" fill={muted}>WHAT READING ALL 177 DAMAGED ROWS FOUND</text>
+        </g>
+        {rows.map((r, i) => {
+          const yy = 158 + i * 42;
+          const w = scale(r.pct);
+          return (
+            <g key={r.label} fontFamily="monospace">
+              <rect x={x0} y={yy} width={w} height="24" fill={r.color} opacity="0.85" />
+              <text x={x0 + w + 10} y={yy + 16} fontSize="11" fontWeight="700" fill={ink}>
+                {r.n}/177 · {r.pct}%{r.note ? ` · ${r.note}` : ''}
+              </text>
+              <text x={x0} y={yy + 36} fontSize="9.5" fill={muted}>{r.label}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartCard>
+  );
+};
+
 const ResearchChart = ({ type }) => {
   if (type === 'seam-absorption') return <SeamAbsorptionChart />;
   if (type === 'seam-model-panel') return <SeamModelPanelChart />;
@@ -598,6 +768,9 @@ const ResearchChart = ({ type }) => {
   if (type === 'lapse-dissociation') return <LapseDissociationChart />;
   if (type === 'lapse-consolidation') return <LapseConsolidationChart />;
   if (type === 'lapse-timebomb') return <LapseTimeBombDiagram />;
+  if (type === 'trace-chain') return <TraceChainDiagram />;
+  if (type === 'smoke-catches') return <SmokeGateCatchesChart />;
+  if (type === 'signflip-audit') return <SignFlipAuditChart />;
   return null;
 };
 

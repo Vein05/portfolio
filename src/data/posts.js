@@ -45,7 +45,7 @@ export const posts = [
     excerpt: "The bookkeeping discipline behind eight concurrent paper projects: every number traces to a scorer version and run, kill criteria precede spend, expensive runs pass a gate, logs are append-only, and no detector output is believed before a manual audit.",
     tags: ["Research Workflow", "Reproducibility", "Provenance", "Experiment Tracking", "Research Engineering"],
     seoTitle: "Research Provenance: Rules That Keep Numbers Traceable | Sugam Panthi",
-    seoDescription: "The bookkeeping rules behind running eight paper projects at once: trace every number to a scorer version and run, gate expensive runs, keep append-only logs, and audit detectors before you believe them.",
+    seoDescription: "The bookkeeping rules behind eight concurrent paper projects: trace every number to its scorer version and run, gate paid spend, keep append-only logs.",
     canonicalPath: "/blog/a-number-you-cant-trace-is-a-rumor"
   },
   {
