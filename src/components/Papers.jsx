@@ -8,6 +8,26 @@ import {
 import { citations } from "../data/citations";
 
 const Thumb = {
+  OutcomeMonitor: () => (
+    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
+      {/* tool result panel */}
+      <rect x="30" y="26" width="88" height="62" rx="3" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.32" />
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x="40" y={36 + i * 11} width={i === 3 ? 34 : 62} height="3" rx="1" fill="rgb(var(--color-ink-dark))" opacity={0.14 + i * 0.03} />
+      ))}
+      {/* violated-property flag (receipt) */}
+      <path d="M118 40 h30 l-6 8 l6 8 h-30 z" fill="rgb(var(--color-ink-red))" opacity="0.5" />
+      <circle cx="118" cy="56" r="3" fill="rgb(var(--color-ink-red))" opacity="0.8" />
+      {/* recovery branch to an open door */}
+      <path d="M74 88 q0 26 44 26 h32" fill="none" stroke="rgb(var(--color-ink-blue))" strokeWidth="1.3" opacity="0.5" strokeDasharray="4 3" />
+      <rect x="150" y="98" width="34" height="30" rx="2" fill="none" stroke="rgb(var(--color-ink-blue))" strokeWidth="1.2" opacity="0.45" />
+      <line x1="167" y1="98" x2="167" y2="128" stroke="rgb(var(--color-ink-blue))" strokeWidth="1" opacity="0.35" />
+      <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.75">
+        Tools · Receipts · Recovery
+      </text>
+    </svg>
+  ),
   PlasticRecycling: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
@@ -84,7 +104,25 @@ const Thumb = {
   ),
 };
 
-const papers = [
+export const papers = [
+  {
+    title: "Outcome Monitors: Recovery Affordances for Silent Tool Failures",
+    thumb: "OutcomeMonitor",
+    anchorId: "research-outcome-monitors",
+    citeKey: "outcome-monitors",
+    tag: "Research Paper · arXiv 2026",
+    summary: "Introduces outcome monitors that detect silent tool failures against contracts mined from task-disjoint traces, then attach a nonbinding receipt naming the violated property and public recovery tools. Raises ToolMaze completion from 10.9% to 28.1%.",
+    link: "https://arxiv.org/abs/2608.19303",
+    linkLabel: "Read on arXiv",
+    linkIcon: "external",
+    doi: "10.48550/arXiv.2608.19303",
+    details: [
+      "Authors: Sugam Panthi, Rabab Abdelfattah",
+      "Submitted to arXiv in August 2026",
+      "Contracts mined from task-disjoint traces or derived from public schemas",
+      "Evaluated on ToolMaze and τ-bench retail across models from multiple families",
+    ],
+  },
   {
     title: "Fixed RAG Compression Collapses Measured Reader Scaling",
     thumb: "ReaderScaling",
@@ -108,7 +146,7 @@ const papers = [
     thumb: "TargetChoice",
     anchorId: "research-conversational-memory",
     citeKey: "memory-targets",
-    tag: "Research Paper · arXiv 2026",
+    tag: "Research Paper · EMNLP Findings 2026",
     summary: "Shows how LLM memory benchmark conclusions can flip when the ranked retrieval output stays fixed and only the credited scoring target changes.",
     link: "https://arxiv.org/abs/2605.24060",
     linkLabel: "Read on arXiv",
@@ -116,6 +154,7 @@ const papers = [
     doi: "10.48550/arXiv.2605.24060",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
+      "Accepted to Findings of EMNLP 2026",
       "Submitted to arXiv on May 22, 2026",
       "TIAP fixed-output audit over Raw, Source, and Canonical scoring targets",
       "Evaluates target non-invariance on LoCoMo, LongMemEval-S, Mem0, and MemoryOS",
@@ -125,7 +164,7 @@ const papers = [
     title: "A Comprehensive Review of Plastic Recycling in the Construction Industry: Challenges and Opportunities in the US",
     thumb: "PlasticRecycling",
     citeKey: "plastic-recycling",
-    tag: "Research Paper · 2025",
+    tag: "Research Paper · CIB Conferences 2025",
     summary: "A review of plastic recycling pathways and the main barriers to construction reuse in the US.",
     link: "https://docs.lib.purdue.edu/cib-conferences/vol1/iss1/63/",
     linkLabel: "Read on Purdue eLib",

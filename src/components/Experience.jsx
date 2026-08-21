@@ -1,7 +1,6 @@
 import React from 'react';
 
-const Experience = () => {
-  const experiences = [
+export const experiences = [
     {
       title: "Co-Founder & CTO",
       company: "MagnoliaEd LLC",
@@ -51,8 +50,9 @@ const Experience = () => {
       ],
       status: "completed"
     }
-  ];
+];
 
+const Experience = () => {
   return (
     <div className="mt-8 mb-2 pb-2">
       <h2 className="text-2xl font-bold mb-6 text-ink-dark">Experience</h2>

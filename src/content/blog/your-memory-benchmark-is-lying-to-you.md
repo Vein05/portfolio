@@ -247,7 +247,7 @@ That choice needs to be explicit.
 
 ## End
 
-This post is the public companion to our arXiv paper, [Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks](https://arxiv.org/abs/2605.24060), by Sugam Panthi and Rabab Abdelfattah.
+This post is the public companion to our paper, [Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks](https://arxiv.org/abs/2605.24060), by Sugam Panthi and Rabab Abdelfattah, accepted to Findings of EMNLP 2026.
 
 ```bibtex
 key: memory-targets

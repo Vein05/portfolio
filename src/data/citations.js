@@ -4,6 +4,19 @@
 // it anywhere.
 
 export const citations = {
+  "outcome-monitors": {
+    label: "Outcome Monitors: Recovery Affordances for Silent Tool Failures (arXiv 2026)",
+    bibtex: `@misc{panthi2026outcomemonitors,
+  title         = {Outcome Monitors: Recovery Affordances for Silent Tool Failures},
+  author        = {Panthi, Sugam and Abdelfattah, Rabab},
+  year          = {2026},
+  eprint        = {2608.19303},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.AI},
+  doi           = {10.48550/arXiv.2608.19303},
+  url           = {https://arxiv.org/abs/2608.19303}
+}`,
+  },
   "rag-compression": {
     label: "Fixed RAG Compression Collapses Measured Reader Scaling (arXiv 2026)",
     bibtex: `@misc{panthi2026ragcompression,
@@ -18,11 +31,13 @@ export const citations = {
 }`,
   },
   "memory-targets": {
-    label: "Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks (arXiv 2026)",
-    bibtex: `@misc{panthi2026memorytargets,
+    label: "Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks (EMNLP Findings 2026)",
+    bibtex: `@inproceedings{panthi2026memorytargets,
   title         = {Same Ranking, Different Winner: How Scoring Targets Shape {LLM} Memory Benchmarks},
   author        = {Panthi, Sugam and Abdelfattah, Rabab},
+  booktitle     = {Findings of the Association for Computational Linguistics: EMNLP 2026},
   year          = {2026},
+  note          = {To appear},
   eprint        = {2605.24060},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},

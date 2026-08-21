@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { papers } from '../components/Papers.jsx';
+import { experiences } from '../components/Experience.jsx';
+import { items as projects } from '../components/Projects.jsx';
+
+// venue from tag ("Research Paper · EMNLP Findings 2026" → "EMNLP Findings 2026")
+const venue = (tag: string) => tag.split('·').pop()?.trim() ?? tag;
+const authorsOf = (p: { details?: string[] }) =>
+  p.details?.find((d) => d.startsWith('Authors:'))?.replace('Authors: ', '') ?? 'Sugam Panthi';
+---
+
+<BaseLayout
+  title="Sugam Panthi"
+  description="Sugam Panthi — publications, experience, and projects. Plain-text research portfolio."
+  canonical="https://spanthi.com/simple"
+>
+  <div class="min-h-screen bg-paper-light">
+    <div class="mx-auto max-w-[52rem] px-5 py-8 text-[15px] leading-relaxed text-ink-dark" style="font-family:'IBM Plex Sans','Oswald',sans-serif">
+
+      <nav class="mb-8 border-b border-border-paper pb-3 text-center text-sm">
+        <a href="/" class="text-ink-blue hover:underline">Full site</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="/blog" class="text-ink-blue hover:underline">Blog</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="mailto:Sugam.Panthi@usm.edu" class="text-ink-blue hover:underline">Email</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="https://github.com/vein05" target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">GitHub</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="https://www.linkedin.com/in/sugam-panthi" target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">LinkedIn</a>
+      </nav>
+
+      <header class="mb-10 flex items-start justify-between gap-6">
+        <div class="min-w-0">
+          <h1 class="text-2xl font-bold">Sugam Panthi</h1>
+          <p class="mt-2 text-ink-muted">
+            Co-founder @ <a href="https://magnoliaed.ai" target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">MagnoliaEd</a>
+            · Research Assistant @ <a href="https://www.usm.edu/" target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">The University of Southern Mississippi</a>
+          </p>
+          <p class="mt-3">
+            I build software and research conversational memory for LLM systems.
+            This is the plain version of <a href="/" class="text-ink-blue hover:underline">spanthi.com</a>.
+          </p>
+        </div>
+        <img
+          src="/images/headshot.jpeg"
+          alt="Sugam Panthi"
+          width="110"
+          height="115"
+          class="mt-1 h-[115px] w-[110px] shrink-0 rounded-sm border border-border-paper object-cover object-bottom"
+          loading="eager"
+        />
+      </header>
+
+      <section class="mb-10">
+        <h2 class="mb-4 border-b border-border-paper pb-1 text-lg font-bold">Publications</h2>
+        <ul class="space-y-4">
+          {papers.map((p) => (
+            <li>
+              <a href={p.link} target="_blank" rel="noopener noreferrer" class="font-medium text-ink-blue hover:underline">{p.title}</a>
+              <div class="text-sm text-ink-muted">
+                {authorsOf(p)} ·
+                {venue(p.tag).startsWith('arXiv') ? (
+                  <span> {venue(p.tag)}</span>
+                ) : (
+                  <span class="bg-ink-blue/10 px-1 font-medium text-ink-dark">{venue(p.tag)}</span>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="mb-4 border-b border-border-paper pb-1 text-lg font-bold">Experience</h2>
+        <ul class="space-y-3">
+          {experiences.map((e) => (
+            <li>
+              <span class="font-medium">{e.title}</span>,
+              {e.companyLink ? (
+                <a href={e.companyLink} target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline"> {e.company}</a>
+              ) : (
+                <span> {e.company}</span>
+              )}
+              <span class="text-sm text-ink-muted"> — {e.period}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="mb-4 border-b border-border-paper pb-1 text-lg font-bold">Projects</h2>
+        <ul class="space-y-3">
+          {projects.map((p) => (
+            <li>
+              <a href={p.link} target="_blank" rel="noopener noreferrer" class="font-medium text-ink-blue hover:underline">{p.title}</a>
+              <span class="text-ink-muted"> — {p.description}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <footer class="border-t border-border-paper pt-3 text-sm text-ink-muted">
+        © Sugam Panthi · <a href="/" class="text-ink-blue hover:underline">full site</a>
+      </footer>
+    </div>
+  </div>
+</BaseLayout>

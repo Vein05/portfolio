@@ -118,7 +118,7 @@ const Thumb = {
   ),
 };
 
-const items = [
+export const items = [
   {
     title: "Pali",
     thumb: "Pali",
