@@ -1,0 +1,229 @@
+/* Poster pages: the page is the poster. Fixed A0-portrait canvas in physical
+   units (mm/pt) scaled to fill the window width on screen; browser print
+   yields the exact A0 PDF. Self-contained: fixed light-palette tokens, no
+   site theme machinery. */
+
+:root {
+  --color-paper-light: 250 249 246;
+  --color-paper-surface: 255 255 255;
+  --color-ink-dark: 26 26 20;
+  --color-ink-muted: 107 101 96;
+  --color-ink-blue: 37 99 235;
+  --color-ink-red: 220 38 38;
+  --color-border-paper: 212 207 196;
+  /* Exact paper palette (LaTeX definecolor / seaborn deep):
+     RawTurnColor #4C72B0, SourceFamilyColor #55A868, CanonicalColor #C44E52.
+     Partial-verdict orange is seaborn deep #DD8452. Custom charts must match
+     the embedded paper figures. */
+  --color-target-raw: 76 114 176;
+  --color-target-source: 85 168 104;
+  --color-target-canonical: 196 78 82;
+  --color-audit-partial: 221 132 82;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(var(--color-paper-light));
+}
+
+/* ── Scaler: fill window width, native zoom does the rest ── */
+.poster-scaler {
+  overflow: hidden;
+}
+
+.poster-scaler .poster-canvas {
+  transform: scale(var(--poster-scale, 1));
+  transform-origin: top left;
+}
+
+/* ── Canvas: true A0 portrait ────────────────── */
+.poster-canvas {
+  width: 841mm;
+  height: 1189mm;
+  box-sizing: border-box;
+  background-color: rgb(var(--color-paper-light));
+  color: rgb(var(--color-ink-dark));
+  padding: 16mm 16mm 22mm;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: min-content;
+  gap: 8mm;
+  align-content: start;
+  font-family: 'Oswald', sans-serif;
+}
+
+.poster-canvas *,
+.poster-canvas *::before,
+.poster-canvas *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* ── Cells ───────────────────────────────────── */
+.poster-cell {
+  border: 0.6mm solid rgb(var(--color-border-paper));
+  border-radius: 2mm;
+  background-color: rgb(var(--color-paper-surface));
+  padding: 8mm 10mm;
+  position: relative;
+  min-width: 0;
+}
+
+.poster-cell.plain {
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.poster-cell .cell-marker {
+  position: absolute;
+  top: -6mm;
+  left: 10mm;
+  width: 13mm;
+  height: 13mm;
+  border-radius: 50%;
+  background-color: rgb(var(--color-ink-dark));
+  color: rgb(var(--color-paper-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21pt;
+  font-weight: 600;
+}
+
+.poster-cell .cell-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 16pt;
+  color: rgb(var(--color-ink-muted));
+  margin-bottom: 3mm;
+}
+
+.poster-cell .cell-title {
+  font-size: 28pt;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 6mm;
+}
+
+.poster-body {
+  font-size: 22pt;
+  line-height: 1.4;
+  font-weight: 300;
+}
+
+.poster-body strong {
+  font-weight: 600;
+}
+
+.poster-body .accent-blue {
+  color: rgb(var(--color-ink-blue));
+  font-weight: 600;
+}
+
+.poster-body .accent-red {
+  color: rgb(var(--color-ink-red));
+  font-weight: 600;
+}
+
+.poster-caption {
+  font-size: 16pt;
+  line-height: 1.35;
+  color: rgb(var(--color-ink-muted));
+  margin-top: 4mm;
+}
+
+.poster-figure {
+  margin: 0;
+}
+
+.poster-figure svg,
+.poster-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* ── Winner-flip grid (shared by data-table cells) ── */
+.winner-grid {
+  display: grid;
+  grid-template-columns: 1fr repeat(3, 0.45fr);
+  gap: 5mm 4mm;
+  align-items: center;
+  margin: 6mm 0;
+}
+
+.winner-head {
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 22pt;
+}
+
+.winner-label {
+  font-size: 21pt;
+  color: rgb(var(--color-ink-muted));
+}
+
+.winner-chip {
+  text-align: center;
+  font-size: 24pt;
+  font-weight: 600;
+  border: 0.6mm solid rgb(var(--color-border-paper));
+  border-radius: 2mm;
+  padding: 3.5mm 0;
+}
+
+.winner-chip[data-denser='true'] {
+  background-color: rgb(var(--color-ink-dark));
+  color: rgb(var(--color-paper-light));
+  border-color: rgb(var(--color-ink-dark));
+}
+
+/* ── TL;DR band ──────────────────────────────── */
+.tldr-band {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10mm;
+  font-size: 23pt;
+}
+
+.tldr-band > div {
+  border-left: 1mm solid rgb(var(--color-ink-dark));
+  padding-left: 6mm;
+}
+
+.tldr-head {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 20pt;
+  font-weight: 600;
+  margin-bottom: 3mm;
+}
+
+/* ── Print: exact A0, no scaling ─────────────── */
+@page {
+  size: 841mm 1189mm;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    height: 1189mm;
+    overflow: hidden;
+  }
+
+  .poster-scaler {
+    overflow: visible;
+    height: auto !important;
+  }
+
+  .poster-scaler .poster-canvas {
+    transform: none !important;
+  }
+}

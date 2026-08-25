@@ -1,0 +1,55 @@
+---
+// Poster shell: the page IS the poster. No site chrome, no theme machinery —
+// a fixed A0-portrait canvas scaled to fill the window width; browser zoom
+// and browser print work directly on it. Content is static — no islands —
+// so print-to-PDF never depends on hydration.
+import '../../styles/poster.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  slug: string;
+}
+
+const { title, description, slug } = Astro.props;
+const canonical = `https://spanthi.com/poster/${slug}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content="Sugam Panthi" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="poster-scaler">
+      <div class="poster-canvas">
+        <slot />
+      </div>
+    </div>
+    <script is:inline>
+      (() => {
+        const scaler = document.querySelector('.poster-scaler');
+        const canvas = document.querySelector('.poster-canvas');
+        const apply = () => {
+          const scale = document.documentElement.clientWidth / canvas.offsetWidth;
+          scaler.style.setProperty('--poster-scale', String(scale));
+          scaler.style.height = `${canvas.offsetHeight * scale}px`;
+        };
+        window.addEventListener('resize', apply);
+        apply();
+      })();
+    </script>
+  </body>
+</html>

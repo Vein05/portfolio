@@ -151,6 +151,7 @@ export const papers = [
     link: "https://arxiv.org/abs/2605.24060",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
+    posterHref: "/poster/memory-targets",
     doi: "10.48550/arXiv.2605.24060",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
@@ -324,6 +325,17 @@ const Papers = () => {
                         {activeItem.linkLabel}
                         <ExternalLink className="h-2.5 w-2.5 opacity-50" />
                       </a>
+                      {activeItem.posterHref && (
+                        <a
+                          href={activeItem.posterHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
+                        >
+                          <FileText className="h-3 w-3" />
+                          Poster
+                        </a>
+                      )}
                       {activeItem.doi && (
                         <a
                           href={`https://plu.mx/plum/a/?doi=${encodeURIComponent(activeItem.doi)}`}

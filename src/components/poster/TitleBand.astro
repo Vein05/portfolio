@@ -1,0 +1,82 @@
+---
+// Full-width poster header: venue kicker, title, authors, QR to the paper.
+export interface Props {
+  kicker: string;
+  title: string;
+  authors: string;
+  affiliation?: string;
+  qrSrc?: string;
+  qrLabel?: string;
+}
+
+const { kicker, title, authors, affiliation, qrSrc, qrLabel } = Astro.props;
+---
+
+<header class="poster-cell plain title-band" style="grid-column: span 12;">
+  <div class="title-band-text">
+    <p class="cell-kicker">{kicker}</p>
+    <h1>{title}</h1>
+    <p class="title-band-authors">{authors}</p>
+    {affiliation && <p class="title-band-affiliation">{affiliation}</p>}
+  </div>
+  {
+    qrSrc && (
+      <div class="title-band-qr">
+        <img src={qrSrc} alt={`QR code: ${qrLabel ?? 'link to paper'}`} />
+        {qrLabel && <p>{qrLabel}</p>}
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .title-band {
+    display: flex;
+    align-items: center;
+    gap: 14mm;
+    border-bottom: 1.2mm solid rgb(var(--color-ink-dark));
+    padding-bottom: 8mm;
+  }
+
+  .title-band-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .title-band h1 {
+    font-size: 62pt;
+    font-weight: 600;
+    line-height: 1.06;
+    margin: 4mm 0 6mm;
+  }
+
+  .title-band-authors {
+    font-size: 24pt;
+    font-weight: 400;
+  }
+
+  .title-band-affiliation {
+    font-size: 17pt;
+    color: rgb(var(--color-ink-muted));
+    margin-top: 2mm;
+  }
+
+  .title-band-qr {
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .title-band-qr img {
+    width: 44mm;
+    height: 44mm;
+    border: 0.6mm solid rgb(var(--color-border-paper));
+  }
+
+  .title-band-qr p {
+    font-size: 14pt;
+    color: rgb(var(--color-ink-muted));
+    margin-top: 2mm;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+</style>

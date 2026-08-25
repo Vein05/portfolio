@@ -1,0 +1,23 @@
+---
+// Generic bento cell. `span` is the 12-column grid span; `marker` is the
+// numbered reading-spine badge (bento grids are ambiguous about reading
+// order, so every content cell states its place in the sequence).
+export interface Props {
+  span: number;
+  marker?: string;
+  kicker?: string;
+  title?: string;
+  plain?: boolean;
+  rowSpan?: number;
+}
+
+const { span, marker, kicker, title, plain = false, rowSpan } = Astro.props;
+const style = `grid-column: span ${span};${rowSpan ? ` grid-row: span ${rowSpan};` : ''}`;
+---
+
+<section class:list={['poster-cell', { plain }]} style={style}>
+  {marker && <span class="cell-marker" aria-hidden="true">{marker}</span>}
+  {kicker && <p class="cell-kicker">{kicker}</p>}
+  {title && <h2 class="cell-title">{title}</h2>}
+  <slot />
+</section>
