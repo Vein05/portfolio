@@ -115,6 +115,7 @@ export const papers = [
     link: "https://arxiv.org/abs/2608.19303",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
+    posterHref: "/poster/outcome-monitors",
     doi: "10.48550/arXiv.2608.19303",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",

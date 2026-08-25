@@ -19,6 +19,14 @@
   --color-target-source: 85 168 104;
   --color-target-canonical: 196 78 82;
   --color-audit-partial: 221 132 82;
+  /* Outcome Monitors paper palette (arXiv:2608.19303 LaTeX definecolor):
+     ocmain #206945 (advisory green), ocwarn #B0392E (failure red),
+     ocflag #9E6C14 (flag amber), ocink #272E34, ocmuted #696F74. */
+  --color-oc-main: 32 105 68;
+  --color-oc-warn: 176 57 46;
+  --color-oc-flag: 158 108 20;
+  --color-oc-ink: 39 46 52;
+  --color-oc-muted: 105 111 116;
 }
 
 html,

@@ -1,0 +1,322 @@
+---
+// A0 poster for "Outcome Monitors: Recovery Affordances for Silent Tool
+// Failures" (arXiv:2608.19303, under review at AAAI-27). Every number comes
+// from the camera-ready; keep in sync with it. Embedded figures are the
+// paper's own TikZ figures compiled standalone and converted to SVG
+// (public/poster/figures/oc_*.svg). Custom charts rebuild Table 1 and the
+// incident-suite recall split, in the paper's oc palette: advisory green,
+// failure red, flag amber.
+import PosterShell from '../../components/poster/PosterShell.astro';
+import PosterCell from '../../components/poster/PosterCell.astro';
+import TitleBand from '../../components/poster/TitleBand.astro';
+
+const ink = 'rgb(var(--color-oc-ink))';
+const muted = 'rgb(var(--color-oc-muted))';
+const mainC = 'rgb(var(--color-oc-main))';
+const warnC = 'rgb(var(--color-oc-warn))';
+const flagC = 'rgb(var(--color-oc-flag))';
+
+// ── Figure ③: frozen paired ToolMaze completion (paper Table 1) ──
+// Percentages are completions / 80 episodes per model.
+const toolmazeRows = [
+  { label: 'DeepSeek V4 Flash', base: 17.5, mon: 33.75, delta: '+16.25', wl: '15/2', counts: '14→27 / 80' },
+  { label: 'DeepSeek V4 Pro', base: 16.25, mon: 28.75, delta: '+12.50', wl: '14/4', counts: '13→23 / 80' },
+  { label: 'Qwen 3.7 Plus', base: 3.75, mon: 18.75, delta: '+15.00', wl: '12/0', counts: '3→15 / 80' },
+  { label: 'Qwen 3.7 Max', base: 6.25, mon: 31.25, delta: '+25.00', wl: '21/1', counts: '5→25 / 80' },
+  { label: 'Primary aggregate', base: 10.94, mon: 28.13, delta: '+17.19', wl: '62/7', counts: '35→90 / 320', bold: true },
+  { label: 'MiniMax M3 · replication', base: 6.25, mon: 25.0, delta: '+18.75', wl: '17/2', counts: '5→20 / 80' },
+];
+// Dumbbell geometry: viewBox 1440×320, plot x ∈ [420, 1180] for 0–40%.
+const tmX = (v) => 420 + (v / 40) * 760;
+const tmY = (i) => 48 + i * 46;
+const tmTicks = [0, 10, 20, 30, 40];
+
+// ── Figure ⑥: incident-suite recall by fault surface (paper §Results) ──
+const recallRows = [
+  { label: 'Violations over structured values', pct: 83, n: '25/30', color: mainC },
+  { label: 'Corruption inside plausible strings', pct: 22, n: '6/27', color: warnC },
+];
+---
+
+<PosterShell
+  title="Poster — Outcome Monitors"
+  description="A0 research poster: recovery affordances for silent tool failures (arXiv:2608.19303, under review at AAAI-27)."
+  slug="outcome-monitors"
+>
+  <TitleBand
+    kicker="Under review at AAAI-27 · arXiv:2608.19303 · cs.AI · cs.CL · cs.SE"
+    title="Outcome Monitors: Recovery Affordances for Silent Tool Failures"
+    authors="Sugam Panthi · Rabab Abdelfattah"
+    affiliation="The University of Southern Mississippi — detect contract violations in tool results; answer with a nonbinding receipt naming the violated property and public recovery tools"
+    qrSrc="/poster/outcome-monitors-qr.svg"
+    qrLabel="Scan for paper"
+  />
+
+  <PosterCell span={5} marker="1" kicker="The problem" title="A timeout is loud. A cached error page is silent.">
+    <div class="poster-body">
+      <p>
+        When a tool call times out, the agent sees the failure and routes around it. A cached error
+        page or a <span class="oc-warn">negative price</span> instead arrives in the expected format
+        and is <span class="oc-warn">consumed as fact</span> — detect, localize, recover are all left
+        to an agent that never learns anything went wrong.
+      </p>
+    </div>
+    <p class="big-stat">
+      <span class="stat-number">10.9%</span>
+      of ToolMaze episodes complete under injected silent faults — 35 of 320 across four models, with
+      a fault-aware system prompt already in place.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={7} marker="2" kicker="Method" title="Detect and advise: an in-band receipt, not a controller">
+    <div class="method-split">
+      <figure class="poster-figure">
+        <img
+          src="/poster/figures/oc_detect_advise.svg"
+          alt="Two lanes: in the raw interface the agent consumes a silent failure as fact; with detect-and-advise the result is kept, a contract violation is flagged, and an advisory receipt with a witness and recovery tools is appended, leaving verify, retry, and switch available."
+        />
+      </figure>
+      <div class="poster-body method-note">
+        <p>
+          <strong>Outcome contracts</strong> are mined from task-disjoint traces or derived from public
+          schemas. On a violation the monitor <strong>preserves the raw result</strong> and appends an
+          advisory receipt: the violated property, a diagnostic witness, and
+          <span class="oc-main">public recovery tools</span>.
+        </p>
+        <p class="method-note-second">
+          The receipt is <strong>nonbinding</strong> — no action is removed, no repair is chosen, and
+          no extra model call is made. Both arms share the same fault-aware prompt; the intervention
+          lives entirely in the returned tool result. Evaluations are frozen and prespecified, with
+          injected failures.
+        </p>
+      </div>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={12} marker="3" kicker="Core result · frozen paired ToolMaze completion, Table 1" title="Completion rises from 10.9% to 28.1% — every model, every stratum nonnegative">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 336" role="img" aria-label="Dumbbell chart: baseline versus monitor completion for four primary models, their aggregate, and the MiniMax M3 replication">
+        {tmTicks.map((t) => (
+          <>
+            <line x1={tmX(t)} y1="28" x2={tmX(t)} y2="288" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+            <text x={tmX(t)} y="312" text-anchor="middle" font-size="17" fill={muted}>{t}%</text>
+          </>
+        ))}
+        {toolmazeRows.map((r, i) => (
+          <g>
+            <text x="12" y={tmY(i) + 6} font-size="19" font-weight={r.bold ? '600' : '400'} fill={ink}>{r.label}</text>
+            <text x="405" y={tmY(i) + 6} text-anchor="end" font-size="15" fill={muted}>{r.counts}</text>
+            <line x1={tmX(r.base)} y1={tmY(i)} x2={tmX(r.mon)} y2={tmY(i)} stroke={mainC} stroke-width={r.bold ? 5 : 3.5} opacity="0.55" />
+            <circle cx={tmX(r.base)} cy={tmY(i)} r={r.bold ? 10 : 8} fill="rgb(var(--color-paper-surface))" stroke={ink} stroke-width="2.5" />
+            <circle cx={tmX(r.mon)} cy={tmY(i)} r={r.bold ? 10 : 8} fill={mainC} />
+            <text x="1210" y={tmY(i) + 6} font-size="20" font-weight="600" fill={mainC}>{r.delta}</text>
+            <text x="1320" y={tmY(i) + 6} font-size="16" fill={muted}>W/L {r.wl}</text>
+          </g>
+        ))}
+        <line x1="12" y1={tmY(4) - 23} x2="1428" y2={tmY(4) - 23} stroke={muted} stroke-width="1" opacity="0.35" />
+        <line x1="12" y1={tmY(5) - 23} x2="1428" y2={tmY(5) - 23} stroke={muted} stroke-width="1" opacity="0.35" />
+      </svg>
+      <figcaption class="poster-caption">
+        Open circles are baseline, filled are the monitor arm; Δ in percentage points, W/L counts
+        discordant pairs. Aggregate effect <strong>+17.2 points</strong> (95% bootstrap
+        [11.25, 23.44], sign-flip p&nbsp;&lt;&nbsp;.00001); MiniMax M3 is a separately frozen
+        third-family replication (exact p&nbsp;=&nbsp;.00073). An 8,192-token thinking-budget ablation
+        does not substitute for the receipt (interval [10.00, 25.62]). Data: paper Table 1.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} marker="4" kicker="What carries the gain · 114 paired workflows" title="The recovery-tool list is the active content">
+    <figure class="poster-figure decomposition-figure">
+      <img
+        src="/poster/figures/oc_signal_decomposition.svg"
+        alt="Contrast estimates with 95% intervals: receipt minus stripped +11.4 and receipt minus baseline +12.3 clear zero; stripped minus baseline, localized minus generic, and on-time minus deferred do not."
+      />
+      <figcaption class="poster-caption">
+        A receipt stripped of its recovery-tool list performs at baseline; restoring the list adds
+        <strong>+11.4 points</strong> (p&nbsp;=&nbsp;.028). Witness detail and delivery timing show no
+        detectable difference (≈18-point MDE bounds the nulls). Targeting content with the detector
+        cuts warning volume from ≈600 per tier to 80–91 with no detected completion loss.
+        Data: paper Figure 3.
+      </figcaption>
+    </figure>
+    <p class="poster-body after-receipt">
+      After a receipt, agents <span class="oc-main">switch to a listed substitute in 48.6%</span> of
+      484 detector events; 33.5% call another tool, 14.0% retry, 3.9% stop. 91.5% of events retain at
+      least two admissible recovery actions.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={6} marker="5" kicker="Generalization · frozen studies + dev rows" title="Gains concentrate where the fault blocks completion">
+    <figure class="poster-figure cross-env-figure">
+      <img
+        src="/poster/figures/oc_cross_environment.svg"
+        alt="Paired baseline and advisory completion by study: ToolMaze +17.2, tau-bench status +28.0, AppWorld type flip +16.7 improve; clean P0, tau-bench conservation, and AppWorld missing field are unchanged."
+      />
+      <figcaption class="poster-caption">
+        τ-bench retail replicates the effect in a stateful second environment: <strong>+14.0
+        points</strong> on V4 Flash (p&nbsp;=&nbsp;.028) and <strong>+12.0</strong> on V4 Pro
+        (p&nbsp;=&nbsp;.023), driven by categorical status violations (+28.0, exact
+        p&nbsp;=&nbsp;.00012). Where baselines already complete despite the fault (conservation 70%,
+        held-out AppWorld 78%), net effects are ≤ +6.3 with rescues offset by harms. Clean advisory
+        traffic: one spurious receipt in 100 τ-bench episodes; 0-point estimate on 114 clean ToolMaze
+        pairs. Data: paper Figure 2.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} marker="6" kicker="Validity check · incident-derived faults, authored blind" title="The contract vocabulary bounds detection">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 720 190" role="img" aria-label="Bar chart: detection recall is 83% for violations over structured values and 22% for corruption inside plausible strings">
+        {recallRows.map((r, i) => {
+          const y = 18 + i * 88;
+          const w = (r.pct / 100) * 470;
+          return (
+            <g>
+              <text x="10" y={y + 14} font-size="20" fill={ink}>{r.label}</text>
+              <rect x="10" y={y + 26} width="470" height="34" rx="3" fill={r.color} opacity="0.14" />
+              <rect x="10" y={y + 26} width={w} height="34" rx="3" fill={r.color} opacity="0.9" />
+              <text x={10 + w + 12} y={y + 49} font-size="24" font-weight="600" fill={r.color}>{r.pct}%</text>
+              <text x="600" y={y + 49} font-size="18" fill={muted}>{r.n}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <figcaption class="poster-caption">
+        On a suite transcribed from published production incidents, the unchanged detector flags
+        46.1% / 45.3% of injected faults (Flash / Pro) — recall splits by fault surface. Completion is
+        unchanged (faulted baselines already complete 65–68%), yet corrupted values propagate in
+        roughly <strong>1 in 5</strong> trackable episodes and about two thirds of those still pass.
+        On 53,078 organic StableToolBench responses the detector fires on 0.80%. Data: paper §6.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} marker="7" kicker="Takeaway" title="Attach recovery affordances at the point of failure">
+    <ol class="poster-body takeaway-list">
+      <li>Silent failures need an <strong>in-band signal</strong>: fault-aware prompts and extended reasoning budgets do not substitute for the receipt.</li>
+      <li>Put <span class="oc-main">recovery tools</span> in the receipt — diagnostics without them perform at baseline in our controls.</li>
+      <li>Keep it <strong>nonbinding and cheap</strong>: +$0.13 (+7%) per episode with no extra model call beats a five-call reviewer port (+$9.24, +498%) by +11.25 points.</li>
+      <li>Expect gains where the fault <strong>blocks completion</strong> (baseline ≤ 16%); elsewhere rescues and harms roughly cancel.</li>
+      <li>Detection stops at the <span class="oc-warn">mined vocabulary</span> — corruption inside plausible strings mostly slips through. Extending it is open.</li>
+    </ol>
+  </PosterCell>
+
+  <PosterCell span={12} marker="8" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we did</p>
+        <p>
+          Outcome Monitors check tool results against <strong>contracts mined from task-disjoint
+          traces</strong> or public schemas. On a violation they keep the result and append a
+          <span class="oc-main">nonbinding receipt</span>: violated property, witness, and public
+          recovery tools. Frozen, prespecified evaluations with injected failures.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we found</p>
+        <p>
+          ToolMaze completion rises <strong>10.9% → 28.1%</strong> across four models in two families
+          and replicates in a third; τ-bench retail improves +14.0 / +12.0 points. Ablations identify
+          the <strong>recovery-tool list</strong> — not diagnostic detail or timing — as the active
+          content.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What you should do</p>
+        <p>
+          When a tool result can be silently wrong, <strong>deliver recovery options with the
+          flag</strong> — a one-line in-band receipt outperforms a 5-call reviewer at 1/70th the added
+          cost. And treat the contract vocabulary as the boundary of trust: outside it, detection
+          drops to 46%.
+        </p>
+      </div>
+    </div>
+  </PosterCell>
+</PosterShell>
+
+<style>
+  .oc-main {
+    color: rgb(var(--color-oc-main));
+    font-weight: 600;
+  }
+
+  .oc-warn {
+    color: rgb(var(--color-oc-warn));
+    font-weight: 600;
+  }
+
+  .big-stat {
+    margin-top: 6mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+    font-size: 20pt;
+    line-height: 1.35;
+    font-weight: 300;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: 48pt;
+    font-weight: 600;
+    color: rgb(var(--color-oc-warn));
+    line-height: 1.05;
+  }
+
+  .method-split {
+    display: grid;
+    grid-template-columns: 43% 1fr;
+    gap: 8mm;
+    align-items: start;
+  }
+
+  .method-note-second {
+    margin-top: 4mm;
+  }
+
+  .decomposition-figure img {
+    width: 88%;
+    margin: 0 auto;
+  }
+
+  .cross-env-figure img {
+    width: 78%;
+    margin: 0 auto;
+  }
+
+  .after-receipt {
+    margin-top: 5mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+    font-size: 19pt;
+  }
+
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    margin-bottom: 4mm;
+    padding-left: 15mm;
+    position: relative;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    width: 9mm;
+    height: 9mm;
+    border: 0.6mm solid rgb(var(--color-ink-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15pt;
+    font-weight: 600;
+  }
+</style>
