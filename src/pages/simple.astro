@@ -65,6 +65,9 @@ const authorsOf = (p: { details?: string[] }) =>
                 ) : (
                   <span class="bg-ink-blue/10 px-1 font-medium text-ink-dark">{venue(p.tag)}</span>
                 )}
+                {p.posterHref && (
+                  <span> · <a href={p.posterHref} target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">Poster</a></span>
+                )}
               </div>
             </li>
           ))}
