@@ -134,6 +134,7 @@ export const papers = [
     link: "https://arxiv.org/abs/2606.21807",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
+    posterHref: "/poster/rag-compression",
     doi: "10.48550/arXiv.2606.21807",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
