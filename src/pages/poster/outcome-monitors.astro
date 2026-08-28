@@ -1,11 +1,11 @@
 ---
 // A0 poster for "Outcome Monitors: Recovery Affordances for Silent Tool
 // Failures" (arXiv:2608.19303, under review at AAAI-27). Every number comes
-// from the camera-ready; keep in sync with it. Embedded figures are the
-// paper's own TikZ figures compiled standalone and converted to SVG
-// (public/poster/figures/oc_*.svg). Custom charts rebuild Table 1 and the
-// incident-suite recall split, in the paper's oc palette: advisory green,
-// failure red, flag amber.
+// from the camera-ready; keep in sync with it. All figures are drawn
+// poster-native in this file (Oswald, poster-scale strokes) from the paper's
+// TikZ sources (arxiv/figures/*.tex) — the compiled paper SVGs were too small
+// and font-mismatched at A0. Color code used everywhere: advisory/monitor =
+// oc green, silent failure/harm = oc red, detection/flag = oc amber.
 import PosterShell from '../../components/poster/PosterShell.astro';
 import PosterCell from '../../components/poster/PosterCell.astro';
 import TitleBand from '../../components/poster/TitleBand.astro';
@@ -15,6 +15,8 @@ const muted = 'rgb(var(--color-oc-muted))';
 const mainC = 'rgb(var(--color-oc-main))';
 const warnC = 'rgb(var(--color-oc-warn))';
 const flagC = 'rgb(var(--color-oc-flag))';
+const paper = 'rgb(var(--color-paper-surface))';
+const mono = "ui-monospace, 'SF Mono', Menlo, monospace";
 
 // ── Figure ③: frozen paired ToolMaze completion (paper Table 1) ──
 // Percentages are completions / 80 episodes per model.
@@ -26,20 +28,68 @@ const toolmazeRows = [
   { label: 'Primary aggregate', base: 10.94, mon: 28.13, delta: '+17.19', wl: '62/7', counts: '35→90 / 320', bold: true },
   { label: 'MiniMax M3 · replication', base: 6.25, mon: 25.0, delta: '+18.75', wl: '17/2', counts: '5→20 / 80' },
 ];
-// Dumbbell geometry: viewBox 1440×320, plot x ∈ [420, 1180] for 0–40%.
+// Dumbbell geometry: viewBox 1440×336, plot x ∈ [420, 1180] for 0–40%.
 const tmX = (v) => 420 + (v / 40) * 760;
-const tmY = (i) => 48 + i * 46;
+const tmY = (i) => 42 + i * 42;
 const tmTicks = [0, 10, 20, 30, 40];
 
-// ── Figure ⑥: incident-suite recall by fault surface (paper §Results) ──
+// ── Figure ④a: receipt-component contrasts (paper Figure 3 / decomposition) ──
+// Centers and 95% bootstrap intervals in completion points, 114 paired
+// workflows per contrast; intervals decoded from the TikZ x(v) mapping.
+const contrastGroups = [
+  {
+    head: 'RECOVERY TOOLS ADDED',
+    active: true,
+    rows: [
+      { label: 'receipt − stripped', c: 11.4, lo: 2.6, hi: 20.2 },
+      { label: 'receipt − baseline', c: 12.3, lo: 3.5, hi: 21.9 },
+    ],
+  },
+  {
+    head: 'RECOVERY TOOLS UNCHANGED',
+    active: false,
+    rows: [
+      { label: 'stripped − baseline', c: 0.9, lo: -6.1, hi: 7.9 },
+      { label: 'localized − generic', c: -2.6, lo: -11.4, hi: 6.1 },
+      { label: 'on-time − deferred', c: 0.9, lo: -4.4, hi: 6.1 },
+    ],
+  },
+];
+// Contrast geometry: viewBox 1440×470, plot x ∈ [470, 1250] for −15…+25 pts.
+const ctX = (v) => 470 + ((v + 15) / 40) * 780;
+const ctTicks = [-10, 0, 10, 20];
+
+// ── Figure ④b: action after a receipt (484 detector events) ──
+const actionSplit = [
+  { label: 'switch to listed substitute', pct: 48.6, color: mainC },
+  { label: 'call another tool', pct: 33.5, color: flagC },
+  { label: 'retry', pct: 14.0, color: muted },
+  { label: 'stop', pct: 3.9, color: warnC },
+];
+
+// ── Figure ⑤: cross-environment paired completion (paper Figure 2) ──
+const crossRows = [
+  { label: 'ToolMaze implicit (4 models)', base: 10.9, mon: 28.1, delta: '+17.2' },
+  { label: 'τ-bench status', base: 12.0, mon: 40.0, delta: '+28.0' },
+  { label: 'ToolMaze clean P0', base: 64.9, mon: 64.9, delta: '0.0', tag: 'CLEAN' },
+  { label: 'AppWorld type flip', base: 66.7, mon: 83.3, delta: '+16.7', tag: 'DEV' },
+  { label: 'τ-bench conservation', base: 70.0, mon: 70.0, delta: '0.0' },
+  { label: 'AppWorld missing field', base: 85.0, mon: 85.0, delta: '0.0', tag: 'DEV' },
+];
+// Cross-env geometry: viewBox 1440×430, plot x ∈ [440, 1230] for 0–100%.
+const ceX = (v) => 440 + (v / 100) * 790;
+const ceY = (i) => 56 + i * 84;
+const ceTicks = [0, 25, 50, 75, 100];
+
+// ── Figure ⑥: incident-suite recall by fault surface (paper §6) ──
 const recallRows = [
-  { label: 'Violations over structured values', pct: 83, n: '25/30', color: mainC },
+  { label: 'Violations over structured values', pct: 83, n: '25/30', color: flagC },
   { label: 'Corruption inside plausible strings', pct: 22, n: '6/27', color: warnC },
 ];
 ---
 
 <PosterShell
-  title="Poster — Outcome Monitors"
+  title="Poster · Outcome Monitors"
   description="A0 research poster: recovery affordances for silent tool failures (arXiv:2608.19303, under review at AAAI-27)."
   slug="outcome-monitors"
 >
@@ -47,7 +97,7 @@ const recallRows = [
     kicker="Under review at AAAI-27 · arXiv:2608.19303 · cs.AI · cs.CL · cs.SE"
     title="Outcome Monitors: Recovery Affordances for Silent Tool Failures"
     authors="Sugam Panthi · Rabab Abdelfattah"
-    affiliation="The University of Southern Mississippi — detect contract violations in tool results; answer with a nonbinding receipt naming the violated property and public recovery tools"
+    affiliation="Detect and advise: a nonbinding in-band receipt naming the violated property and public recovery tools"
     qrSrc="/poster/outcome-monitors-qr.svg"
     qrLabel="Scan for paper"
   />
@@ -57,49 +107,109 @@ const recallRows = [
       <p>
         When a tool call times out, the agent sees the failure and routes around it. A cached error
         page or a <span class="oc-warn">negative price</span> instead arrives in the expected format
-        and is <span class="oc-warn">consumed as fact</span> — detect, localize, recover are all left
+        and is <span class="oc-warn">consumed as fact</span>: detect, localize, recover are all left
         to an agent that never learns anything went wrong.
       </p>
     </div>
+    <figure class="poster-figure loud-silent">
+      <svg viewBox="0 0 900 264" role="img" aria-label="Two rows: a loud timeout is visibly broken and the agent routes around it; a silent cached error page looks valid and is consumed as fact">
+        <text x="10" y="30" font-size="20" font-weight="600" letter-spacing="2" fill={muted}>LOUD</text>
+        <rect x="10" y="44" width="330" height="62" rx="6" fill="none" stroke={muted} stroke-width="3" stroke-dasharray="10 8" />
+        <text x="30" y="82" font-size="24" font-family={mono} fill={ink}>timeout · HTTP 504</text>
+        <line x1="356" y1="75" x2="420" y2="75" stroke={muted} stroke-width="3" />
+        <path d="M 420 75 l -14 -8 v 16 z" fill={muted} />
+        <text x="436" y="70" font-size="23" fill={ink}>agent sees the failure,</text>
+        <text x="436" y="98" font-size="23" fill={mainC} font-weight="600">routes around it</text>
+
+        <text x="10" y="166" font-size="20" font-weight="600" letter-spacing="2" fill={warnC}>SILENT</text>
+        <rect x="10" y="180" width="330" height="62" rx="6" fill={paper} stroke={ink} stroke-width="2.5" />
+        <text x="30" y="218" font-size="24" font-family={mono} fill={ink}>200 OK · cached page</text>
+        <line x1="356" y1="211" x2="420" y2="211" stroke={warnC} stroke-width="3" />
+        <path d="M 420 211 l -14 -8 v 16 z" fill={warnC} />
+        <text x="436" y="206" font-size="23" fill={ink}>expected format, wrong value,</text>
+        <text x="436" y="234" font-size="23" fill={warnC} font-weight="600">consumed as fact</text>
+      </svg>
+    </figure>
     <p class="big-stat">
       <span class="stat-number">10.9%</span>
-      of ToolMaze episodes complete under injected silent faults — 35 of 320 across four models, with
-      a fault-aware system prompt already in place.
+      of ToolMaze episodes complete under injected silent faults (35 of 320 across four models),
+      with a fault-aware system prompt already in place.
     </p>
   </PosterCell>
 
   <PosterCell span={7} marker="2" kicker="Method" title="Detect and advise: an in-band receipt, not a controller">
-    <div class="method-split">
-      <figure class="poster-figure">
-        <img
-          src="/poster/figures/oc_detect_advise.svg"
-          alt="Two lanes: in the raw interface the agent consumes a silent failure as fact; with detect-and-advise the result is kept, a contract violation is flagged, and an advisory receipt with a witness and recovery tools is appended, leaving verify, retry, and switch available."
-        />
-      </figure>
-      <div class="poster-body method-note">
-        <p>
-          <strong>Outcome contracts</strong> are mined from task-disjoint traces or derived from public
-          schemas. On a violation the monitor <strong>preserves the raw result</strong> and appends an
-          advisory receipt: the violated property, a diagnostic witness, and
-          <span class="oc-main">public recovery tools</span>.
-        </p>
-        <p class="method-note-second">
-          The receipt is <strong>nonbinding</strong> — no action is removed, no repair is chosen, and
-          no extra model call is made. Both arms share the same fault-aware prompt; the intervention
-          lives entirely in the returned tool result. Evaluations are frozen and prespecified, with
-          injected failures.
-        </p>
-      </div>
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 600" role="img" aria-label="Two lanes: in the raw interface the agent consumes a silent failure as fact; with detect-and-advise the result is kept, a contract violation is flagged, and an advisory receipt with a witness and recovery tools is appended, leaving verify, retry, and switch available.">
+        <defs>
+          <marker id="oc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={muted} />
+          </marker>
+        </defs>
+
+        <!-- lane A: raw interface -->
+        <rect x="0" y="0" width="695" height="600" rx="10" fill={warnC} opacity="0.06" />
+        <text x="30" y="52" font-size="27" font-weight="600" letter-spacing="2" fill={warnC}>RAW INTERFACE</text>
+        <rect x="30" y="90" width="635" height="84" rx="7" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="56" y="128" font-size="25" font-family={mono} fill={ink}>lookup_inventory</text>
+        <text x="56" y="160" font-size="22" font-family={mono} fill={muted}>available = -3</text>
+        <line x1="90" y1="174" x2="90" y2="274" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="30" y="280" width="635" height="84" rx="7" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="56" y="318" font-size="25" font-weight="600" fill={ink}>detect · localize · recover</text>
+        <text x="56" y="350" font-size="22" fill={muted}>all left to the agent</text>
+        <line x1="90" y1="364" x2="90" y2="464" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="30" y="470" width="635" height="84" rx="7" fill={warnC} fill-opacity="0.1" stroke={warnC} stroke-width="2.5" />
+        <text x="56" y="508" font-size="25" font-weight="600" fill={warnC}>silent failure</text>
+        <text x="56" y="540" font-size="22" fill={muted}>value consumed as fact</text>
+
+        <!-- lane B: detect and advise -->
+        <rect x="745" y="0" width="695" height="600" rx="10" fill={mainC} opacity="0.06" />
+        <text x="775" y="52" font-size="27" font-weight="600" letter-spacing="2" fill={mainC}>DETECT AND ADVISE</text>
+        <rect x="775" y="74" width="635" height="64" rx="7" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="801" y="115" font-size="25" font-family={mono} fill={ink}>lookup_inventory</text>
+        <text x="1080" y="115" font-size="22" fill={muted}>raw result kept</text>
+        <line x1="835" y1="138" x2="835" y2="166" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="775" y="172" width="635" height="64" rx="7" fill={flagC} fill-opacity="0.12" stroke={flagC} stroke-width="2.5" />
+        <text x="801" y="213" font-size="25" font-weight="600" fill={flagC}>contract violated</text>
+        <text x="1080" y="213" font-size="22" fill={muted}>mined or public invariant</text>
+        <line x1="835" y1="236" x2="835" y2="264" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="775" y="270" width="635" height="200" rx="8" fill={mainC} />
+        <text x="801" y="306" font-size="24" font-weight="600" letter-spacing="2" fill={paper}>ADVISORY RECEIPT</text>
+        <rect x="791" y="322" width="603" height="134" rx="5" fill={paper} />
+        <text x="811" y="360" font-size="22" font-weight="600" fill={ink}>witness</text>
+        <text x="930" y="360" font-size="20" font-family={mono} fill={ink}>expected ≥ 0, observed -3</text>
+        <text x="811" y="402" font-size="22" font-weight="600" fill={ink}>recovery</text>
+        <text x="930" y="402" font-size="20" font-family={mono} fill={ink}>query_warehouse · get_stock_by_sku</text>
+        <line x1="930" y1="416" x2="1340" y2="416" stroke={mainC} stroke-width="2.5" />
+        <text x="930" y="444" font-size="20" font-style="italic" fill={mainC}>the active content</text>
+        <line x1="835" y1="470" x2="835" y2="494" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="775" y="500" width="635" height="64" rx="7" fill={mainC} fill-opacity="0.1" stroke={mainC} stroke-width="2.5" />
+        <text x="801" y="541" font-size="25" font-weight="600" fill={mainC}>verify · retry · switch</text>
+        <text x="1080" y="541" font-size="22" fill={muted}>action set intact</text>
+      </svg>
+    </figure>
+    <div class="method-note poster-body">
+      <p>
+        <strong>Outcome contracts</strong> are mined from task-disjoint traces or derived from public
+        schemas. On a violation the monitor <strong>preserves the raw result</strong> and appends an
+        advisory receipt: the violated property, a diagnostic witness, and
+        <span class="oc-main">public recovery tools</span>.
+      </p>
+      <p>
+        The receipt is <strong>nonbinding</strong>: no action is removed, no repair is chosen, and
+        no extra model call is made. Both arms share the same fault-aware prompt; the intervention
+        lives entirely in the returned tool result.
+      </p>
     </div>
   </PosterCell>
 
-  <PosterCell span={12} marker="3" kicker="Core result · frozen paired ToolMaze completion, Table 1" title="Completion rises from 10.9% to 28.1% — every model, every stratum nonnegative">
+  <PosterCell span={12} marker="3" kicker="Core result · frozen paired ToolMaze, Table 1" title="Completion rises from 10.9% to 28.1%: every model, every stratum nonnegative">
     <figure class="poster-figure">
-      <svg viewBox="0 0 1440 336" role="img" aria-label="Dumbbell chart: baseline versus monitor completion for four primary models, their aggregate, and the MiniMax M3 replication">
+      <svg viewBox="0 0 1440 304" role="img" aria-label="Dumbbell chart: baseline versus monitor completion for four primary models, their aggregate, and the MiniMax M3 replication">
+        <rect x="12" y={tmY(4) - 19} width="1416" height="38" fill={mainC} opacity="0.07" />
         {tmTicks.map((t) => (
           <>
-            <line x1={tmX(t)} y1="28" x2={tmX(t)} y2="288" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
-            <text x={tmX(t)} y="312" text-anchor="middle" font-size="17" fill={muted}>{t}%</text>
+            <line x1={tmX(t)} y1="24" x2={tmX(t)} y2="262" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+            <text x={tmX(t)} y="288" text-anchor="middle" font-size="17" fill={muted}>{t}%</text>
           </>
         ))}
         {toolmazeRows.map((r, i) => (
@@ -113,54 +223,129 @@ const recallRows = [
             <text x="1320" y={tmY(i) + 6} font-size="16" fill={muted}>W/L {r.wl}</text>
           </g>
         ))}
-        <line x1="12" y1={tmY(4) - 23} x2="1428" y2={tmY(4) - 23} stroke={muted} stroke-width="1" opacity="0.35" />
-        <line x1="12" y1={tmY(5) - 23} x2="1428" y2={tmY(5) - 23} stroke={muted} stroke-width="1" opacity="0.35" />
+        <line x1="12" y1={tmY(4) - 21} x2="1428" y2={tmY(4) - 21} stroke={muted} stroke-width="1" opacity="0.35" />
+        <line x1="12" y1={tmY(5) - 21} x2="1428" y2={tmY(5) - 21} stroke={muted} stroke-width="1" opacity="0.35" />
       </svg>
       <figcaption class="poster-caption">
-        Open circles are baseline, filled are the monitor arm; Δ in percentage points, W/L counts
-        discordant pairs. Aggregate effect <strong>+17.2 points</strong> (95% bootstrap
-        [11.25, 23.44], sign-flip p&nbsp;&lt;&nbsp;.00001); MiniMax M3 is a separately frozen
-        third-family replication (exact p&nbsp;=&nbsp;.00073). An 8,192-token thinking-budget ablation
-        does not substitute for the receipt (interval [10.00, 25.62]). Data: paper Table 1.
+        Open circles are baseline, <span class="oc-main">filled green</span> the monitor arm; Δ in
+        points, W/L discordant pairs. Aggregate effect <strong>+17.2 points</strong> (95% bootstrap
+        [11.25, 23.44], p&nbsp;&lt;&nbsp;.00001); MiniMax M3 is a frozen third-family replication
+        (p&nbsp;=&nbsp;.00073). Data: paper Table 1.
       </figcaption>
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="4" kicker="What carries the gain · 114 paired workflows" title="The recovery-tool list is the active content">
-    <figure class="poster-figure decomposition-figure">
-      <img
-        src="/poster/figures/oc_signal_decomposition.svg"
-        alt="Contrast estimates with 95% intervals: receipt minus stripped +11.4 and receipt minus baseline +12.3 clear zero; stripped minus baseline, localized minus generic, and on-time minus deferred do not."
-      />
+  <PosterCell span={6} marker="4" kicker="Ablations · 114 paired workflows" title="The recovery-tool list is the active content">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 528" role="img" aria-label="Contrast estimates with 95% intervals: receipt minus stripped +11.4 and receipt minus baseline +12.3 clear zero; stripped minus baseline, localized minus generic, and on-time minus deferred do not.">
+        <rect x="12" y="24" width="1416" height="152" rx="6" fill={mainC} opacity="0.07" />
+        <rect x="12" y="194" width="1416" height="188" rx="6" fill={ink} opacity="0.03" />
+        {ctTicks.map((t) => (
+          <>
+            <line x1={ctX(t)} y1="24" x2={ctX(t)} y2="396" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity={t === 0 ? 0 : 0.35} />
+            <text x={ctX(t)} y="434" text-anchor="middle" font-size="24" fill={muted}>{t > 0 ? `+${t}` : t}</text>
+          </>
+        ))}
+        <line x1={ctX(0)} y1="20" x2={ctX(0)} y2="400" stroke={muted} stroke-width="2.5" stroke-dasharray="8 8" opacity="0.7" />
+        <text x="30" y="64" font-size="25" font-weight="600" letter-spacing="2" fill={mainC}>{contrastGroups[0].head}</text>
+        {contrastGroups[0].rows.map((r, i) => {
+          const y = 106 + i * 48;
+          return (
+            <g>
+              <text x="30" y={y + 9} font-size="27" fill={ink}>{r.label}</text>
+              <line x1={ctX(r.lo)} y1={y} x2={ctX(r.hi)} y2={y} stroke={mainC} stroke-width="7" stroke-linecap="round" />
+              <circle cx={ctX(r.c)} cy={y} r="13" fill={mainC} />
+              <text x="1420" y={y + 9} text-anchor="end" font-size="28" font-weight="600" fill={mainC}>+{r.c.toFixed(1)}</text>
+            </g>
+          );
+        })}
+        <text x="30" y="234" font-size="25" font-weight="600" letter-spacing="2" fill={muted}>{contrastGroups[1].head}</text>
+        {contrastGroups[1].rows.map((r, i) => {
+          const y = 276 + i * 48;
+          return (
+            <g>
+              <text x="30" y={y + 9} font-size="27" fill={ink}>{r.label}</text>
+              <line x1={ctX(r.lo)} y1={y} x2={ctX(r.hi)} y2={y} stroke={muted} stroke-width="5" stroke-linecap="round" />
+              <circle cx={ctX(r.c)} cy={y} r="12" fill={paper} stroke={muted} stroke-width="4" />
+              <text x="1420" y={y + 9} text-anchor="end" font-size="28" font-weight="600" fill={muted}>{r.c > 0 ? `+${r.c.toFixed(1)}` : r.c.toFixed(1)}</text>
+            </g>
+          );
+        })}
+        <text x={ctX(5)} y="500" text-anchor="middle" font-size="24" fill={muted}>completion difference (points), 95% interval</text>
+      </svg>
       <figcaption class="poster-caption">
         A receipt stripped of its recovery-tool list performs at baseline; restoring the list adds
         <strong>+11.4 points</strong> (p&nbsp;=&nbsp;.028). Witness detail and delivery timing show no
-        detectable difference (≈18-point MDE bounds the nulls). Targeting content with the detector
-        cuts warning volume from ≈600 per tier to 80–91 with no detected completion loss.
-        Data: paper Figure 3.
+        detectable difference (≈18-point MDE bounds the nulls). Data: paper Figure 3.
       </figcaption>
     </figure>
-    <p class="poster-body after-receipt">
-      After a receipt, agents <span class="oc-main">switch to a listed substitute in 48.6%</span> of
-      484 detector events; 33.5% call another tool, 14.0% retry, 3.9% stop. 91.5% of events retain at
-      least two admissible recovery actions.
-    </p>
+    <p class="poster-body after-receipt">What agents do after a receipt, across 484 detector events:</p>
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 170" role="img" aria-label="Stacked bar: after a receipt agents switch to a listed substitute 48.6% of the time, call another tool 33.5%, retry 14.0%, and stop 3.9%.">
+        {(() => {
+          let acc = 0;
+          return actionSplit.map((seg, i) => {
+            const x = 10 + (acc / 100) * 1420;
+            const w = (seg.pct / 100) * 1420 - 6;
+            acc += seg.pct;
+            const cx = x + w / 2;
+            const last = i === actionSplit.length - 1;
+            return (
+              <g>
+                <rect x={x} y="16" width={w} height="76" rx="4" fill={seg.color} opacity={i === 0 ? 0.9 : 0.75} />
+                {!last && <text x={i === 0 ? cx : x + w - 12} y="64" text-anchor={i === 0 ? 'middle' : 'end'} font-size="30" font-weight="600" fill={paper}>{seg.pct}%</text>}
+                <text x={last ? 1430 : cx} y="140" text-anchor={last ? 'end' : 'middle'} font-size="24" fill={last ? warnC : muted}>{seg.label}{last ? ` ${seg.pct}%` : ''}</text>
+              </g>
+            );
+          });
+        })()}
+      </svg>
+      <figcaption class="poster-caption">
+        91.5% of detector events retain at least two admissible recovery actions.
+      </figcaption>
+    </figure>
   </PosterCell>
 
   <PosterCell span={6} marker="5" kicker="Generalization · frozen studies + dev rows" title="Gains concentrate where the fault blocks completion">
-    <figure class="poster-figure cross-env-figure">
-      <img
-        src="/poster/figures/oc_cross_environment.svg"
-        alt="Paired baseline and advisory completion by study: ToolMaze +17.2, tau-bench status +28.0, AppWorld type flip +16.7 improve; clean P0, tau-bench conservation, and AppWorld missing field are unchanged."
-      />
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 640" role="img" aria-label="Paired baseline and advisory completion by study: ToolMaze +17.2, tau-bench status +28.0, AppWorld type flip +16.7 improve; clean P0, tau-bench conservation, and AppWorld missing field are unchanged.">
+        {ceTicks.map((t) => (
+          <>
+            <line x1={ceX(t)} y1="24" x2={ceX(t)} y2="520" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+            <text x={ceX(t)} y="560" text-anchor="middle" font-size="24" fill={muted}>{t}%</text>
+          </>
+        ))}
+        {crossRows.map((r, i) => {
+          const same = r.base === r.mon;
+          return (
+            <g>
+              <text x="12" y={ceY(i) + 9} font-size="26" fill={ink}>{r.label}</text>
+              {r.tag && <text x="356" y={ceY(i) + 8} font-size="19" font-weight="600" letter-spacing="2" fill={muted}>{r.tag}</text>}
+              {!same && <line x1={ceX(r.base)} y1={ceY(i)} x2={ceX(r.mon)} y2={ceY(i)} stroke={mainC} stroke-width="5" opacity="0.55" />}
+              {same ? (
+                <>
+                  <circle cx={ceX(r.base)} cy={ceY(i)} r="13" fill={paper} stroke={ink} stroke-width="3" />
+                  <circle cx={ceX(r.base)} cy={ceY(i)} r="6" fill={mainC} />
+                </>
+              ) : (
+                <>
+                  <circle cx={ceX(r.base)} cy={ceY(i)} r="11" fill={paper} stroke={ink} stroke-width="3" />
+                  <circle cx={ceX(r.mon)} cy={ceY(i)} r="11" fill={mainC} />
+                </>
+              )}
+              <text x="1420" y={ceY(i) + 9} text-anchor="end" font-size="28" font-weight="600" fill={same ? muted : mainC}>{r.delta}</text>
+            </g>
+          );
+        })}
+        <text x={ceX(50)} y="616" text-anchor="middle" font-size="24" fill={muted}>task completion (%); concentric marker = identical rates</text>
+      </svg>
       <figcaption class="poster-caption">
         τ-bench retail replicates the effect in a stateful second environment: <strong>+14.0
         points</strong> on V4 Flash (p&nbsp;=&nbsp;.028) and <strong>+12.0</strong> on V4 Pro
-        (p&nbsp;=&nbsp;.023), driven by categorical status violations (+28.0, exact
-        p&nbsp;=&nbsp;.00012). Where baselines already complete despite the fault (conservation 70%,
-        held-out AppWorld 78%), net effects are ≤ +6.3 with rescues offset by harms. Clean advisory
-        traffic: one spurious receipt in 100 τ-bench episodes; 0-point estimate on 114 clean ToolMaze
-        pairs. Data: paper Figure 2.
+        (p&nbsp;=&nbsp;.023), driven by categorical status violations. Where baselines already
+        complete despite the fault (≥&nbsp;65%), rescues are offset by harms. Clean traffic stays
+        quiet: one spurious receipt in 100 τ-bench episodes, a 0-point estimate on 114 clean
+        ToolMaze pairs. Data: paper Figure 2.
       </figcaption>
     </figure>
   </PosterCell>
@@ -182,23 +367,34 @@ const recallRows = [
           );
         })}
       </svg>
-      <figcaption class="poster-caption">
-        On a suite transcribed from published production incidents, the unchanged detector flags
-        46.1% / 45.3% of injected faults (Flash / Pro) — recall splits by fault surface. Completion is
-        unchanged (faulted baselines already complete 65–68%), yet corrupted values propagate in
-        roughly <strong>1 in 5</strong> trackable episodes and about two thirds of those still pass.
-        On 53,078 organic StableToolBench responses the detector fires on 0.80%. Data: paper §6.
-      </figcaption>
     </figure>
+    <div class="validity-stats">
+      <div>
+        <p class="mini-stat oc-flag-stat">46%</p>
+        <p class="mini-stat-label">of injected incident faults flagged (46.1 / 45.3 Flash / Pro)</p>
+      </div>
+      <div>
+        <p class="mini-stat oc-warn-stat">1 in 5</p>
+        <p class="mini-stat-label">trackable episodes propagate a corrupted value; ⅔ still pass</p>
+      </div>
+      <div>
+        <p class="mini-stat oc-main-stat">0.80%</p>
+        <p class="mini-stat-label">fire rate on 53,078 organic responses</p>
+      </div>
+    </div>
+    <p class="poster-caption">
+      Suite transcribed from published production incidents; detector unchanged. The mined
+      vocabulary catches structured violations, not plausible-string corruption. Data: paper §6.
+    </p>
   </PosterCell>
 
   <PosterCell span={6} marker="7" kicker="Takeaway" title="Attach recovery affordances at the point of failure">
     <ol class="poster-body takeaway-list">
       <li>Silent failures need an <strong>in-band signal</strong>: fault-aware prompts and extended reasoning budgets do not substitute for the receipt.</li>
-      <li>Put <span class="oc-main">recovery tools</span> in the receipt — diagnostics without them perform at baseline in our controls.</li>
+      <li>Put <span class="oc-main">recovery tools</span> in the receipt: diagnostics without them perform at baseline in our controls.</li>
       <li>Keep it <strong>nonbinding and cheap</strong>: +$0.13 (+7%) per episode with no extra model call beats a five-call reviewer port (+$9.24, +498%) by +11.25 points.</li>
       <li>Expect gains where the fault <strong>blocks completion</strong> (baseline ≤ 16%); elsewhere rescues and harms roughly cancel.</li>
-      <li>Detection stops at the <span class="oc-warn">mined vocabulary</span> — corruption inside plausible strings mostly slips through. Extending it is open.</li>
+      <li>Detection stops at the <span class="oc-flag">mined vocabulary</span>: corruption inside plausible strings mostly slips through. Extending it is open.</li>
     </ol>
   </PosterCell>
 
@@ -218,7 +414,7 @@ const recallRows = [
         <p>
           ToolMaze completion rises <strong>10.9% → 28.1%</strong> across four models in two families
           and replicates in a third; τ-bench retail improves +14.0 / +12.0 points. Ablations identify
-          the <strong>recovery-tool list</strong> — not diagnostic detail or timing — as the active
+          the <strong>recovery-tool list</strong>, not diagnostic detail or timing, as the active
           content.
         </p>
       </div>
@@ -226,7 +422,7 @@ const recallRows = [
         <p class="tldr-head">What you should do</p>
         <p>
           When a tool result can be silently wrong, <strong>deliver recovery options with the
-          flag</strong> — a one-line in-band receipt outperforms a 5-call reviewer at 1/70th the added
+          flag</strong>: a one-line in-band receipt outperforms a 5-call reviewer at 1/70th the added
           cost. And treat the contract vocabulary as the boundary of trust: outside it, detection
           drops to 46%.
         </p>
@@ -246,6 +442,17 @@ const recallRows = [
     font-weight: 600;
   }
 
+  .oc-flag {
+    color: rgb(var(--color-oc-flag));
+    font-weight: 600;
+  }
+
+  .loud-silent {
+    margin-top: 6mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 5mm;
+  }
+
   .big-stat {
     margin-top: 6mm;
     border-top: 0.6mm solid rgb(var(--color-border-paper));
@@ -263,32 +470,56 @@ const recallRows = [
     line-height: 1.05;
   }
 
-  .method-split {
+  .method-note {
+    margin-top: 6mm;
     display: grid;
-    grid-template-columns: 43% 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 8mm;
-    align-items: start;
-  }
-
-  .method-note-second {
-    margin-top: 4mm;
-  }
-
-  .decomposition-figure img {
-    width: 88%;
-    margin: 0 auto;
-  }
-
-  .cross-env-figure img {
-    width: 78%;
-    margin: 0 auto;
   }
 
   .after-receipt {
-    margin-top: 5mm;
+    margin-top: 3mm;
     border-top: 0.6mm solid rgb(var(--color-border-paper));
-    padding-top: 4mm;
+    padding-top: 3mm;
     font-size: 19pt;
+  }
+
+  .tldr-band {
+    font-size: 21pt;
+  }
+
+  .validity-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6mm;
+    margin: 5mm 0;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 5mm;
+  }
+
+  .mini-stat {
+    font-size: 34pt;
+    font-weight: 600;
+    line-height: 1.05;
+  }
+
+  .oc-flag-stat {
+    color: rgb(var(--color-oc-flag));
+  }
+
+  .oc-warn-stat {
+    color: rgb(var(--color-oc-warn));
+  }
+
+  .oc-main-stat {
+    color: rgb(var(--color-oc-main));
+  }
+
+  .mini-stat-label {
+    font-size: 15pt;
+    line-height: 1.3;
+    color: rgb(var(--color-ink-muted));
+    margin-top: 2mm;
   }
 
   .takeaway-list {

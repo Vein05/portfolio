@@ -77,7 +77,7 @@ const audit = [
 ---
 
 <PosterShell
-  title="Poster — Same Ranking, Different Winner"
+  title="Poster · Same Ranking, Different Winner"
   description="A0 research poster: how scoring targets shape LLM memory benchmarks (EMNLP Findings 2026)."
   slug="memory-targets"
 >
@@ -95,7 +95,7 @@ const audit = [
       <p>
         Memory systems store one piece of evidence in several forms: the <strong>raw turn</strong>,
         a <strong>source-linked observation</strong>, and a <strong>canonical fact</strong>.
-        Benchmarks silently pick which form earns retrieval credit — so conclusions flip while the
+        Benchmarks silently pick which form earns retrieval credit, so conclusions flip while the
         ranked output is held completely fixed. We call it
         <span class="noninv">target non-invariance</span>.
       </p>
@@ -121,9 +121,9 @@ const audit = [
       />
     </figure>
     <p class="poster-body method-note">
-      Three targets — <span class="t-raw">Raw</span> (exact turn), <span class="t-source">Source</span>
-      (same source family), <span class="t-canonical">Canonical</span> (serving form) — rescore the
-      same saved outputs. LoCoMo &amp; LongMemEval-S · 4 retrievers · transfer: Mem0, MemoryOS.
+      Three targets rescore the same saved outputs: <span class="t-raw">Raw</span> (exact turn),
+      <span class="t-source">Source</span> (same source family), and
+      <span class="t-canonical">Canonical</span> (serving form). LoCoMo &amp; LongMemEval-S · 4 retrievers · transfer: Mem0, MemoryOS.
     </p>
     <p class="big-stat">
       <span class="stat-number">83.4–94.0%</span>
@@ -172,7 +172,7 @@ const audit = [
       </svg>
       <figcaption class="poster-caption">
         Canonical beats Raw on every native run, but the margin swings from +0.068 (LoCoMo · BGE-M3) to
-        +0.420 (LongMemEval-S · mxbai-large) — a six-fold difference in the apparent quality gap.
+        +0.420 (LongMemEval-S · mxbai-large), a six-fold difference in the apparent quality gap.
         Source exceeds Canonical on all four LoCoMo subsets; the order reverses on LongMemEval-S.
         Fixed ranked outputs, nDCG@60. Data: paper Table 2.
       </figcaption>
@@ -197,7 +197,7 @@ const audit = [
     <p class="poster-caption">
       Winning parser density (F1 = 1 fact per turn … F8 = 8) per scoring target. Filled chips mark the
       denser store. <strong>Source prefers the denser store in 6 of 6 comparisons; Raw prefers the
-      sparser in 4 of 6.</strong> Same benchmark, same evidence, same 453 queries — different target,
+      sparser in 4 of 6.</strong> Same benchmark, same evidence, same 453 queries: different target,
       different recommended system. Data: paper Table 5.
     </p>
   </PosterCell>
@@ -210,7 +210,7 @@ const audit = [
       />
       <figcaption class="poster-caption">
         Rescoring published Mem0 and MemoryOS runs preserves non-invariance, but the ordering flips
-        between datasets — two monotonic, two non-monotonic. On Mem0 · LongMemEval-S,
+        between datasets: two monotonic, two non-monotonic. On Mem0 · LongMemEval-S,
         raw-vs-canonical switching changes MRR on 466 of 470 queries.
       </figcaption>
     </figure>
@@ -238,7 +238,7 @@ const audit = [
       <figcaption class="poster-caption">
         Cases where Raw scored a miss but Source/Canonical scored a hit, audited for whether the credited
         memory actually answers the query. Human validation: Fleiss κ = 0.83 on a 115-case subset.
-        Permissive targets are not free — but the failures do not rescue the raw-only default either.
+        Permissive targets are not free, but the failures do not rescue the raw-only default either.
         Data: paper Table 6.
       </figcaption>
     </figure>
@@ -259,7 +259,7 @@ const audit = [
       <div>
         <p class="tldr-head">What we did</p>
         <p>
-          TIAP rescored <strong>saved ranked outputs</strong> — retrieval never rerun — under three
+          TIAP rescored <strong>saved ranked outputs</strong> (retrieval never rerun) under three
           scoring targets (<span class="t-raw">Raw</span> · <span class="t-source">Source</span> ·
           <span class="t-canonical">Canonical</span>) on LoCoMo and LongMemEval-S, plus Mem0 and
           MemoryOS transfer runs.
@@ -269,7 +269,7 @@ const audit = [
         <p class="tldr-head">What we found</p>
         <p>
           The target choice alone changes per-query nDCG on <strong>83.4–94.0%</strong> of shared
-          queries, flips which system wins, and reverses store-design recommendations — and relaxed
+          queries, flips which system wins, and reverses store-design recommendations; relaxed
           credit is fully justified only <strong>29.2%</strong> of the time.
         </p>
       </div>
@@ -277,7 +277,7 @@ const audit = [
         <p class="tldr-head">What you should do</p>
         <p>
           A memory benchmark score is meaningless without its target. <strong>Declare it, report
-          Canonical with a Raw floor, and treat cross-target disagreement as a finding</strong> —
+          Canonical with a Raw floor, and treat cross-target disagreement as a finding</strong>;
           otherwise the benchmark measures your ontology choice, not your retriever.
         </p>
       </div>

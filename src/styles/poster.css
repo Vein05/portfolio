@@ -27,6 +27,10 @@
   --color-oc-flag: 158 108 20;
   --color-oc-ink: 39 46 52;
   --color-oc-muted: 105 111 116;
+  /* RAG-compression paper palette (build_figures.py):
+     HotpotQA/RECOMP blue #2F6F9F, MuSiQue/shared-summary amber #A65F00. */
+  --color-rc-hp: 47 111 159;
+  --color-rc-mq: 166 95 0;
 }
 
 html,
@@ -137,7 +141,7 @@ body {
 }
 
 .poster-caption {
-  font-size: 16pt;
+  font-size: 18pt;
   line-height: 1.35;
   color: rgb(var(--color-ink-muted));
   margin-top: 4mm;
