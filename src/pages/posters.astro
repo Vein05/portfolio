@@ -1,0 +1,106 @@
+---
+// Poster gallery: one card per A0 poster under /poster/<slug>. Each card
+// embeds the live poster page in a scaled iframe (the poster route fits
+// itself to its window width, so a narrow iframe shows the whole sheet).
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posters = [
+  {
+    slug: 'memory-targets',
+    title: 'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks',
+    venue: 'Findings of EMNLP 2026, arXiv:2605.24060',
+    authors: 'Sugam Panthi and Rabab Abdelfattah',
+    status: 'published',
+  },
+  {
+    slug: 'outcome-monitors',
+    title: 'Outcome Monitors: Recovery Affordances for Silent Tool Failures',
+    venue: 'arXiv:2608.19303',
+    authors: 'Sugam Panthi and Rabab Abdelfattah',
+    status: 'published',
+  },
+  {
+    slug: 'rag-compression',
+    title: 'Fixed RAG Compression Collapses Measured Reader Scaling',
+    venue: 'arXiv:2606.21807',
+    authors: 'Sugam Panthi and Rabab Abdelfattah',
+    status: 'published',
+  },
+  {
+    slug: 'stale-policy',
+    title: 'The Stale Answer Problem: Where the Current Statement Drops Out',
+    venue: 'Draft idea proposition, no paper yet, 2026-09-04',
+    authors: 'Sugam Panthi',
+    status: 'draft',
+  },
+];
+---
+
+<BaseLayout
+  title="Posters by Sugam Panthi"
+  description="Research posters by Sugam Panthi: full-size A0 sheets that print as single-page vector PDFs."
+  canonical="https://spanthi.com/posters"
+>
+  <div class="min-h-screen bg-paper-light">
+    <div class="mx-auto max-w-[64rem] px-5 py-8 text-[15px] leading-relaxed text-ink-dark" style="font-family:'IBM Plex Sans','Oswald',sans-serif">
+      <nav class="mb-8 border-b border-border-paper pb-3 text-center text-sm">
+        <a href="/" class="text-ink-blue hover:underline">Full site</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="/blog" class="text-ink-blue hover:underline">Blog</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="/simple" class="text-ink-blue hover:underline">Plain version</a>
+      </nav>
+
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold">Posters</h1>
+      </header>
+
+      <ul class="grid gap-8 sm:grid-cols-2">
+        {posters.map((p) => (
+          <li class="flex flex-col border border-border-paper bg-paper-surface p-4">
+            <a href={`/poster/${p.slug}`} class="poster-thumb block overflow-hidden border border-border-paper bg-paper-light" aria-label={`Open poster: ${p.title}`}>
+              <iframe
+                src={`/poster/${p.slug}`}
+                title={`Preview: ${p.title}`}
+                loading="lazy"
+                tabindex="-1"
+                scrolling="no"
+              ></iframe>
+            </a>
+            <div class="mt-4 flex items-center gap-2 text-xs uppercase tracking-wide text-ink-muted">
+              {p.status === 'draft' ? (
+                <span class="bg-ink-red/10 px-1.5 py-0.5 font-medium text-ink-red">Draft</span>
+              ) : (
+                <span class="bg-ink-blue/10 px-1.5 py-0.5 font-medium text-ink-dark">Poster</span>
+              )}
+              <span>{p.venue}</span>
+            </div>
+            <h2 class="mt-2 text-base font-semibold leading-snug">
+              <a href={`/poster/${p.slug}`} class="hover:underline">{p.title}</a>
+            </h2>
+            <p class="mt-1 text-sm text-ink-muted">{p.authors}</p>
+            <p class="mt-3 text-sm">
+              <a href={`/poster/${p.slug}`} class="text-ink-blue hover:underline">Open poster</a>
+              <span class="mx-2 text-ink-muted">/</span>
+              <a href={`/poster/${p.slug}`} target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">New tab</a>
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .poster-thumb {
+    aspect-ratio: 841 / 1189;
+    position: relative;
+  }
+  .poster-thumb iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    pointer-events: none;
+    display: block;
+  }
+</style>

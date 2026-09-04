@@ -162,7 +162,7 @@ That is what the receipt is for.
 - [When Errors Become Narratives](https://arxiv.org/abs/2606.14589) provides the production silent-failure taxonomy used for the incident-derived boundary study.
 - [Reinforced Agent](https://aclanthology.org/2026.gem-main.13/) is the inference-time reviewer method used for a separate retrospective comparison.
 
-This article reports the manuscript's frozen results. The paper and reproducibility artifact will be linked here with the public release.
+This article reports the results from the paper, now public: [Outcome Monitors: Recovery Affordances for Silent Tool Failures](https://arxiv.org/abs/2608.19303) (Panthi and Abdelfattah, arXiv 2026).
 
 ## Frequently asked questions
 
@@ -177,3 +177,9 @@ No. The monitor studied here preserves the original tool result and leaves every
 ### Do outcome monitors always improve agent performance?
 
 No. Gains were largest when the injected fault usually blocked baseline completion. Held-out AppWorld and a retail conservation fault showed no net gain, and clean ToolMaze traffic contained paired harms as well as rescues. A deployment must measure fault prevalence, false receipts, and clean-traffic behavior.
+
+## Cite this work
+
+```bibtex
+key: outcome-monitors
+```

@@ -34,14 +34,14 @@ const mqPts = [
 ];
 const scalePanels = [
   {
-    title: 'HOTPOTQA · FIXED RECOMP · EM',
+    title: 'HOTPOTQA, FIXED RECOMP, EM',
     pts: hpPts,
     color: hpC,
     readers: '20 readers',
     note: 'retains 24.5% of a 31.8pp contrast',
   },
   {
-    title: 'MUSIQUE · SHARED SUMMARY · F1',
+    title: 'MUSIQUE, SHARED SUMMARY, F1',
     pts: mqPts,
     color: mqC,
     readers: '15 readers',
@@ -55,10 +55,10 @@ const scTicks = [0, 0.25, 0.5];
 
 // ── Figure ④: excess ranking flips vs the raw replay floor (paper Fig. 3) ──
 const flipRows = [
-  { label: 'HotpotQA · EM', c: 16.7, lo: 8.7, hi: 24.4, color: hpC },
-  { label: 'HotpotQA · F1', c: 16.7, lo: 8.5, hi: 24.1, color: hpC },
-  { label: 'MuSiQue · EM', c: 32.7, lo: 18.6, hi: 45.8, color: mqC },
-  { label: 'MuSiQue · F1', c: 21.2, lo: 6.5, hi: 37.7, color: mqC },
+  { label: 'HotpotQA, EM', c: 16.7, lo: 8.7, hi: 24.4, color: hpC },
+  { label: 'HotpotQA, F1', c: 16.7, lo: 8.5, hi: 24.1, color: hpC },
+  { label: 'MuSiQue, EM', c: 32.7, lo: 18.6, hi: 45.8, color: mqC },
+  { label: 'MuSiQue, F1', c: 21.2, lo: 6.5, hi: 37.7, color: mqC },
 ];
 // Flip geometry: viewBox 1440×470, plot x ∈ [430, 1290] for −5…+50 pts.
 const flX = (v) => 430 + ((v + 5) / 55) * 860;
@@ -80,14 +80,15 @@ const policyRows = [
 ---
 
 <PosterShell
-  title="Poster · Fixed RAG Compression"
+  author="Sugam Panthi"
+  title="Poster: Fixed RAG Compression"
   description="A0 research poster: fixed RAG compression collapses measured reader scaling (arXiv:2606.21807)."
   slug="rag-compression"
 >
   <TitleBand
-    kicker="arXiv:2606.21807 · cs.CL · 176,864-row reader-by-compression matrix released"
+    kicker="arXiv:2606.21807, cs.CL. 176,864-row reader-by-compression matrix released"
     title="Fixed RAG Compression Collapses Measured Reader Scaling"
-    authors="Sugam Panthi · Rabab Abdelfattah"
+    authors="Sugam Panthi and Rabab Abdelfattah"
     affiliation="Fixed-Artifact Reader Replay: byte-identical compressed evidence replayed across 8 to 20 reader panels"
     qrSrc="/poster/rag-compression-qr.svg"
     qrLabel="Scan for paper"
@@ -136,30 +137,30 @@ const policyRows = [
             <path d="M 0 0 L 10 5 L 0 10 z" fill={muted} />
           </marker>
         </defs>
-        <rect x="360" y="16" width="720" height="76" rx="8" fill={paper} stroke={ink} stroke-width="2.5" />
+        <rect x="360" y="16" width="720" height="76" fill={paper} stroke={ink} stroke-width="2.5" />
         <text x="720" y="49" font-size="25" font-weight="600" fill={ink} text-anchor="middle">frozen candidate pools per row</text>
         <text x="720" y="78" font-size="21" fill={muted} text-anchor="middle">rows, retrieval, prompts, and scoring all fixed</text>
         <line x1="540" y1="92" x2="380" y2="148" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
         <line x1="900" y1="92" x2="1060" y2="148" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
 
-        <rect x="30" y="154" width="640" height="102" rx="8" fill={ink} fill-opacity="0.04" stroke={ink} stroke-width="2.5" />
+        <rect x="30" y="154" width="640" height="102" fill={ink} fill-opacity="0.04" stroke={ink} stroke-width="2.5" />
         <text x="350" y="196" font-size="25" font-weight="600" fill={ink} text-anchor="middle">raw evidence</text>
         <text x="350" y="228" font-size="21" fill={muted} text-anchor="middle">the declared reference policy</text>
-        <rect x="770" y="154" width="640" height="102" rx="8" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
+        <rect x="770" y="154" width="640" height="102" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
         <text x="1090" y="196" font-size="25" font-weight="600" fill={hpC} text-anchor="middle">one compressed artifact per row</text>
         <text x="1090" y="228" font-size="21" fill={muted} text-anchor="middle">byte-identical for every reader, admitted by hash</text>
 
         <line x1="350" y1="256" x2="640" y2="316" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
         <line x1="1090" y1="256" x2="800" y2="316" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
-        <rect x="360" y="322" width="720" height="76" rx="8" fill={paper} stroke={ink} stroke-width="2.5" />
+        <rect x="360" y="322" width="720" height="76" fill={paper} stroke={ink} stroke-width="2.5" />
         <text x="720" y="355" font-size="25" font-weight="600" fill={ink} text-anchor="middle">replay both policies across the panel</text>
         <text x="720" y="384" font-size="21" fill={muted} text-anchor="middle">8 to 20 readers per panel, 11 model families</text>
 
         <line x1="540" y1="398" x2="380" y2="438" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
         <line x1="900" y1="398" x2="1060" y2="438" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
-        <rect x="30" y="444" width="640" height="64" rx="8" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
+        <rect x="30" y="444" width="640" height="64" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
         <text x="350" y="484" font-size="24" font-weight="600" fill={hpC} text-anchor="middle">upgrade retention ρ = Δcomp / Δraw</text>
-        <rect x="770" y="444" width="640" height="64" rx="8" fill={mqC} fill-opacity="0.08" stroke={mqC} stroke-width="2.5" />
+        <rect x="770" y="444" width="640" height="64" fill={mqC} fill-opacity="0.08" stroke={mqC} stroke-width="2.5" />
         <text x="1090" y="484" font-size="24" font-weight="600" fill={mqC} text-anchor="middle">excess ranking flips vs raw replay floor</text>
       </svg>
     </figure>
@@ -178,7 +179,7 @@ const policyRows = [
     </div>
   </PosterCell>
 
-  <PosterCell span={12} marker="3" kicker="Core result · frozen confirmatory panels" title="The curves rise, and they flatten: lower-scoring readers gain the most">
+  <PosterCell span={12} marker="3" kicker="Core result: frozen confirmatory panels" title="The curves rise, and they flatten: lower-scoring readers gain the most">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 400" role="img" aria-label="Two scatter panels of reader score under raw versus compressed evidence. HotpotQA with fixed RECOMP retains 24.5% of a 31.8 point contrast across 20 readers; MuSiQue with a shared summary retains 0.8% of an 18.7 point contrast across 15 readers. Points sit far above the identity line at the low end.">
         {scalePanels.map((panel, p) => (
@@ -220,7 +221,7 @@ const policyRows = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="4" kicker="Decision consequence · 5,000 row splits" title="Compression reverses reader orderings beyond row noise">
+  <PosterCell span={6} marker="4" kicker="Decision consequence: 5,000 row splits" title="Compression reverses reader orderings beyond row noise">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 470" role="img" aria-label="Excess flip estimates with split-stability intervals: HotpotQA 16.7 points under EM and F1, MuSiQue 32.7 under EM and 21.2 under F1, all above the zero raw replay floor.">
         {flTicks.map((t) => (
@@ -259,7 +260,7 @@ const policyRows = [
     </div>
   </PosterCell>
 
-  <PosterCell span={6} marker="5" kicker="The account · row transitions" title="Rescue and damage coexist inside a rising average">
+  <PosterCell span={6} marker="5" kicker="The account: row transitions" title="Rescue and damage coexist inside a rising average">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 420" role="img" aria-label="Paired bars: HotpotQA RECOMP rescues 19.1% of row-reader pairs while damaging 35.7% of raw-correct pairs; MuSiQue rescues 22.9% and damages 33.8%.">
         {transRows.map((r, i) => {
@@ -269,10 +270,10 @@ const policyRows = [
           return (
             <g>
               <text x="26" y={y0} font-size="26" font-weight="600" fill={r.color}>{r.label}</text>
-              <rect x="290" y={y0 - 20} width={wR} height="46" rx="4" fill={r.color} opacity="0.85" />
+              <rect x="290" y={y0 - 20} width={wR} height="46" fill={r.color} opacity="0.85" />
               <text x={290 + wR + 14} y={y0 + 12} font-size="26" font-weight="600" fill={r.color}>{r.rescue}%</text>
               <text x="290" y={y0 + 56} font-size="19" fill={muted}>rescued: raw-wrong, correct after compression (share of all row-reader pairs)</text>
-              <rect x="290" y={y0 + 70} width={wD} height="46" rx="4" fill={ink} opacity="0.55" />
+              <rect x="290" y={y0 + 70} width={wD} height="46" fill={ink} opacity="0.55" />
               <text x={290 + wD + 14} y={y0 + 102} font-size="26" font-weight="600" fill={ink}>{r.damage}%</text>
               <text x="290" y={y0 + 146} font-size="19" fill={muted}>damaged: raw-correct pairs that become incorrect</text>
             </g>
@@ -288,7 +289,7 @@ const policyRows = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="6" kicker="Validity check · four HotpotQA policies" title="Not every compressor collapses the curve">
+  <PosterCell span={6} marker="6" kicker="Validity check: four HotpotQA policies" title="Not every compressor collapses the curve">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 400" role="img" aria-label="Bar chart of endpoint EM retention by HotpotQA policy: EXIT 0.836, RECOMP extractive 0.245, LLM summary 0.181, RECOMP abstractive 0.138.">
         {policyRows.map((r, i) => {
@@ -297,8 +298,8 @@ const policyRows = [
           return (
             <g>
               <text x="26" y={y + 14} font-size="25" fill={ink}>{r.label}</text>
-              <rect x="330" y={y - 8} width="1000" height="44" rx="4" fill={hpC} opacity="0.12" />
-              <rect x="330" y={y - 8} width={w} height="44" rx="4" fill={hpC} opacity={i === 0 ? 0.9 : 0.55} />
+              <rect x="330" y={y - 8} width="1000" height="44" fill={hpC} opacity="0.12" />
+              <rect x="330" y={y - 8} width={w} height="44" fill={hpC} opacity={i === 0 ? 0.9 : 0.55} />
               <text x={330 + w + 14} y={y + 24} font-size="27" font-weight="600" fill={hpC}>.{Math.round(r.ret * 1000)}</text>
             </g>
           );
@@ -315,7 +316,7 @@ const policyRows = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="7" kicker="Takeaway" title="Audit fidelity separately from utility">
+  <PosterCell span={6} marker="7" kicker="Takeaway" title="Audit fidelity separately from utility" fill>
     <ol class="poster-body takeaway-list">
       <li><strong>Freeze the evidence.</strong> One retrieval pool and one compressed artifact per row, with recorded hashes; regenerated summaries are different evidence.</li>
       <li>Select weak, middle, and strong readers <strong>by raw score, before</strong> inspecting compressed scores.</li>
@@ -356,6 +357,15 @@ const policyRows = [
     </div>
   </PosterCell>
 </PosterShell>
+
+<style is:global>
+  /* Paper palette (build_figures.py): HotpotQA/RECOMP blue #2F6F9F,
+     MuSiQue/shared-summary amber #A65F00. */
+  :root {
+    --color-rc-hp: 47 111 159;
+    --color-rc-mq: 166 95 0;
+  }
+</style>
 
 <style>
   .rc-hp {

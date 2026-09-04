@@ -11,26 +11,8 @@
   --color-ink-blue: 37 99 235;
   --color-ink-red: 220 38 38;
   --color-border-paper: 212 207 196;
-  /* Exact paper palette (LaTeX definecolor / seaborn deep):
-     RawTurnColor #4C72B0, SourceFamilyColor #55A868, CanonicalColor #C44E52.
-     Partial-verdict orange is seaborn deep #DD8452. Custom charts must match
-     the embedded paper figures. */
-  --color-target-raw: 76 114 176;
-  --color-target-source: 85 168 104;
-  --color-target-canonical: 196 78 82;
-  --color-audit-partial: 221 132 82;
-  /* Outcome Monitors paper palette (arXiv:2608.19303 LaTeX definecolor):
-     ocmain #206945 (advisory green), ocwarn #B0392E (failure red),
-     ocflag #9E6C14 (flag amber), ocink #272E34, ocmuted #696F74. */
-  --color-oc-main: 32 105 68;
-  --color-oc-warn: 176 57 46;
-  --color-oc-flag: 158 108 20;
-  --color-oc-ink: 39 46 52;
-  --color-oc-muted: 105 111 116;
-  /* RAG-compression paper palette (build_figures.py):
-     HotpotQA/RECOMP blue #2F6F9F, MuSiQue/shared-summary amber #A65F00. */
-  --color-rc-hp: 47 111 159;
-  --color-rc-mq: 166 95 0;
+  /* Paper-specific palette tokens live in each poster page
+     (`<style is:global>` in src/pages/poster/<slug>.astro). */
 }
 
 html,
@@ -43,6 +25,170 @@ body {
 /* ── Scaler: fill window width, native zoom does the rest ── */
 .poster-scaler {
   overflow: hidden;
+  margin: 0 auto;
+}
+
+/* ── View toggle (screen only): fit-to-width or A4-width ── */
+.poster-view-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgb(var(--color-border-paper));
+  border-radius: 0;
+  background-color: rgb(var(--color-paper-surface));
+  font-family: 'Oswald', sans-serif;
+}
+
+.poster-view-toggle[hidden] {
+  display: none;
+}
+
+.poster-view-toggle button {
+  font: inherit;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: rgb(var(--color-ink-muted));
+  cursor: pointer;
+}
+
+.poster-view-toggle button[aria-pressed='true'] {
+  background-color: rgb(var(--color-ink-dark));
+  color: rgb(var(--color-paper-light));
+}
+
+body[data-poster-view='a4'] {
+  padding: 24px 0 48px;
+}
+
+/* ── Lightbox: a cloned cell, scaled to the viewport (screen only) ── */
+.poster-lightbox {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(26, 26, 20, 0.92);
+  font-family: 'Oswald', sans-serif;
+  color: rgb(var(--color-ink-dark));
+}
+
+.poster-lightbox[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.poster-lightbox::backdrop {
+  background: transparent;
+}
+
+.poster-lightbox-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: rgb(var(--color-paper-surface));
+  border-bottom: 1px solid rgb(var(--color-border-paper));
+}
+
+.poster-lightbox-bar button {
+  font: inherit;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-width: 34px;
+  padding: 4px 10px;
+  border: 1px solid rgb(var(--color-border-paper));
+  border-radius: 0;
+  background: none;
+  color: rgb(var(--color-ink-dark));
+  cursor: pointer;
+}
+
+.poster-lightbox-bar button:hover {
+  background-color: rgb(var(--color-ink-dark));
+  color: rgb(var(--color-paper-light));
+}
+
+.poster-lightbox-hint {
+  flex: 1;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--color-ink-muted));
+  text-align: center;
+}
+
+.poster-lightbox-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+}
+
+.poster-lightbox-sizer {
+  flex: 0 0 auto;
+  margin: auto;
+}
+
+.poster-lightbox-stage {
+  transform-origin: top left;
+}
+
+.poster-lightbox-stage .poster-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.poster-lightbox-stage *,
+.poster-lightbox-stage *::before,
+.poster-lightbox-stage *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* ── Right-click menu (screen only) ── */
+.poster-menu {
+  position: fixed;
+  z-index: 20;
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  min-width: 220px;
+  border: 1px solid rgb(var(--color-border-paper));
+  border-radius: 0;
+  background-color: rgb(var(--color-paper-surface));
+  box-shadow: 0 6px 20px rgba(26, 26, 20, 0.12);
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: rgb(var(--color-ink-dark));
+}
+
+.poster-menu[hidden] {
+  display: none;
+}
+
+.poster-menu li {
+  padding: 8px 12px;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.poster-menu li:hover {
+  background-color: rgb(var(--color-ink-dark));
+  color: rgb(var(--color-paper-light));
 }
 
 .poster-scaler .poster-canvas {
@@ -76,11 +222,38 @@ body {
 /* ── Cells ───────────────────────────────────── */
 .poster-cell {
   border: 0.6mm solid rgb(var(--color-border-paper));
-  border-radius: 2mm;
+  border-radius: 0;
   background-color: rgb(var(--color-paper-surface));
   padding: 8mm 10mm;
   position: relative;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Rule (2026-09-04): a cell stretched by a taller row-mate pins a trailing
+   caption (the "Data:" line) to the bottom, so the slack sits between body
+   and caption instead of below the content. Only captions, never the body:
+   a body-only cell keeps its gap at the bottom. Add `.pin-bottom` to opt in
+   another element. */
+.poster-cell > .poster-caption:last-child,
+.poster-cell > .pin-bottom {
+  margin-top: auto;
+}
+
+/* The title band is a row flex container (its own scoped style). */
+.poster-cell.title-band {
+  flex-direction: row;
+}
+
+/* Opt-in for list-only cells: spread the items over the cell height. */
+.poster-cell.fill > .poster-body,
+.poster-cell.fill > ul,
+.poster-cell.fill > ol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .poster-cell.plain {
@@ -186,7 +359,7 @@ body {
   font-size: 24pt;
   font-weight: 600;
   border: 0.6mm solid rgb(var(--color-border-paper));
-  border-radius: 2mm;
+  border-radius: 0;
   padding: 3.5mm 0;
 }
 
@@ -223,6 +396,11 @@ body {
   margin: 0;
 }
 
+@page poster-a4 {
+  size: 210mm 297mm;
+  margin: 0;
+}
+
 @media print {
   html,
   body {
@@ -230,9 +408,46 @@ body {
     overflow: hidden;
   }
 
+  .poster-menu,
+  .poster-lightbox {
+    display: none;
+  }
+
+  /* A4 export: the A0 canvas scaled by 210/841 onto one A4 sheet. */
+  html:has(body[data-print-size='a4']),
+  body[data-print-size='a4'] {
+    height: 297mm;
+    overflow: hidden;
+  }
+
+  body[data-print-size='a4'] {
+    page: poster-a4;
+  }
+
+  body[data-print-size='a4'] .poster-scaler {
+    width: 210mm !important;
+    height: 297mm !important;
+    overflow: hidden !important;
+  }
+
+  body[data-print-size='a4'] .poster-scaler .poster-canvas {
+    transform: none !important;
+    zoom: 0.2497;
+  }
+
+  .poster-view-toggle {
+    display: none;
+  }
+
+  body[data-poster-view='a4'] {
+    padding: 0;
+  }
+
   .poster-scaler {
     overflow: visible;
+    width: auto !important;
     height: auto !important;
+    margin: 0;
   }
 
   .poster-scaler .poster-canvas {

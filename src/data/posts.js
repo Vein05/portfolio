@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "five-years-zero-fives",
+    title: "Five Years, Zero Fives: Half a Decade of ACL Rolling Review Scores",
+    date: "2026-08-20",
+    category: "Research",
+    status: "cooking",
+    excerpt: "I pulled every score ACL Rolling Review has published: 69,781 scored submissions across 35 cycles, 2021 to 2026. No paper ever averaged a 5.0. The scores are per-paper aggregates, not individual reviews, the mode is 2.5, and the meta score swings wider than a paper's averaged reviews.",
+    tags: ["Peer Review", "ACL Rolling Review", "ARR", "Score Distribution", "Meta-Review", "NLP", "Data Analysis"],
+    seoTitle: "Five Years, Zero Fives: ACL Rolling Review Scores 2021-2026 | Sugam Panthi",
+    seoDescription: "Across 69,781 scored ACL Rolling Review submissions from 2021 to 2026, no paper averaged a 5.0. ARR scores are per-paper aggregates, not individual reviews; the mode is 2.5 and area-chair meta scores swing wider.",
+    canonicalPath: "/blog/five-years-zero-fives"
+  },
+  {
     slug: "gsap-choreography-part-2",
     title: "Scripted product demos with GSAP, part two: the camera",
     date: "2026-05-26",

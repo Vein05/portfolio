@@ -1,6 +1,6 @@
 ---
 // A0 poster for "Outcome Monitors: Recovery Affordances for Silent Tool
-// Failures" (arXiv:2608.19303, under review at AAAI-27). Every number comes
+// Failures" (arXiv:2608.19303; under review, venue not named). Every number comes
 // from the camera-ready; keep in sync with it. All figures are drawn
 // poster-native in this file (Oswald, poster-scale strokes) from the paper's
 // TikZ sources (arxiv/figures/*.tex) — the compiled paper SVGs were too small
@@ -26,7 +26,7 @@ const toolmazeRows = [
   { label: 'Qwen 3.7 Plus', base: 3.75, mon: 18.75, delta: '+15.00', wl: '12/0', counts: '3→15 / 80' },
   { label: 'Qwen 3.7 Max', base: 6.25, mon: 31.25, delta: '+25.00', wl: '21/1', counts: '5→25 / 80' },
   { label: 'Primary aggregate', base: 10.94, mon: 28.13, delta: '+17.19', wl: '62/7', counts: '35→90 / 320', bold: true },
-  { label: 'MiniMax M3 · replication', base: 6.25, mon: 25.0, delta: '+18.75', wl: '17/2', counts: '5→20 / 80' },
+  { label: 'MiniMax M3, replication', base: 6.25, mon: 25.0, delta: '+18.75', wl: '17/2', counts: '5→20 / 80' },
 ];
 // Dumbbell geometry: viewBox 1440×336, plot x ∈ [420, 1180] for 0–40%.
 const tmX = (v) => 420 + (v / 40) * 760;
@@ -89,14 +89,15 @@ const recallRows = [
 ---
 
 <PosterShell
-  title="Poster · Outcome Monitors"
-  description="A0 research poster: recovery affordances for silent tool failures (arXiv:2608.19303, under review at AAAI-27)."
+  author="Sugam Panthi"
+  title="Poster: Outcome Monitors"
+  description="A0 research poster: recovery affordances for silent tool failures (arXiv:2608.19303)."
   slug="outcome-monitors"
 >
   <TitleBand
-    kicker="Under review at AAAI-27 · arXiv:2608.19303 · cs.AI · cs.CL · cs.SE"
+    kicker="arXiv:2608.19303, cs.AI, cs.CL, cs.SE"
     title="Outcome Monitors: Recovery Affordances for Silent Tool Failures"
-    authors="Sugam Panthi · Rabab Abdelfattah"
+    authors="Sugam Panthi and Rabab Abdelfattah"
     affiliation="Detect and advise: a nonbinding in-band receipt naming the violated property and public recovery tools"
     qrSrc="/poster/outcome-monitors-qr.svg"
     qrLabel="Scan for paper"
@@ -114,16 +115,16 @@ const recallRows = [
     <figure class="poster-figure loud-silent">
       <svg viewBox="0 0 900 264" role="img" aria-label="Two rows: a loud timeout is visibly broken and the agent routes around it; a silent cached error page looks valid and is consumed as fact">
         <text x="10" y="30" font-size="20" font-weight="600" letter-spacing="2" fill={muted}>LOUD</text>
-        <rect x="10" y="44" width="330" height="62" rx="6" fill="none" stroke={muted} stroke-width="3" stroke-dasharray="10 8" />
-        <text x="30" y="82" font-size="24" font-family={mono} fill={ink}>timeout · HTTP 504</text>
+        <rect x="10" y="44" width="330" height="62" fill="none" stroke={muted} stroke-width="3" stroke-dasharray="10 8" />
+        <text x="30" y="82" font-size="24" font-family={mono} fill={ink}>timeout, HTTP 504</text>
         <line x1="356" y1="75" x2="420" y2="75" stroke={muted} stroke-width="3" />
         <path d="M 420 75 l -14 -8 v 16 z" fill={muted} />
         <text x="436" y="70" font-size="23" fill={ink}>agent sees the failure,</text>
         <text x="436" y="98" font-size="23" fill={mainC} font-weight="600">routes around it</text>
 
         <text x="10" y="166" font-size="20" font-weight="600" letter-spacing="2" fill={warnC}>SILENT</text>
-        <rect x="10" y="180" width="330" height="62" rx="6" fill={paper} stroke={ink} stroke-width="2.5" />
-        <text x="30" y="218" font-size="24" font-family={mono} fill={ink}>200 OK · cached page</text>
+        <rect x="10" y="180" width="330" height="62" fill={paper} stroke={ink} stroke-width="2.5" />
+        <text x="30" y="218" font-size="24" font-family={mono} fill={ink}>200 OK, cached page</text>
         <line x1="356" y1="211" x2="420" y2="211" stroke={warnC} stroke-width="3" />
         <path d="M 420 211 l -14 -8 v 16 z" fill={warnC} />
         <text x="436" y="206" font-size="23" fill={ink}>expected format, wrong value,</text>
@@ -147,43 +148,43 @@ const recallRows = [
         </defs>
 
         <!-- lane A: raw interface -->
-        <rect x="0" y="0" width="695" height="600" rx="10" fill={warnC} opacity="0.06" />
+        <rect x="0" y="0" width="695" height="600" fill={warnC} opacity="0.06" />
         <text x="30" y="52" font-size="27" font-weight="600" letter-spacing="2" fill={warnC}>RAW INTERFACE</text>
-        <rect x="30" y="90" width="635" height="84" rx="7" fill={paper} stroke={muted} stroke-width="2" />
+        <rect x="30" y="90" width="635" height="84" fill={paper} stroke={muted} stroke-width="2" />
         <text x="56" y="128" font-size="25" font-family={mono} fill={ink}>lookup_inventory</text>
         <text x="56" y="160" font-size="22" font-family={mono} fill={muted}>available = -3</text>
         <line x1="90" y1="174" x2="90" y2="274" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
-        <rect x="30" y="280" width="635" height="84" rx="7" fill={paper} stroke={muted} stroke-width="2" />
-        <text x="56" y="318" font-size="25" font-weight="600" fill={ink}>detect · localize · recover</text>
+        <rect x="30" y="280" width="635" height="84" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="56" y="318" font-size="25" font-weight="600" fill={ink}>detect, localize, recover</text>
         <text x="56" y="350" font-size="22" fill={muted}>all left to the agent</text>
         <line x1="90" y1="364" x2="90" y2="464" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
-        <rect x="30" y="470" width="635" height="84" rx="7" fill={warnC} fill-opacity="0.1" stroke={warnC} stroke-width="2.5" />
+        <rect x="30" y="470" width="635" height="84" fill={warnC} fill-opacity="0.1" stroke={warnC} stroke-width="2.5" />
         <text x="56" y="508" font-size="25" font-weight="600" fill={warnC}>silent failure</text>
         <text x="56" y="540" font-size="22" fill={muted}>value consumed as fact</text>
 
         <!-- lane B: detect and advise -->
-        <rect x="745" y="0" width="695" height="600" rx="10" fill={mainC} opacity="0.06" />
+        <rect x="745" y="0" width="695" height="600" fill={mainC} opacity="0.06" />
         <text x="775" y="52" font-size="27" font-weight="600" letter-spacing="2" fill={mainC}>DETECT AND ADVISE</text>
-        <rect x="775" y="74" width="635" height="64" rx="7" fill={paper} stroke={muted} stroke-width="2" />
+        <rect x="775" y="74" width="635" height="64" fill={paper} stroke={muted} stroke-width="2" />
         <text x="801" y="115" font-size="25" font-family={mono} fill={ink}>lookup_inventory</text>
         <text x="1080" y="115" font-size="22" fill={muted}>raw result kept</text>
         <line x1="835" y1="138" x2="835" y2="166" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
-        <rect x="775" y="172" width="635" height="64" rx="7" fill={flagC} fill-opacity="0.12" stroke={flagC} stroke-width="2.5" />
+        <rect x="775" y="172" width="635" height="64" fill={flagC} fill-opacity="0.12" stroke={flagC} stroke-width="2.5" />
         <text x="801" y="213" font-size="25" font-weight="600" fill={flagC}>contract violated</text>
         <text x="1080" y="213" font-size="22" fill={muted}>mined or public invariant</text>
         <line x1="835" y1="236" x2="835" y2="264" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
-        <rect x="775" y="270" width="635" height="200" rx="8" fill={mainC} />
+        <rect x="775" y="270" width="635" height="200" fill={mainC} />
         <text x="801" y="306" font-size="24" font-weight="600" letter-spacing="2" fill={paper}>ADVISORY RECEIPT</text>
-        <rect x="791" y="322" width="603" height="134" rx="5" fill={paper} />
+        <rect x="791" y="322" width="603" height="134" fill={paper} />
         <text x="811" y="360" font-size="22" font-weight="600" fill={ink}>witness</text>
         <text x="930" y="360" font-size="20" font-family={mono} fill={ink}>expected ≥ 0, observed -3</text>
         <text x="811" y="402" font-size="22" font-weight="600" fill={ink}>recovery</text>
-        <text x="930" y="402" font-size="20" font-family={mono} fill={ink}>query_warehouse · get_stock_by_sku</text>
+        <text x="930" y="402" font-size="20" font-family={mono} fill={ink}>query_warehouse, get_stock_by_sku</text>
         <line x1="930" y1="416" x2="1340" y2="416" stroke={mainC} stroke-width="2.5" />
         <text x="930" y="444" font-size="20" font-style="italic" fill={mainC}>the active content</text>
         <line x1="835" y1="470" x2="835" y2="494" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
-        <rect x="775" y="500" width="635" height="64" rx="7" fill={mainC} fill-opacity="0.1" stroke={mainC} stroke-width="2.5" />
-        <text x="801" y="541" font-size="25" font-weight="600" fill={mainC}>verify · retry · switch</text>
+        <rect x="775" y="500" width="635" height="64" fill={mainC} fill-opacity="0.1" stroke={mainC} stroke-width="2.5" />
+        <text x="801" y="541" font-size="25" font-weight="600" fill={mainC}>verify, retry, switch</text>
         <text x="1080" y="541" font-size="22" fill={muted}>action set intact</text>
       </svg>
     </figure>
@@ -202,7 +203,7 @@ const recallRows = [
     </div>
   </PosterCell>
 
-  <PosterCell span={12} marker="3" kicker="Core result · frozen paired ToolMaze, Table 1" title="Completion rises from 10.9% to 28.1%: every model, every stratum nonnegative">
+  <PosterCell span={12} marker="3" kicker="Core result: frozen paired ToolMaze, Table 1" title="Completion rises from 10.9% to 28.1%: every model, every stratum nonnegative">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 304" role="img" aria-label="Dumbbell chart: baseline versus monitor completion for four primary models, their aggregate, and the MiniMax M3 replication">
         <rect x="12" y={tmY(4) - 19} width="1416" height="38" fill={mainC} opacity="0.07" />
@@ -235,11 +236,11 @@ const recallRows = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="4" kicker="Ablations · 114 paired workflows" title="The recovery-tool list is the active content">
+  <PosterCell span={6} marker="4" kicker="Ablations: 114 paired workflows" title="The recovery-tool list is the active content">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 528" role="img" aria-label="Contrast estimates with 95% intervals: receipt minus stripped +11.4 and receipt minus baseline +12.3 clear zero; stripped minus baseline, localized minus generic, and on-time minus deferred do not.">
-        <rect x="12" y="24" width="1416" height="152" rx="6" fill={mainC} opacity="0.07" />
-        <rect x="12" y="194" width="1416" height="188" rx="6" fill={ink} opacity="0.03" />
+        <rect x="12" y="24" width="1416" height="152" fill={mainC} opacity="0.07" />
+        <rect x="12" y="194" width="1416" height="188" fill={ink} opacity="0.03" />
         {ctTicks.map((t) => (
           <>
             <line x1={ctX(t)} y1="24" x2={ctX(t)} y2="396" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity={t === 0 ? 0 : 0.35} />
@@ -292,7 +293,7 @@ const recallRows = [
             const last = i === actionSplit.length - 1;
             return (
               <g>
-                <rect x={x} y="16" width={w} height="76" rx="4" fill={seg.color} opacity={i === 0 ? 0.9 : 0.75} />
+                <rect x={x} y="16" width={w} height="76" fill={seg.color} opacity={i === 0 ? 0.9 : 0.75} />
                 {!last && <text x={i === 0 ? cx : x + w - 12} y="64" text-anchor={i === 0 ? 'middle' : 'end'} font-size="30" font-weight="600" fill={paper}>{seg.pct}%</text>}
                 <text x={last ? 1430 : cx} y="140" text-anchor={last ? 'end' : 'middle'} font-size="24" fill={last ? warnC : muted}>{seg.label}{last ? ` ${seg.pct}%` : ''}</text>
               </g>
@@ -306,7 +307,7 @@ const recallRows = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="5" kicker="Generalization · frozen studies + dev rows" title="Gains concentrate where the fault blocks completion">
+  <PosterCell span={6} marker="5" kicker="Generalization: frozen studies + dev rows" title="Gains concentrate where the fault blocks completion">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 640" role="img" aria-label="Paired baseline and advisory completion by study: ToolMaze +17.2, tau-bench status +28.0, AppWorld type flip +16.7 improve; clean P0, tau-bench conservation, and AppWorld missing field are unchanged.">
         {ceTicks.map((t) => (
@@ -350,7 +351,7 @@ const recallRows = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="6" kicker="Validity check · incident-derived faults, authored blind" title="The contract vocabulary bounds detection">
+  <PosterCell span={6} marker="6" kicker="Validity check: incident-derived faults, authored blind" title="The contract vocabulary bounds detection">
     <figure class="poster-figure">
       <svg viewBox="0 0 720 190" role="img" aria-label="Bar chart: detection recall is 83% for violations over structured values and 22% for corruption inside plausible strings">
         {recallRows.map((r, i) => {
@@ -359,8 +360,8 @@ const recallRows = [
           return (
             <g>
               <text x="10" y={y + 14} font-size="20" fill={ink}>{r.label}</text>
-              <rect x="10" y={y + 26} width="470" height="34" rx="3" fill={r.color} opacity="0.14" />
-              <rect x="10" y={y + 26} width={w} height="34" rx="3" fill={r.color} opacity="0.9" />
+              <rect x="10" y={y + 26} width="470" height="34" fill={r.color} opacity="0.14" />
+              <rect x="10" y={y + 26} width={w} height="34" fill={r.color} opacity="0.9" />
               <text x={10 + w + 12} y={y + 49} font-size="24" font-weight="600" fill={r.color}>{r.pct}%</text>
               <text x="600" y={y + 49} font-size="18" fill={muted}>{r.n}</text>
             </g>
@@ -388,7 +389,7 @@ const recallRows = [
     </p>
   </PosterCell>
 
-  <PosterCell span={6} marker="7" kicker="Takeaway" title="Attach recovery affordances at the point of failure">
+  <PosterCell span={6} marker="7" kicker="Takeaway" title="Attach recovery affordances at the point of failure" fill>
     <ol class="poster-body takeaway-list">
       <li>Silent failures need an <strong>in-band signal</strong>: fault-aware prompts and extended reasoning budgets do not substitute for the receipt.</li>
       <li>Put <span class="oc-main">recovery tools</span> in the receipt: diagnostics without them perform at baseline in our controls.</li>
@@ -430,6 +431,19 @@ const recallRows = [
     </div>
   </PosterCell>
 </PosterShell>
+
+<style is:global>
+  /* Paper palette (arXiv:2608.19303 LaTeX definecolor): ocmain #206945
+     (advisory green), ocwarn #B0392E (failure red), ocflag #9E6C14 (flag
+     amber), ocink #272E34, ocmuted #696F74. */
+  :root {
+    --color-oc-main: 32 105 68;
+    --color-oc-warn: 176 57 46;
+    --color-oc-flag: 158 108 20;
+    --color-oc-ink: 39 46 52;
+    --color-oc-muted: 105 111 116;
+  }
+</style>
 
 <style>
   .oc-main {

@@ -10,11 +10,21 @@ export interface Props {
 }
 
 const { kicker, title, authors, affiliation, qrSrc, qrLabel } = Astro.props;
+// Any "arXiv:NNNN.NNNNN" in the kicker becomes a link to the abstract page.
+const kickerParts = kicker.split(/(arXiv:\d{4}\.\d{4,5}(?:v\d+)?)/);
 ---
 
 <header class="poster-cell plain title-band" style="grid-column: span 12;">
   <div class="title-band-text">
-    <p class="cell-kicker">{kicker}</p>
+    <p class="cell-kicker">
+      {kickerParts.map((part) =>
+        /^arXiv:/.test(part) ? (
+          <a href={`https://arxiv.org/abs/${part.slice(6)}`} target="_blank" rel="noopener noreferrer">{part}</a>
+        ) : (
+          part
+        )
+      )}
+    </p>
     <h1>{title}</h1>
     <p class="title-band-authors">{authors}</p>
     {affiliation && <p class="title-band-affiliation">{affiliation}</p>}
@@ -48,6 +58,16 @@ const { kicker, title, authors, affiliation, qrSrc, qrLabel } = Astro.props;
     font-weight: 600;
     line-height: 1.06;
     margin: 4mm 0 6mm;
+  }
+
+  .cell-kicker a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cell-kicker a:hover {
+    text-decoration: underline;
+    color: rgb(var(--color-ink-blue));
   }
 
   .title-band-authors {

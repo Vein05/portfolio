@@ -1,6 +1,8 @@
 # Poster System — Design Principles
 
-How research posters are built here. Companion to `design.md` (site figures) and `writing.md` (prose, binding for poster copy too); the original approved spec is `research/2026-08-25-paper-poster-design.md`. Posters so far: `/poster/memory-targets` (EMNLP Findings 2026), `/poster/outcome-monitors` (arXiv 2608.19303), `/poster/rag-compression` (arXiv 2606.21807).
+How research posters are built here. Companion to `design.md` (site figures) and `writing.md` (prose, binding for poster copy too); the original approved spec is `research/2026-08-25-paper-poster-design.md`. Posters so far: `/poster/memory-targets` (EMNLP Findings 2026), `/poster/outcome-monitors` (arXiv 2608.19303), `/poster/rag-compression` (arXiv 2606.21807), and one draft, `/poster/stale-policy` (idea proposition, no paper; sourced from `~/Documents/research/stale-policy-retrieval/`). All are listed on the gallery page `/posters` (`src/pages/posters.astro`), which embeds each poster in a scaled iframe; add a card there for every new poster.
+
+Draft posters: allowed for an idea before the study exists. The title-band kicker must say "Draft" and "no paper yet", the gallery card gets `status: 'draft'`, illustrative numbers are labelled invented in the caption, and literature numbers carry a caption saying they are as reported and not reproduced. The subtitle line under the authors states the idea in one or two plain sentences, not a list of deliverables.
 
 ## What this is
 
@@ -8,35 +10,41 @@ Full-size A0-portrait (841 × 1189 mm) research posters that live on the website
 
 ## Principles
 
-1. **The page IS the poster.** A poster route renders nothing but the poster: no site nav, no toolbar, no theme machinery. The canvas scales to fill the window width; browser zoom is the zoom UI; browser print is the export UI. Cmd+P → Save as PDF must yield the exact single-page vector A0 file.
+1. **The page IS the poster.** A poster route renders nothing but the poster: no site nav, no theme machinery. The canvas scales to fill the window width ("Fit width") or shows at A4 width, centred ("A4"); a two-button toggle top-right switches between them and is hidden in print (added 2026-09-04, user request). Browser zoom is the zoom UI. Export is a right-click menu on the sheet: "Download PDF · A0 full size" (native) or "Download PDF · A4" (canvas zoomed 210/841 onto one A4 page); both open the browser print dialog, save as PDF from there. `?print=a4` or `?print=a0` in the URL preselects the size for headless checks. arXiv ids in the title-band kicker are links (TitleBand does this automatically). Double-clicking any content cell opens it in a lightbox: the cell is cloned into a modal and scaled to fit the viewport; +/− buttons or ⌘/ctrl+wheel zoom, scrolling pans, Esc or click-outside closes. Figures stay vector, so zoom is lossless. Disabled inside iframes and in print. Cmd+P → Save as PDF must yield the exact single-page vector A0 file.
 2. **Physical units, always.** The canvas is a fixed `841mm × 1189mm` element; type is set in `pt`. Screen display is a pure `transform: scale()` on top — so what you proof on screen is geometrically identical to print.
 3. **Static markup only.** No React islands or hydration inside the canvas. Print output must never depend on client-side timing. The only script is the tiny inline fit-to-width scaler.
 4. **Self-contained styling.** Posters do not import the site's themed `global.css`. `src/styles/poster.css` defines its own fixed near-white palette. No site textures, tints, or theme switching — a poster is an academic artifact, not a page of the personal site.
 5. **The paper is the theme.** Each poster adopts its paper's own figure palette as CSS tokens. For memory-targets that is the LaTeX-defined seaborn-deep set: `RawTurnColor #4C72B0`, `SourceFamilyColor #55A868`, `CanonicalColor #C44E52` (+ `#DD8452` for partial-verdict orange). Custom charts must be hue-identical to the embedded paper figures; never mix the site palette into a poster.
 6. **Redraw figures at poster scale; the paper figure is the spec, not the asset.** Compiled paper figures are drawn for a 3.3-inch column: blown up to A0 their strokes, fonts, and label density read as postage stamps of the paper (this sank the first outcome-monitors poster). Rebuild each figure as inline SVG in the poster page — same content, same palette, same encoding as the paper figure, but Oswald type and poster-weight strokes — using the paper's TikZ/matplotlib source as the ground truth for every value. Compute coordinates from the raw numbers in Astro frontmatter (type the numbers once, derive coordinates), never hand-placed. `pdftocairo -svg` conversion of paper PDFs is acceptable only for figures that are already large-canvas and poster-legible.
 7. **Real numbers only.** Every value on the poster comes from the camera-ready paper, or, when the research repo's frozen analysis is ahead of the posted arXiv version (rag-compression), from the repo's frozen result artifacts (note the divergence in the page's frontmatter comment). When the blog and the paper disagree (e.g. an earlier pilot audit vs the final one), the paper wins. Captions state the takeaway, then provenance ("Data: paper Table 5").
+7b. **No submission venue on a poster under review.** Double-blind rules. The title-band kicker carries the arXiv id and categories only; "under review at <venue>" never appears (this was on outcome-monitors until 2026-09-04). Name the venue after acceptance.
+7c. **Kickers are label-then-detail, never dot lists.** "Validity check: four HotpotQA policies", not "Validity check · four HotpotQA policies". Title-band kicker is a comma list ("arXiv:2606.21807, cs.CL"). Authors joined with "and". Chart labels use commas ("HotpotQA, EM"). Rule added 2026-09-04 after all four posters were converted.
+7d. **Bold is rare.** One bold phrase per cell body at most, and none in the TL;DR band unless a single number carries the poster. Row heads and list names are weight 500. The draft poster is the reference; the three paper posters predate the rule and keep their paper-copy bold until their next edit.
+7e. **Straight edges.** `border-radius: 0` on cells, chips, toggle, menus, lightbox; no `rx` on SVG rects. Marker badges and data points stay circles.
 8. **Poster copy follows `writing.md`.** All prose rules apply to titles, captions, takeaways, and the TL;DR, especially: no em dashes (restructure with periods, commas, colons, semicolons, or parentheses), bounded claims, kill throat-clearing.
+9a. **Row-mates share a height; handle the slack deliberately.** Cells in one grid row stretch to the tallest. Two mechanisms, both in `poster.css` (2026-09-04): a trailing `.poster-caption` (or any element with `.pin-bottom`) is pinned to the cell floor, so slack sits between body and caption; and a list-only cell can take `fill` on `PosterCell` to spread its items over the height (used on the three takeaway cells). Never pin the body itself: a body-only cell keeps its gap at the bottom. If a cell's content covers under about two-thirds of its box after both, that is an authoring problem: change spans or move content, do not pad.
 9. **Bento grid with a reading spine.** Layout is a 12-column grid of typed cells, but bento grids are ambiguous about order — so every content cell carries a numbered marker (①…⑧) forming an explicit reading path: problem → method → core result → consequences → validity → takeaway → TL;DR.
 10. **Typography is calculated, not eyeballed.** At print scale 1pt = 0.353mm; readable distance ≈ text height in mm × 300. Tiers: title ~62pt (~6 m), cell titles 28pt (~2.5 m), body/TL;DR 21–23pt (~1.5 m, standard poster distance), captions 18pt / kickers 16pt (~1 m lean-in tier). Nothing below 14pt.
 11. **End with a TL;DR band.** A full-width three-column strip (what we did / what we found / what you should do) is the last cell — the walk-away message, set at body size, never fine print.
 
 ## Architecture
 
-- `src/components/poster/PosterShell.astro` — bare HTML shell + A0 canvas + fit-to-width scaler.
-- `src/components/poster/PosterCell.astro` — bento cell: `span`, numbered `marker`, `kicker`, `title`.
-- `src/components/poster/TitleBand.astro` — full-width header: venue kicker, title, authors, QR to the paper.
-- `src/styles/poster.css` — tokens, canvas, cells, shared chart pieces (winner grid, TL;DR band), print rules (`@page { size: 841mm 1189mm; margin: 0 }`).
-- `src/pages/poster/<slug>.astro` — one hand-crafted page per paper on top of the shared parts.
+- `src/components/poster/PosterShell.astro` — bare HTML shell + A0 canvas + scaler (Fit width / A4 views, stored in localStorage) + right-click PDF menu. Both are disabled when the page is inside an iframe (gallery thumbnails).
+- `src/components/poster/PosterCell.astro` — bento cell: `span`, numbered `marker`, `kicker`, `title`, `rowSpan`, `plain`, `fill` (list-only cells: distribute items over the cell height).
+- `src/components/poster/TitleBand.astro` — full-width header: kicker (arXiv ids auto-linked; never a submission venue while under review), title, authors, one- or two-sentence `affiliation` line, optional QR to the paper.
+- `src/styles/poster.css` — shared tokens (paper/ink palette only), canvas, cells, shared chart pieces (winner grid, TL;DR band), view toggle and context-menu styles, print rules (`@page` A0 by default; the named page `poster-a4` plus CSS zoom 210/841 when `body[data-print-size='a4']`). Paper-specific palette tokens do NOT go here.
+- `src/pages/poster/<slug>.astro` — one hand-crafted page per paper on top of the shared parts. Each page declares its paper's palette tokens in a `<style is:global>` `:root` block.
+- `src/pages/posters.astro` — the gallery: one card per poster with a scaled iframe preview and a Draft/Poster chip. Add a card for every new poster.
 - `public/poster/` — QR codes (`npx -y qrcode -t svg -o ... "<arxiv-url>"`) and converted figure SVGs.
 
 ## Adding a poster (checklist)
 
 1. Pull real numbers from the camera-ready paper (arXiv), not the blog post.
 2. Redraw the paper's figures as inline SVG at poster scale (principle 6), computing coordinates from the raw numbers in frontmatter; convert a paper PDF into `public/poster/figures/` only if it is already poster-legible.
-3. Extract the paper's palette (grep `definecolor` in the LaTeX source) into poster tokens.
-4. Generate the QR SVG; add a "Poster" link (`posterHref`) on the paper's card in `Papers.jsx`.
+3. Extract the paper's palette (grep `definecolor` in the LaTeX source) into a `<style is:global>` `:root` token block in the page.
+4. Generate the QR SVG; add a "Poster" link (`posterHref`) on the paper's card in `Papers.jsx`; add the gallery card in `src/pages/posters.astro`. Drafts skip the QR and `posterHref`.
 5. Lay out cells against the height budget (~1150mm of usable canvas); leave real margin under the last row.
-6. Verify on the **production build** (`npm run build` + `astro preview`), not the dev server — dev can silently drop scoped styles for slot content. Check: headless screenshot for layout; headless `--print-to-pdf` must give **1 page, MediaBox 2383.92 × 3370.08 pt**, no clipped cells.
+6. Verify on the **production build** (`npm run build` + `astro preview`), not the dev server — dev can silently drop scoped styles for slot content. Check: headless screenshot for layout, including the gallery thumbnail; `--print-to-pdf` on `?print=a0` must give **1 page, MediaBox 2383.92 × 3370.08 pt** and on `?print=a4` **1 page, 594.96 × 841.92 pt**, no clipped cells. SVG labels must not touch their lines (check at poster scale, not thumbnail).
 
 ## Known limitation
 

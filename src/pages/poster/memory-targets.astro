@@ -77,14 +77,15 @@ const audit = [
 ---
 
 <PosterShell
-  title="Poster · Same Ranking, Different Winner"
+  author="Sugam Panthi"
+  title="Poster: Same Ranking, Different Winner"
   description="A0 research poster: how scoring targets shape LLM memory benchmarks (EMNLP Findings 2026)."
   slug="memory-targets"
 >
   <TitleBand
-    kicker="Findings of EMNLP 2026 · arXiv:2605.24060 · cs.IR"
+    kicker="Findings of EMNLP 2026, arXiv:2605.24060, cs.IR"
     title="Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks"
-    authors="Sugam Panthi · Rabab Abdelfattah"
+    authors="Sugam Panthi and Rabab Abdelfattah"
     affiliation="TIAP: a fixed-output audit of scoring-target choice in conversational-memory evaluation"
     qrSrc="/poster/memory-targets-qr.svg"
     qrLabel="Scan for paper"
@@ -123,7 +124,7 @@ const audit = [
     <p class="poster-body method-note">
       Three targets rescore the same saved outputs: <span class="t-raw">Raw</span> (exact turn),
       <span class="t-source">Source</span> (same source family), and
-      <span class="t-canonical">Canonical</span> (serving form). LoCoMo &amp; LongMemEval-S · 4 retrievers · transfer: Mem0, MemoryOS.
+      <span class="t-canonical">Canonical</span> (serving form). LoCoMo &amp; LongMemEval-S, 4 retrievers, transfer: Mem0, MemoryOS.
     </p>
     <p class="big-stat">
       <span class="stat-number">83.4–94.0%</span>
@@ -131,7 +132,7 @@ const audit = [
     </p>
   </PosterCell>
 
-  <PosterCell span={12} marker="3" kicker="Core result · nDCG@60, canonical-covered shared subsets (n = 899–963 / 299–332)" title="Same runs, three scores: the target choice moves every number">
+  <PosterCell span={12} marker="3" kicker="Core result: nDCG@60, canonical-covered shared subsets (n = 899–963 / 299–332)" title="Same runs, three scores: the target choice moves every number">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 340" role="img" aria-label="Slope chart: nDCG under Raw, Source, and Canonical targets for eight runs on LoCoMo and LongMemEval-S">
         {slopeData.map((panel, p) => {
@@ -171,15 +172,15 @@ const audit = [
         <line x1="712" y1="34" x2="712" y2="302" stroke={muted} stroke-width="1" opacity="0.3" />
       </svg>
       <figcaption class="poster-caption">
-        Canonical beats Raw on every native run, but the margin swings from +0.068 (LoCoMo · BGE-M3) to
-        +0.420 (LongMemEval-S · mxbai-large), a six-fold difference in the apparent quality gap.
+        Canonical beats Raw on every native run, but the margin swings from +0.068 (LoCoMo, BGE-M3) to
+        +0.420 (LongMemEval-S, mxbai-large), a six-fold difference in the apparent quality gap.
         Source exceeds Canonical on all four LoCoMo subsets; the order reverses on LongMemEval-S.
         Fixed ranked outputs, nDCG@60. Data: paper Table 2.
       </figcaption>
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="4" kicker="Engineering consequence · fixed subset, n = 453" title="Pick a target, pick a different memory-store design">
+  <PosterCell span={6} marker="4" kicker="Engineering consequence: fixed subset, n = 453" title="Pick a target, pick a different memory-store design">
     <div class="winner-grid poster-body">
       <div class="winner-head"></div>
       <div class="winner-head" style={`color:${rawC}`}>Raw</div>
@@ -187,7 +188,7 @@ const audit = [
       <div class="winner-head" style={`color:${canonC}`}>Canonical</div>
       {winnerRows.map((row) => (
         <>
-          <div class="winner-label">{row.provider} · {row.cmp}</div>
+          <div class="winner-label">{row.provider}, {row.cmp}</div>
           {['raw', 'source', 'canonical'].map((t) => (
             <div class="winner-chip" data-denser={denser(row.cmp, row[t])}>{row[t]}</div>
           ))}
@@ -202,7 +203,7 @@ const audit = [
     </p>
   </PosterCell>
 
-  <PosterCell span={6} marker="5" kicker="Transfer · full-run nDCG@60" title="It follows real architectures, in no clean direction">
+  <PosterCell span={6} marker="5" kicker="Transfer: full-run nDCG@60" title="It follows real architectures, in no clean direction">
     <figure class="poster-figure transfer-figure">
       <img
         src="/poster/figures/transfer_orderings.svg"
@@ -210,13 +211,13 @@ const audit = [
       />
       <figcaption class="poster-caption">
         Rescoring published Mem0 and MemoryOS runs preserves non-invariance, but the ordering flips
-        between datasets: two monotonic, two non-monotonic. On Mem0 · LongMemEval-S,
+        between datasets: two monotonic, two non-monotonic. On Mem0 with LongMemEval-S,
         raw-vs-canonical switching changes MRR on 466 of 470 queries.
       </figcaption>
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="6" kicker="Validity check · n = 1,902 contested cases, majority vote" title="Relaxed credit is fully justified only 29.2% of the time">
+  <PosterCell span={6} marker="6" kicker="Validity check: n = 1,902 contested cases, majority vote" title="Relaxed credit is fully justified only 29.2% of the time">
     <figure class="poster-figure">
       <svg viewBox="0 0 720 160" role="img" aria-label="Stacked bar: 29.2% fully supports, 39.6% partially supportive, 31.2% does not support">
         {(() => {
@@ -227,7 +228,7 @@ const audit = [
             acc += seg.pct;
             return (
               <g>
-                <rect x={x} y="26" width={w - 4} height="60" rx="3" fill={seg.color} opacity="0.85" />
+                <rect x={x} y="26" width={w - 4} height="60" fill={seg.color} opacity="0.85" />
                 <text x={x + (w - 4) / 2} y="65" text-anchor="middle" font-size="26" font-weight="600" fill="rgb(var(--color-paper-light))">{seg.pct}%</text>
                 <text x={x + (w - 4) / 2} y="124" text-anchor="middle" font-size="19" fill={ink}>{seg.label}</text>
               </g>
@@ -244,7 +245,7 @@ const audit = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={6} marker="7" kicker="Takeaway" title="Report the target, or the benchmark reports noise">
+  <PosterCell span={6} marker="7" kicker="Takeaway" title="Report the target, or the benchmark reports noise" fill>
     <ol class="poster-body takeaway-list">
       <li><span class="t-canonical">Canonical</span> is the primary target when the deployed system serves transformed memories.</li>
       <li>Always report <span class="t-raw">Raw</span> alongside it as a strict floor.</li>
@@ -260,7 +261,7 @@ const audit = [
         <p class="tldr-head">What we did</p>
         <p>
           TIAP rescored <strong>saved ranked outputs</strong> (retrieval never rerun) under three
-          scoring targets (<span class="t-raw">Raw</span> · <span class="t-source">Source</span> ·
+          scoring targets (<span class="t-raw">Raw</span>, <span class="t-source">Source</span> ·
           <span class="t-canonical">Canonical</span>) on LoCoMo and LongMemEval-S, plus Mem0 and
           MemoryOS transfer runs.
         </p>
@@ -284,6 +285,18 @@ const audit = [
     </div>
   </PosterCell>
 </PosterShell>
+
+<style is:global>
+  /* Paper palette (LaTeX definecolor / seaborn deep): RawTurnColor #4C72B0,
+     SourceFamilyColor #55A868, CanonicalColor #C44E52; partial-verdict
+     orange is seaborn deep #DD8452. Custom charts must match the figures. */
+  :root {
+    --color-target-raw: 76 114 176;
+    --color-target-source: 85 168 104;
+    --color-target-canonical: 196 78 82;
+    --color-audit-partial: 221 132 82;
+  }
+</style>
 
 <style>
   .t-raw {

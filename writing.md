@@ -16,6 +16,8 @@ Precise technical essayist, not a marketer and not a lecturer. Confident but bou
 4. **Bounded claims beat oversized ones.** State scope. Label inference as inference. Never hedge a result the table shows ("may suggest" becomes "shows"); never claim beyond what you ran.
 5. **No em dashes.** Use periods, commas, colons, semicolons, or parentheses. If a sentence needs an em dash, restructure it.
 6. **Kill throat-clearing.** No "it is important to note," "basically," "obviously," "clearly," "in order to," "utilize," "leverage," "various," "very," "really" unless the word earns its place.
+7. **No middle-dot fragments.** "A · B · C" is banned everywhere. Comma list, sentence, or label-then-colon.
+8. **Bold once per block, if at all.** Bold marks the single load-bearing phrase. Adjacent bold runs cancel each other.
 
 ---
 

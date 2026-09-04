@@ -1,0 +1,407 @@
+---
+// DRAFT A0 poster for the stale-policy-retrieval idea (working name; no
+// paper yet). Content mirrors ~/Documents/research/stale-policy-retrieval/
+// CHARTER.md and research/PROPOSITION.md as of 2026-09-04. The 120/90-day
+// example is illustrative (numbers invented, as PROPOSITION §1 states).
+// The lib.usm.edu observations come from the 2026-09-04 crawl in
+// ~/Documents/magnoliaed/library-chatbot (scope.json, verify.json,
+// docs/SITE_SURVEY.md). Literature numbers are as reported by the cited
+// papers; nothing is reproduced here. Palette: stale = rust, current = teal.
+import PosterShell from '../../components/poster/PosterShell.astro';
+import PosterCell from '../../components/poster/PosterCell.astro';
+import TitleBand from '../../components/poster/TitleBand.astro';
+
+const ink = 'rgb(var(--color-ink-dark))';
+const muted = 'rgb(var(--color-ink-muted))';
+const paper = 'rgb(var(--color-paper-surface))';
+const stale = 'rgb(var(--color-sp-stale))';
+const current = 'rgb(var(--color-sp-current))';
+
+// ③ per-system failure table (PROPOSITION §1)
+const systems = [
+  ['Hybrid retrieval', 'FAQ matches the question word for word; the policy sentence ranks low and is never shown.'],
+  ['Recency reranker', 'Prefers the FAQ: a typo fix last month gave it the newer page date.'],
+  ['Conflict detector', 'Sees no conflict, because the policy sentence was not retrieved.'],
+  ['Search agent', 'Opens the FAQ, reads 120 days, stops. Nothing it saw suggests a contradiction exists.'],
+  ['Long context', 'Has both statements, undated, and must decide from content alone. Whether it can is an experiment.'],
+  ['Graph memory', 'Extracts "borrow period" and "loan period" as different edges; the old one is never invalidated.'],
+];
+
+// ④ literature (as reported by the cited papers)
+const lit = [
+  ['DRNoise', '2607.17291', 'Premature stopping was the dominant failure: agents retrieved true records next to misleading ones and stopped before reconciling. Accuracy fell 66 to 88 points.'],
+  ['Failing to Falsify', '2604.02485', 'Eleven models chose tests that confirm the current hypothesis over tests that could refute it.'],
+  ['DRAGged into Conflicts', '2506.08500', 'Models resolve conflicting passages when told to look for conflict. Both passages were shown together.'],
+  ['EnterpriseRAG-Bench', '2605.05253', 'Conflicts are near-duplicate pairs: 20 of 500 questions, and BM25 answers 90% of them. The easy case is solved.'],
+  ['AgenticRAG', '2605.05538', '49.6% recall@1 on BRIGHT. The EnterpriseRAG-Bench bash agent: 29.6% recall on low-overlap questions against 43.2% for BM25.'],
+  ['MemStrata', 'preprint', 'Embedding similarity does not separate a contradiction from a duplicate: AUROC 0.59.'],
+];
+
+// ⑤ real observations from the 2026-09-04 crawl of lib.usm.edu
+const crawl = { pages: '1,782', pdfs: 66, unique: '1,429', empty: 55, widgets: 4, embeds: 14 };
+---
+
+<PosterShell
+  author="Sugam Panthi"
+  title="Draft poster: The Stale Answer Problem"
+  description="Draft A0 poster: when a knowledge base holds a stale statement and its reworded replacement on different pages with no trustworthy dates, at which stage does the current statement drop out?"
+  slug="stale-policy"
+>
+  <TitleBand
+    kicker="Draft. Idea proposition, no paper yet, 2026-09-04. Working name: stale-policy-retrieval"
+    title="The Stale Answer Problem: Where the Current Statement Drops Out"
+    authors="Sugam Panthi"
+    affiliation="A site can keep an old policy sentence on one page while a reworded replacement lives on another, with no date a crawler can trust. We do not yet know how often that happens, or whether question-answering systems then serve the old one. This poster states the question and how we will test it."
+  />
+
+  <PosterCell span={6} marker="1" kicker="The failure, by example" title="The FAQ says 120 days. The policy says 90. The system cites the FAQ.">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1200 700" role="img" aria-label="A student question matches a stale FAQ sentence almost word for word and shares no words with the current policy sentence, so the system answers 120 days with a citation.">
+        <defs>
+          <marker id="sp-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={ink} />
+          </marker>
+        </defs>
+        <!-- question -->
+        <rect x="20" y="250" width="330" height="200" fill={paper} stroke={ink} stroke-width="3" />
+        <text x="40" y="285" font-size="20" font-weight="600" letter-spacing="2" fill={muted}>STUDENT ASKS</text>
+        <text x="40" y="330" font-size="27" fill={ink}>"I'm a grad student,</text>
+        <text x="40" y="366" font-size="27" fill={ink}>when do my <tspan font-weight="600">books</tspan> come</text>
+        <text x="40" y="402" font-size="27" fill={ink}>due?"</text>
+        <!-- FAQ page -->
+        <rect x="560" y="40" width="620" height="240" fill={paper} stroke={stale} stroke-width="4" />
+        <text x="585" y="78" font-size="20" font-weight="600" letter-spacing="2" fill={stale}>FAQ PAGE, /help/, STALE, re-saved last month (typo fix)</text>
+        <text x="585" y="125" font-size="27" fill={ink}>"How long can I keep a book?"</text>
+        <text x="585" y="170" font-size="27" fill={ink}><tspan font-weight="600">Graduate students</tspan> may borrow <tspan font-weight="600">books</tspan></text>
+        <text x="585" y="210" font-size="27" fill={ink}>for <tspan font-weight="600" fill={stale}>120 days</tspan>.</text>
+        <text x="585" y="255" font-size="20" fill={muted}>Shares "grad", "books", "due/keep" with the question</text>
+        <!-- policy page -->
+        <rect x="560" y="420" width="620" height="240" fill={paper} stroke={current} stroke-width="4" />
+        <text x="585" y="458" font-size="20" font-weight="600" letter-spacing="2" fill={current}>POLICY PAGE, PolicyStat, CURRENT, page date older</text>
+        <text x="585" y="505" font-size="27" fill={ink}>"Loan periods: faculty 180 days,</text>
+        <text x="585" y="550" font-size="27" fill={ink}>graduate <tspan font-weight="600" fill={current}>90 days</tspan>, undergraduate</text>
+        <text x="585" y="590" font-size="27" fill={ink}>28 days."</text>
+        <text x="585" y="635" font-size="20" fill={muted}>Shares no content word with the question</text>
+        <!-- arrows -->
+        <line x1="350" y1="320" x2="548" y2="170" stroke={stale} stroke-width="5" marker-end="url(#sp-arrow)" />
+        <text x="430" y="205" font-size="21" font-weight="600" fill={stale} text-anchor="end">rank 1</text>
+        <line x1="350" y1="380" x2="548" y2="530" stroke={muted} stroke-width="3" stroke-dasharray="12 10" marker-end="url(#sp-arrow)" />
+        <text x="520" y="565" font-size="21" font-weight="600" fill={muted} text-anchor="end">not retrieved</text>
+        <!-- answer -->
+        <rect x="20" y="520" width="330" height="140" fill={stale} />
+        <text x="40" y="560" font-size="20" font-weight="600" letter-spacing="2" fill={paper}>ANSWER, WITH CITATION</text>
+        <text x="40" y="620" font-size="44" font-weight="600" fill={paper}>120 days</text>
+      </svg>
+    </figure>
+    <p class="poster-caption">
+      Illustrative. The page layout is lib.usm.edu's; the day counts are invented. Neither page
+      carries a date a crawler can trust, and the stale page is the newer one by page date.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={6} marker="2" kicker="The question" title="At which of three stages did the current statement drop out?">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1200 560" role="img" aria-label="Three stacked stages: ingested, in front of the model, chosen. The current statement can drop out at any of them; for agents the middle stage splits into stopped and searched-and-missed.">
+        <defs>
+          <marker id="sp-arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={muted} />
+          </marker>
+        </defs>
+        {[
+          { y: 30, w: 1000, n: '1', head: 'INGESTED', body: 'Did it enter what the system builds: an index, a graph, a memory store, a context window, or weights?' },
+          { y: 200, w: 760, n: '2', head: 'IN FRONT OF THE MODEL', body: 'Was it among the passages, nodes, memories, or window contents the model saw?' },
+          { y: 370, w: 520, n: '3', head: 'CHOSEN', body: 'With both statements in front of it, did the model pick the current one?' },
+        ].map((s) => (
+          <g>
+            <rect x={(1200 - s.w) / 2} y={s.y} width={s.w} height="130" fill={paper} stroke={ink} stroke-width="3" />
+            <circle cx={(1200 - s.w) / 2 + 45} cy={s.y + 65} r="28" fill={ink} />
+            <text x={(1200 - s.w) / 2 + 45} y={s.y + 76} font-size="32" font-weight="600" fill={paper} text-anchor="middle">{s.n}</text>
+            <text x={(1200 - s.w) / 2 + 95} y={s.y + 50} font-size="22" font-weight="600" letter-spacing="2" fill={current}>{s.head}</text>
+            <foreignObject x={(1200 - s.w) / 2 + 95} y={s.y + 62} width={s.w - 120} height="64">
+              <p xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Oswald',sans-serif;font-size:21px;line-height:1.25;font-weight:300;color:rgb(26,26,20);margin:0">{s.body}</p>
+            </foreignObject>
+          </g>
+        ))}
+        <line x1="600" y1="160" x2="600" y2="195" stroke={muted} stroke-width="4" marker-end="url(#sp-arrow2)" />
+        <line x1="600" y1="330" x2="600" y2="365" stroke={muted} stroke-width="4" marker-end="url(#sp-arrow2)" />
+        <!-- agent split: stage 2 read from traces -->
+        <path d="M 980 265 L 1010 265 L 1010 410 L 880 410" fill="none" stroke={stale} stroke-width="3" />
+        <text x="880" y="440" font-size="19" font-weight="600" fill={stale}>STAGE 2 FOR AGENTS, FROM TRACES</text>
+        <text x="880" y="470" font-size="19" fill={ink}>"stopped": never opened the page</text>
+        <text x="880" y="498" font-size="19" fill={ink}>"searched and missed": wording gap</text>
+      </svg>
+    </figure>
+    <div class="poster-body">
+      <p>
+        The question is about the <strong>corpus</strong>, so it applies to any kind of system, and the
+        diagnostic is reported per system. "Retrieval miss versus resolution miss" is the retrieval-only
+        case of stages 2 and 3.
+      </p>
+      <p class="mt">
+        Nearby work assumes one of three things: both versions are among the retrieved passages
+        (ConflictRAG, DRAGged), candidates carry reliable timestamps (FRESCO, recency rerankers), or
+        facts are already aligned as triples (MemStrata, Graphiti). Help centers and institutional
+        sites break all three at once.
+      </p>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={6} marker="3" kicker="Why every kind of system serves the stale one" title="Where each kind of system loses the current statement">
+    <table class="sp-table">
+      <tbody>
+        {systems.map(([k, v]) => (
+          <tr>
+            <th>{k}</th>
+            <td>{v}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <p class="poster-caption">Walk-through of the ①-example against each system kind (PROPOSITION §1). These are the four kinds the paper will evaluate, plus two variants.</p>
+  </PosterCell>
+
+  <PosterCell span={6} marker="4" kicker="What the literature already shows, in nearby settings" title="Each part of the hypothesis has evidence. The combination does not.">
+    <ul class="sp-lit poster-body">
+      {lit.map(([name, id, txt]) => (
+        <li>
+          <span class="sp-lit-name">{name}</span>
+          {id.startsWith('2') ? (
+            <a class="sp-lit-id" href={`https://arxiv.org/abs/${id}`} target="_blank" rel="noopener noreferrer">arXiv:{id}</a>
+          ) : (
+            <span class="sp-lit-id">{id}</span>
+          )}
+          <span class="sp-lit-txt">{txt}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="poster-caption">
+      Numbers as reported by the cited papers; none reproduced here. The difference from our setting
+      in every row: their misleading documents are wrong or adversarial and both sides were
+      retrieved. Ours is a once-true statement, undated, with the replacement not retrieved.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={7} marker="5" kicker="Two things the first crawl already shows" title="On lib.usm.edu, the authoritative page is the one that fails ingestion">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1400 470" role="img" aria-label="Two real cases from the 2026-09-04 crawl. The library policies page links eight policies into PolicyStat, a JavaScript app that returns a 26-character shell, so no policy text is ingested while the FAQ page is. The Cook Library hours page is an empty LibCal widget while the home page carries the hours as static text.">
+        <!-- case A -->
+        <text x="10" y="34" font-size="22" font-weight="600" letter-spacing="2" fill={ink}>A. LOAN AND CIRCULATION POLICY</text>
+        <rect x="10" y="60" width="300" height="130" fill={paper} stroke={ink} stroke-width="3" />
+        <text x="30" y="95" font-size="23" font-weight="600" fill={ink}>/about_us/library_policies/</text>
+        <text x="30" y="128" font-size="21" fill={muted}>in-degree 1,680, tier 0</text>
+        <text x="30" y="160" font-size="21" fill={muted}>8 links, 0 sentences of policy</text>
+        <line x1="310" y1="125" x2="400" y2="125" stroke={muted} stroke-width="4" marker-end="url(#sp-arrow2)" />
+        <rect x="410" y="60" width="330" height="130" fill={paper} stroke={current} stroke-width="4" stroke-dasharray="14 10" />
+        <text x="430" y="95" font-size="23" font-weight="600" fill={current}>usm.policystat.com</text>
+        <text x="430" y="128" font-size="21" fill={ink}>React app, plain HTTP returns</text>
+        <text x="430" y="160" font-size="21" fill={ink}>a 26-character shell</text>
+        <rect x="770" y="60" width="300" height="130" fill={paper} stroke={stale} stroke-width="4" />
+        <text x="790" y="95" font-size="23" font-weight="600" fill={stale}>/help/ (FAQ)</text>
+        <text x="790" y="128" font-size="21" fill={muted}>in-degree 1,701, tier 0</text>
+        <text x="790" y="160" font-size="21" fill={ink}>fully ingested, Q/A markup</text>
+        <text x="1100" y="105" font-size="21" font-weight="600" fill={current}>NOT INGESTED: stage 1</text>
+        <text x="1100" y="150" font-size="21" font-weight="600" fill={stale}>INGESTED, question-shaped</text>
+        <!-- case B -->
+        <text x="10" y="314" font-size="22" font-weight="600" letter-spacing="2" fill={ink}>B. OPENING HOURS</text>
+        <rect x="10" y="340" width="360" height="120" fill={paper} stroke={current} stroke-width="4" stroke-dasharray="14 10" />
+        <text x="30" y="375" font-size="23" font-weight="600" fill={current}>/about_us/cook_library_hours.html</text>
+        <text x="30" y="408" font-size="21" fill={muted}>in-degree 849, tier 0</text>
+        <text x="30" y="440" font-size="21" fill={ink}>body: empty (LibCal widget, JS)</text>
+        <rect x="410" y="340" width="360" height="120" fill={paper} stroke={stale} stroke-width="4" />
+        <text x="430" y="375" font-size="23" font-weight="600" fill={stale}>/ (home page banner)</text>
+        <text x="430" y="408" font-size="21" fill={ink}>"Cook Library Hours: 7am - 5pm"</text>
+        <text x="430" y="440" font-size="21" fill={muted}>static text, no date, restated</text>
+        <text x="800" y="380" font-size="21" font-weight="600" fill={ink}>Same value today. The bot's only</text>
+        <text x="800" y="412" font-size="21" font-weight="600" fill={ink}>copy is the one nobody has to update</text>
+        <text x="800" y="444" font-size="21" font-weight="600" fill={ink}>when the widget changes.</text>
+      </svg>
+    </figure>
+    <p class="poster-caption">
+      Data: library-chatbot crawl of 2026-09-04. {crawl.pages} HTML pages, {crawl.pdfs} PDFs,
+      {crawl.unique} unique bodies. {crawl.empty} pages extracted empty: {crawl.widgets} LibCal
+      widgets, {crawl.embeds} forms or embeds, the rest image-only exhibit pages. In-degree counts
+      one vote per linking page. This is the "not ingested" stage in the wild; no stale value has
+      been caught yet, because there is one snapshot.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={5} marker="6" kicker="Hypothesis" title="Two causes that compound">
+    <div class="poster-body">
+      <p>
+        <strong>1. Nothing prompts a search against the first fit.</strong> Once a system finds a
+        statement that answers the question, it keeps searching within the frame that statement
+        set, and rarely against it. Say "prefers confirming evidence", not "stops early": the same
+        literature reports agents that over-search. More rounds deepen the same line.
+      </p>
+      <p class="mt">
+        <strong>2. The replacement is worded like a policy.</strong> Even a deliberate search for a
+        contradiction has to bridge the gap between "when are my books due" and "loan periods".
+        If so, better search alone will not close it.
+      </p>
+      <p class="mt sp-mech">
+        Mechanism to test: pages written in the user's language (FAQ, how-to) match questions well
+        and go stale because nobody owns them. Policy pages match poorly and are the ones that get
+        updated. The stale copy is found first because it was written to be found.
+      </p>
+      <p class="mt">
+        A good timestamp fixes stage 3 only. A page date is not a fact date, and when the current
+        value was removed the right answer is "unknown", which no date rule produces.
+      </p>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={12} marker="7" kicker="What gets measured, and what kills it" title="Benchmark first, frozen before any method code">
+    <div class="sp-plan poster-body">
+      <div>
+        <p class="sp-plan-head">Corpus, from real edit histories</p>
+        <p>GitHub Docs and Mozilla Support (git and revision history), a Wayback-archived help center, and lib.usm.edu from daily snapshots. The evaluated system gets a flat crawl. The timeline stays sealed. Wikipedia is a control only.</p>
+      </div>
+      <div>
+        <p class="sp-plan-head">Three conditions, plus oracle dates</p>
+        <p>Easy: the fact changed in place. Hard: it changed on one page and a reworded copy went stale on another. Stale-only: the current value was removed, so the right answer is "unknown". Oracle statement-level dates measure how much timestamps alone close.</p>
+      </div>
+      <div>
+        <p class="sp-plan-head">Four kinds of system</p>
+        <p>Hybrid retrieval (plus recency, FRESCO-style, ConflictRAG-style variants), long context (isolates stage 3), agentic search (plus falsification prompting and evidence-aware termination), one graph or memory system. Then a simple baseline: an offline index that aligns reworded statements about one fact and marks the older one replaced.</p>
+      </div>
+      <div>
+        <p class="sp-plan-head">Kill criteria, set before any data</p>
+        <p>Gate 1, first week: across two edit-history corpora, fewer than 25% of changed mutable facts had a reworded copy on another page. Then the hard case is rare and there is no paper. Also: an existing reranker or detector resolves over 85% of the hard condition; most failures land at stage 3; or falsification prompting alone closes it.</p>
+      </div>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={12} marker="8" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we ask</p>
+        <p>
+          When a stale statement and its reworded replacement sit on different pages with no
+          trustworthy dates, does the system serve the current value, and if not, did the current
+          statement fail to be ingested, fail to reach the model, or lose the
+          final choice?
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we have</p>
+        <p>
+          A charter with dated kill criteria, a prior-art table, and one crawl of lib.usm.edu in
+          which the policy text and the hours are the two things that do not ingest while their
+          question-shaped restatements do. No result yet.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What happens next</p>
+        <p>
+          Gate 1: clone two documentation repos, find commits that change a mutable fact, and grep
+          the old value across the repo at that commit. If reworded cross-page copies are under 25%
+          of changes, the product ships and the paper does not.
+        </p>
+      </div>
+    </div>
+  </PosterCell>
+</PosterShell>
+
+<style is:global>
+  /* Draft palette, chosen for this poster: stale rust, current teal. */
+  :root {
+    --color-sp-stale: 181 71 58;
+    --color-sp-current: 31 122 122;
+  }
+</style>
+
+<style>
+  .sp-stale {
+    color: rgb(var(--color-sp-stale));
+    font-weight: 600;
+  }
+  .sp-current {
+    color: rgb(var(--color-sp-current));
+    font-weight: 600;
+  }
+  .mt {
+    margin-top: 4mm;
+  }
+  .terms {
+    margin-top: 5mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+    font-size: 20pt;
+  }
+  .terms p + p {
+    margin-top: 2mm;
+  }
+  .sp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 21pt;
+    line-height: 1.3;
+    font-weight: 300;
+  }
+  .sp-table th {
+    text-align: left;
+    font-weight: 500;
+    width: 24%;
+    padding: 3.5mm 4mm 3.5mm 0;
+    vertical-align: top;
+    color: rgb(var(--color-sp-stale));
+  }
+  .sp-table td {
+    padding: 3.5mm 0;
+    vertical-align: top;
+  }
+  .sp-table tr + tr th,
+  .sp-table tr + tr td {
+    border-top: 0.5mm solid rgb(var(--color-border-paper));
+  }
+  .sp-lit {
+    list-style: none;
+    padding: 0;
+    font-size: 20pt;
+    line-height: 1.3;
+  }
+  .sp-lit li {
+    display: grid;
+    grid-template-columns: 34% 1fr;
+    column-gap: 5mm;
+    padding: 3.2mm 0;
+  }
+  .sp-lit li + li {
+    border-top: 0.5mm solid rgb(var(--color-border-paper));
+  }
+  .sp-lit-name {
+    font-weight: 500;
+    grid-column: 1;
+  }
+  .sp-lit-id {
+    grid-column: 1;
+    color: rgb(var(--color-ink-muted));
+    text-decoration: none;
+    font-size: 15pt;
+    color: rgb(var(--color-ink-muted));
+    letter-spacing: 0.06em;
+  }
+  .sp-lit-txt {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .sp-mech {
+    border-left: 1.2mm solid rgb(var(--color-sp-current));
+    padding-left: 5mm;
+  }
+  .sp-plan {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10mm;
+    font-size: 20pt;
+    line-height: 1.35;
+  }
+  .sp-plan-head {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 17pt;
+    font-weight: 600;
+    color: rgb(var(--color-sp-current));
+    margin-bottom: 3mm;
+  }
+</style>

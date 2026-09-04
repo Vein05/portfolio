@@ -757,6 +757,239 @@ export const SignFlipAuditChart = () => {
   );
 };
 
+// --- ARR: five-year review score distribution (the empty ceiling) ----------
+export const ArrScoreCeilingChart = () => {
+  const data = [
+    { s: '1.0', v: 0.56 },
+    { s: '1.5', v: 4.30 },
+    { s: '2.0', v: 19.46 },
+    { s: '2.5', v: 33.69, mode: true },
+    { s: '3.0', v: 29.72 },
+    { s: '3.5', v: 10.51 },
+    { s: '4.0', v: 1.33 },
+    { s: '4.5', v: 0.04 },
+    { s: '5.0', v: 0.00, empty: true },
+  ];
+  const W = 680, H = 320;
+  const x0 = 44, x1 = 664, yBase = 250, yTop = 58;
+  const max = 36;
+  const slot = (x1 - x0) / data.length;
+  const barW = 40;
+  const scale = (v) => (v / max) * (yBase - yTop);
+  const cx5 = x0 + slot * 8 + slot / 2;
+
+  return (
+    <ChartCard
+      kicker="ARR · aggregate review score per paper · 2021–2026"
+      title="No ACL paper ever averages a perfect score: zero 5.0s in 69,781 submissions."
+      caption="Distribution of per-paper aggregate review scores (one score per submission, the average of its roughly three reviews) across all 35 ACL Rolling Review cycles, May 2021 to May 2026 (69,781 scored submissions, public ARR dashboard). The 1–5 scale behaves as a 2-to-3 scale: 83% of papers land at 2.0–3.0, the mode is 2.5, and the 5.0 bin is empty. A 4.5 appears 28 times (0.04%). These are paper aggregates; individual reviewer scores are not published."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Bar chart of ARR per-paper aggregate scores: mode at 2.5 (33.7%), 3.0 at 29.7%, 2.0 at 19.5%, 4.0 at 1.3%, and zero papers at 5.0.">
+        <line x1={x0 - 6} y1={yBase} x2={x1} y2={yBase} stroke={border} strokeWidth="1" />
+        {data.map((d, i) => {
+          const cx = x0 + slot * i + slot / 2;
+          const bx = cx - barW / 2;
+          const h = scale(d.v);
+          const by = yBase - h;
+          const c = d.mode ? ink : muted;
+          return (
+            <g key={d.s} fontFamily="monospace">
+              {d.v > 0 && <rect x={bx} y={by} width={barW} height={h} fill={c} opacity={d.mode ? 0.9 : 0.6} />}
+              {d.v === 0 && <rect x={bx} y={yBase - 2} width={barW} height="2" fill={muted} opacity="0.4" />}
+              <text x={cx} y={(d.v > 0 ? by : yBase) - 8} textAnchor="middle" fontSize="11"
+                fontWeight={d.mode || d.empty ? '700' : '400'} fill={d.empty ? red : d.mode ? ink : muted}>
+                {d.v === 0 ? '0' : d.v.toFixed(d.v < 1 ? 2 : 1) + '%'}
+              </text>
+              <text x={cx} y={yBase + 18} textAnchor="middle" fontSize="11" fill={muted}>{d.s}</text>
+            </g>
+          );
+        })}
+        <g fontFamily="monospace">
+          <line x1={cx5} y1={yTop + 2} x2={cx5} y2={yBase - 6} stroke={red} strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
+          <text x={cx5} y={yTop - 6} textAnchor="middle" fontSize="11" fontWeight="700" fill={red}>no paper 5.0</text>
+        </g>
+      </svg>
+    </ChartCard>
+  );
+};
+
+// --- ARR: reviewers vs area chairs (who hands out the highs) ----------------
+export const ArrReviewerVsAcChart = () => {
+  const data = [
+    { s: '1.0', r: 0.23, a: 0.41 },
+    { s: '1.5', r: 3.65, a: 3.24 },
+    { s: '2.0', r: 19.15, a: 21.99 },
+    { s: '2.5', r: 35.98, a: 22.01, fence: true },
+    { s: '3.0', r: 30.41, a: 29.47 },
+    { s: '3.5', r: 9.54, a: 14.78 },
+    { s: '4.0', r: 0.79, a: 7.50, champ: true },
+    { s: '4.5', r: 0.00, a: 0.23 },
+    { s: '5.0', r: 0.00, a: 0.02 },
+  ];
+  const W = 680, H = 344;
+  const x0 = 44, x1 = 664, yBase = 264, yTop = 70;
+  const max = 38;
+  const slot = (x1 - x0) / data.length;
+  const bw = 15, gap = 3;
+  const scale = (v) => (v / max) * (yBase - yTop);
+
+  return (
+    <ChartCard
+      kicker="ARR · averaged reviews vs meta · per paper · 2025–2026"
+      title="A paper's meta score swings wider than its averaged reviews."
+      caption="Per-paper aggregate review score vs the area chair's meta score, half-point-scale era only (ARR switched the meta scale from integer to half-points in Feb 2025), 43,458 papers. The meta score reaches 4.0 seven times more often (7.5% vs 0.8%) and cuts the hedged 2.5 fence from 36% to 22%. Caveat: the review number is an average of three scores and the meta is a single score, so a single score's higher variance explains part of the wider tails, not area-chair generosity alone."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Grouped bar chart per paper: at 2.5 averaged reviews 36% vs meta 22%; at 4.0 averaged reviews 0.8% vs meta 7.5%.">
+        <line x1={x0 - 6} y1={yBase} x2={x1} y2={yBase} stroke={border} strokeWidth="1" />
+        {/* legend */}
+        <g fontFamily="monospace" fontSize="11">
+          <rect x={x0 + 2} y={yTop - 44} width={11} height={11} fill={muted} opacity="0.6" />
+          <text x={x0 + 18} y={yTop - 35} fill={muted}>avg review</text>
+          <rect x={x0 + 108} y={yTop - 44} width={11} height={11} fill={blue} opacity="0.9" />
+          <text x={x0 + 124} y={yTop - 35} fill={muted}>meta (AC)</text>
+        </g>
+        {data.map((d, i) => {
+          const cx = x0 + slot * i + slot / 2;
+          const rH = scale(d.r), aH = scale(d.a);
+          const rx = cx - bw - gap / 2, ax = cx + gap / 2;
+          return (
+            <g key={d.s} fontFamily="monospace">
+              {d.r > 0 && <rect x={rx} y={yBase - rH} width={bw} height={rH} fill={muted} opacity="0.6" />}
+              {d.a > 0 && <rect x={ax} y={yBase - aH} width={bw} height={aH} fill={blue} opacity="0.9" />}
+              <text x={cx} y={yBase + 18} textAnchor="middle" fontSize="11" fill={muted}>{d.s}</text>
+            </g>
+          );
+        })}
+        {/* fence-drop annotation at 2.5 */}
+        {(() => {
+          const cx = x0 + slot * 3 + slot / 2;
+          return (
+            <g fontFamily="monospace">
+              <text x={cx} y={yBase - scale(35.98) - 8} textAnchor="middle" fontSize="10" fontWeight="700" fill={muted}>36%</text>
+              <text x={cx + bw + gap} y={yBase - scale(22.01) - 8} textAnchor="middle" fontSize="10" fontWeight="700" fill={blue}>22%</text>
+              <text x={cx} y={yTop - 6} textAnchor="middle" fontSize="10" fontWeight="700" fill={ink}>fence: −14 pts</text>
+            </g>
+          );
+        })()}
+        {/* champion-jump annotation at 4.0 */}
+        {(() => {
+          const cx = x0 + slot * 6 + slot / 2;
+          return (
+            <g fontFamily="monospace">
+              <text x={cx + bw + gap} y={yBase - scale(7.50) - 8} textAnchor="middle" fontSize="10" fontWeight="700" fill={blue}>7.5%</text>
+              <text x={cx - bw} y={yBase - 8} textAnchor="middle" fontSize="10" fill={muted}>0.8%</text>
+              <text x={cx + 6} y={yTop + 4} textAnchor="middle" fontSize="10" fontWeight="700" fill={ink}>champion: ×9.5</text>
+              <line x1={cx + 6} y1={yTop + 10} x2={cx + bw / 2 + gap} y2={yBase - scale(7.50) - 14} stroke={ink} strokeWidth="1" strokeDasharray="3 3" opacity="0.5" />
+            </g>
+          );
+        })()}
+      </svg>
+    </ChartCard>
+  );
+};
+
+// --- ARR: volume exploded, mean held -----------------------------------------
+export const ArrMeanVsVolumeChart = () => {
+  const d = [
+    { c: '2021/05', m: 2.611, n: 63, yr: '2021' },
+    { c: '2021/06', m: 2.587, n: 23 },
+    { c: '2021/07', m: 2.648, n: 27 },
+    { c: '2021/08', m: 2.800, n: 40 },
+    { c: '2021/09', m: 2.801, n: 276 },
+    { c: '2021/10', m: 2.664, n: 320 },
+    { c: '2021/11', m: 2.749, n: 2585 },
+    { c: '2021/12', m: 2.791, n: 179 },
+    { c: '2022/01', m: 2.586, n: 1777, yr: '2022' },
+    { c: '2022/02', m: 2.547, n: 161 },
+    { c: '2022/03', m: 2.566, n: 332 },
+    { c: '2022/04', m: 2.662, n: 173 },
+    { c: '2022/06', m: 2.794, n: 107 },
+    { c: '2022/07', m: 2.256, n: 82 },
+    { c: '2022/09', m: 2.410, n: 183 },
+    { c: '2022/10', m: 2.495, n: 376 },
+    { c: '2022/12', m: 2.496, n: 474 },
+    { c: '2023/02', m: 2.457, n: 140, yr: '2023' },
+    { c: '2023/04', m: 2.516, n: 187 },
+    { c: '2023/08', m: 2.476, n: 105 },
+    { c: '2023/10', m: 2.242, n: 1263 },
+    { c: '2023/12', m: 2.617, n: 2224 },
+    { c: '2024/02', m: 2.638, n: 4585, yr: '2024' },
+    { c: '2024/04', m: 2.575, n: 763 },
+    { c: '2024/06', m: 2.641, n: 4774 },
+    { c: '2024/08', m: 2.548, n: 409 },
+    { c: '2024/10', m: 2.607, n: 2704 },
+    { c: '2024/12', m: 2.651, n: 1991 },
+    { c: '2025/02', m: 2.600, n: 7321, yr: '2025' },
+    { c: '2025/05', m: 2.664, n: 6472 },
+    { c: '2025/07', m: 2.282, n: 1439 },
+    { c: '2025/10', m: 2.621, n: 3310 },
+    { c: '2026/01', m: 2.646, n: 9177, yr: '2026' },
+    { c: '2026/03', m: 2.579, n: 2071 },
+    { c: '2026/05', m: 2.628, n: 13668 },
+  ];
+  const W = 720, H = 340;
+  const x0 = 40, x1 = 664, yBase = 262, yTop = 54;
+  const nMax = 14000, mLo = 2.0, mHi = 2.9;
+  const slot = (x1 - x0) / d.length;
+  const bw = Math.min(12, slot - 3);
+  const nScale = (v) => (v / nMax) * (yBase - yTop);
+  const mY = (m) => yBase - ((m - mLo) / (mHi - mLo)) * (yBase - yTop);
+  const cx = (i) => x0 + slot * i + slot / 2;
+  const meanLine = d.map((p, i) => `${cx(i)},${mY(p.m)}`).join(' ');
+
+  return (
+    <ChartCard
+      kicker="ARR · mean review score vs volume · 2021–2026"
+      title="ARR grew more than 100× in five years. The average score didn't move."
+      caption="Per-cycle scored-paper count (bars, left axis) and mean per-paper aggregate review score (line, right axis) across 35 ACL Rolling Review cycles, May 2021 to May 2026. Volume rose from 23 scored papers in mid-2021 to 13,668 in May 2026 while the mean stayed inside a 2.24–2.80 band. The two lowest means (2023/10, 2025/07) are small off-cadence cycles."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Bars show review volume rising sharply to 13,668 by 2026; the overlaid mean-score line stays flat near 2.6 throughout.">
+        {/* mean grid band 2.5-2.7 */}
+        <rect x={x0} y={mY(2.7)} width={x1 - x0} height={mY(2.5) - mY(2.7)} fill={blue} opacity="0.06" />
+        <line x1={x0} y1={mY(2.6)} x2={x1} y2={mY(2.6)} stroke={blue} strokeWidth="1" strokeDasharray="4 4" opacity="0.5" />
+        <line x1={x0 - 6} y1={yBase} x2={x1} y2={yBase} stroke={border} strokeWidth="1" />
+        {/* left axis ticks (volume) */}
+        <g fontFamily="monospace" fontSize="9" fill={muted}>
+          {[0, 5000, 10000].map((t) => (
+            <g key={t}>
+              <line x1={x0 - 4} y1={yBase - nScale(t)} x2={x0} y2={yBase - nScale(t)} stroke={muted} strokeWidth="1" />
+              <text x={x0 - 7} y={yBase - nScale(t) + 3} textAnchor="end">{t / 1000 + 'k'}</text>
+            </g>
+          ))}
+        </g>
+        {/* right axis ticks (mean) */}
+        <g fontFamily="monospace" fontSize="9" fill={blue}>
+          {[2.0, 2.5, 2.9].map((t) => (
+            <text key={t} x={x1 + 6} y={mY(t) + 3} textAnchor="start">{t.toFixed(1)}</text>
+          ))}
+        </g>
+        {/* volume bars */}
+        {d.map((p, i) => (
+          <rect key={p.c} x={cx(i) - bw / 2} y={yBase - nScale(p.n)} width={bw} height={nScale(p.n)} fill={muted} opacity="0.45" />
+        ))}
+        {/* year labels */}
+        <g fontFamily="monospace" fontSize="10" fill={muted}>
+          {d.map((p, i) => p.yr && (
+            <text key={p.yr} x={cx(i)} y={yBase + 18} textAnchor="middle">{p.yr}</text>
+          ))}
+        </g>
+        {/* mean line + dots */}
+        <polyline points={meanLine} fill="none" stroke={blue} strokeWidth="1.75" opacity="0.9" />
+        {d.map((p, i) => <circle key={p.c} cx={cx(i)} cy={mY(p.m)} r="2" fill={blue} />)}
+        {/* annotations */}
+        <g fontFamily="monospace">
+          <text x={x0 + 8} y={mY(2.6) - 8} fontSize="10" fontWeight="700" fill={blue}>mean holds near 2.6</text>
+          <text x={cx(34)} y={yBase - nScale(13668) - 8} textAnchor="end" fontSize="10" fontWeight="700" fill={ink}>13,668</text>
+          <text x={cx(1)} y={yBase - 8} textAnchor="middle" fontSize="9" fill={muted}>23</text>
+        </g>
+      </svg>
+    </ChartCard>
+  );
+};
+
 const ResearchChart = ({ type }) => {
   if (type === 'seam-absorption') return <SeamAbsorptionChart />;
   if (type === 'seam-model-panel') return <SeamModelPanelChart />;
@@ -771,6 +1004,9 @@ const ResearchChart = ({ type }) => {
   if (type === 'trace-chain') return <TraceChainDiagram />;
   if (type === 'smoke-catches') return <SmokeGateCatchesChart />;
   if (type === 'signflip-audit') return <SignFlipAuditChart />;
+  if (type === 'arr-score-ceiling') return <ArrScoreCeilingChart />;
+  if (type === 'arr-reviewer-vs-ac') return <ArrReviewerVsAcChart />;
+  if (type === 'arr-mean-vs-volume') return <ArrMeanVsVolumeChart />;
   return null;
 };
 

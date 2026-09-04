@@ -9,10 +9,12 @@ export interface Props {
   title: string;
   description: string;
   slug: string;
+  author?: string;
 }
 
-const { title, description, slug } = Astro.props;
-const canonical = `https://spanthi.com/poster/${slug}`;
+const { title, description, slug, author } = Astro.props;
+// Canonical URL comes from `site` in astro.config; omitted when unset.
+const canonical = Astro.site ? new URL(`/poster/${slug}`, Astro.site).href : undefined;
 ---
 
 <!doctype html>
@@ -23,8 +25,8 @@ const canonical = `https://spanthi.com/poster/${slug}`;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta name="author" content="Sugam Panthi" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {author && <meta name="author" content={author} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -33,22 +35,166 @@ const canonical = `https://spanthi.com/poster/${slug}`;
     />
   </head>
   <body>
+    <div class="poster-view-toggle" role="group" aria-label="Poster view">
+      <button type="button" data-view="fit">Fit width</button>
+      <button type="button" data-view="a4">A4</button>
+    </div>
     <div class="poster-scaler">
       <div class="poster-canvas">
         <slot />
       </div>
     </div>
+    <dialog class="poster-lightbox" aria-label="Expanded poster cell">
+      <div class="poster-lightbox-bar">
+        <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+        <button type="button" data-zoom="fit">Fit</button>
+        <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+        <span class="poster-lightbox-hint">+ and − zoom, 0 fits, scroll pans, ⌘/ctrl + wheel zooms, Esc or X closes</span>
+        <button type="button" data-zoom="close" aria-label="Close">×</button>
+      </div>
+      <div class="poster-lightbox-scroll">
+        <div class="poster-lightbox-sizer">
+          <div class="poster-lightbox-stage"></div>
+        </div>
+      </div>
+    </dialog>
+    <ul class="poster-menu" role="menu" hidden>
+      <li role="menuitem" data-print="a0">Download A0 PDF (full size)</li>
+      <li role="menuitem" data-print="a4">Download A4 PDF</li>
+    </ul>
     <script is:inline>
       (() => {
+        // Two on-screen views of the same A0 canvas: "fit" scales the sheet
+        // to the window width; "a4" shows it at A4 width (210mm), centred.
+        // Print ignores both (poster.css resets the transform).
         const scaler = document.querySelector('.poster-scaler');
         const canvas = document.querySelector('.poster-canvas');
+        const buttons = document.querySelectorAll('.poster-view-toggle button');
+        const KEY = 'poster-view';
+        // Embedded (gallery iframe): always fit width, no toggle.
+        const embedded = window.self !== window.top;
+        let view = 'fit';
+        if (embedded) {
+          document.querySelector('.poster-view-toggle').hidden = true;
+        } else {
+          try {
+            const stored = localStorage.getItem(KEY);
+            if (stored === 'a4' || stored === 'fit') view = stored;
+          } catch {}
+        }
         const apply = () => {
-          const scale = document.documentElement.clientWidth / canvas.offsetWidth;
+          const winW = document.documentElement.clientWidth;
+          const a4 = document.createElement('div');
+          a4.style.cssText = 'position:absolute;visibility:hidden;width:210mm';
+          document.body.appendChild(a4);
+          const a4px = a4.offsetWidth;
+          a4.remove();
+          const targetW = view === 'a4' ? Math.min(a4px, winW) : winW;
+          const scale = targetW / canvas.offsetWidth;
           scaler.style.setProperty('--poster-scale', String(scale));
+          scaler.style.width = `${targetW}px`;
           scaler.style.height = `${canvas.offsetHeight * scale}px`;
+          document.body.dataset.posterView = view;
+          buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.view === view)));
         };
+        buttons.forEach((b) =>
+          b.addEventListener('click', () => {
+            view = b.dataset.view;
+            try { localStorage.setItem(KEY, view); } catch {}
+            apply();
+          })
+        );
         window.addEventListener('resize', apply);
         apply();
+
+        // Right-click menu: print to PDF at A0 (native) or A4 (canvas scaled
+        // 210/841). The browser's print dialog does the saving; poster.css
+        // carries the @page rules keyed on body[data-print-size].
+        const menu = document.querySelector('.poster-menu');
+        const hideMenu = () => { menu.hidden = true; };
+        const printAs = (size) => {
+          hideMenu();
+          document.body.dataset.printSize = size;
+          const done = () => { delete document.body.dataset.printSize; };
+          window.addEventListener('afterprint', done, { once: true });
+          setTimeout(() => window.print(), 50);
+        };
+        if (!embedded) {
+          document.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.poster-view-toggle')) return;
+            e.preventDefault();
+            menu.hidden = false;
+            const w = menu.offsetWidth, h = menu.offsetHeight;
+            menu.style.left = `${Math.min(e.clientX, window.innerWidth - w - 8)}px`;
+            menu.style.top = `${Math.min(e.clientY, window.innerHeight - h - 8)}px`;
+          });
+          menu.querySelectorAll('[data-print]').forEach((li) =>
+            li.addEventListener('click', () => printAs(li.dataset.print))
+          );
+          document.addEventListener('click', (e) => { if (!menu.contains(e.target)) hideMenu(); });
+          document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideMenu(); });
+          window.addEventListener('scroll', hideMenu, { passive: true });
+          // Double-click a cell: clone it into a modal and scale it to the
+          // viewport; +/− or ⌘/ctrl+wheel zoom, scroll pans, Esc closes.
+          const dlg = document.querySelector('.poster-lightbox');
+          const scroll = dlg.querySelector('.poster-lightbox-scroll');
+          const stage = dlg.querySelector('.poster-lightbox-stage');
+          const sizer = dlg.querySelector('.poster-lightbox-sizer');
+          let cellW = 0, cellH = 0, zoom = 1;
+          const render = () => {
+            // sizer takes the scaled box size so flex `margin: auto` centres
+            // it when it fits and the scroll box pans it when it does not.
+            stage.style.transform = `scale(${zoom})`;
+            stage.style.width = `${cellW}px`;
+            stage.style.height = `${cellH}px`;
+            sizer.style.width = `${cellW * zoom}px`;
+            sizer.style.height = `${cellH * zoom}px`;
+          };
+          const zoomBy = (f) => { zoom *= f; render(); };
+          const fit = () => {
+            zoom = Math.min((scroll.clientWidth - 32) / cellW, (scroll.clientHeight - 32) / cellH);
+            render();
+          };
+          const openCell = (cell) => {
+            stage.innerHTML = '';
+            const clone = cell.cloneNode(true);
+            clone.style.gridColumn = '';
+            clone.style.gridRow = '';
+            clone.style.width = `${cell.offsetWidth}px`;
+            cellW = cell.offsetWidth;
+            cellH = cell.offsetHeight;
+            stage.appendChild(clone);
+            dlg.showModal();
+            fit();
+            scroll.scrollTo(0, 0);
+          };
+          document.querySelectorAll('.poster-cell:not(.title-band)').forEach((cell) =>
+            cell.addEventListener('dblclick', (e) => { e.preventDefault(); openCell(cell); })
+          );
+          dlg.querySelectorAll('[data-zoom]').forEach((b) =>
+            b.addEventListener('click', () => {
+              const z = b.dataset.zoom;
+              if (z === 'close') dlg.close();
+              else if (z === 'fit') fit();
+              else zoomBy(z === 'in' ? 1.25 : 0.8);
+            })
+          );
+          dlg.addEventListener('keydown', (e) => {
+            if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomBy(1.25); }
+            else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomBy(0.8); }
+            else if (e.key === '0' || e.key === 'f') { e.preventDefault(); fit(); }
+            else if (e.key === 'x' || e.key === 'q') { e.preventDefault(); dlg.close(); }
+          });
+          scroll.addEventListener('wheel', (e) => {
+            if (!(e.ctrlKey || e.metaKey)) return;
+            e.preventDefault();
+            zoomBy(e.deltaY < 0 ? 1.1 : 0.9);
+          }, { passive: false });
+          dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+          dlg.addEventListener('close', () => { stage.innerHTML = ''; });
+          const want = new URLSearchParams(location.search).get('print');
+          if (want === 'a4' || want === 'a0') document.body.dataset.printSize = want;
+        }
       })();
     </script>
   </body>
