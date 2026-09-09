@@ -1,11 +1,9 @@
 ---
-title: "Creating the Most Popular Deepseek API Client in Go (Part 2): Architecture and API Design"
+title: "Building deepseek-go, Part 2: Architecture and API Design"
 date: "2026-03-03"
 category: "Engineering"
 status: "plated"
 ---
-
-# Creating the Most Popular Deepseek API Client in Go (Part 2): Architecture and API Design
 
 Part 1 was about motivation. This part is about implementation.
 
@@ -32,7 +30,7 @@ if err != nil {
 
 For local model servers that do not require auth, I added `WithoutAPIKeyValidation()` because forcing fake keys is bad DX.
 
-## FAQ: How does pkg.go.dev track new Go package versions?
+## pkg.go.dev discovers versions from module tags
 
 What I learned (and now plan releases around):
 
@@ -51,7 +49,7 @@ Example proxy check:
 curl https://proxy.golang.org/github.com/cohesion-org/deepseek-go/@v/v1.3.3.info
 ```
 
-## FAQ: How do Git tags publish new versions for a Go package?
+## Git tags define the versions users can install
 
 My release flow is intentionally boring:
 
@@ -72,7 +70,7 @@ Important details:
 - Pre-releases are valid (`v1.4.0-beta.1`) but users must request them explicitly.
 - Never retag a published version. Cut a new one.
 
-## FAQ: What changes for v2+ modules?
+## Version 2 and later require the major version in the module path
 
 For `v2` and above, the module path must include the major suffix (`/v2`, `/v3`, ...), and imports must match it.
 
@@ -210,7 +208,7 @@ if err := extractor.ExtractJSON(resp, &books); err != nil {
 }
 ```
 
-## FAQ: What is the best struct-construction convention for request types?
+## Request structs use named fields in examples and tests
 
 I keep request structs explicit, then add small constructors only when invariants matter.
 

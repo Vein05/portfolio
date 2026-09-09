@@ -5,8 +5,6 @@ category: "Engineering"
 status: "fermented"
 ---
 
-# Getting Started with Go for Web Services (Part 1): Foundations
-
 Go is great for backend systems because it gives you a clean standard library, predictable performance, and a concurrency model that stays readable as systems grow.
 
 This guide is written as a practical series for building production-minded web services:

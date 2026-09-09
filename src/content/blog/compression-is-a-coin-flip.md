@@ -1,5 +1,5 @@
 ---
-title: "For Strong Readers, Evidence Compression Is a Coin Flip"
+title: "Evidence Compression Is Reader-Dependent"
 date: "2026-04-24"
 category: "Research"
 status: "plated"
@@ -11,10 +11,10 @@ alt: Same compression, different outcomes. Small readers get a 3:1 help-to-damag
 position: right
 valign: middle
 layout: wide
-text: You compress retrieved evidence before passing it to a reader model. The reader gets a cleaner, shorter input. Accuracy goes up.\n\nThat is the standard story. It is also incomplete.\n\nI tested twenty reader models across twelve families, from Llama 8B to Grok. For the smallest models, compression rescues three rows for every one it breaks. For the strongest, it is a coin flip. The help-to-damage ratio collapses from 3:1 to 1:1.\n\nThe aggregate number hides this completely.
+text: You compress retrieved evidence before passing it to a reader model. The shorter input raises average accuracy, but the average hides opposite row-level effects.\n\nI tested twenty reader models across twelve families, from Llama 8B to Grok. For the smallest models, compression rescues three rows for every one it breaks. For the strongest, it rescues and breaks roughly equal numbers of rows. The help-to-damage ratio falls from 3:1 to 1:1.
 ```
 
-## The Setup
+## Every reader received the same compressed evidence
 
 I built a compression pipeline called SIEVE that uses typed extraction schemas for different question types (temporal, preference, factual, etc.). Evidence is compiled once with a single 8B model and replayed across all twenty readers. This means every reader sees the exact same compressed evidence. The only variable is the reader itself.
 
@@ -22,13 +22,13 @@ I also tested four other compression methods: LLMLingua-2 (token pruning at 30%,
 
 The correlation between reader baseline accuracy and compression gain is $r = -0.886$ across twenty models. For RECOMP on HotpotQA, it is $r = -0.994$. Near-perfect inverse.
 
-## Two Mechanisms, One Crossover
+## The source of gains changes with reader strength
 
 Tracking what happens to each individual row reveals something the aggregate hides.
 
 Small models (7-8B) abstain on 37-43% of answerable questions when given raw context. They see 700 tokens of noisy conversation and give up. Compression reduces false abstention by 25-32%. That is the rescue mechanism.
 
-Strong models rarely abstain. Their gains, when they exist, come from answer quality improvement. The compressed evidence is not just shorter. It is structured. The reader extracts a better answer from it.
+Strong models rarely abstain. Their gains, when they exist, come from answer quality improvement because the compressor gives them a shorter, structured representation of the evidence.
 
 These two mechanisms shift continuously with baseline accuracy. The crossover is at roughly 35-40% naive accuracy.
 
@@ -46,9 +46,7 @@ layout: wide
 caption: Small models and OLMo abstain on 37-43% of answerable questions. Compilation reduces this substantially. GPT-4.1-mini barely abstains yet still gains +9.6pp.
 ```
 
-## 15% of Correct Rows Get Broken
-
-This is the part that matters for deployment.
+## Compression breaks 15.3% of previously correct rows
 
 I classified every row into four outcomes: the reader went from wrong to correct (rescued), from unknown to correct (also rescued), stayed the same, or went from correct to wrong (damaged).
 
@@ -56,7 +54,7 @@ Across all eight models I decomposed, 15.3% of rows the reader already answered 
 
 For small readers, this damage is outweighed by the rescue rate. For strong readers, the rescue pool shrinks while the damage pool stays the same. That is why the ratio collapses.
 
-## Not All Questions Are Equal
+## Temporal and preference questions gain; knowledge updates regress
 
 The most useful finding is the per-question-type breakdown.
 
@@ -75,7 +73,7 @@ Knowledge-update questions regress for strong readers (-1 to -10pp). The compile
 
 Multi-session is flat regardless of reader or compression method. BM25 top-20 retrieves 3-4 of 5+ relevant sessions. Compression cannot conjure missing evidence.
 
-## Token Pruning Never Helps
+## LLMLingua-2 did not help at any tested retention rate
 
 I tested LLMLingua-2 at three retention rates: 30%, 50%, and 70%.
 
@@ -90,7 +88,7 @@ I tested LLMLingua-2 at three retention rates: 30%, 50%, and 70%.
 
 At 30%, token pruning destroys coherence. Retained fragments are not parseable. At 70%, it barely compresses (88% actual retention) and achieves nothing. There is no sweet spot where token pruning helps.
 
-Meanwhile, LLM-Summarize produces 27-token coherent summaries and gains +16.6pp for the small reader. The dividing line is not how much you compress. It is whether the output is coherent.
+LLM-Summarize instead produces 27-token coherent summaries and gains +16.6pp for the small reader. In these runs, coherence separates the successful compressors from token pruning more clearly than token count does.
 
 ```image
 src: /posts/images/compression-is-a-coin-flip/pareto.png
@@ -99,15 +97,15 @@ layout: wide
 caption: SIEVE curves dominate naive points across all models and budget levels for small readers.
 ```
 
-## The Practical Move
+## Route compression by reader strength and question type
 
-The lesson is not "skip compression for strong readers." Llama 70B gains +8.2pp overall, with +15-30pp on temporal and preference questions. Blanket compression is the problem, not compression itself.
+Llama 70B gains +8.2pp overall, including +15-30pp on temporal and preference questions. The deployment problem is applying one compression policy to every question and reader.
 
 For small readers, compress everything. Any coherence-preserving method works. Even a one-line "summarize what's relevant" prompt gains +16pp.
 
 For large readers, route by question type. I tested a trivial 3-line router: always compress temporal and preference, skip knowledge-update if the reader is strong, compress everything else. It eliminates 6-11 damaged rows per model while preserving all gains. The routing itself is free because question-type classification already happens in the pipeline via SpaCy.
 
-## What This Means for RAG Systems
+## Evaluate compression across readers and report damage separately
 
 If you are deploying a RAG system with evidence compression, the current evaluation standard is misleading. Testing with one reader model and reporting aggregate accuracy gain tells you almost nothing about what will happen when you swap the reader.
 

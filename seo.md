@@ -49,7 +49,7 @@ Consequence: **the markdown frontmatter `date` is not what renders.** The displa
 
 `title` can keep the literary hook. `seoTitle` must lead with the topic a searcher or model would type. Example from this repo:
 
-- `title`: "Eternal-Present Memory: Why Your Assistant Thinks You Still Live Where You Were Only Visiting"
+- `title`: "Memory Consolidation Turns Temporary Statements Into Standing Facts"
 - `seoTitle`: "Temporal Memory Consolidation in LLMs | Sugam Panthi"
 
 The hook wins attention in a feed; the `seoTitle` wins the search result. We get both because they are separate fields. Do not collapse them.

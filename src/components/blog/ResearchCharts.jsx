@@ -14,17 +14,27 @@ const border = 'rgb(var(--color-border-paper))';
 
 const ChartCard = ({ title, kicker, children, caption }) => (
   <figure className="my-10 mx-auto max-w-[720px] border border-border-paper bg-paper-surface">
+    <style>{`
+      .research-chart text[font-size="8.5"],
+      .research-chart text[font-size="9"],
+      .research-chart text[font-size="9.5"] { font-size: 12px; }
+      .research-chart text[font-size="10"],
+      .research-chart text[font-size="10.5"] { font-size: 13px; }
+      .research-chart text[font-size="11"],
+      .research-chart text[font-size="11.5"],
+      .research-chart text[font-size="12"] { font-size: 14px; }
+    `}</style>
     <figcaption className="px-5 pt-4">
       {kicker && (
-        <div className="text-[10px] font-mono uppercase tracking-[0.15em] text-ink-muted mb-1">
+        <div className="text-[11px] font-mono uppercase tracking-[0.15em] text-ink-muted mb-1">
           {kicker}
         </div>
       )}
-      <div className="text-sm font-bold text-ink-dark leading-snug">{title}</div>
+      <div className="text-base font-bold text-ink-dark leading-snug">{title}</div>
     </figcaption>
-    <div className="px-3 py-3">{children}</div>
+    <div className="research-chart overflow-x-auto px-3 py-3 [&>svg]:min-w-[720px]">{children}</div>
     {caption && (
-      <div className="px-5 pb-4 text-[11px] leading-relaxed text-ink-muted border-t border-border-paper pt-3">
+      <div className="px-5 pb-4 text-[13px] leading-relaxed text-ink-muted border-t border-border-paper pt-3">
         {caption}
       </div>
     )}
@@ -50,7 +60,7 @@ export const SeamAbsorptionChart = () => {
 
   return (
     <ChartCard
-      kicker="SEAM · instruction absorption"
+      kicker="SEAM: instruction absorption"
       title="A boundary marker cuts absorption ~7×. A bigger gap does nothing."
       caption="Absorption rate by seam condition. DeepSeek V4 Flash, 300 clusters per condition, scored against the matched clean output. clean is the reference; newline and blank add whitespace; boundary marks the paste seam; mitigation adds one instruction line."
     >
@@ -63,7 +73,7 @@ export const SeamAbsorptionChart = () => {
           <line x1={x0 + slot * 1 + slot / 2} y1={yTop - 8} x2={x0 + slot * 3 + slot / 2} y2={yTop - 8}
             stroke={muted} strokeWidth="1" strokeDasharray="3 3" />
           <text x={(x0 + slot * 1 + slot / 2 + x0 + slot * 3 + slot / 2) / 2} y={yTop - 14}
-            textAnchor="middle" fontSize="11" fontWeight="700" fill={ink}>31% → 4.4% · 7× drop</text>
+            textAnchor="middle" fontSize="11" fontWeight="700" fill={ink}>31% → 4.4%, a 7× drop</text>
         </g>
         {data.map((d, i) => {
           const cx = x0 + slot * i + slot / 2;
@@ -117,7 +127,7 @@ export const SeamModelPanelChart = () => {
 
   return (
     <ChartCard
-      kicker="SEAM · 19-model panel"
+      kicker="SEAM: 19-model panel"
       title="Boundary markup reduces absorption in 18 of 19 models"
       caption="Absorption rate across the current full-cascade panel, sorted by bare-newline rate. Lines connect the same 300 composition clusters under a bare newline and explicit boundary; diamonds show boundary-plus-mitigation. Cells use n=297–300 after completed-output exclusions."
     >
@@ -171,14 +181,14 @@ export const SeamRegisterChart = () => {
 
   return (
     <ChartCard
-      kicker="Register manipulation · four models"
+      kicker="Register manipulation: four models"
       title="When the afterthought sounds like the artifact, absorption rises"
       caption="The left panel holds artifact and bare-newline seam fixed and changes only the afterthought’s register. The right panel isolates code, where casual afterthought absorption is 0% in every model and register-matched absorption rises to 19–81%. Each rate uses 300 overall clusters or 100 pooled code conditions per model."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Four model rows showing overall absorption rising by 20 to 37 points when afterthought register matches the artifact, and code rising from zero to between 19 and 81 percent.">
         <text x="18" y="48" fontFamily="monospace" fontSize="9" fontWeight="700" fill={muted}>MODEL</text>
-        <text x={(overall0 + overall1) / 2} y="48" textAnchor="middle" fontFamily="monospace" fontSize="9" fontWeight="700" fill={muted}>ALL GENRES · BARE NEWLINE</text>
+        <text x={(overall0 + overall1) / 2} y="48" textAnchor="middle" fontFamily="monospace" fontSize="9" fontWeight="700" fill={muted}>ALL GENRES, BARE NEWLINE</text>
         <text x={(code0 + code1) / 2} y="48" textAnchor="middle" fontFamily="monospace" fontSize="9" fontWeight="700" fill={muted}>CODE ONLY</text>
         {[0, 20, 40, 60].map((tick) => (
           <g key={`overall-${tick}`} fontFamily="monospace" fontSize="8.5" fill={muted}>
@@ -233,7 +243,7 @@ export const OutcomeContractsChart = () => {
 
   return (
     <ChartCard
-      kicker="ToolMaze · paired completion"
+      kicker="ToolMaze: paired completion"
       title="Every evaluated model recovered more often with the monitor"
       caption="Eighty workflows per model; baseline and monitor episodes were paired, randomized, and interleaved. The four-model primary aggregate rose from 35/320 to 90/320 (+17.2 points; task-cluster p < .00001). MiniMax M3 is a separately frozen replication and is not pooled. Model marks identify the evaluated families."
     >
@@ -245,7 +255,7 @@ export const OutcomeContractsChart = () => {
           </marker>
         </defs>
         <text x="18" y="40" fontFamily="monospace" fontSize="10" fontWeight="700" fill={muted}>MODEL</text>
-        <text x="708" y="40" textAnchor="end" fontFamily="monospace" fontSize="10" fontWeight="700" fill={muted}>CHANGE · POINTS</text>
+        <text x="708" y="40" textAnchor="end" fontFamily="monospace" fontSize="10" fontWeight="700" fill={muted}>CHANGE IN POINTS</text>
         <g fontFamily="monospace" fontSize="10" fill={muted}>
           {[0, 10, 20, 30, 40].map((t) => (
             <g key={t}>
@@ -300,7 +310,7 @@ export const RecoveryAffordancesChart = () => {
 
   return (
     <ChartCard
-      kicker="Receipt ablations · 114 paired workflows"
+      kicker="Receipt ablations: 114 paired workflows"
       title="The recovery-tool list carried the detectable gain"
       caption="Completion differences with task-cluster bootstrap intervals. Filled points clear zero; open points do not. The null contrasts are bounded by an approximately 18-point minimum detectable effect, so they do not establish equivalence."
     >
@@ -325,7 +335,7 @@ export const RecoveryAffordancesChart = () => {
             <text x="704" y={y(i) + 4} textAnchor="end" fontSize="11" fontWeight="700" fill={row.active ? blue : muted}>{row.value > 0 ? '+' : ''}{row.value}</text>
           </g>
         ))}
-        <text x={(x0 + x1) / 2} y="380" textAnchor="middle" fontFamily="monospace" fontSize="9" fill={muted}>COMPLETION DIFFERENCE · PERCENTAGE POINTS</text>
+        <text x={(x0 + x1) / 2} y="380" textAnchor="middle" fontFamily="monospace" fontSize="9" fill={muted}>COMPLETION DIFFERENCE IN PERCENTAGE POINTS</text>
       </svg>
     </ChartCard>
   );
@@ -347,7 +357,7 @@ export const OutcomeBoundariesChart = () => {
 
   return (
     <ChartCard
-      kicker="Cross-study pattern · descriptive"
+      kicker="Cross-study pattern: descriptive"
       title="Receipts help when the fault leaves room to recover"
       caption="Baseline and monitored task completion in selected frozen rows. The two strongest gains occur where faulted baseline completion is lowest. Rows differ in task, fault, and sample and are not pooled; this is a post-hoc descriptive pattern, not a deployment threshold."
     >
@@ -364,7 +374,7 @@ export const OutcomeBoundariesChart = () => {
           return (
             <g key={row.label} fontFamily="monospace">
               <text x="18" y={y(i) - 2} fontSize="10.5" fontWeight="700" fill={ink}>{row.label}</text>
-              <text x="18" y={y(i) + 13} fontSize="9" fill={muted}>{row.note}{row.kind === 'clean' ? ' · CLEAN' : ''}</text>
+              <text x="18" y={y(i) + 13} fontSize="9" fill={muted}>{row.note}{row.kind === 'clean' ? ', CLEAN' : ''}</text>
               {!same && <line x1={scale(row.base)} y1={y(i)} x2={scale(row.monitor)} y2={y(i)} stroke={blue} strokeWidth="2.5" strokeLinecap="round" />}
               <circle cx={scale(row.base)} cy={y(i)} r={same ? 7 : 5.5} fill={surface} stroke={muted} strokeWidth="2" />
               <circle cx={scale(row.monitor)} cy={y(i)} r={same ? 3.2 : 5.5} fill={same ? blue : blue} />
@@ -400,7 +410,7 @@ export const DetectorVocabularyChart = () => {
 
   return (
     <ChartCard
-      kicker="Incident-derived faults · detector recall"
+      kicker="Incident-derived faults: detector recall"
       title="The monitor catches broken structure, not polished lies"
       caption="Recall on faults authored from a production-incident taxonomy without access to the contract vocabulary. Overall detection was about 46% on each evaluated tier. Counts show the expressibility breakdown reported in the manuscript."
     >
@@ -432,25 +442,25 @@ export const DetectorVocabularyChart = () => {
 
 // --- LAPSE: explicit knowledge vs behavior ----------------------------------
 export const LapseDissociationChart = () => {
-  const W = 720, H = 286;
+  const W = 720, H = 300;
   const x0 = 314, x1 = 666;
   const scale = (v) => (v / 100) * (x1 - x0);
   const rows = [
-    { label: 'Behavior: hedged when stale', note: 'all three forms · 0 / 300', value: 0, color: red },
+    { label: 'Behavior: hedged when stale', note: 'all three forms, 0 / 300', value: 0, color: red },
     { label: 'Explicit rule: progressive', note: '98 / 100 correct', value: 98, color: blue },
     { label: 'Explicit rule: simple', note: '91 / 100 correct', value: 91, color: blue },
   ];
 
   return (
     <ChartCard
-      kicker="LAPSE pilot · one model"
+      kicker="LAPSE pilot: one model"
       title="The model could state the rule. It did not use the rule."
       caption="DeepSeek V4 Flash, initial frozen pilot. Behavioral non-commitment was 0/300 across stale simple, progressive, and explicitly bounded forms. The same model correctly rejected automatic currency in 98% of progressive and 91% of simple explicit-knowledge controls. Because behavior was policy-flat, this is a say–do dissociation, not a clean causal aspect contrast."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Bar chart showing zero behavioral hedging across 300 stale cases while explicit knowledge questions were answered correctly 98 and 91 percent of the time.">
         {[0, 25, 50, 75, 100].map((tick) => (
-          <g key={tick} fontFamily="monospace" fontSize="9" fill={muted}>
+          <g key={tick} fontFamily="monospace" fontSize="14" fill={muted}>
             <line x1={x0 + scale(tick)} y1="45" x2={x0 + scale(tick)} y2="224" stroke={border} strokeDasharray="2 4" />
             <text x={x0 + scale(tick)} y="248" textAnchor="middle">{tick}%</text>
           </g>
@@ -459,19 +469,19 @@ export const LapseDissociationChart = () => {
           const yy = 82 + i * 66;
           return (
             <g key={row.label} fontFamily="monospace">
-              <text x="18" y={yy - 5} fontSize="10.5" fontWeight="700" fill={ink}>{row.label}</text>
-              <text x="18" y={yy + 12} fontSize="9" fill={muted}>{row.note}</text>
+              <text x="18" y={yy - 5} fontSize="16" fontWeight="700" fill={ink}>{row.label}</text>
+              <text x="18" y={yy + 14} fontSize="14" fill={muted}>{row.note}</text>
               <rect x={x0} y={yy - 14} width={x1 - x0} height="28" rx="3" fill={border} opacity="0.55" />
               {row.value > 0 ? (
                 <rect x={x0} y={yy - 14} width={scale(row.value)} height="28" rx="3" fill={row.color} opacity="0.86" />
               ) : (
                 <line x1={x0} y1={yy - 16} x2={x0} y2={yy + 16} stroke={red} strokeWidth="4" />
               )}
-              <text x={row.value > 0 ? x0 + scale(row.value) - 8 : x0 + 10} y={yy + 5} textAnchor={row.value > 0 ? 'end' : 'start'} fontSize="12" fontWeight="700" fill={row.value > 0 ? surface : red}>{row.value}%</text>
+              <text x={row.value > 0 ? x0 + scale(row.value) - 8 : x0 + 10} y={yy + 6} textAnchor={row.value > 0 ? 'end' : 'start'} fontSize="17" fontWeight="700" fill={row.value > 0 ? surface : red}>{row.value}%</text>
             </g>
           );
         })}
-        <text x={(x0 + x1) / 2} y="278" textAnchor="middle" fontFamily="monospace" fontSize="9" fill={muted}>NON-COMMITMENT / CORRECT-REJECTION RATE</text>
+        <text x={(x0 + x1) / 2} y="292" textAnchor="middle" fontFamily="monospace" fontSize="14" fill={muted}>NON-COMMITMENT / CORRECT-REJECTION RATE</text>
       </svg>
     </ChartCard>
   );
@@ -492,22 +502,22 @@ export const LapseConsolidationChart = () => {
 
   return (
     <ChartCard
-      kicker="LAPSE consolidation · 100 matched clusters per form"
+      kicker="LAPSE consolidation: 100 matched clusters per form"
       title="Consolidation selectively erased temporary validity"
       caption="DeepSeek V4 Flash, initial pilot. Destruction is the sum of coerced-stative rewrites, dropped explicit bounds, and manufactured write-time deixis. Progressive versus simple destruction produced 80/0 paired discordant clusters (exact p = 1.7 × 10⁻²⁴)."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Stacked bars showing 80 percent temporal-form destruction for progressive statements, 69 percent for explicitly bounded statements, and zero for simple-present statements.">
-        <g fontFamily="monospace" fontSize="8.5" fill={muted} transform="translate(232, 35)">
+        <g fontFamily="monospace" fontSize="14" fill={muted} transform="translate(232, 27)">
           <rect x="0" y="-10" width="12" height="12" fill={red} opacity="0.82" />
-          <text x="18" y="0">coerced to standing fact</text>
-          <rect x="178" y="-10" width="12" height="12" fill={amber} opacity="0.9" />
-          <text x="196" y="0">bound dropped / “currently”</text>
-          <rect x="390" y="-10" width="12" height="12" fill={blue} opacity="0.78" />
-          <text x="408" y="0">preserved</text>
+          <text x="18" y="0">standing rewrite</text>
+          <rect x="160" y="-10" width="12" height="12" fill={amber} opacity="0.9" />
+          <text x="178" y="0">bound dropped / “currently”</text>
+          <rect x="0" y="12" width="12" height="12" fill={blue} opacity="0.78" />
+          <text x="18" y="22">temporary form kept</text>
         </g>
         {[0, 25, 50, 75, 100].map((tick) => (
-          <g key={tick} fontFamily="monospace" fontSize="9" fill={muted}>
+          <g key={tick} fontFamily="monospace" fontSize="14" fill={muted}>
             <line x1={x0 + scale(tick)} y1="58" x2={x0 + scale(tick)} y2="230" stroke={border} strokeDasharray="2 4" />
             <text x={x0 + scale(tick)} y="254" textAnchor="middle">{tick}%</text>
           </g>
@@ -518,17 +528,17 @@ export const LapseConsolidationChart = () => {
           const destruction = row.coerced + combinedOther;
           return (
             <g key={row.label} fontFamily="monospace">
-              <text x="18" y={yy - 4} fontSize="10.5" fontWeight="700" fill={ink}>{row.label}</text>
-              <text x="18" y={yy + 13} fontSize="9" fill={muted}>{row.example}</text>
+              <text x="18" y={yy - 4} fontSize="16" fontWeight="700" fill={ink}>{row.label}</text>
+              <text x="18" y={yy + 15} fontSize="14" fill={muted}>{row.example}</text>
               {row.coerced > 0 && <rect x={x0} y={yy - 15} width={scale(row.coerced)} height="30" rx="2" fill={red} opacity="0.82" />}
               {combinedOther > 0 && <rect x={x0 + scale(row.coerced)} y={yy - 15} width={scale(combinedOther)} height="30" fill={amber} opacity="0.9" />}
               <rect x={x0 + scale(destruction)} y={yy - 15} width={scale(row.preserved)} height="30" rx="2" fill={blue} opacity="0.78" />
-              {destruction > 0 && <text x={x0 + scale(destruction) - 6} y={yy + 5} textAnchor="end" fontSize="11" fontWeight="700" fill={surface}>{destruction}% destroyed</text>}
-              <text x={x0 + scale(destruction) + scale(row.preserved) / 2} y={yy + 5} textAnchor="middle" fontSize="10" fontWeight="700" fill={surface}>{row.preserved}% kept</text>
+              {destruction > 0 && <text x={x0 + scale(destruction) - 6} y={yy + 6} textAnchor="end" fontSize="16" fontWeight="700" fill={surface}>{destruction}% destroyed</text>}
+              <text x={x0 + scale(destruction) + scale(row.preserved) / 2} y={yy + 6} textAnchor="middle" fontSize="15" fontWeight="700" fill={surface}>{row.preserved}% kept</text>
             </g>
           );
         })}
-        <text x={(x0 + x1) / 2} y="286" textAnchor="middle" fontFamily="monospace" fontSize="9" fill={muted}>MEMORY-NOTE OUTCOME</text>
+        <text x={(x0 + x1) / 2} y="288" textAnchor="middle" fontFamily="monospace" fontSize="14" fill={muted}>MEMORY-NOTE OUTCOME</text>
       </svg>
     </ChartCard>
   );
@@ -540,7 +550,7 @@ export const LapseTimeBombDiagram = () => {
   const box = (x, y, w, h) => `M${x},${y} h${w} v${h} h${-w} Z`;
   return (
     <ChartCard
-      kicker="LAPSE · eternal-present memory"
+      kicker="LAPSE: eternal-present memory"
       title="Consolidation rewrites a temporary statement into a standing fact"
       caption="Conceptual diagram, not measured rates. The consolidation step drops the marker of temporariness and inserts 'currently', which asserts present validity and can override an adjacent date stamp. Phenomenon reported from n=1 probes; a controlled rate study is in progress."
     >
@@ -593,7 +603,7 @@ export const TraceChainDiagram = () => {
   const box = (x, y, w, h) => `M${x},${y} h${w} v${h} h${-w} Z`;
   return (
     <ChartCard
-      kicker="Provenance · the trace chain"
+      kicker="Provenance: the trace chain"
       title="Every number in the paper resolves to a command"
       caption="The trace test, using a real value from an internal scoring audit. A table cell points to a ledger row, the row carries the run ID and scorer version, and the reproducer regenerates the value from frozen outputs. If any link is missing, the number is a rumor with good posture."
     >
@@ -607,7 +617,7 @@ export const TraceChainDiagram = () => {
         {/* Box 1: the paper table cell */}
         <g fontFamily="monospace">
           <path d={box(20, 30, 176, 84)} fill={surface} stroke={border} strokeWidth="1.5" />
-          <text x="32" y="52" fontSize="10" fill={muted}>PAPER · TABLE 3</text>
+          <text x="32" y="52" fontSize="10" fill={muted}>PAPER, TABLE 3</text>
           <text x="32" y="78" fontSize="14" fontWeight="700" fill={ink}>&minus;39.744</text>
           <text x="32" y="98" fontSize="9" fill={muted}>never hand-copied</text>
         </g>
@@ -617,7 +627,7 @@ export const TraceChainDiagram = () => {
         {/* Box 2: the ledger row */}
         <g fontFamily="monospace">
           <path d={box(260, 18, 224, 110)} fill={surface} stroke={blue} strokeWidth="1.5" />
-          <text x="272" y="40" fontSize="10" fill={blue}>RESULTS LEDGER · ONE ROW</text>
+          <text x="272" y="40" fontSize="10" fill={blue}>RESULTS LEDGER, ONE ROW</text>
           <text x="272" y="62" fontSize="11" fill={ink}>run_id: mhrag_think_0810</text>
           <text x="272" y="80" fontSize="11" fill={ink}>scorer: v3 (frozen SHA)</text>
           <text x="272" y="98" fontSize="11" fill={ink}>date: 2026-08-10</text>
@@ -667,7 +677,7 @@ export const SmokeGateCatchesChart = () => {
   const slot = 220, bx0 = 12, by = 84, bw = 204, bh = 118;
   return (
     <ChartCard
-      kicker="Cost gates · one overnight sweep"
+      kicker="Cost gates: one overnight sweep"
       title="Three catches in one night, each before money was spent"
       caption="A scaling sweep of roughly 3,600 scored calls across 0.6B to 32B checkpoints, 2026-08-05. Every stage ran a ten-item smoke test before its full run. All three failures were caught at the smoke or engine-init stage; total overhead was about 50 smoke calls and 25 minutes, against rescoring or rerunning 3,600 calls if any had shipped."
     >
@@ -695,7 +705,7 @@ export const SmokeGateCatchesChart = () => {
         <g fontFamily="monospace">
           <text x="24" y="238" fontSize="10" fill={muted}>COST OF THE GATES</text>
           <rect x="24" y="246" width="10" height="16" fill={blue} opacity="0.85" />
-          <text x="42" y="259" fontSize="11" fontWeight="700" fill={ink}>~50 smoke calls · ~25 min</text>
+          <text x="42" y="259" fontSize="11" fontWeight="700" fill={ink}>~50 smoke calls, ~25 min</text>
           <text x="24" y="288" fontSize="10" fill={muted}>COST IF ONE SHIPPED</text>
           <rect x="24" y="296" width="620" height="16" fill={red} opacity="0.75" />
           <text x="278" y="309" fontSize="11" fontWeight="700" fill={surface}>rescore or rerun ~3,600 calls</text>
@@ -718,7 +728,7 @@ export const SignFlipAuditChart = () => {
   const scale = (v) => (v / 100) * (x1 - x0);
   return (
     <ChartCard
-      kicker="Manual audit · reasoning-toggle experiment"
+      kicker="Manual audit: reasoning-toggle experiment"
       title="The 40-point reasoning collapse was the scorer, not the model"
       caption="Yes/no subgroup of a multi-hop QA benchmark, n=130 items, 177 damaged seed-pairs read by hand. Strict exact match against a one-token gold scored the toggle at −39.7 points; a scorer that extracts the verdict from the sentence scores the same frozen outputs at −0.0. Token-F1 co-moved (mean 0.077 on damaged rows) because it shares the failure mode, so metric agreement was the artifact's signature, not a check."
     >
@@ -732,7 +742,7 @@ export const SignFlipAuditChart = () => {
           <text x={x0 + 218 + scale(39.7 * 0.9)} y="59" fontSize="12" fontWeight="700" fill={red}>&minus;39.7 pts</text>
           <text x={x0} y="90" fontSize="11" fill={ink}>verdict extraction</text>
           <rect x={x0 + 210} y="78" width="3" height="20" fill={blue} opacity="0.9" />
-          <text x={x0 + 222} y="93" fontSize="12" fontWeight="700" fill={blue}>&minus;0.0 pts · same outputs</text>
+          <text x={x0 + 222} y="93" fontSize="12" fontWeight="700" fill={blue}>&minus;0.0 pts, same outputs</text>
         </g>
         <line x1={x0} y1="112" x2={x1} y2="112" stroke={border} strokeWidth="1" />
         {/* bottom: the 177 damage rows, read by hand */}
@@ -746,7 +756,7 @@ export const SignFlipAuditChart = () => {
             <g key={r.label} fontFamily="monospace">
               <rect x={x0} y={yy} width={w} height="24" fill={r.color} opacity="0.85" />
               <text x={x0 + w + 10} y={yy + 16} fontSize="11" fontWeight="700" fill={ink}>
-                {r.n}/177 · {r.pct}%{r.note ? ` · ${r.note}` : ''}
+                {r.n}/177, {r.pct}%{r.note ? `, ${r.note}` : ''}
               </text>
               <text x={x0} y={yy + 36} fontSize="9.5" fill={muted}>{r.label}</text>
             </g>
@@ -780,7 +790,7 @@ export const ArrScoreCeilingChart = () => {
 
   return (
     <ChartCard
-      kicker="ARR · aggregate review score per paper · 2021–2026"
+      kicker="ARR: aggregate review score per paper, 2021–2026"
       title="No ACL paper ever averages a perfect score: zero 5.0s in 69,781 submissions."
       caption="Distribution of per-paper aggregate review scores (one score per submission, the average of its roughly three reviews) across all 35 ACL Rolling Review cycles, May 2021 to May 2026 (69,781 scored submissions, public ARR dashboard). The 1–5 scale behaves as a 2-to-3 scale: 83% of papers land at 2.0–3.0, the mode is 2.5, and the 5.0 bin is empty. A 4.5 appears 28 times (0.04%). These are paper aggregates; individual reviewer scores are not published."
     >
@@ -836,7 +846,7 @@ export const ArrReviewerVsAcChart = () => {
 
   return (
     <ChartCard
-      kicker="ARR · averaged reviews vs meta · per paper · 2025–2026"
+      kicker="ARR: averaged reviews vs meta, per paper, 2025–2026"
       title="A paper's meta score swings wider than its averaged reviews."
       caption="Per-paper aggregate review score vs the area chair's meta score, half-point-scale era only (ARR switched the meta scale from integer to half-points in Feb 2025), 43,458 papers. The meta score reaches 4.0 seven times more often (7.5% vs 0.8%) and cuts the hedged 2.5 fence from 36% to 22%. Caveat: the review number is an average of three scores and the meta is a single score, so a single score's higher variance explains part of the wider tails, not area-chair generosity alone."
     >
@@ -941,7 +951,7 @@ export const ArrMeanVsVolumeChart = () => {
 
   return (
     <ChartCard
-      kicker="ARR · mean review score vs volume · 2021–2026"
+      kicker="ARR: mean review score vs volume, 2021–2026"
       title="ARR grew more than 100× in five years. The average score didn't move."
       caption="Per-cycle scored-paper count (bars, left axis) and mean per-paper aggregate review score (line, right axis) across 35 ACL Rolling Review cycles, May 2021 to May 2026. Volume rose from 23 scored papers in mid-2021 to 13,668 in May 2026 while the mean stayed inside a 2.24–2.80 band. The two lowest means (2023/10, 2025/07) are small off-cadence cycles."
     >

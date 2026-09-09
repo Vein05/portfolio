@@ -5,8 +5,6 @@ category: "Engineering"
 status: "fermented"
 ---
 
-# Getting Started with Go for Web Services (Part 2): Data, Middleware, Auth
-
 Part 2 moves from a simple server to production-ready API behavior: data boundaries, middleware, request IDs, auth, and observability.
 
 ## Data access boundaries

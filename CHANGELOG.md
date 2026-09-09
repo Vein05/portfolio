@@ -22,7 +22,7 @@ All notable changes to the portfolio site are documented here. Format loosely fo
 ## 2026-08-20
 
 ### Added
-- **New post: "Five Years, Zero Fives: Half a Decade of ACL Rolling Review Scores"** (`src/content/blog/five-years-zero-fives.md`), with its `posts.js` metadata entry. Analyzes 35 ARR cycles (69,781 scored submissions, 2021–2026): no paper ever averages a 5.0, the mode is 2.5, and the meta score swings wider than a paper's averaged reviews. Opens with the IC-Light [10, 10, 10, 10] ICLR 2025 contrast.
+- **New post: "None of ARR’s 69,781 Published Paper Scores Is a 5.0"** (`src/content/blog/five-years-zero-fives.md`), with its `posts.js` metadata entry. Analyzes 35 ARR cycles (69,781 scored submissions, 2021–2026): no paper ever averages a 5.0, the mode is 2.5, and the meta score swings wider than a paper's averaged reviews. Opens with the IC-Light [10, 10, 10, 10] ICLR 2025 contrast.
 - **Three ARR charts** in `src/components/blog/ResearchCharts.jsx`, registered in the dispatch switch: `arr-score-ceiling` (per-paper score distribution), `arr-reviewer-vs-ac` (averaged reviews vs meta), `arr-mean-vs-volume` (flat mean under 100x volume growth).
 - **Paper: "Outcome Monitors: Recovery Affordances for Silent Tool Failures"** (arXiv 2608.19303, Panthi & Abdelfattah), now public:
   - `citations.js` BibTeX entry (`outcome-monitors`).

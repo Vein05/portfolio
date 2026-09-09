@@ -1,5 +1,5 @@
 ---
-title: "Your Memory Benchmark Is Lying To You (And The Ranked List Never Changed)"
+title: "Scoring Targets Change Which Memory System Wins"
 date: "2026-05-22"
 category: "Research"
 status: "plated"
@@ -7,16 +7,16 @@ status: "plated"
 
 ```textandimage
 src: /posts/images/your-memory-benchmark-is-lying-to-you/header.jpg
-alt: Header image for Your Memory Benchmark Is Lying To You
+alt: Header image for Scoring Targets Change Which Memory System Wins
 position: right
 valign: middle
 layout: wide
-text: You build a memory system for a long-horizon conversational agent. You run it on a standard benchmark. It retrieves the right answer: the user moved to Austin in summer 2021, and your system found that fact. The benchmark scores it as a miss.\n\nYou tweak nothing. You rescore. Now it is a hit.\n\nThe ranked list is identical. Not a single retrieved item moved. The only thing that changed was which stored form of the answer the benchmark was willing to accept as correct.\n\nThat is not a hypothetical. It is a systematic failure mode in how we evaluate transformed conversational memory.
+text: You run a memory system on a standard benchmark. It retrieves a transformed memory stating that the user moved to Austin in summer 2021, but the benchmark scores a miss because it accepts only the original transcript turn.\n\nRescoring the same ranked list against the transformed memory produces a hit. No retrieved item moved. The scoring target alone changed the result. This is a systematic failure mode in evaluations of transformed conversational memory.
 ```
 
-## One Answer, Many Stored Forms
+## One answer can appear in three stored forms
 
-Modern memory systems do not just store raw dialogue turns. They transform them. The same evidence can live in the store as:
+Modern memory systems transform raw dialogue turns. The same evidence can live in the store as:
 
 - The original turn: `"Yeah I actually just relocated to Austin last summer, it's been great so far."`
 - A derived observation: `"User relocated to Austin in summer 2021."`
@@ -34,7 +34,7 @@ alt: Stylized target non-invariance example
 layout: wide
 ```
 
-## The Numbers Are Not Small
+## Rescoring changes most query-level nDCG values
 
 I rescored fixed ranked outputs from two benchmarks, **LoCoMo** and **LongMemEval-S**, across four retrievers:
 
@@ -55,9 +55,9 @@ The ranked lists never changed. Only the scoring target did.
 
 On shared queries where both raw and canonical targets apply, switching only the scoring target changed per-query nDCG on **83.4% to 93.1%** of queries across the two benchmarks.
 
-That is not evaluator noise. That is the evaluation environment behaving differently under a hidden assumption.
+The evaluation changes because its target definition contains an unreported assumption about which representation deserves credit.
 
-### Canonical beats Raw everywhere, but by wildly different margins
+### Canonical beats Raw everywhere, with margins from 0.068 to 0.420
 
 On the canonical-covered shared subset, **Canonical beats Raw on every native run**. But the size of the gap changes dramatically:
 
@@ -85,11 +85,9 @@ layout: wide
 | LongMemEval-S | BGE-M3 | 299 | 0.1969 | 0.4576 | 0.5326 | +0.336 | +0.075 |
 | LongMemEval-S | mxbai-embed-large | 332 | 0.1815 | 0.5032 | 0.6015 | +0.420 | +0.098 |
 
-The important part is not just that scores move. It is that they move on the **same saved traces**.
+Every score in the table comes from the **same saved traces**. Only the credited target changes.
 
-## The Winner Can Flip Even When Nothing About Retrieval Changes
-
-This is the engineering consequence that matters most.
+## Target choice changes the preferred memory-store density
 
 I ran a parser-density sweep where:
 
@@ -128,9 +126,9 @@ layout: wide
 | all-MiniLM | F1 vs F8 | F1 | F8 | F1 |
 | all-MiniLM | F5 vs F8 | F8 | F8 | F8 |
 
-Same benchmark family. Same underlying evidence. Same fixed subset. Different target, different winner.
+The benchmark family, underlying evidence, and 453-query subset are fixed. Changing the target changes the winner.
 
-## It Transfers Across Architectures, But Not In One Clean Direction
+## Mem0 and MemoryOS show different target orderings
 
 I also rescored full runs from two external memory architectures, **Mem0** and **MemoryOS**, on full LoCoMo and LongMemEval-S runs.
 
@@ -170,11 +168,9 @@ layout: wide
 | MemoryOS / LoCoMo | 0.4339 | 0.5794 | 0.4086 |
 | MemoryOS / LongMemEval-S | 0.2306 | 0.8121 | 0.7298 |
 
-The point is not that abstraction always helps. It is that **target choice controls the story**.
+The transfer runs do not support a general claim that more abstract targets score higher. They show that the target definition changes the reported ordering.
 
-## But Is Extra Credit for Transformed Memories Actually Meaningful?
-
-Fair question.
+## Human review rejects some relaxed-target credit
 
 Maybe a permissive target is just inflating scores by awarding credit to memories that do not really answer the query. So I audited **120 disagreement cases** where raw-turn scoring gave no credit but source-family and canonical scoring did.
 
@@ -206,9 +202,9 @@ Among the non-supportive cases, the dominant failure modes were:
 
 That 36% non-support rate applies to the **contested disagreement pool**, not to all canonical-credit queries. In the two audited runs, that disagreement pool was about **19.9%** of canonical-hit queries, which projects to roughly **7.1% of all canonical-hit queries**.
 
-So yes, the problem is real. But no, it does not rescue the raw-only benchmark default.
+The audit finds genuine false credit, but that false credit does not make raw-only scoring a valid default for systems that serve transformed memories.
 
-## Three Targets, Three Different Questions
+## Raw, Source family, and Canonical answer different questions
 
 These targets are not interchangeable. They answer different evaluation questions.
 
@@ -226,7 +222,7 @@ By construction:
 
 That makes **Source family** a provenance-relaxed upper bound, **Raw** a strict floor, and **Canonical** the deployment-aligned target when the product actually serves transformed memory rather than transcript snippets.
 
-## What You Should Do
+## Report multiple targets and inspect winner flips
 
 If you are building or benchmarking transformed conversational memory, the reporting policy should change.
 
@@ -237,15 +233,11 @@ If you are building or benchmarking transformed conversational memory, the repor
 5. Inspect **query-level disagreement** before pretending target choice is innocuous. In these runs, raw-vs-canonical switching changed nDCG on 83% to 93% of shared queries.
 6. Flag **winner flips**. If one target recommends a different system or store density, that disagreement is a result, not an annoyance to smooth away.
 
-## The Bottom Line
+## A benchmark score includes an ontology choice
 
 If your memory benchmark can score the same ranked list as both a miss and a hit, depending only on which stored representation it is willing to count as correct, then the benchmark is not measuring a stable property of retrieval quality.
 
-It is measuring retrieval quality **plus an unspoken ontology choice**.
-
-That choice needs to be explicit.
-
-## End
+It measures retrieval quality together with an ontology choice about which stored forms count as relevant. Report that choice explicitly.
 
 This post is the public companion to our paper, [Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks](https://arxiv.org/abs/2605.24060), by Sugam Panthi and Rabab Abdelfattah, accepted to Findings of EMNLP 2026.
 

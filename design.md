@@ -12,7 +12,7 @@ Paper-and-ink technical aesthetic: restrained, hand-drawn, editorial. Think a we
 
 - **Theme-aware, always.** Never hardcode hex colors for content. Use the CSS variables so light/dark both work: `rgb(var(--color-ink-dark))`, `--color-ink-muted`, `--color-ink-blue`, `--color-ink-red`, `--color-paper-surface`, `--color-paper-light`, `--color-border-paper`, `--color-blue-soft`. A rare accent hex is acceptable only for a semantic third color that has no token (document why).
 - **Palette semantics.** Ink for structure and neutral values. Blue for the good/fixed/intervention state. Red for the failure/danger/baseline-problem state. Muted for scaffolding (axes, ticks, secondary labels).
-- **Type.** Monospace (Oswald mono stack) for chart labels, kickers, and values. Uppercase + letter-spacing for kickers and axis titles. Keep label sizes small and consistent (8.5–13px in a ~600–720 viewBox).
+- **Type.** Monospace (Oswald mono stack) for chart labels, kickers, and values. Uppercase plus letter-spacing for kickers and axis titles. Small type is still reading type. Follow the figure-text minimums below.
 
 ---
 
@@ -22,6 +22,27 @@ Paper-and-ink technical aesthetic: restrained, hand-drawn, editorial. Think a we
 - **Centered on desktop.** `.blog-prose figure { margin: 2rem auto }` in `global.css` centers all figures. Cards use `max-w-[720px] mx-auto`. Do not reintroduce a left/right margin that overrides the auto centering.
 - **Captions state the takeaway, then the provenance.** Lead with the claim the figure proves. For any data chart, the caption must name the model and sample size (e.g., "DeepSeek V4 Flash, 300 clusters per condition"). This is non-negotiable and mirrors the honesty rule in `writing.md`.
 - **Responsive.** SVGs use a `viewBox` with `width="100%" height="auto"`. Include a real `role="img"` + `aria-label` describing the finding.
+
+### Figure-text minimums
+
+Judge text at its rendered size, not only by the number written in `fontSize`. A `10`-unit SVG label becomes 5 CSS pixels when a 720-unit chart is squeezed into a 360-pixel column.
+
+At the standard 720 CSS-pixel desktop chart width:
+
+- Figure title: at least 16 CSS pixels, bold.
+- Figure kicker: at least 11 CSS pixels.
+- Primary row and category labels: at least 14 CSS pixels; prefer 15 when space permits.
+- Values printed on or beside marks: at least 15 CSS pixels and weight 600 or 700.
+- Axis ticks, legends, annotations, and secondary labels: at least 12 CSS pixels; prefer 13.
+- Caption: at least 13 CSS pixels with a line height of at least 1.5.
+
+No essential figure text may render below 12 CSS pixels at any supported viewport. On narrow screens, use one of these options in order:
+
+1. Reflow the figure into a taller mobile layout.
+2. Shorten labels without changing their meaning.
+3. Give the SVG a readable minimum width and allow horizontal scrolling.
+
+Never make labels smaller to avoid wrapping or scrolling. Shared research charts keep a 720 CSS-pixel minimum drawing width so a 14-unit label in a 720-unit SVG does not shrink below 14 CSS pixels. Test at 720 CSS pixels and 360 CSS pixels. At both widths, a reader must be able to identify every category, value, legend entry, and axis without browser zoom.
 
 ---
 
@@ -46,7 +67,7 @@ Rules:
 
 ---
 
-## Verify visually — always
+## Always verify visually
 
 Do not claim a visual change is done without looking at it. Small issues (off-center figures, clipped labels, overflow) pass the build and hide in code review.
 
@@ -59,7 +80,8 @@ Do not claim a visual change is done without looking at it. Small issues (off-ce
    ```
    Charts are client-side React islands, so `--virtual-time-budget` is required to let them hydrate.
 3. Crop to each chart with Python PIL (`/opt/homebrew` python3) to read fine detail, and inspect for clipping, overflow, overlap, and centering.
-4. Test desktop width (≥1024, sidebar visible) to confirm figures are centered, not just full-width.
+4. Test desktop width (≥1024, sidebar visible) to confirm figures are centered within the article column.
+5. Test a 360-pixel content viewport. Confirm that figure text remains at least 12 CSS pixels; if the chart scrolls, the scroll region must contain the entire SVG and no page-level horizontal overflow.
 
 **Previewing a draft:** posts with `status: "draft"` 404 even in dev. To preview, temporarily set a visible status AND add a `src/data/posts.js` entry (the metadata source; without it the island shows "Post not found"). Revert both before commit.
 

@@ -1,11 +1,9 @@
 ---
-title: "Creating the Most Popular Deepseek API Client in Go (Part 5): My Testing Strategy in Go"
+title: "Building deepseek-go, Part 5: Testing the Client"
 date: "2026-03-03"
 category: "Engineering"
 status: "plated"
 ---
-
-# Creating the Most Popular Deepseek API Client in Go (Part 5): My Testing Strategy in Go
 
 When `deepseek-go` started getting real users, testing stopped being optional and became the main way I could ship quickly without breaking trust.
 
@@ -73,7 +71,7 @@ Key behaviors in `env.go`:
 
 One caveat I explicitly watch for: `LoadTestConfig` defers `os.Unsetenv(\"TEST_DEEPSEEK_API_KEY\")` and `os.Unsetenv(\"TEST_TIMEOUT\")`. That keeps tests isolated, but it can surprise other tests if they assume those env vars remain set after config loading.
 
-## FAQ: How should I handle docs.go in a Go package?
+## Package documentation lives in docs.go
 
 I treat `docs.go` as the package's landing page for `pkg.go.dev`.
 
@@ -93,7 +91,7 @@ Minimal pattern:
 package deepseek
 ```
 
-## FAQ: How do I optimize documentation for pkg.go.dev?
+## Examples and exported comments make pkg.go.dev useful
 
 The improvements that mattered most for me:
 
@@ -103,7 +101,7 @@ The improvements that mattered most for me:
 - Keep README and package docs aligned so users do not see contradictory setup steps.
 - Prefer stable, tagged releases because versioned docs are easier to trust and cite.
 
-## FAQ: Beginner maintainer mistakes I wish I avoided earlier
+## Early maintainer mistakes that weakened the test suite
 
 1. Shipping undocumented breaking changes in minor versions.
 2. Changing env var names without transition/deprecation windows.
@@ -164,7 +162,7 @@ That let us merge faster while preserving release stability.
 
 ## Personal rule for SDK testing
 
-For SDKs, tests are not just correctness checks. They are compatibility guarantees.
+For an SDK, tests define which request shapes, stream behaviors, and errors remain compatible across releases.
 
 If a test fails after a change, I assume I may have broken someone else's production path, even if my own examples still pass.
 

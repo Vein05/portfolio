@@ -5,8 +5,6 @@ category: "Engineering"
 status: "fermented"
 ---
 
-# Getting Started with Go for Web Services (Part 3): Testing, Deployment, Scaling
-
 Part 3 closes the series with quality gates, release strategy, and scale patterns.
 
 ## Testing pyramid for Go APIs

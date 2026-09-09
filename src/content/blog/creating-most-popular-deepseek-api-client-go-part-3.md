@@ -1,11 +1,9 @@
 ---
-title: "Creating the Most Popular Deepseek API Client in Go (Part 3): Growth, Stats, and OSS Momentum"
+title: "Building deepseek-go, Part 3: How Adoption Changed Maintenance"
 date: "2026-03-03"
 category: "Engineering"
 status: "plated"
 ---
-
-# Creating the Most Popular Deepseek API Client in Go (Part 3): Growth, Stats, and OSS Momentum
 
 This is the part I care about the most: the project stopped being "my code" and became a community-maintained package.
 
@@ -61,7 +59,7 @@ layout: narrow
 
 ## Release cadence and confidence building
 
-The growth was not just stars. Release consistency drove trust.
+Release consistency mattered alongside the star count.
 
 Recent visible milestones:
 
@@ -90,7 +88,7 @@ When a package reaches this level of adoption, priorities shift:
 3. Documentation quality starts affecting issue volume directly.
 4. Test stability matters as much as feature velocity.
 
-I started treating each release note as an operational artifact, not just a changelog.
+I started using each release note as an operational record of compatibility changes and migration requirements.
 
 ## Tools I used for this analysis
 

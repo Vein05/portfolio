@@ -94,7 +94,7 @@ const policyRows = [
     qrLabel="Scan for paper"
   />
 
-  <PosterCell span={5} marker="1" kicker="The problem" title="A useful compressor can hide the comparison you ran.">
+  <PosterCell span={5} marker="1" kicker="The problem" title="Fixed compression shrinks the measured gap between readers">
     <div class="poster-body">
       <p>
         Compression is evaluated as a deployment layer: does a shorter context preserve accuracy?
@@ -138,8 +138,8 @@ const policyRows = [
           </marker>
         </defs>
         <rect x="360" y="16" width="720" height="76" fill={paper} stroke={ink} stroke-width="2.5" />
-        <text x="720" y="49" font-size="25" font-weight="600" fill={ink} text-anchor="middle">frozen candidate pools per row</text>
-        <text x="720" y="78" font-size="21" fill={muted} text-anchor="middle">rows, retrieval, prompts, and scoring all fixed</text>
+        <text x="720" y="49" font-size="25" font-weight="600" fill={ink} text-anchor="middle">saved candidate pools per row</text>
+        <text x="720" y="78" font-size="21" fill={muted} text-anchor="middle">rows, retrieval, prompts, and scorer fixed before replay</text>
         <line x1="540" y1="92" x2="380" y2="148" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
         <line x1="900" y1="92" x2="1060" y2="148" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
 
@@ -148,7 +148,7 @@ const policyRows = [
         <text x="350" y="228" font-size="21" fill={muted} text-anchor="middle">the declared reference policy</text>
         <rect x="770" y="154" width="640" height="102" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
         <text x="1090" y="196" font-size="25" font-weight="600" fill={hpC} text-anchor="middle">one compressed artifact per row</text>
-        <text x="1090" y="228" font-size="21" fill={muted} text-anchor="middle">byte-identical for every reader, admitted by hash</text>
+        <text x="1090" y="228" font-size="21" fill={muted} text-anchor="middle">content hash must match for every reader record</text>
 
         <line x1="350" y1="256" x2="640" y2="316" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
         <line x1="1090" y1="256" x2="800" y2="316" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
@@ -174,12 +174,13 @@ const policyRows = [
       <p>
         The primary study covers <strong>4 benchmarks and 5 compression families</strong> in a
         released 176,864-row interaction matrix. A method enters a panel only when every reader
-        received the identical row-level artifact; a shared method label is not enough.
+        record has the same content hash for that row-level artifact. The analysis code performs
+        this check; a shared method label alone does not admit the panel.
       </p>
     </div>
   </PosterCell>
 
-  <PosterCell span={12} marker="3" kicker="Core result: frozen confirmatory panels" title="The curves rise, and they flatten: lower-scoring readers gain the most">
+  <PosterCell span={12} marker="3" kicker="Core result: prespecified confirmatory panels" title="Compression raises low-reader scores more and reduces the reader gap">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 400" role="img" aria-label="Two scatter panels of reader score under raw versus compressed evidence. HotpotQA with fixed RECOMP retains 24.5% of a 31.8 point contrast across 20 readers; MuSiQue with a shared summary retains 0.8% of an 18.7 point contrast across 15 readers. Points sit far above the identity line at the low end.">
         {scalePanels.map((panel, p) => (

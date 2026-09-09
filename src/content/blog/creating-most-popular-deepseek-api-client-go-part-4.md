@@ -1,11 +1,9 @@
 ---
-title: "Creating the Most Popular Deepseek API Client in Go (Part 4): Contributors, Lessons, and Roadmap"
+title: "Building deepseek-go, Part 4: Maintainer Lessons and Roadmap"
 date: "2026-03-03"
 category: "Engineering"
 status: "plated"
 ---
-
-# Creating the Most Popular Deepseek API Client in Go (Part 4): Contributors, Lessons, and Roadmap
 
 This final part is the most personal one.
 
@@ -54,7 +52,7 @@ Any ambiguity in lifecycle, buffering, or cancellation shows up immediately unde
 
 ### 4. Good docs reduce maintenance cost
 
-Detailed examples (chat, stream, JSON, providers, Ollama, FIM) were not just "nice-to-have." They reduced repetitive issue traffic and helped new users succeed quickly.
+Detailed examples for chat, streaming, JSON, providers, Ollama, and FIM reduced repetitive issue traffic and gave new users a working starting point.
 
 ## The roadmap I care about next
 
@@ -95,4 +93,3 @@ layout: wide
 - Releases: [GitHub Releases](https://github.com/cohesion-org/deepseek-go/releases)
 - Star trend: [Star History](https://www.star-history.com/#cohesion-org/deepseek-go&Date)
 - Badges and repo metrics visuals: [Shields.io](https://shields.io/)
-

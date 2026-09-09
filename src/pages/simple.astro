@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { papers } from '../components/Papers.jsx';
 import { experiences } from '../components/Experience.jsx';
 import { items as projects } from '../components/Projects.jsx';
+import ResearchRange from '../components/ResearchRange.jsx';
 
 // venue from tag ("Research Paper · EMNLP Findings 2026" → "EMNLP Findings 2026")
 const venue = (tag: string) => tag.split('·').pop()?.trim() ?? tag;
@@ -16,7 +17,7 @@ const authorsOf = (p: { details?: string[] }) =>
   canonical="https://spanthi.com/simple"
 >
   <div class="min-h-screen bg-paper-light">
-    <div class="mx-auto max-w-[52rem] px-5 py-8 text-[15px] leading-relaxed text-ink-dark" style="font-family:'IBM Plex Sans','Oswald',sans-serif">
+    <div class="mx-auto max-w-[52rem] px-5 py-8 text-[16.5px] leading-relaxed text-ink-dark" style="font-family:'IBM Plex Sans','Oswald',sans-serif">
 
       <nav class="mb-8 border-b border-border-paper pb-3 text-center text-sm">
         <a href="/" class="text-ink-blue hover:underline">Full site</a>
@@ -45,12 +46,19 @@ const authorsOf = (p: { details?: string[] }) =>
         <img
           src="/images/headshot.jpeg"
           alt="Sugam Panthi"
-          width="110"
-          height="115"
-          class="mt-1 h-[115px] w-[110px] shrink-0 rounded-sm border border-border-paper object-cover object-bottom"
+          width="138"
+          height="144"
+          class="mt-1 h-[144px] w-[138px] shrink-0 rounded-sm border border-border-paper object-cover object-bottom"
           loading="eager"
         />
       </header>
+
+      <section class="mb-10">
+        <h2 class="mb-4 border-b border-border-paper pb-1 text-lg font-bold">Sugam&rsquo;s Research Trail <span class="text-xs font-normal text-ink-muted md:hidden">(scroll sideways...)</span></h2>
+        <div class="relative left-1/2 w-[min(100vw-2.5rem,1240px)] -translate-x-1/2 pt-6">
+          <ResearchRange client:load />
+        </div>
+      </section>
 
       <section class="mb-10">
         <h2 class="mb-4 border-b border-border-paper pb-1 text-lg font-bold">Publications</h2>

@@ -91,7 +91,7 @@ const audit = [
     qrLabel="Scan for paper"
   />
 
-  <PosterCell span={7} marker="1" kicker="The problem" title="The ranked list never changed. The winner did.">
+  <PosterCell span={7} marker="1" kicker="The problem" title="Rescoring the same ranked output changes the winning system">
     <div class="poster-body">
       <p>
         Memory systems store one piece of evidence in several forms: the <strong>raw turn</strong>,
@@ -114,7 +114,7 @@ const audit = [
     </figure>
   </PosterCell>
 
-  <PosterCell span={5} marker="2" kicker="Method" title="TIAP: rescore, never rerun">
+  <PosterCell span={5} marker="2" kicker="Method" title="A deterministic script rescores saved output against three targets">
     <figure class="poster-figure">
       <img
         src="/poster/figures/A_framework_overview.svg"
@@ -122,9 +122,11 @@ const audit = [
       />
     </figure>
     <p class="poster-body method-note">
-      Three targets rescore the same saved outputs: <span class="t-raw">Raw</span> (exact turn),
+      The authors construct three targets for each query, then a deterministic script rescores the
+      same saved outputs: <span class="t-raw">Raw</span> (exact turn),
       <span class="t-source">Source</span> (same source family), and
-      <span class="t-canonical">Canonical</span> (serving form). LoCoMo &amp; LongMemEval-S, 4 retrievers, transfer: Mem0, MemoryOS.
+      <span class="t-canonical">Canonical</span> (serving form). The script never reruns retrieval.
+      LoCoMo &amp; LongMemEval-S, 4 retrievers, transfer: Mem0, MemoryOS.
     </p>
     <p class="big-stat">
       <span class="stat-number">83.4–94.0%</span>
@@ -132,7 +134,7 @@ const audit = [
     </p>
   </PosterCell>
 
-  <PosterCell span={12} marker="3" kicker="Core result: nDCG@60, canonical-covered shared subsets (n = 899–963 / 299–332)" title="Same runs, three scores: the target choice moves every number">
+  <PosterCell span={12} marker="3" kicker="Core result: nDCG@60 on queries with a canonical mapping and output from every compared run (n = 899–963 / 299–332)" title="Changing only the credited target moves every score">
     <figure class="poster-figure">
       <svg viewBox="0 0 1440 340" role="img" aria-label="Slope chart: nDCG under Raw, Source, and Canonical targets for eight runs on LoCoMo and LongMemEval-S">
         {slopeData.map((panel, p) => {

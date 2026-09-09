@@ -1,43 +1,29 @@
 ---
-title: "Reflections on my AI/ML Internship"
+title: "What Edge Deployment Changed About My ML Work"
 date: "2024-12-10"
 category: "Career"
 status: "cooking"
 ---
 
-# Interning at Prediction3d
+At Prediction3d, a model that produced acceptable outputs could still fail the deployment target because it used too much memory or took too long on edge hardware. That changed the order of my work. Data checks and resource measurements came before another round of hyperparameter tuning.
 
-My time as an AI and Machine Learning intern at Prediction3d was a massive period of growth. Transitioning from academic coursework to production models is a steep learning curve, but incredibly rewarding.
-
-
-```textandimage
-title: Why real-world ML feels different
-text: In coursework, the model is the center of attention. In production, reliability, observability, and data quality dominate engineering time.\n\nThat shift in priorities was the biggest mindset change from internship work.
-src: /.netlify/images?url=/posts/images/getting-started-with-go/golang.png&w=900&h=700
-alt: Whiteboard planning for production ML
-position: right
-justify: end
-valign: middle
-layout: wide
-```
-
-## The Gap Between Theory and Practice
+## Production data required cleaning before training
 
 In school, you are typically handed a clean dataset (like MNIST or Titanic) and told to build a model. In the real world, the data is messy, incomplete, and sometimes explicitly wrong.
 
-### Data Cleaning is 80% of the Job
+### Cleaning and normalization took more time than tuning
 
 I spent far more time writing Pandas and Numpy scripts to clean and normalize data pipelines than I did actually tuning hyperparameters in PyTorch or TensorFlow.
 
-## Model Optimization techniques
+## The deployment target constrained the model
 
 We had models that performed well contextually but were too slow or resource-heavy for production edge deployment. I learned several optimization techniques:
 
-1. **Quantization**: Converting FP32 weights to INT8, significantly reducing model size with minimal accuracy loss.
-2. **Pruning**: Removing near-zero weights from the network to compress the architecture.
-3. **ONNX Export**: Getting models out of native PyTorch and into ONNX runtime for cross-platform inference speedups.
+1. **Quantization:** Convert FP32 weights to INT8, then remeasure model size, latency, and accuracy.
+2. **Pruning:** Remove near-zero weights, then verify that the smaller network still meets the task requirement.
+3. **ONNX export:** Move inference out of native PyTorch and test the exported graph on the target runtime.
 
-> Productionizing ML is less about finding the exact perfect theoretical architecture, and more about finding the "good enough" architecture that fits into memory and runs in <50ms.
+The selected model had to fit the target memory budget and meet its latency requirement. Accuracy alone could not choose it.
 
 ```mermaid
 graph LR
@@ -49,6 +35,6 @@ graph LR
   F --> G[Edge deployment]
 ```
 
-## Takeaways
+## The useful skill was diagnosing the next bottleneck
 
-The most valuable thing I learned wasn't a specific framework API, but rather the intuition of diagnosing a badly behaving model. Understanding *why* a gradient is vanishing or *why* the loss curve resembles a chaotic heartbeat is what separates a practitioner from someone just copying tutorials.
+The most useful skill was deciding which layer to inspect next: the input data, the training dynamics, the exported graph, memory use, or runtime latency. A framework API can execute an optimization. It cannot tell you which constraint is preventing deployment.

@@ -3,7 +3,7 @@
 // Failures" (arXiv:2608.19303; under review, venue not named). Every number comes
 // from the camera-ready; keep in sync with it. All figures are drawn
 // poster-native in this file (Oswald, poster-scale strokes) from the paper's
-// TikZ sources (arxiv/figures/*.tex) — the compiled paper SVGs were too small
+// TikZ sources (arxiv/figures/*.tex). The compiled paper SVGs were too small
 // and font-mismatched at A0. Color code used everywhere: advisory/monitor =
 // oc green, silent failure/harm = oc red, detection/flag = oc amber.
 import PosterShell from '../../components/poster/PosterShell.astro';
@@ -103,13 +103,12 @@ const recallRows = [
     qrLabel="Scan for paper"
   />
 
-  <PosterCell span={5} marker="1" kicker="The problem" title="A timeout is loud. A cached error page is silent.">
+  <PosterCell span={5} marker="1" kicker="The problem" title="A cached error page looks valid, so the agent uses it as fact">
     <div class="poster-body">
       <p>
-        When a tool call times out, the agent sees the failure and routes around it. A cached error
-        page or a <span class="oc-warn">negative price</span> instead arrives in the expected format
-        and is <span class="oc-warn">consumed as fact</span>: detect, localize, recover are all left
-        to an agent that never learns anything went wrong.
+        A timeout labels the failure, so the agent can choose another route. A cached error page or
+        a <span class="oc-warn">negative price</span> arrives in the expected format. Nothing tells
+        the agent to doubt it, and the wrong value enters the next decision as fact.
       </p>
     </div>
     <figure class="poster-figure loud-silent">
@@ -171,7 +170,7 @@ const recallRows = [
         <line x1="835" y1="138" x2="835" y2="166" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
         <rect x="775" y="172" width="635" height="64" fill={flagC} fill-opacity="0.12" stroke={flagC} stroke-width="2.5" />
         <text x="801" y="213" font-size="25" font-weight="600" fill={flagC}>contract violated</text>
-        <text x="1080" y="213" font-size="22" fill={muted}>mined or public invariant</text>
+        <text x="1080" y="213" font-size="22" fill={muted}>clean traces or public rules</text>
         <line x1="835" y1="236" x2="835" y2="264" stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
         <rect x="775" y="270" width="635" height="200" fill={mainC} />
         <text x="801" y="306" font-size="24" font-weight="600" letter-spacing="2" fill={paper}>ADVISORY RECEIPT</text>
@@ -190,15 +189,16 @@ const recallRows = [
     </figure>
     <div class="method-note poster-body">
       <p>
-        <strong>Outcome contracts</strong> are mined from task-disjoint traces or derived from public
-        schemas. On a violation the monitor <strong>preserves the raw result</strong> and appends an
-        advisory receipt: the violated property, a diagnostic witness, and
-        <span class="oc-main">public recovery tools</span>.
+        For ToolMaze, a deterministic program scans clean tool executions for required fields,
+        stable types, positive values, small categorical domains, echoed arguments, ordered dates,
+        and exact relationships between fields. It keeps a rule only if it holds in every qualifying
+        example and meets a class-specific support threshold.
       </p>
       <p>
-        The receipt is <strong>nonbinding</strong>: no action is removed, no repair is chosen, and
-        no extra model call is made. Both arms share the same fault-aware prompt; the intervention
-        lives entirely in the returned tool result.
+        Five-fold task splitting keeps each tested workflow out of the traces used to build its
+        checker. AppWorld rules come from its released API schemas; τ-bench rules come from its
+        public retail database. On a violation, the monitor keeps the raw result and appends the
+        violated rule, a witness, and callable recovery tools. It makes no model call and chooses no repair.
       </p>
     </div>
   </PosterCell>
@@ -384,8 +384,8 @@ const recallRows = [
       </div>
     </div>
     <p class="poster-caption">
-      Suite transcribed from published production incidents; detector unchanged. The mined
-      vocabulary catches structured violations, not plausible-string corruption. Data: paper §6.
+      Suite transcribed from published production incidents; detector unchanged. Rules learned from
+      clean traces catch structured violations, not plausible-string corruption. Data: paper §6.
     </p>
   </PosterCell>
 
@@ -395,7 +395,7 @@ const recallRows = [
       <li>Put <span class="oc-main">recovery tools</span> in the receipt: diagnostics without them perform at baseline in our controls.</li>
       <li>Keep it <strong>nonbinding and cheap</strong>: +$0.13 (+7%) per episode with no extra model call beats a five-call reviewer port (+$9.24, +498%) by +11.25 points.</li>
       <li>Expect gains where the fault <strong>blocks completion</strong> (baseline ≤ 16%); elsewhere rescues and harms roughly cancel.</li>
-      <li>Detection stops at the <span class="oc-flag">mined vocabulary</span>: corruption inside plausible strings mostly slips through. Extending it is open.</li>
+      <li>Detection stops at the <span class="oc-flag">learned rule classes</span>: corruption inside plausible strings mostly slips through. Extending it is open.</li>
     </ol>
   </PosterCell>
 
@@ -404,8 +404,8 @@ const recallRows = [
       <div>
         <p class="tldr-head">What we did</p>
         <p>
-          Outcome Monitors check tool results against <strong>contracts mined from task-disjoint
-          traces</strong> or public schemas. On a violation they keep the result and append a
+          Outcome Monitors check tool results against <strong>rules learned from clean traces from
+          other tasks</strong> or public schemas. On a violation they keep the result and append a
           <span class="oc-main">nonbinding receipt</span>: violated property, witness, and public
           recovery tools. Frozen, prespecified evaluations with injected failures.
         </p>

@@ -1,5 +1,5 @@
 ---
-title: "SEO Optimization"
+title: "Technical SEO for a Multilingual Browser Game"
 date: "2026-03-03"
 category: "Engineering"
 status: "cooking"
@@ -7,7 +7,7 @@ status: "cooking"
 
 This is a practical write-up of the SEO work I implemented for [playimposter.xyz](https://www.playimposter.xyz/), a browser-based social deduction party game.
 
-The goal was straightforward: rank for high-intent game queries, improve index coverage across languages, and make my pages understandable to both search engines and social crawlers.
+The implementation goal was to give each page one declared purpose, one canonical URL, and a complete set of language alternates. This article documents the changes. It does not claim a ranking lift because I do not report a controlled before-and-after measurement here.
 
 Instead of treating SEO as one tag or one tool, I handled it as a full system:
 
@@ -27,7 +27,7 @@ flowchart LR
   D["Performance"] --> E
 ```
 
-## Why this project needed serious SEO
+## The site had multiple intents and six language routes
 
 `playimposter.xyz` is in a crowded space. People search for:
 
@@ -41,7 +41,7 @@ If the site does not clearly communicate relevance and page purpose, search engi
 
 So I built SEO into every content surface: home, FAQ, setup, settings, history, and localized routes.
 
-## 1. Keyword-targeted titles and descriptions by page intent
+## Each page received a title and description for its own intent
 
 I rewrote each important page title and meta description based on search intent, not generic branding.
 
@@ -65,7 +65,7 @@ This gave each URL a distinct search purpose instead of duplicated metadata.
 <meta name="robots" content="index, follow" />
 ```
 
-## 2. Canonical tags on every core page
+## Every core page declares its canonical URL
 
 I implemented canonical URLs to make preferred indexing explicit and reduce duplicate-content ambiguity.
 
@@ -88,7 +88,7 @@ Canonicalization is especially important in multilingual sites with similar temp
 <link rel="alternate" hreflang="x-default" href="https://www.playimposter.xyz/" />
 ```
 
-## 3. Full multilingual SEO with hreflang clusters
+## Each language route links to the complete hreflang cluster
 
 A key part of this optimization was international discoverability.
 
@@ -130,7 +130,7 @@ sequenceDiagram
   G-->>U: Show best localized result
 ```
 
-## 4. Structured data for richer SERP understanding
+## Structured data mirrors content visible on the page
 
 I added JSON-LD schema where it mattered most.
 
@@ -144,7 +144,7 @@ Homepage includes `WebApplication` data that declares:
 - free pricing (`Offer` price `0`),
 - keywords and language.
 
-This helps search engines classify the site as an interactive game product, not just a static article.
+This identifies the site as an interactive game product with playable actions and visible rules.
 
 ### `FAQPage` schema on homepage and FAQ page
 
@@ -190,7 +190,7 @@ These FAQ entities improve topical coverage and can support richer search result
 }
 ```
 
-## 5. Robots and crawl directives
+## Robots directives separate crawl guidance from indexing decisions
 
 I configured `robots.txt` to explicitly allow crawling for main and language paths and to expose the sitemap URL:
 
@@ -212,7 +212,7 @@ Allow: /hi/
 Sitemap: https://www.playimposter.xyz/sitemap.xml
 ```
 
-## 6. XML sitemap with hreflang alternates
+## The sitemap repeats the language relationships
 
 I built a sitemap that does more than list URLs. It includes:
 
@@ -236,7 +236,7 @@ This gives search engines cleaner discovery and better language clustering for b
 </url>
 ```
 
-## 7. Social metadata for better distribution
+## Social metadata supplies stable link previews
 
 Search is not the only discovery channel, so I standardized share metadata:
 
@@ -245,7 +245,7 @@ Search is not the only discovery channel, so I standardized share metadata:
 
 This improves CTR when pages are shared in chats and social feeds, which indirectly supports traffic and search signals over time.
 
-## 8. Technical SEO hardening in server config
+## Server configuration enforces one HTTPS route and predictable caching
 
 I also optimized delivery and crawl efficiency at the infrastructure level via `.htaccess`.
 
@@ -293,7 +293,7 @@ ExpiresByType application/javascript "access plus 1 year"
 ExpiresByType text/html "access plus 1 hour"
 ```
 
-## 9. Information architecture and internal navigation consistency
+## Internal links expose the same route structure to users and crawlers
 
 SEO is easier when site structure is predictable.
 
@@ -310,7 +310,7 @@ I kept consistent page routes for game flow and used shared navigation logic acr
 
 This stabilized crawl paths and made every locale structurally parallel.
 
-## 10. Matching content to actual search behavior
+## Page copy uses the terms people use for the game
 
 I intentionally targeted user-language search phrases around:
 
@@ -351,9 +351,9 @@ flowchart TD
   S6 --> S7["7. Keep locales synchronized"]
 ```
 
-## What this optimization changed
+## What changed in the deployed system
 
-From an engineering perspective, this project moved from "a fun static game page" to "a structured, indexable multilingual web product."
+The work changed the site’s machine-readable structure. It did not by itself establish that rankings or traffic improved.
 
 The improvements were:
 
@@ -402,16 +402,6 @@ stateDiagram-v2
   Monitor --> Draft: Iterate
 ```
 
-```mermaid
-pie showData
-  title SEO Work Distribution
-  "Metadata + Content Mapping" : 28
-  "Canonical + Hreflang" : 22
-  "Structured Data" : 18
-  "Crawl Controls" : 17
-  "Performance/Infra" : 15
-```
-
 ## Useful SEO tools and submission links
 
 When shipping SEO updates, these are the official pages I use most:
@@ -425,28 +415,4 @@ When shipping SEO updates, these are the official pages I use most:
 - Bing sitemap submission help: [How to submit sitemaps](https://www.bing.com/webmasters/help/how-to-submit-sitemaps-82a15bd4)
 - Bing URL submission help: [URL Submission](https://www.bing.com/webmasters/help/url-submission-62f2860b)
 
-## FAQ: What were the most important SEO wins on playimposter.xyz?
-
-The biggest wins were combining canonical tags, multilingual `hreflang`, structured data, and a sitemap with alternate links. Each piece alone helps, but together they create clear, non-conflicting indexing signals.
-
-## FAQ: Why use both FAQPage schema and a visible FAQ page?
-
-Because schema should reflect real content users can read. The dedicated `faq.html` page captures long-tail question intent, while `FAQPage` JSON-LD helps search engines parse that content more reliably.
-
-## FAQ: Did technical server settings really matter for SEO?
-
-Yes. HTTPS redirects, compression, and cache policies improve consistency, speed, and crawl efficiency. They are not substitutes for content relevance, but they strengthen the technical baseline that search engines evaluate.
-
-## FAQ: Why invest in multilingual SEO this early?
-
-The game already had real non-English usage potential. Adding proper language routing, canonicals, and hreflang early prevents future index confusion and makes international growth cleaner.
-
-## FAQ: What should be improved next?
-
-Next improvements should focus on performance metrics (Core Web Vitals), deeper internal linking between gameplay pages and FAQ content, and language-specific content expansion beyond translated templates.
-
-## Final takeaway
-
-SEO optimization on `playimposter.xyz` worked because I treated it as product infrastructure, not marketing garnish.
-
-I aligned content intent, technical signals, and multilingual architecture so crawlers and users see the same clear story: what this game is, who it is for, and why this page should rank.
+The next evaluation should measure indexed-page coverage, Core Web Vitals, impressions, click-through rate, and query position before making performance claims. The implementation described here establishes the routes and metadata needed for that measurement.

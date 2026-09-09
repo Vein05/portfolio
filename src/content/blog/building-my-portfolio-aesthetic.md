@@ -5,8 +5,6 @@ category: "Design"
 status: "fermented"
 ---
 
-# Designing with Texture
-
 When I started this portfolio, the goal was less "build a trendy site" and more "build a place that feels printed."
 
 ```image

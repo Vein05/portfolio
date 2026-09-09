@@ -1,11 +1,9 @@
 ---
-title: "Creating the Most Popular Deepseek API Client in Go (Part 6): Ollama Integration"
+title: "Building deepseek-go, Part 6: The Ollama Adapter"
 date: "2026-03-03"
 category: "Engineering"
 status: "plated"
 ---
-
-# Creating the Most Popular Deepseek API Client in Go (Part 6): Ollama Integration
 
 Adding Ollama support was one of the most requested features, and it forced me to design for real API differences instead of assuming everything behaves like OpenAI-compatible endpoints.
 
@@ -80,7 +78,7 @@ Ollama support landed as a major release milestone (`v1.3.0`) with:
 
 That release was a turning point for adoption among local-model users.
 
-## FAQ: How do I version provider integrations without breaking users?
+## Provider changes follow the public API versioning policy
 
 My rule:
 
@@ -90,7 +88,7 @@ My rule:
 
 That keeps upgrade risk predictable for teams pinning versions.
 
-## FAQ: Should I keep provider docs only in README?
+## Provider-specific setup needs dedicated documentation
 
 No. I keep provider docs in three places:
 

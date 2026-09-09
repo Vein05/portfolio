@@ -1,11 +1,9 @@
 ---
-title: "Creating the Most Popular Deepseek API Client in Go (Part 1): Why I Built deepseek-go"
+title: "Building deepseek-go, Part 1: Design Constraints"
 date: "2026-03-03"
 category: "Engineering"
 status: "plated"
 ---
-
-# Creating the Most Popular Deepseek API Client in Go (Part 1): Why I Built deepseek-go
 
 I did not start `deepseek-go` because I wanted to maintain another SDK.
 I started it because I needed a Go client I could trust in production.

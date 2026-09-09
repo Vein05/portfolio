@@ -1,5 +1,5 @@
 ---
-title: "Voice AI Can Stop Talking. It Still Needs Heard State."
+title: "Voice Agents Need a Record of What the User Heard"
 date: "2026-05-03"
 category: "Research"
 status: "cooking"
@@ -15,17 +15,13 @@ The agent answers the side question. Fine. Then you say:
 
 > Okay, go back to where you were.
 
-And the spell breaks.
-
 Sometimes it starts over. Sometimes it skips ahead. Sometimes it says "as I was saying" and continues from a place you never heard. The strange part is that the model is not confused in the usual way. It did not fail to understand your words. It failed to remember the shared state of the conversation.
 
 It does not know what actually reached your ears, or what thread should be resumed from there.
 
-That is the failure mode this piece is about.
+Voice agents can stop speaking, but most current stacks do not expose a first-class record of what was heard, what was only generated, and which conversational thread should resume. The rest of this article shows the failure, explains the timing mismatch that causes it, compares four current stacks, and describes a protocol that records the missing state.
 
-More precisely: voice agents can stop speaking, but most current stacks do not expose a first-class model of what was heard, what was merely generated, and what conversational thread should be resumed.
-
-## The Go-Back Test
+## The go-back test exposes the missing state
 
 I do not care only whether a system claims to support barge-in. I care whether it passes the go-back test.
 
@@ -44,9 +40,9 @@ If it says "as I was saying" but has no idea where that was, it failed.
 
 The passing behavior is specific: it should answer the side question, then resume the original explanation from the last position you actually heard.
 
-That is not a personality feature. It is not a better prompt. It is conversation state.
+Passing the test requires explicit conversation state, including the last heard position and the suspended parent thread.
 
-## The Missing Piece Is Not Barge-In
+## Stopping audio does not preserve the interrupted conversation
 
 Voice agents already know how to stop talking.
 
@@ -67,7 +63,7 @@ So the moment you interrupt, the system has to guess which world it is in:
 
 Without those answers, "interruption" tends to become a destructive operation. The agent cancels the current response and starts a new turn. That feels responsive in the moment, but it can quietly corrupt the conversation.
 
-## Why It Happens
+## Generation runs ahead of playback
 
 The root cause is simple: generation runs ahead of playback.
 
@@ -104,15 +100,15 @@ layout: wide
 caption: In a five-interruption paper-explanation scenario, cancel-and-restart strategies can accumulate context drift. The exact direction differs by stack, but the user and server can stop agreeing on what was heard.
 ```
 
-This is why the failure feels so uncanny. The agent is not merely losing a response. It is losing common ground.
+The agent loses the record of which part of the response both sides share.
 
-## Evidence From Current Stacks
+## Current stacks expose cancellation and repair primitives
 
 This problem shows up differently across frameworks. The point is not that these projects are careless. Most of them have reasonable mechanisms for barge-in, truncation, cancellation, or transcript repair.
 
 The architectural gap is narrower and more interesting: interruption is usually exposed first as cancellation or truncation. A first-class resumable thread model is still left to the application.
 
-### OpenAI Realtime: Truncation Solves One Layer
+### OpenAI Realtime truncates unheard output
 
 OpenAI's Realtime API has the clearest statement of the underlying timing issue. The docs for `conversation.item.truncate` say the server can produce audio faster than realtime, so the client uses truncation when audio has been sent but not yet played. The same docs say truncation removes the server-side text transcript so the context does not contain text the user did not hear.
 
@@ -143,7 +139,7 @@ The community reports show why that boundary matters. One developer reported tha
 
 That is a lot of machinery to recover the most basic fact in a voice conversation: what did the user hear?
 
-### LiveKit: Repairing Heard History Is Hard
+### A LiveKit issue shows that cleanup can also delete heard speech
 
 LiveKit is explicit about the right target. Its current docs describe truncating conversation history to the portion of speech the user heard.
 
@@ -162,7 +158,7 @@ One failure mode can make the agent believe you heard too much. The LiveKit repo
 
 Both are context desync.
 
-### Pipecat: Interruption Is A Stop Signal
+### Pipecat represents interruption as a stop signal
 
 Pipecat makes the design gap visible in one small class:
 
@@ -181,7 +177,7 @@ Pipecat issue #2791 described the practical result: interrupt a counting bot aft
 
 Again, the problem is not audio cancellation. The problem is the shared state model above cancellation.
 
-### Vocode: Fast Cancellation, Not Resume Semantics
+### Vocode cancels quickly but leaves resume semantics to the application
 
 Vocode has the same broad shape. Its interruption path broadcasts interrupts, calls the output device interruption, cancels the current agent task, and cancels response workers.
 
@@ -189,7 +185,7 @@ That is a reasonable way to stop a voice pipeline quickly. It is not a resume mo
 
 The stack stops. A resumable parent thread is left to application code.
 
-## The Pattern
+## Four interruption types require different state operations
 
 Once you look across the implementations, a common abstraction boundary is visible:
 
@@ -217,7 +213,7 @@ That bridge only works because both people know where the parent thread was susp
 
 Voice agents need the same state operation.
 
-## What Fixing It Looks Like
+## The protocol records playback, types the interruption, and holds the parent thread
 
 I built Interupt around a small protocol idea: interruption should not only be a stop signal. It should be a state transition.
 
@@ -240,7 +236,7 @@ In the demo, that state is visible. The orb changes color when the agent branche
 
 That is the behavior I want voice-agent stacks to make easy.
 
-## The Tradeoff
+## The protocol can replay a segment and adds classification latency
 
 ICP is not free.
 
@@ -252,7 +248,7 @@ The bigger cost is architectural. A voice agent has to stop treating conversatio
 
 That sounds heavier until you compare it with the alternative: every interruption can move the system into a different conversation than the one the user experienced.
 
-## Links
+## Protocol links
 
 The protocol spec is here: [ICP wire protocol](https://github.com/Vein05/icp-protocol/blob/main/icp-wire-protocol.md) and [conversation model](https://github.com/Vein05/icp-protocol/blob/main/icp-conversation-model.md).
 

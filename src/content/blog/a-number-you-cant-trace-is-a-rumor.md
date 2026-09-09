@@ -1,5 +1,5 @@
 ---
-title: "A Number You Can't Trace Is a Rumor. Here's the Machinery That Traces Mine."
+title: "Every Reported Number Should Trace to One Scorer and Run"
 date: "2026-08-18"
 category: "Research"
 status: "cooking"
@@ -9,11 +9,11 @@ Two weeks after a run, you open the manuscript and find a number you cannot repr
 
 It is in a table. It is doing real work: it is the reason a claim in the abstract is phrased the way it is. But you no longer know which scorer version produced it, which split it ran on, or whether the value was copied by hand from a terminal you have since closed. The number is probably right. You cannot prove it is right. And "probably right" is not a thing you can defend to a reviewer, or to yourself at 2 a.m. before a deadline.
 
-That is the failure I have organized an entire research workflow around not repeating. Not a clever failure. A bookkeeping failure, the kind nobody writes papers about and everybody has.
+I built the workflow in this article to prevent that bookkeeping failure.
 
-I run concurrent paper projects as an undergrad. What keeps them from collapsing into a heap of half-remembered results is not intelligence or tooling. It is a small set of boring rules, each one scar tissue from a specific time the absence of that rule cost me something. This is the machinery, and the mistakes that forced each piece of it.
+I use a small set of rules across concurrent paper projects: every reported value has provenance, stop conditions are written before the run, paid runs require a gate, logs are append-only, and detector outputs are read before they become claims. Each section explains who performs the check, when it happens, and which failure it prevents.
 
-## A number that can't trace to a version is a rumor
+## Every reported value points to a scorer version and run ID
 
 The rule: every reported number links to a scorer version and a run provenance record. No value is ever copied, rounded or not, from one document into another by hand.
 
@@ -27,7 +27,7 @@ The discipline extends to documents you would never think of as instruments. Whe
 
 The test for whether you have this rule is simple. Pick any number in your draft. Can you, in under a minute, name the exact code that produced it and the command that ran it? If not, it is a rumor with good posture.
 
-## Kill criteria before spend
+## Write the stop condition before spending money or interpreting results
 
 The rule: no project, and no paid run inside a project, begins without a written kill criterion. The single sentence that says *if this happens, I stop.*
 
@@ -35,7 +35,7 @@ Research rewards optimism, and optimism is exactly what makes you keep a dying r
 
 The criterion has to be falsifiable and cheap to check. In my workspace, every project charter must contain one before any work starts, and mid-project decisions get their own. A real example, written into a run spec before a relaunch: if the run still fails its parse gate at the raised 8,192-token budget, stop. Report it as a finding. No third raise. That last sentence is the entire point; without it, "raise the budget once" quietly becomes "raise the budget until the result appears."
 
-## The expensive irreversible action gets a gate
+## I approve a full run only after five checks pass
 
 The rule: before any broad paid run, five things must exist: a frozen schema, a complete manifest, an exact cost estimate, a passing smoke test, and my own explicit approval. In that order.
 
@@ -49,7 +49,7 @@ type: smoke-catches
 
 Enforcement matters more than intention here. A rule you have to remember is a rule you will skip under deadline pressure. This one is worth wiring into something that physically refuses to launch the run until the checklist is satisfied.
 
-## Never rewrite history
+## Append corrections instead of rewriting the original record
 
 The rule: handoffs, changelogs, and experiment reports are append-only. You correct a past entry by adding a dated note at the top, never by editing the original.
 
@@ -59,7 +59,7 @@ In practice this means supersession, not deletion. When the audit below overturn
 
 Every project keeps a dated handoff note written at the end of a working session and a dated changelog of what changed, what was learned, and what remains undone. They are the resumption point for the next session and the deposition record for the next reviewer. Both are absolute dates only, never "last Thursday," which means nothing to the person reading it in November.
 
-## Manual audit before belief
+## Read detector hits before reporting their aggregate
 
 The rule: never report a detector's first output. Read the hits, spot-check the categories, look at the actual traces before you believe your own instrument.
 
@@ -75,28 +75,14 @@ type: signflip-audit
 
 The number was an instrument reading, not a finding. Instruments are wrong in quiet, systematic ways, and none of them announce themselves. I have since watched the same lesson generalize: [which scoring target you pick can decide which model wins a benchmark](/blog/your-memory-benchmark-is-lying-to-you), which is the published version of the same distrust. The only defense is to physically read the outputs before the number becomes a belief, and then a sentence, and then a claim you cannot walk back.
 
-## Meet the reviewer before the reviewer meets you
+## An adversarial review pass finds objections while they can still be fixed
 
 The rule: before a paper goes out, it faces an adversarial pass whose only job is to find the objection that sinks it.
 
 The reviewer who will reject your paper has already thought of the weakness you are hoping nobody notices. The only question is whether you meet that objection in your own office, where you can still do something about it, or in a review thread, where you cannot. I run drafts through a calibrated panel of critics tuned to surface the strongest objection, not the most flattering summary, and each project keeps a lessons file distilled from the reviews the last paper actually received. It is uncomfortable by design. Discomfort now is cheap; discomfort at the commitment deadline is not.
 
-## What this is, and what it isn't
+## These rules fit scored empirical projects, with limits
 
 These are notes from building a working research process across a handful of papers, not a doctrine. They are downstream of my particular corner of the field, empirical NLP, where the unit of work is a scored run, and they will not all transfer to theory, or to a lab with a data engineer and a real MLOps stack. Someone with more experience will find pieces of this naive.
 
 But the core generalizes further than the specifics: **research reliability is mostly the discipline to write things down before you have a stake in the outcome, and to refuse to trust a result you cannot trace.** The cleverness is in the science. The trust is in the bookkeeping. Most people learn this the way I did, by nearly shipping a scorer artifact as a finding or paying for a broken run, and I would rather you learn it from a blog post.
-
-## Frequently asked questions
-
-### Isn't this just experiment tracking?
-
-Partly. A tracking tool gives you the storage; it does not give you the discipline. The rules here are about the decisions the tool can't make for you: when to stop, when not to spend, when not to believe your own detector, and when to refuse to edit the record. You can have MLflow and still ship a number you can't trace.
-
-### Why append-only? Can't I just use git?
-
-Git gives you the ability to recover history. Append-only records give you the *intent* not to rewrite it. The point isn't that the old version is retrievable; it's that the log reads as an honest, dated sequence of what you actually believed, including the wrong beliefs, without you having quietly cleaned it up.
-
-### Is a kill criterion just giving up early?
-
-The opposite. It's deciding, while you're still clear-headed, what evidence would change your mind, so that when the result is ambiguous and you're emotionally invested, you follow a rule you set in advance instead of the sunk cost you feel in the moment.
