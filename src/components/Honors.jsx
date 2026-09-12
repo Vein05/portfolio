@@ -13,7 +13,7 @@ const typeConfig = {
   },
 };
 
-const honors = [
+export const honors = [
   {
     type: "Winner",
     title: "Pitch Competition",

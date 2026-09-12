@@ -1,6 +1,6 @@
 import React from 'react';
 
-const skillGroups = [
+export const skillGroups = [
   {
     label: "Languages",
     skills: ["Go", "Python", "JavaScript", "TypeScript", "SQL"]
