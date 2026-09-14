@@ -59,6 +59,7 @@ const RANGES = [
     stops: [
       { t: "Paste boundary", k: "SEAM post", date: "2026-08", kind: "post", active: true, ls: 1,
         href: "/blog/where-does-the-paste-end",
+        demo: "https://aimsresearchlab.com/seam",
         full: "LLMs Absorb Text Typed After a Paste",
         d: "Ask a model to edit a document and add a side remark after the paste. Most fold the remark into the document. Across 20 models, absorption runs 8% to 67%; boundary markup cuts it in 19 of 20." },
     ],
@@ -246,20 +247,28 @@ export default function ResearchRange() {
       </p>
 
       {card && (
-        <a href={card.s.href}
-          target="_blank" rel="noopener noreferrer"
-          className="range-card absolute z-10 block w-[300px] border border-ink-dark px-3.5 pb-3 pt-3 no-underline hover:border-ink-blue"
+        <div
+          className="range-card absolute z-10 block w-[300px] border border-ink-dark px-3.5 pb-3 pt-3 hover:border-ink-blue"
           style={{ left: card.left, top: card.top, background: PAPER, boxShadow: `4px 4px 0 ${BORDER}`, color: "inherit" }}
           onMouseEnter={cancelHide} onMouseLeave={hide}>
-          <div className="mb-1 text-[10.5px] uppercase tracking-[0.12em]" style={{ color: BLUE_STRONG, fontFamily: "'Oswald', sans-serif" }}>
-            {card.s.k}: {fmt(card.s.date)}
-          </div>
-          <div className="mb-1.5 text-[14px] font-medium leading-tight" style={{ fontFamily: "'Oswald', sans-serif" }}>{card.s.full}</div>
-          <div className="text-[12.5px] leading-snug text-ink-dark" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>{card.s.d}</div>
+          <a href={card.s.href} target="_blank" rel="noopener noreferrer" className="block no-underline" style={{ color: "inherit" }}>
+            <div className="mb-1 text-[10.5px] uppercase tracking-[0.12em]" style={{ color: BLUE_STRONG, fontFamily: "'Oswald', sans-serif" }}>
+              {card.s.k}: {fmt(card.s.date)}
+            </div>
+            <div className="mb-1.5 text-[14px] font-medium leading-tight" style={{ fontFamily: "'Oswald', sans-serif" }}>{card.s.full}</div>
+            <div className="text-[12.5px] leading-snug text-ink-dark" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>{card.s.d}</div>
+          </a>
           <div className="mt-2 text-[10.5px] uppercase tracking-[0.12em] text-ink-blue" style={{ fontFamily: "'Oswald', sans-serif" }}>
-            {card.s.href.startsWith("http") ? "Open ↗" : "Read →"}
+            <a href={card.s.href} target="_blank" rel="noopener noreferrer" className="no-underline hover:underline" style={{ color: "inherit" }}>
+              {card.s.href.startsWith("http") ? "Open ↗" : "Read →"}
+            </a>
+            {card.s.demo && (
+              <a href={card.s.demo} target="_blank" rel="noopener noreferrer" className="ml-3 no-underline hover:underline" style={{ color: "inherit" }}>
+                Demo ↗
+              </a>
+            )}
           </div>
-        </a>
+        </div>
       )}
     </div>
   );
