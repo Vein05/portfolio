@@ -42,7 +42,7 @@ const BlogPostIsland = ({ markdown = '', postMeta = null, seriesNavItems = [], s
         <div className="text-center">
           <h1 className="text-3xl font-custom text-ink-dark mb-4">Post not found</h1>
           <p className="font-serif text-ink-muted mb-8">The requested article could not be loaded.</p>
-          <a href="/blog" className="text-ink-blue underline">Return to Blog</a>
+          <a href="/blog/" className="text-ink-blue underline">Return to Blog</a>
         </div>
       </div>
     );

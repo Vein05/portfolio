@@ -45,7 +45,7 @@ const Pantry = ({ ingredients = [], onTagClick, activeTag }) => {
     if (onTagClick) {
       onTagClick(item.tag);
     } else if (item.dishes && item.dishes.length > 0) {
-      window.location.href = `/blog/${item.dishes[0].slug}`;
+      window.location.href = `/blog/${item.dishes[0].slug}/`;
     }
   };
 

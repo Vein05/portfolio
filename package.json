@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/tailwind": "^6.0.2",
     "@gsap/react": "^2.1.2",

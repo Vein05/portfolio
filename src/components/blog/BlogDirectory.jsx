@@ -229,7 +229,7 @@ const BlogDirectory = () => {
               visiblePosts.map((post) => (
                 <Link
                   key={post.slug}
-                  to={`/blog/${post.slug}`}
+                  to={`/blog/${post.slug}/`}
                   className="group block bg-paper-light transition-all duration-300 directory-row directory-card"
                 >
                   <article className="p-4 md:p-6 directory-row-inner">

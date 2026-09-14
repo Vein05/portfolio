@@ -300,7 +300,7 @@ const BlogDirectoryIsland = () => {
             </div>
             <div className="cutting-board-items">
               {rawPosts.map((post) => (
-                <a key={post.slug} href={`/blog/${post.slug}`} className="cutting-board-item group">
+                <a key={post.slug} href={`/blog/${post.slug}/`} className="cutting-board-item group">
                   <span className="cutting-board-item-title group-hover:text-ink-blue transition-colors duration-200">{post.title}</span>
                   <span className="cutting-board-item-date">
                     {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })}
@@ -316,7 +316,7 @@ const BlogDirectoryIsland = () => {
             visiblePosts.map((post) => (
               <a
                 key={post.slug}
-                href={`/blog/${post.slug}`}
+                href={`/blog/${post.slug}/`}
                 data-status={post.status || 'plated'}
                 className="group block bg-paper-light transition-all duration-300 directory-row directory-card"
               >

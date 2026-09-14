@@ -46,9 +46,9 @@ const posters = [
       <nav class="mb-8 border-b border-border-paper pb-3 text-center text-sm">
         <a href="/" class="text-ink-blue hover:underline">Full site</a>
         <span class="mx-2 text-ink-muted">/</span>
-        <a href="/blog" class="text-ink-blue hover:underline">Blog</a>
+        <a href="/blog/" class="text-ink-blue hover:underline">Blog</a>
         <span class="mx-2 text-ink-muted">/</span>
-        <a href="/simple" class="text-ink-blue hover:underline">Plain version</a>
+        <a href="/simple/" class="text-ink-blue hover:underline">Plain version</a>
       </nav>
 
       <header class="mb-8">
@@ -58,7 +58,7 @@ const posters = [
       <ul class="grid gap-8 sm:grid-cols-2">
         {posters.map((p) => (
           <li class="flex flex-col border border-border-paper bg-paper-surface p-4">
-            <a href={`/poster/${p.slug}`} class="poster-thumb block overflow-hidden border border-border-paper bg-paper-light" aria-label={`Open poster: ${p.title}`}>
+            <a href={`/poster/${p.slug}/`} class="poster-thumb block overflow-hidden border border-border-paper bg-paper-light" aria-label={`Open poster: ${p.title}`}>
               <iframe
                 src={`/poster/${p.slug}`}
                 title={`Preview: ${p.title}`}
@@ -76,13 +76,13 @@ const posters = [
               <span>{p.venue}</span>
             </div>
             <h2 class="mt-2 text-base font-semibold leading-snug">
-              <a href={`/poster/${p.slug}`} class="hover:underline">{p.title}</a>
+              <a href={`/poster/${p.slug}/`} class="hover:underline">{p.title}</a>
             </h2>
             <p class="mt-1 text-sm text-ink-muted">{p.authors}</p>
             <p class="mt-3 text-sm">
-              <a href={`/poster/${p.slug}`} class="text-ink-blue hover:underline">Open poster</a>
+              <a href={`/poster/${p.slug}/`} class="text-ink-blue hover:underline">Open poster</a>
               <span class="mx-2 text-ink-muted">/</span>
-              <a href={`/poster/${p.slug}`} target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">New tab</a>
+              <a href={`/poster/${p.slug}/`} target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">New tab</a>
             </p>
           </li>
         ))}

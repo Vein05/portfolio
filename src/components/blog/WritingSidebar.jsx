@@ -17,7 +17,7 @@ function WritingSidebar({ limit = 3 }) {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xs uppercase tracking-widest text-ink-muted">Writing</h2>
           <a
-            href="/blog"
+            href="/blog/"
             className="text-xs uppercase tracking-wider text-ink-blue hover:text-ink-dark transition-colors flex items-center gap-1"
           >
             All <ArrowRight className="w-3 h-3" />
@@ -28,7 +28,7 @@ function WritingSidebar({ limit = 3 }) {
           {recentPosts.map((post) => (
             <li key={post.slug} className="border-b border-border-paper last:border-0">
               <a
-                href={`/blog/${post.slug}`}
+                href={`/blog/${post.slug}/`}
                 className="group block py-4 hover:bg-ink-dark transition-colors duration-150 -mx-5 px-5"
               >
                 <span className="text-[10px] uppercase tracking-wider text-ink-blue block mb-1">

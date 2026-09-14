@@ -41,7 +41,7 @@ const nextSeriesPost =
 
 const seriesNavItems = seriesPosts.map((post, index) => ({
   id: post.slug,
-  href: `/blog/${post.slug}`,
+  href: `/blog/${post.slug}/`,
   label: post.title.replace(/^Getting Started with Go for Web Services \(Part \d+\):\s*/i, ''),
   number: `${index + 1}.`,
   currentLabel: post.slug === slug ? 'You are here' : undefined,

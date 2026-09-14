@@ -76,7 +76,7 @@ const BlogPost = () => {
   const canonicalUrl = `${siteUrl}${canonicalPath.replace(/\/?$/, '/')}`;
   const seriesNavItems = seriesPosts.map((post, index) => ({
     id: post.slug,
-    href: `/blog/${post.slug}`,
+    href: `/blog/${post.slug}/`,
     label: post.title.replace(/^Getting Started with Go for Web Services \(Part \d+\):\s*/i, ''),
     number: `${index + 1}.`,
     currentLabel: post.slug === slug ? 'You are here' : undefined,
@@ -116,7 +116,7 @@ const BlogPost = () => {
         <div className="text-center">
           <h1 className="text-3xl font-custom text-ink-dark mb-4">Post not found</h1>
           <p className="font-serif text-ink-muted mb-8">The requested article could not be loaded.</p>
-          <a href="/blog" className="text-ink-blue underline">Return to Blog</a>
+          <a href="/blog/" className="text-ink-blue underline">Return to Blog</a>
         </div>
       </div>
     );

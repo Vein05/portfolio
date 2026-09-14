@@ -56,7 +56,7 @@ const BreadcrumbIsland = ({ title = null, status = null, currentPath = '/' }) =>
               {isBlog && (
                 <>
                   <ChevronRight className="w-4 h-4 text-ink-muted" />
-                  <a href="/blog" className="hover:text-ink-blue transition-colors">Blog</a>
+                  <a href="/blog/" className="hover:text-ink-blue transition-colors">Blog</a>
                 </>
               )}
               {title && (
@@ -77,7 +77,7 @@ const BreadcrumbIsland = ({ title = null, status = null, currentPath = '/' }) =>
         <div className="flex items-center gap-3 flex-shrink-0 ml-4">
           {isHome && (
             <a
-              href="/blog"
+              href="/blog/"
               className="lg:hidden flex-shrink-0 text-xs uppercase tracking-widest text-paper-light/60 hover:text-ink-blue transition-colors"
             >
               Blog →

@@ -115,7 +115,7 @@ export const papers = [
     link: "https://arxiv.org/abs/2608.19303",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
-    posterHref: "/poster/outcome-monitors",
+    posterHref: "/poster/outcome-monitors/",
     doi: "10.48550/arXiv.2608.19303",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
@@ -134,7 +134,7 @@ export const papers = [
     link: "https://arxiv.org/abs/2606.21807",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
-    posterHref: "/poster/rag-compression",
+    posterHref: "/poster/rag-compression/",
     doi: "10.48550/arXiv.2606.21807",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
@@ -153,7 +153,7 @@ export const papers = [
     link: "https://arxiv.org/abs/2605.24060",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
-    posterHref: "/poster/memory-targets",
+    posterHref: "/poster/memory-targets/",
     doi: "10.48550/arXiv.2605.24060",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",

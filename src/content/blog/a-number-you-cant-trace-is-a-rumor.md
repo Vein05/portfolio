@@ -73,7 +73,7 @@ The rule forced me to read the damage first. All 177 damaged rows, by hand. 115 
 type: signflip-audit
 ```
 
-The number was an instrument reading, not a finding. Instruments are wrong in quiet, systematic ways, and none of them announce themselves. I have since watched the same lesson generalize: [which scoring target you pick can decide which model wins a benchmark](/blog/your-memory-benchmark-is-lying-to-you), which is the published version of the same distrust. The only defense is to physically read the outputs before the number becomes a belief, and then a sentence, and then a claim you cannot walk back.
+The number was an instrument reading, not a finding. Instruments are wrong in quiet, systematic ways, and none of them announce themselves. I have since watched the same lesson generalize: [which scoring target you pick can decide which model wins a benchmark](/blog/your-memory-benchmark-is-lying-to-you/), which is the published version of the same distrust. The only defense is to physically read the outputs before the number becomes a belief, and then a sentence, and then a claim you cannot walk back.
 
 ## An adversarial review pass finds objections while they can still be fixed
 
