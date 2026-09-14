@@ -125,4 +125,4 @@ layout: narrow
 
 ---
 
-In Part 2, I break down the technical internals: request pipeline, streaming, FIM/beta endpoints, and how provider compatibility actually works without making the API messy.
+In [Part 2](/blog/creating-most-popular-deepseek-api-client-go-part-2/), I break down the technical internals: request pipeline, streaming, FIM/beta endpoints, and how provider compatibility actually works without making the API messy.

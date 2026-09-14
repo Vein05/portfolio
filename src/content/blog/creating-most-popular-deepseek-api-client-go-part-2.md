@@ -5,7 +5,7 @@ category: "Engineering"
 status: "plated"
 ---
 
-Part 1 was about motivation. This part is about implementation.
+[Part 1](/blog/creating-most-popular-deepseek-api-client-go-part-1/) was about motivation. This part is about implementation.
 
 When I designed `deepseek-go`, I wanted the public API to feel simple while keeping internals composable enough for new features.
 
@@ -254,4 +254,4 @@ Those decisions made contributor onboarding faster and reduced regression risk d
 
 ---
 
-In Part 3, I’ll cover adoption, trend data, GitHub stats, and what the growth curve taught me about open-source SDK maintenance.
+In [Part 3](/blog/creating-most-popular-deepseek-api-client-go-part-3/), I’ll cover adoption, trend data, GitHub stats, and what the growth curve taught me about open-source SDK maintenance.

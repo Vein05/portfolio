@@ -100,4 +100,4 @@ These are all open-source-friendly ecosystem tools that make maintainer reportin
 
 ---
 
-In Part 4, I’ll close the series with contributor acknowledgments, hard lessons, and my technical roadmap for deepseek-go.
+In [Part 4](/blog/creating-most-popular-deepseek-api-client-go-part-4/), I’ll close the series with contributor acknowledgments, hard lessons, and my technical roadmap for deepseek-go.

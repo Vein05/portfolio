@@ -10,8 +10,8 @@ Go is great for backend systems because it gives you a clean standard library, p
 This guide is written as a practical series for building production-minded web services:
 
 1. **Part 1 (this page):** foundations, project setup, HTTP basics, configuration, and error handling.
-2. **Part 2:** data layer, API design, middleware, auth, and observability.
-3. **Part 3:** testing strategy, deployment, and scaling patterns.
+2. **[Part 2](/blog/getting-started-with-go-data-middleware-auth/):** data layer, API design, middleware, auth, and observability.
+3. **[Part 3](/blog/getting-started-with-go-testing-deploy-scaling/):** testing strategy, deployment, and scaling patterns.
 
 ```textandimage
 title: Roadmap for the Go Web Services Series
