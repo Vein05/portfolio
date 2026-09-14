@@ -5,7 +5,7 @@ category: "Engineering"
 status: "plated"
 ---
 
-[Part one](https://spanthi.com/blog/gsap-choreography) reached 67,000 views on r/webdev in two days. I did not expect that. I wrote it because I thought replacing a 3.4 MB video with 40 KB of DOM animation was interesting enough to share. Turns out a lot of people are thinking about the same problem.
+[Part one](https://spanthi.com/blog/gsap-choreography/) reached 67,000 views on r/webdev in two days. I did not expect that. I wrote it because I thought replacing a 3.4 MB video with 40 KB of DOM animation was interesting enough to share. Turns out a lot of people are thinking about the same problem.
 
 The comments were better than the post. People asked about SEO indexing, screen reader behavior, `prefers-reduced-motion` fallbacks, whether GSAP is even necessary, and several pointed out it was missing something. They were right.
 

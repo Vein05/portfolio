@@ -4,7 +4,9 @@ import { posts } from '../data/posts.js';
 const BASE_URL = 'https://spanthi.com';
 
 function link(title: string, path: string, description: string) {
-  const url = path.startsWith('http') ? path : `${BASE_URL}${path}`;
+  // Page paths get the trailing slash the host serves; files keep their name.
+  const normalised = /\.[a-z0-9]{2,5}$/i.test(path) ? path : path.replace(/\/?$/, '/');
+  const url = path.startsWith('http') ? path : `${BASE_URL}${normalised}`;
   return `- [${title}](${url}): ${description}`;
 }
 

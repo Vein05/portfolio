@@ -146,8 +146,8 @@ const BlogPost = () => {
           <meta name="description" content={postMeta.seoDescription || postMeta.excerpt} />
           <meta name="keywords" content={postMeta.tags?.join(', ')} />
           <link rel="canonical" href={canonicalUrl} />
-          {prevSeriesPost && <link rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}`} />}
-          {nextSeriesPost && <link rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}`} />}
+          {prevSeriesPost && <link rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}/`} />}
+          {nextSeriesPost && <link rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}/`} />}
           <meta property="og:title" content={postMeta.seoTitle || postMeta.title} />
           <meta property="og:description" content={postMeta.seoDescription || postMeta.excerpt} />
           <meta property="og:type" content="article" />

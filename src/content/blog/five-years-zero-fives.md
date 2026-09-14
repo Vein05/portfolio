@@ -65,7 +65,7 @@ This is the observation [David Jurgens flagged](https://medium.com/@jurgens_2458
 
 These are aggregated per-paper histograms, and the aggregation is the whole caveat. There are no individual reviewer scores, no paper identifiers, no accept or reject labels, no review text. You cannot recover how any single reviewer scores, measure disagreement inside a paper's review set, or join a score to an outcome.
 
-It also cannot answer whether an automated reviewer would reproduce this distribution. There are no matched papers to score, and ACL reviews are public on OpenReview, so a model may have seen a paper's reception during training. That is contamination, not calibration, and it is the reason I keep [my own reviewer-model work](https://spanthi.com/blog/where-does-the-paste-end) on held-out material rather than published venues. The honest scope of this post is one sentence: this is the distribution of paper-level aggregate scores across five years, and no paper ever averaged a perfect one.
+It also cannot answer whether an automated reviewer would reproduce this distribution. There are no matched papers to score, and ACL reviews are public on OpenReview, so a model may have seen a paper's reception during training. That is contamination, not calibration, and it is the reason I keep [my own reviewer-model work](https://spanthi.com/blog/where-does-the-paste-end/) on held-out material rather than published venues. The honest scope of this post is one sentence: this is the distribution of paper-level aggregate scores across five years, and no paper ever averaged a perfect one.
 
 ## Sources
 

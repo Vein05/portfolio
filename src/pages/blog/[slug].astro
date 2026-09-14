@@ -81,7 +81,7 @@ const breadcrumbJsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog/` },
     { '@type': 'ListItem', position: 3, name: postMeta?.title ?? entry.data.title, item: canonicalUrl },
   ],
 };
@@ -113,8 +113,8 @@ const currentPath = Astro.url.pathname;
   publishedTime={postMeta?.date}
 >
   <!-- Extra SEO head tags injected server-side -->
-  {prevSeriesPost && <link slot="head" rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}`} />}
-  {nextSeriesPost && <link slot="head" rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}`} />}
+  {prevSeriesPost && <link slot="head" rel="prev" href={`${siteUrl}/blog/${prevSeriesPost.slug}/`} />}
+  {nextSeriesPost && <link slot="head" rel="next" href={`${siteUrl}/blog/${nextSeriesPost.slug}/`} />}
   {jsonLd && <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
 
