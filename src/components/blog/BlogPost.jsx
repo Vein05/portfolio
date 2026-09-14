@@ -73,7 +73,7 @@ const BlogPost = () => {
       : null;
   const siteUrl = 'https://spanthi.com';
   const canonicalPath = postMeta?.canonicalPath || `/blog/${postMeta?.slug || slug}`;
-  const canonicalUrl = `${siteUrl}${canonicalPath}`;
+  const canonicalUrl = `${siteUrl}${canonicalPath.replace(/\/?$/, '/')}`;
   const seriesNavItems = seriesPosts.map((post, index) => ({
     id: post.slug,
     href: `/blog/${post.slug}`,

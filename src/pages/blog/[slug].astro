@@ -24,7 +24,8 @@ const postMeta = postsMeta.find((p) => p.slug === slug) ?? null;
 // Build series nav items
 const siteUrl = 'https://spanthi.com';
 const canonicalPath = postMeta?.canonicalPath ?? `/blog/${slug}`;
-const canonicalUrl = `${siteUrl}${canonicalPath}`;
+// Serve-side redirects add a trailing slash, so the canonical must carry one too.
+const canonicalUrl = `${siteUrl}${canonicalPath.replace(/\/?$/, '/')}`;
 
 const seriesPosts = postMeta?.series
   ? postsMeta

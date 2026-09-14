@@ -14,7 +14,7 @@ export interface Props {
 
 const { title, description, slug, author } = Astro.props;
 // Canonical URL comes from `site` in astro.config; omitted when unset.
-const canonical = Astro.site ? new URL(`/poster/${slug}`, Astro.site).href : undefined;
+const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : undefined;
 ---
 
 <!doctype html>
