@@ -11,6 +11,8 @@ All notable changes to the portfolio site are documented here. Format loosely fo
   - Listed on `/simple` via the shared `papers` array; non-arXiv links show the `linkLabel` ("Read on alphaXiv") instead of an arXiv id.
 - **News card on `/simple`** (`src/data/news.js`, `simple.astro`): four dated items, newest first, in the right margin beside the header. Shown only at `2xl` and up (absolute, `left-full`, 5rem gutter); hidden below that width.
 
+- **Landscape posters as editable .pptx** (`scripts/poster-pptx.mjs`, `pnpm poster:pptx [slug]`, needs the dev server up). Renders each 44 x 32 in sheet headlessly, walks the DOM, and writes one slide per poster: every text block a native text box with per-run font, size, weight and colour; backgrounds and borders as shapes; each SVG or image figure rasterised at 200 dpi. Output in `pptx/` (gitignored) with the Oswald font file to install alongside. All five decks pass the OOXML validator and render identically to the web sheets in LibreOffice.
+
 ### Changed
 - **SEAM poster venue** in `posters.js`: "Manuscript under review, no preprint posted" → "Under review; preprint on alphaXiv, September 2026". The poster sheet itself is unchanged (still no paper QR).
 
