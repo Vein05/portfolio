@@ -67,6 +67,60 @@ const extract = () => {
   let imgIndex = 0;
   const figureEls = [];
 
+  // Emit one text box from a run of sibling nodes (text nodes and inline
+  // elements) that share a containing block `el`.
+  const emitText = (el, nodes) => {
+    const cs = getComputedStyle(el);
+    const runs = [];
+    let lineTop = null;
+    const collect = (node, style) => {
+      for (const n of node.childNodes) {
+        if (n.nodeType === 3) {
+          const raw = n.textContent;
+          if (!raw.trim()) { if (runs.length && !/\s$/.test(runs[runs.length - 1].text) && /\s/.test(raw)) runs[runs.length - 1].text += ' '; continue; }
+          // words split after hyphens too, since Chrome may break there
+          const re = /[^\s-]+-*|-+|\s+/g; let m;
+          while ((m = re.exec(raw))) {
+            if (/^\s+$/.test(m[0])) { if (runs.length && !/\s$/.test(runs[runs.length - 1].text) && runs[runs.length - 1].text !== '\n') runs[runs.length - 1].text += ' '; continue; }
+            const rg = document.createRange(); rg.setStart(n, m.index); rg.setEnd(n, m.index + m[0].length);
+            const rect = rg.getClientRects()[0] ?? rg.getBoundingClientRect();
+            if (lineTop !== null && rect.top > lineTop + rect.height * 0.5) {
+              if (runs.length && /\s$/.test(runs[runs.length - 1].text)) runs[runs.length - 1].text = runs[runs.length - 1].text.replace(/\s+$/, '');
+              runs.push({ text: '\n', ...style });
+            }
+            if (lineTop === null || rect.top > lineTop + rect.height * 0.5) lineTop = rect.top;
+            const last = runs[runs.length - 1];
+            if (last && last.text !== '\n' && last.size === style.size && last.weight === style.weight && last.italic === style.italic && last.color === style.color && last.font === style.font && last.upper === style.upper) last.text += m[0];
+            else runs.push({ text: m[0], ...style });
+          }
+        } else if (n.nodeType === 1) {
+          if (isFigure(n)) { if (visible(n)) { figureEls.push(n); images.push({ ...rel(n.getBoundingClientRect()), idx: imgIndex++ }); } continue; }
+          if (n.tagName === 'BR') { runs.push({ text: '\n', ...style }); continue; }
+          if (!visible(n)) continue;
+          const st = getComputedStyle(n);
+          collect(n, styleOf(st));
+        }
+      }
+    };
+    const styleOf = (st) => ({
+      font: st.fontFamily, size: parseFloat(st.fontSize), weight: Number(st.fontWeight),
+      italic: st.fontStyle === 'italic', color: rgb(st.color)?.hex ?? '000000',
+      upper: st.textTransform === 'uppercase', spacing: parseFloat(st.letterSpacing) || 0,
+      mono: /mono/i.test(st.fontFamily),
+    });
+    collect({ childNodes: nodes }, styleOf(cs));
+    if (!runs.length) return;
+    const range = document.createRange(); range.setStartBefore(nodes[0]); range.setEndAfter(nodes[nodes.length - 1]);
+    const rr = range.getBoundingClientRect();
+    const box = rr.width ? rel(rr) : rel(el.getBoundingClientRect());
+    const lh = cs.lineHeight === 'normal' ? 1.2 : parseFloat(cs.lineHeight) / parseFloat(cs.fontSize);
+    texts.push({
+      ...box, runs, lineHeight: lh, align: cs.textAlign,
+      bullet: cs.display === 'list-item' && cs.listStyleType !== 'none',
+      padLeft: parseFloat(cs.paddingLeft) || 0,
+    });
+  };
+
   const walk = (el) => {
     if (!visible(el)) return;
     if (isFigure(el)) {
@@ -110,75 +164,47 @@ const extract = () => {
         side(r.x + r.w - br, r.y, br, r.h, br, cs.borderRightColor);
       }
     }
-    const kids = [...el.childNodes];
-    const hasBlockChild = kids.some(
-      (n) => n.nodeType === 1 && !isFigure(n) && visible(n) && !INLINE.has(getComputedStyle(n).display),
-    );
-    const hasText = kids.some((n) => n.nodeType === 3 && n.textContent.trim());
-    if (!hasBlockChild && (hasText || kids.some((n) => n.nodeType === 1 && INLINE.has(getComputedStyle(n).display) && n.textContent.trim()))) {
-      // leaf block: collect runs
-      // Runs carry the browser's own line breaks: each word is measured with a
-      // Range, and a jump in its top edge starts a new line. The text box is
-      // then written with wrapping off, so any viewer, whatever its font
-      // metrics, shows exactly the lines Chrome laid out.
-      const runs = [];
-      let lineTop = null;
-      const collect = (node, style) => {
-        for (const n of node.childNodes) {
-          if (n.nodeType === 3) {
-            const raw = n.textContent;
-            if (!raw.trim()) { if (runs.length && !/\s$/.test(runs[runs.length - 1].text) && /\s/.test(raw)) runs[runs.length - 1].text += ' '; continue; }
-            // words split after hyphens too, since Chrome may break there
-            const re = /[^\s-]+-*|-+|\s+/g; let m;
-            while ((m = re.exec(raw))) {
-              if (/^\s+$/.test(m[0])) { if (runs.length && !/\s$/.test(runs[runs.length - 1].text) && runs[runs.length - 1].text !== '\n') runs[runs.length - 1].text += ' '; continue; }
-              const rg = document.createRange(); rg.setStart(n, m.index); rg.setEnd(n, m.index + m[0].length);
-              const rect = rg.getClientRects()[0] ?? rg.getBoundingClientRect();
-              if (lineTop !== null && rect.top > lineTop + rect.height * 0.5) {
-                if (runs.length && /\s$/.test(runs[runs.length - 1].text)) runs[runs.length - 1].text = runs[runs.length - 1].text.replace(/\s+$/, '');
-                runs.push({ text: '\n', ...style });
-              }
-              if (lineTop === null || rect.top > lineTop + rect.height * 0.5) lineTop = rect.top;
-              const last = runs[runs.length - 1];
-              if (last && last.text !== '\n' && last.size === style.size && last.weight === style.weight && last.italic === style.italic && last.color === style.color && last.font === style.font && last.upper === style.upper) last.text += m[0];
-              else runs.push({ text: m[0], ...style });
-            }
-          } else if (n.nodeType === 1) {
-            if (isFigure(n)) { if (visible(n)) { figureEls.push(n); images.push({ ...rel(n.getBoundingClientRect()), idx: imgIndex++ }); } continue; }
-            if (n.tagName === 'BR') { runs.push({ text: '\n', ...style }); continue; }
-            if (!visible(n)) continue;
-            const s = getComputedStyle(n);
-            collect(n, {
-              font: s.fontFamily, size: parseFloat(s.fontSize), weight: Number(s.fontWeight),
-              italic: s.fontStyle === 'italic', color: rgb(s.color)?.hex ?? '000000',
-              upper: s.textTransform === 'uppercase', spacing: parseFloat(s.letterSpacing) || 0,
-              mono: /mono/i.test(s.fontFamily),
-            });
-          }
-        }
-      };
-      collect(el, {
-        font: cs.fontFamily, size: parseFloat(cs.fontSize), weight: Number(cs.fontWeight),
-        italic: cs.fontStyle === 'italic', color: rgb(cs.color)?.hex ?? '000000',
-        upper: cs.textTransform === 'uppercase', spacing: parseFloat(cs.letterSpacing) || 0,
-        mono: /mono/i.test(cs.fontFamily),
-      });
-      if (runs.length) {
-        // tighten the box to the actual glyph rects, so padding-heavy blocks
-        // and vertically centred cells land where the text is
-        const range = document.createRange(); range.selectNodeContents(el);
-        const rr = range.getBoundingClientRect();
-        const box = rr.width ? rel(rr) : rel(el.getBoundingClientRect());
-        const lh = cs.lineHeight === 'normal' ? 1.2 : parseFloat(cs.lineHeight) / parseFloat(cs.fontSize);
-        texts.push({
-          ...box, runs, lineHeight: lh, align: cs.textAlign,
-          bullet: cs.display === 'list-item' && cs.listStyleType !== 'none',
-          padLeft: parseFloat(cs.paddingLeft) || 0,
-        });
+    // ::before / ::after generated content (the takeaway-list counters). No
+    // DOM node, so its box is read off the pseudo-element's computed style,
+    // for the absolute-positioned form the posters use.
+    for (const pseudo of ['::before', '::after']) {
+      const ps = getComputedStyle(el, pseudo);
+      if (ps.display === 'none' || ps.content === 'none' || ps.content === 'normal') continue;
+      let text = null;
+      const mStr = ps.content.match(/^"(.*)"$/);
+      if (mStr) text = mStr[1];
+      else if (/counter\(/.test(ps.content)) {
+        const sibs = [...el.parentElement.children].filter((c) => c.tagName === el.tagName);
+        text = String(sibs.indexOf(el) + 1);
       }
-      return;
+      if (text === null || !text.trim()) continue;
+      const host = el.getBoundingClientRect();
+      const w = parseFloat(ps.width), h = parseFloat(ps.height);
+      if (!(w > 0 && h > 0)) continue;
+      const left = parseFloat(ps.left) || 0, top = parseFloat(ps.top) || 0;
+      const box = { x: (host.left - cr.left) / scale + left, y: (host.top - cr.top) / scale + top, w, h };
+      const bg = rgb(ps.backgroundColor), bw = parseFloat(ps.borderTopWidth) || 0, bc = bw ? rgb(ps.borderTopColor) : null;
+      if (bg || bc) shapes.push({ ...box, fill: bg, line: bc ? { hex: bc.hex, w: bw } : null, radius: parseFloat(ps.borderTopLeftRadius) || 0, layer: 1 });
+      const size = parseFloat(ps.fontSize);
+      texts.push({
+        x: box.x, y: box.y + (h - size * 1.2) / 2, w, h: size * 1.2, align: 'center', lineHeight: 1.2, bullet: false, padLeft: 0,
+        runs: [{ text, font: ps.fontFamily, size, weight: Number(ps.fontWeight), italic: false, color: rgb(ps.color)?.hex ?? '000000', upper: false, spacing: 0, mono: false }],
+      });
     }
-    for (const n of kids) if (n.nodeType === 1) walk(n);
+    const kids = [...el.childNodes];
+    // Group the children into runs of inline content between block-level
+    // children. A block with no block children is one group (the common
+    // case); a paragraph holding a display:block span yields the span as
+    // its own block plus the surrounding text as anonymous boxes.
+    const isBlock = (n) => n.nodeType === 1 && !isFigure(n) && visible(n) && !INLINE.has(getComputedStyle(n).display);
+    let group = [];
+    const flush = () => { if (group.some((n) => n.textContent.trim())) emitText(el, group); group = []; };
+    for (const n of kids) {
+      if (isBlock(n)) { flush(); walk(n); }
+      else if (n.nodeType === 1 && isFigure(n)) { if (visible(n)) { figureEls.push(n); images.push({ ...rel(n.getBoundingClientRect()), idx: imgIndex++ }); } }
+      else if (n.nodeType === 3 || n.nodeType === 1) group.push(n);
+    }
+    flush();
   };
   walk(canvas);
   window.__figureEls = figureEls;
