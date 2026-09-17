@@ -117,12 +117,32 @@ const extract = () => {
     const hasText = kids.some((n) => n.nodeType === 3 && n.textContent.trim());
     if (!hasBlockChild && (hasText || kids.some((n) => n.nodeType === 1 && INLINE.has(getComputedStyle(n).display) && n.textContent.trim()))) {
       // leaf block: collect runs
+      // Runs carry the browser's own line breaks: each word is measured with a
+      // Range, and a jump in its top edge starts a new line. The text box is
+      // then written with wrapping off, so any viewer, whatever its font
+      // metrics, shows exactly the lines Chrome laid out.
       const runs = [];
+      let lineTop = null;
       const collect = (node, style) => {
         for (const n of node.childNodes) {
           if (n.nodeType === 3) {
-            const t = n.textContent.replace(/\s+/g, ' ');
-            if (t.trim()) runs.push({ text: t, ...style });
+            const raw = n.textContent;
+            if (!raw.trim()) { if (runs.length && !/\s$/.test(runs[runs.length - 1].text) && /\s/.test(raw)) runs[runs.length - 1].text += ' '; continue; }
+            // words split after hyphens too, since Chrome may break there
+            const re = /[^\s-]+-*|-+|\s+/g; let m;
+            while ((m = re.exec(raw))) {
+              if (/^\s+$/.test(m[0])) { if (runs.length && !/\s$/.test(runs[runs.length - 1].text) && runs[runs.length - 1].text !== '\n') runs[runs.length - 1].text += ' '; continue; }
+              const rg = document.createRange(); rg.setStart(n, m.index); rg.setEnd(n, m.index + m[0].length);
+              const rect = rg.getClientRects()[0] ?? rg.getBoundingClientRect();
+              if (lineTop !== null && rect.top > lineTop + rect.height * 0.5) {
+                if (runs.length && /\s$/.test(runs[runs.length - 1].text)) runs[runs.length - 1].text = runs[runs.length - 1].text.replace(/\s+$/, '');
+                runs.push({ text: '\n', ...style });
+              }
+              if (lineTop === null || rect.top > lineTop + rect.height * 0.5) lineTop = rect.top;
+              const last = runs[runs.length - 1];
+              if (last && last.text !== '\n' && last.size === style.size && last.weight === style.weight && last.italic === style.italic && last.color === style.color && last.font === style.font && last.upper === style.upper) last.text += m[0];
+              else runs.push({ text: m[0], ...style });
+            }
           } else if (n.nodeType === 1) {
             if (isFigure(n)) { if (visible(n)) { figureEls.push(n); images.push({ ...rel(n.getBoundingClientRect()), idx: imgIndex++ }); } continue; }
             if (n.tagName === 'BR') { runs.push({ text: '\n', ...style }); continue; }
@@ -232,9 +252,11 @@ const build = async (browser, slug) => {
   });
   for (const t of data.texts) {
     const runs = t.runs.map((r, i) => ({
-      text: r.upper ? r.text.toUpperCase() : r.text,
+      text: (r.upper ? r.text.toUpperCase() : r.text).replace(/^\s+/, i === 0 ? '' : '$&'),
       options: {
-        fontFace: fontName(r.font, r.mono), fontSize: ptOf(r.size), bold: r.weight >= 600,
+        // Oswald draws 3-4% wider in PowerPoint and LibreOffice than in Chrome;
+        // a small size cut keeps each pre-broken line inside its cell
+        fontFace: fontName(r.font, r.mono), fontSize: ptOf(r.size) * (/oswald/i.test(r.font) && !r.mono ? 0.965 : 1), bold: r.weight >= 600,
         italic: r.italic, color: r.color, charSpacing: r.spacing ? ptOf(r.spacing) : undefined,
         breakLine: r.text === '\n',
       },
@@ -248,16 +270,20 @@ const build = async (browser, slug) => {
     // Without Oswald installed, PowerPoint substitutes a wider face, so multi-
     // line boxes get shrink-to-fit and a little width slack. A single-line box
     // (a badge digit, a kicker) is left unwrapped so it can never collapse.
+    // Lines are already broken where Chrome broke them, so wrapping is off.
+    // A viewer whose Oswald runs wider just lets a line extend a little to the
+    // right rather than adding a line that collides with the block below.
     const maxSize = Math.max(...t.runs.map((r) => r.size));
-    const singleLine = t.h <= maxSize * t.lineHeight * 1.5 && t.w < 1.5 * 96;
-    const slack = 1.01;
     const align = t.align === 'center' ? 'center' : t.align === 'right' || t.align === 'end' ? 'right' : 'left';
-    const wIn = t.w * pxToIn * slack + 0.05;
+    // generous box: a viewer that ignores wrap="none" still finds every
+    // pre-broken line fits on one line
+    const wIn = t.w * pxToIn * 1.15 + 0.1;
     slide.addText(merged, {
-      x: t.x * pxToIn - (align === 'center' ? (wIn - t.w * pxToIn) / 2 : 0), y: t.y * pxToIn, w: wIn, h: t.h * pxToIn,
-      margin: 0, isTextBox: true, valign: 'top', wrap: !singleLine, align,
-      lineSpacingMultiple: t.lineHeight, bullet: t.bullet ? { indent: ptOf(t.padLeft) || 18 } : false,
-      fit: singleLine ? 'none' : 'shrink',
+      x: t.x * pxToIn - (align === 'center' ? (wIn - t.w * pxToIn) / 2 : align === 'right' ? wIn - t.w * pxToIn : 0),
+      y: t.y * pxToIn, w: wIn, h: t.h * pxToIn,
+      margin: 0, isTextBox: true, valign: 'top', wrap: false, align,
+      // exact spacing in points: 'multiple' would scale Oswald's own tall line box
+      lineSpacing: ptOf(t.lineHeight * maxSize), bullet: t.bullet ? { indent: ptOf(t.padLeft) || 18 } : false,
     });
   }
   await page.close();
