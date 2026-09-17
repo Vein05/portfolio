@@ -8,6 +8,27 @@ import {
 import { citations } from "../data/citations";
 
 const Thumb = {
+  Seam: () => (
+    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
+      {/* pasted artifact */}
+      <rect x="30" y="22" width="160" height="58" rx="3" fill="rgb(var(--color-ink-dark))" opacity="0.05" />
+      <rect x="30" y="22" width="160" height="58" rx="3" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.3" />
+      {[0, 1, 2, 3].map((i) => (
+        <rect key={i} x="40" y={32 + i * 11} width={[120, 140, 96, 128][i]} height="3" rx="1" fill="rgb(var(--color-ink-dark))" opacity={0.14 + i * 0.03} />
+      ))}
+      {/* the unmarked seam */}
+      <line x1="30" y1="88" x2="190" y2="88" stroke="rgb(var(--color-ink-red))" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.7" />
+      <text x="194" y="91" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-red))" opacity="0.8">?</text>
+      {/* trailing user speech, pulled up into the artifact */}
+      <rect x="40" y="96" width="72" height="3" rx="1" fill="rgb(var(--color-ink-blue))" opacity="0.7" />
+      <path d="M116 97 q14 -12 14 -22" fill="none" stroke="rgb(var(--color-ink-blue))" strokeWidth="1.2" opacity="0.55" strokeDasharray="3 2" />
+      <path d="M127 78 l3 -6 l3 6" fill="none" stroke="rgb(var(--color-ink-blue))" strokeWidth="1.2" opacity="0.55" />
+      <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.75">
+        Paste · Seam · Absorption
+      </text>
+    </svg>
+  ),
   OutcomeMonitor: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
@@ -25,31 +46,6 @@ const Thumb = {
       <line x1="167" y1="98" x2="167" y2="128" stroke="rgb(var(--color-ink-blue))" strokeWidth="1" opacity="0.35" />
       <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.75">
         Tools · Receipts · Recovery
-      </text>
-    </svg>
-  ),
-  PlasticRecycling: () => (
-    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
-      <rect x="74" y="20" width="72" height="84" rx="2" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.35" />
-      <rect x="74" y="20" width="72" height="14" rx="2" fill="rgb(var(--color-ink-dark))" opacity="0.07" />
-      <polyline points="130,20 146,20 146,36 130,20" fill="rgb(var(--color-paper-surface))" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.3" />
-      {[0, 1, 2, 3, 4].map((i) => (
-        <rect
-          key={i}
-          x="82"
-          y={44 + i * 10}
-          width={i === 0 ? 52 : i % 2 === 0 ? 44 : 36}
-          height="3"
-          rx="1"
-          fill="rgb(var(--color-ink-dark))"
-          opacity={0.12 + i * 0.03}
-        />
-      ))}
-      <circle cx="160" cy="70" r="16" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.22" />
-      <path d="M154 70l4-7 4 7-4 7z" fill="rgb(var(--color-ink-dark))" opacity="0.1" />
-      <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.75">
-        Construction · Recycling · US
       </text>
     </svg>
   ),
@@ -106,6 +102,24 @@ const Thumb = {
 
 export const papers = [
   {
+    title: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams",
+    thumb: "Seam",
+    anchorId: "research-seam",
+    citeKey: "seam",
+    tag: "Research Paper · alphaXiv 2026",
+    summary: "Users paste text and keep typing below it; chat interfaces flatten both into one string. SEAM measures how often 20 models absorb the trailing remark into the pasted artifact: 7.7% to 66.7% at a bare newline. A blank line does not help; explicit boundary markers cut absorption in 19 of 20 models.",
+    link: "https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation",
+    linkLabel: "Read on alphaXiv",
+    linkIcon: "external",
+    posterHref: "/poster/seam/",
+    details: [
+      "Authors: Sugam Panthi, Muhaiminul Yeamin, Rabab Abdelfattah",
+      "Preprint posted to alphaXiv on September 14, 2026; under review",
+      "SEAM benchmark: matched editing tasks under bare-newline, blank-line, and marked-boundary conditions",
+      "Evaluated on 20 models; code at github.com/aimsresearchlab/seam, leaderboard at aimsresearchlab.com/seam",
+    ],
+  },
+  {
     title: "Outcome Monitors: Recovery Affordances for Silent Tool Failures",
     thumb: "OutcomeMonitor",
     anchorId: "research-outcome-monitors",
@@ -161,22 +175,6 @@ export const papers = [
       "Submitted to arXiv on May 22, 2026",
       "TIAP fixed-output audit over Raw, Source, and Canonical scoring targets",
       "Evaluates target non-invariance on LoCoMo, LongMemEval-S, Mem0, and MemoryOS",
-    ],
-  },
-  {
-    title: "A Comprehensive Review of Plastic Recycling in the Construction Industry: Challenges and Opportunities in the US",
-    thumb: "PlasticRecycling",
-    citeKey: "plastic-recycling",
-    tag: "Research Paper · CIB Conferences 2025",
-    summary: "A review of plastic recycling pathways and the main barriers to construction reuse in the US.",
-    link: "https://docs.lib.purdue.edu/cib-conferences/vol1/iss1/63/",
-    linkLabel: "Read on Purdue eLib",
-    linkIcon: "external",
-    doi: "10.7771/3067-4883.2081",
-    details: [
-      "Authors: Sugam Panthi, Fan Zhang",
-      "Published in CIB Conferences — Vol. 1, Iss. 1, p. 63",
-      "DOI: 10.7771/3067-4883.2081",
     ],
   },
 ];

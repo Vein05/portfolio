@@ -2,6 +2,21 @@
 
 All notable changes to the portfolio site are documented here. Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## 2026-09-17
+
+### Added
+- **Paper: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams"** (alphaXiv preprint `2609.llm-pasted-artifact-separation`, Panthi, Yeamin & Abdelfattah; under review, no arXiv id), now public:
+  - `citations.js` BibTeX entry (`seam`), `@misc` with `howpublished = {alphaXiv preprint}`.
+  - Papers panel entry in `Papers.jsx` (first card) with a new hand-drawn `Seam` thumbnail: pasted block, dashed red seam, trailing blue remark pulled up into the block. Links to alphaXiv and `/poster/seam/`.
+  - Listed on `/simple` via the shared `papers` array; non-arXiv links show the `linkLabel` ("Read on alphaXiv") instead of an arXiv id.
+- **News card on `/simple`** (`src/data/news.js`, `simple.astro`): four dated items, newest first, in the right margin beside the header. Shown only at `2xl` and up (absolute, `left-full`, 5rem gutter); hidden below that width.
+
+### Changed
+- **SEAM poster venue** in `posters.js`: "Manuscript under review, no preprint posted" → "Under review; preprint on alphaXiv, September 2026". The poster sheet itself is unchanged (still no paper QR).
+
+### Removed
+- **"A Comprehensive Review of Plastic Recycling in the Construction Industry"** from the Papers panel and `/simple` (`Papers.jsx` entry and `PlasticRecycling` thumbnail). BibTeX entry stays in `citations.js` for blog citation.
+
 ## 2026-09-04
 
 ### Added

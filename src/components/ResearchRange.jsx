@@ -62,6 +62,10 @@ const RANGES = [
         demo: "https://aimsresearchlab.com/seam",
         full: "LLMs Absorb Text Typed After a Paste",
         d: "Ask a model to edit a document and add a side remark after the paste. Most fold the remark into the document. Across 20 models, absorption runs 8% to 67%; boundary markup cuts it in 19 of 20." },
+      { t: "SEAM", k: "alphaXiv", date: "2026-09", kind: "paper", active: true, ls: -1,
+        href: "https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation",
+        full: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams",
+        d: "The SEAM benchmark: matched editing tasks with the trailing remark at a bare newline, a blank line, or behind an explicit marker. 20 models absorb 7.7% to 66.7% at a bare newline; markers help in 19 of 20. Under review." },
     ],
   },
 ];

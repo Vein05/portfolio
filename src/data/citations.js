@@ -4,6 +4,16 @@
 // it anywhere.
 
 export const citations = {
+  "seam": {
+    label: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams (alphaXiv 2026)",
+    bibtex: `@misc{panthi2026seam,
+  title         = {Can {LLMs} Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams},
+  author        = {Panthi, Sugam and Yeamin, Muhaiminul and Abdelfattah, Rabab},
+  year          = {2026},
+  howpublished  = {alphaXiv preprint},
+  url           = {https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation}
+}`,
+  },
   "outcome-monitors": {
     label: "Outcome Monitors: Recovery Affordances for Silent Tool Failures (arXiv 2026)",
     bibtex: `@misc{panthi2026outcomemonitors,
