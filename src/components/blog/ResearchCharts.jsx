@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { lazy } from 'react';
+
+const SyntheticDataDiagram = lazy(() => import('./SyntheticDataDiagrams'));
 
 // Theme-aware infographic charts for the research blog posts. Each chart uses
 // the site's paper-aesthetic CSS variables so it adapts to light/dark, and
@@ -1017,6 +1019,7 @@ const ResearchChart = ({ type }) => {
   if (type === 'arr-score-ceiling') return <ArrScoreCeilingChart />;
   if (type === 'arr-reviewer-vs-ac') return <ArrReviewerVsAcChart />;
   if (type === 'arr-mean-vs-volume') return <ArrMeanVsVolumeChart />;
+  if (type.startsWith('synth-')) return <SyntheticDataDiagram type={type} />;
   return null;
 };
 

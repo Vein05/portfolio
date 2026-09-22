@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "building-a-synthetic-dataset-for-llm-memory",
+    title: "How to Create a Simple Synthetic Dataset?",
+    date: "2026-09-21",
+    category: "Research",
+    status: "cooking",
+    excerpt: "How I built LAPSE, a synthetic benchmark for LLM memory: 15 hand-written prompts and 66 hand-read probe calls, minimal-pair templates, invented names checked against corpora and the web, dates computed from the run date, and a smoke test read by hand.",
+    tags: ["Synthetic Data", "Benchmarks", "LLM Memory", "LAPSE", "Evaluation"],
+    seoTitle: "Building a Synthetic LLM Benchmark | Sugam Panthi",
+    seoDescription: "How the LAPSE synthetic dataset was built: small probes first, minimal pairs, checked invented names, run-date-relative dates, built-in controls and a hand-read smoke test.",
+    canonicalPath: "/blog/building-a-synthetic-dataset-for-llm-memory"
+  },
+  {
     slug: "five-years-zero-fives",
     title: "None of ARR’s 69,781 Published Paper Scores Is a 5.0",
     date: "2026-08-20",
