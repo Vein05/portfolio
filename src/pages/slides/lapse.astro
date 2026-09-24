@@ -1,0 +1,474 @@
+---
+// LAPSE talk deck. Full-screen slides on a fixed 1600x900 stage that scales
+// to the window. Space, arrows, or PageUp/PageDown move between
+// slides; F toggles full screen; the URL hash keeps the slide number.
+// Numbers come from the LAPSE paper (aspect-persistence/paper/sections):
+// abstract, Table 2 (04_results.tex), 06_pipeline.tex, 05_write_read.tex.
+// The pipeline diagram is the one from the dataset-construction blog post.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SyntheticDataDiagram from '../../components/blog/SyntheticDataDiagrams.jsx';
+
+const confirm = [
+  { model: 'DeepSeek V4 Flash', pairs: 128, prog: 104, simple: 0 },
+  { model: 'GPT-5.6 Luna', pairs: 128, prog: 79, simple: 0 },
+  { model: 'GLM-5.2', pairs: 125, prog: 61, simple: 0 },
+];
+const pipes = [
+  { name: 'mem0', flat: 49, n: 128, note: 'of 128 ongoing facts' },
+  { name: 'Graphiti', flat: 15, n: 32, note: 'of 32 ongoing facts' },
+  { name: 'Letta', flat: 26, n: 29, note: 'of the 29 it stored' },
+];
+---
+
+<BaseLayout
+  title="LAPSE: Slides from AIMS Lab"
+  description="Talk slides for LAPSE: memory writers turn 'I'm working at' into 'works at' and lose the cue that a fact may not last."
+  canonical="https://spanthi.com/slides/lapse/"
+>
+  <main class="deck" aria-roledescription="slide deck">
+    <div class="stage" id="stage">
+
+      <!-- 1. Title -->
+      <section class="slide title-slide" aria-label="Title">
+        <div class="kicker">LAPSE</div>
+        <h1>Memory Consolidation Flattens the Temporal Shape of User Facts</h1>
+        <p class="lede">
+          When an AI assistant writes down what you told it, does it keep the part that says
+          the fact might change?
+        </p>
+        <div class="byline">
+          <div>AIMS Lab</div>
+          <div class="muted">University of Southern Mississippi</div>
+        </div>
+        <div class="hint">Press space to begin</div>
+      </section>
+
+      <!-- 2. Introduction: paper Figure 1 -->
+      <section class="slide" aria-label="The problem">
+        <div class="kicker">01 The problem</div>
+        <h2>A memory can keep your fact and lose that it is still happening</h2>
+        <figure class="paper-fig">
+          <img src="/slides/lapse/fig1-lapse-overview.png" alt="A user says 'I'm working at Corvida Analytics.' The memory writer stores 'User works at Corvida Analytics as of August 27, 2026.' The progressive verb, which marks an ongoing event, becomes a simple present, which reads as a standing fact. A write-time test checks whether the form survived; a separate read-time test checks whether a later model uses it." />
+        </figure>
+        <div class="two-up">
+          <p><span class="blue">“I'm working at”</span> says something is going on right now and may end.</p>
+          <p><span class="red">“Works at”</span> reads as a settled fact. We call this loss <strong>aspectual flattening</strong>.</p>
+        </div>
+      </section>
+
+      <!-- 3. Related work -->
+      <section class="slide" aria-label="Related work">
+        <div class="kicker">02 Related work</div>
+        <h2>Others found pieces of this problem</h2>
+        <div class="cards">
+          <article class="card">
+            <div class="badge">ACL 2026 Best Paper</div>
+            <h3>The Imperfective Paradox in Large Language Models</h3>
+            <div class="cite">Ma and Miyao, ACL 2026</div>
+            <p>Models tend to assume an action in progress reached its goal, even when the sentence never says so.</p>
+            <p class="gap"><span class="gap-label">What LAPSE adds</span>There, the original sentence is in front of the model. We ask whether it survives being rewritten into memory.</p>
+          </article>
+          <article class="card">
+            <div class="badge plain">arXiv 2026</div>
+            <h3>Manufactured Confidence</h3>
+            <div class="cite">Kwon, 2026</div>
+            <p>Memory consolidation strips hedges like “probably” and “reportedly”, turning tentative reports into facts.</p>
+            <p class="gap"><span class="gap-label">What LAPSE adds</span>Their cue is a hedge word. Ours is carried by the verb form alone.</p>
+          </article>
+          <article class="card">
+            <div class="badge plain">arXiv 2026</div>
+            <h3>STALE</h3>
+            <div class="cite">Chao et al., 2026</div>
+            <p>Tests whether agents notice a memory is out of date after a later message changes the facts.</p>
+            <p class="gap"><span class="gap-label">What LAPSE adds</span>No later message here. The history is fixed and only the wording changes.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 4. How the dataset was made: blog diagram -->
+      <section class="slide" aria-label="How the dataset was made">
+        <div class="kicker">03 Building the dataset</div>
+        <div class="blog-fig">
+          <SyntheticDataDiagram type="synth-overview" />
+        </div>
+        <p class="foot">
+          <span class="red">Red</span> marks the steps where reading the models' answers exposed a
+          mistake. Each fix went back into the design before the dataset was frozen.
+        </p>
+      </section>
+
+      <!-- 5. The benchmark -->
+      <section class="slide" aria-label="The benchmark">
+        <div class="kicker">04 The benchmark</div>
+        <h2>Change one word, hold everything else fixed</h2>
+        <div class="bench">
+          <div class="pair">
+            <div class="pair-label">A matched pair</div>
+            <div class="utt">
+              <div class="tag blue">ongoing</div>
+              <p>“I'm <span class="blue">working</span> at Corvida Analytics.”</p>
+            </div>
+            <div class="utt">
+              <div class="tag">standing fact</div>
+              <p>“I <span class="ink-strong">work</span> at Corvida Analytics.”</p>
+            </div>
+            <p class="same">Same date, same conversation, same request:<br />“Write memory notes about me.”</p>
+            <p class="question">Does the note still say <span class="blue">working</span>?</p>
+          </div>
+          <dl class="factors">
+            <div><dt>Verb form</dt><dd>5 forms: “I'm working”, “I work”, “until December”, and two perfect forms</dd></div>
+            <div><dt>Topic</dt><dd>8 everyday situations: home, job, car, class, household, borrowed equipment, a role, a project</dd></div>
+            <div><dt>Wording</dt><dd>6 ways of saying it, from a casual life update to a list item</dd></div>
+            <div><dt>Time gap</dt><dd>6 gaps between the old chat and today, from 2 days to over a year</dd></div>
+            <div><dt>Task</dt><dd>7 tasks: write a memory, use a memory, or answer a question about it</dd></div>
+          </dl>
+        </div>
+        <p class="foot">Main test: 128 matched pairs per model, 8 months after the chat. We fixed the test and its analysis before collecting any data.</p>
+      </section>
+
+      <!-- 6. Main result -->
+      <section class="slide" aria-label="Main result">
+        <div class="kicker">05 Result</div>
+        <h2>Writers erase the ongoing form and keep the settled one</h2>
+        <div class="result">
+          <div class="big">
+            <div class="big-num"><span class="red">244</span><span class="colon">:</span><span class="ink-strong">0</span></div>
+            <div class="big-gloss">
+              Out of 381 matched pairs, the writer erased “working” but kept “work” in
+              <span class="red">244</span>. It never did the opposite.
+            </div>
+          </div>
+          <div class="bars">
+            <div class="bars-head"><span>Pairs where only the ongoing form was erased</span><span>Reverse</span></div>
+            {confirm.map((r) => (
+              <div class="bar-row">
+                <div class="bar-model">{r.model}</div>
+                <div class="bar-track">
+                  <div class="bar-fill" style={`width:${(r.prog / r.pairs) * 100}%`}></div>
+                  <span class="bar-val">{r.prog} <span class="of">of {r.pairs}</span></span>
+                </div>
+                <div class="bar-rev">{r.simple}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p class="foot">Across all 11 model setups we tested: 807 pairs lost only the ongoing form, and 2 went the other way.</p>
+      </section>
+
+      <!-- 7. Installed pipelines -->
+      <section class="slide" aria-label="Real memory systems">
+        <div class="kicker">06 Real memory systems</div>
+        <h2>Memory systems people actually install do it too</h2>
+        <div class="pipes">
+          {pipes.map((p) => (
+            <div class="pipe">
+              <div class="pipe-name">{p.name}</div>
+              <div class="pipe-num"><span class="red">{p.flat}</span></div>
+              <div class="pipe-note">{p.note} flattened</div>
+              <div class="pipe-track"><div class="pipe-fill" style={`width:${(p.flat / p.n) * 100}%`}></div></div>
+            </div>
+          ))}
+        </div>
+        <p class="foot">
+          Unmodified pipelines, each with DeepSeek V4 Flash writing the memory. mem0 also dropped
+          “for now” from 91 of 128 notes and “at the moment” from 104.
+        </p>
+      </section>
+
+      <!-- 8. Why it matters -->
+      <section class="slide" aria-label="Why it matters">
+        <div class="kicker">07 Why it matters</div>
+        <h2>The lost word changes what the next model does</h2>
+        <div class="matters">
+          <div class="note-pair">
+            <div class="note"><div class="note-date">Note from 8 months ago</div>User is <span class="blue">working</span> at Corvida.</div>
+            <div class="note"><div class="note-date">Note from 8 months ago</div>User <span class="red">works</span> at Corvida.</div>
+          </div>
+          <ul class="points">
+            <li>Asked whether the note still holds, all three reader models rated the “working” note <span class="blue">16 to 32 points lower</span> on a 0 to 100 scale.</li>
+            <li>When readers could ask the user before acting, two of three acted without asking more often on the flattened note.</li>
+          </ul>
+        </div>
+        <p class="takeaway">Memory systems should store the user's verb form as evidence, not rewrite it away.</p>
+      </section>
+
+      <!-- 9. Thanks -->
+      <section class="slide title-slide" aria-label="Thank you">
+        <div class="kicker">LAPSE</div>
+        <h1>Thank you</h1>
+        <p class="lede">Questions?</p>
+        <div class="byline">
+          <div>AIMS Lab</div>
+          <div class="muted">spanthi.com</div>
+        </div>
+      </section>
+
+    </div>
+
+    <nav class="controls" aria-label="Slide controls">
+      <button type="button" id="prev" aria-label="Previous slide">&larr;</button>
+      <span id="counter" aria-live="polite">1 / 9</span>
+      <button type="button" id="next" aria-label="Next slide">&rarr;</button>
+      <button type="button" id="fs" aria-label="Toggle full screen">Full screen</button>
+    </nav>
+    <div class="progress"><div id="bar"></div></div>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  html, body { height: 100%; overflow: hidden; }
+  body { background: rgb(var(--color-paper-light)); }
+
+  .deck {
+    position: fixed; inset: 0;
+    background: rgb(var(--color-paper-light));
+    color: rgb(var(--color-ink-dark));
+    font-family: 'IBM Plex Sans', 'Oswald', sans-serif;
+  }
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1600px; height: 900px;
+    transform: translate(-50%, -50%) scale(var(--s, 1));
+    transform-origin: center center;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 64px 96px 72px;
+    display: none; flex-direction: column;
+  }
+  .slide.active { display: flex; }
+
+  .deck .kicker {
+    font-family: 'Oswald', ui-monospace, monospace;
+    font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+    margin-bottom: 14px;
+  }
+  .deck h1 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 76px; line-height: 1.08; margin: 0; max-width: 1300px;
+  }
+  .deck h2 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 54px; line-height: 1.1; margin: 0 0 36px;
+  }
+  .deck h3 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 30px; line-height: 1.15; margin: 0 0 6px;
+  }
+  .deck p { margin: 0; }
+  .deck strong { font-weight: 700; }
+  .deck .blue { color: rgb(var(--color-ink-blue)); font-weight: 600; }
+  .deck .red { color: rgb(var(--color-ink-red)); font-weight: 600; }
+  .deck .ink-strong { font-weight: 600; }
+  .deck .muted { color: rgb(var(--color-ink-muted)); }
+  .deck .foot {
+    margin-top: auto; font-size: 24px; line-height: 1.45;
+    color: rgb(var(--color-ink-muted));
+  }
+
+  /* Title slides */
+  .title-slide { justify-content: center; }
+  .title-slide .kicker { font-size: 26px; color: rgb(var(--color-ink-blue)); }
+  .title-slide .lede { font-size: 34px; line-height: 1.4; margin-top: 32px; max-width: 1150px; color: rgb(var(--color-ink-muted)); }
+  .title-slide .byline {
+    margin-top: 64px; padding-top: 24px; border-top: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 28px; line-height: 1.5; max-width: 900px;
+  }
+  .title-slide .hint {
+    position: absolute; bottom: 72px; left: 96px;
+    font-family: 'Oswald', monospace; font-size: 20px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+  }
+
+  /* Intro figure */
+  .paper-fig {
+    margin: 0; padding: 20px 24px; background: #fff;
+    border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .paper-fig img { display: block; width: 100%; height: auto; }
+  .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: auto; font-size: 30px; line-height: 1.4; }
+
+  /* Related work */
+  .cards {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto auto 1fr auto; column-gap: 32px; flex: 1;
+  }
+  .card {
+    display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 14px; align-items: start;
+    padding: 30px 30px 28px;
+    background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 24px; line-height: 1.45;
+  }
+  .card .badge {
+    justify-self: start;
+    font-family: 'Oswald', monospace; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 5px 12px; background: rgb(var(--color-ink-blue)); color: #fff;
+  }
+  .card .badge.plain { background: transparent; color: rgb(var(--color-ink-muted)); border: 1.5px solid rgb(var(--color-border-paper)); }
+  .card .cite { font-size: 20px; color: rgb(var(--color-ink-muted)); margin-top: -8px; }
+  .card .gap { padding-top: 18px; border-top: 1.5px dashed rgb(var(--color-border-paper)); }
+  .card .gap-label {
+    display: block; font-family: 'Oswald', monospace; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-blue)); margin-bottom: 6px;
+  }
+
+  /* Blog diagram, shown without its blog card chrome */
+  .blog-fig { flex: 1; display: flex; align-items: center; }
+  .blog-fig figure { margin: 0 !important; max-width: none !important; width: 100%; border: 0; background: transparent; }
+  .blog-fig figure > figcaption,
+  .blog-fig figure > div:last-child { display: none; }
+  .blog-fig figure > div { overflow: visible !important; padding: 0 !important; }
+  .blog-fig svg { min-width: 0 !important; width: 100%; height: auto; }
+
+  /* Benchmark */
+  .bench { display: grid; grid-template-columns: 1fr 1.05fr; gap: 64px; align-items: start; }
+  .pair { display: flex; flex-direction: column; gap: 18px; }
+  .pair-label, .bars-head, .pipe-name, .note-date, .tag {
+    font-family: 'Oswald', monospace; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+  }
+  .pair-label { font-size: 20px; }
+  .utt {
+    padding: 18px 24px; background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .utt .tag { font-size: 16px; margin-bottom: 4px; }
+  .utt .tag.blue { color: rgb(var(--color-ink-blue)); }
+  .utt p { font-size: 34px; line-height: 1.3; }
+  .pair .same { font-size: 24px; line-height: 1.45; color: rgb(var(--color-ink-muted)); }
+  .pair .question { font-size: 30px; font-weight: 600; }
+  .factors { margin: 0; display: flex; flex-direction: column; gap: 0; }
+  .factors > div {
+    display: grid; grid-template-columns: 170px 1fr; gap: 20px;
+    padding: 16px 0; border-bottom: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .factors > div:first-child { border-top: 1.5px solid rgb(var(--color-border-paper)); }
+  .factors dt { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 26px; }
+  .factors dd { margin: 0; font-size: 23px; line-height: 1.4; }
+
+  /* Result */
+  .result { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 72px; align-items: center; flex: 1; }
+  .big-num { font-family: 'Oswald', sans-serif; font-size: 190px; line-height: 1; font-weight: 600; }
+  .big-num .colon { color: rgb(var(--color-ink-muted)); margin: 0 18px; font-weight: 400; }
+  .big-gloss { font-size: 28px; line-height: 1.45; margin-top: 20px; }
+  .bars { display: flex; flex-direction: column; gap: 30px; }
+  .bars-head { display: grid; grid-template-columns: 1fr 110px; font-size: 18px; }
+  .bars-head span:last-child { text-align: center; }
+  .bar-row { display: grid; grid-template-columns: 1fr 110px; grid-template-rows: auto auto; column-gap: 0; row-gap: 8px; }
+  .bar-model { grid-column: 1 / -1; font-size: 28px; font-weight: 500; }
+  .bar-track { position: relative; height: 48px; background: rgb(var(--color-blue-soft)); }
+  .bar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: rgb(var(--color-ink-red)); }
+  .bar-val {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    color: #fff; font-size: 26px; font-weight: 700;
+  }
+  .bar-val .of { font-weight: 400; opacity: 0.9; }
+  .bar-rev { display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; }
+
+  /* Pipelines */
+  .pipes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; flex: 1; align-items: center; }
+  .pipe {
+    padding: 36px 36px 40px; background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .pipe-name { font-size: 30px; font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: rgb(var(--color-ink-dark)); }
+  .pipe-num { font-family: 'Oswald', sans-serif; font-size: 140px; line-height: 1.05; font-weight: 600; margin-top: 8px; }
+  .pipe-note { font-size: 26px; color: rgb(var(--color-ink-muted)); margin-bottom: 24px; }
+  .pipe-track { height: 18px; background: rgb(var(--color-blue-soft)); }
+  .pipe-fill { height: 100%; background: rgb(var(--color-ink-red)); }
+
+  /* Why it matters */
+  .matters { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; flex: 1; }
+  .note-pair { display: flex; flex-direction: column; gap: 24px; }
+  .note {
+    padding: 22px 28px; background: #fff; color: #1a1a14;
+    border: 1.5px solid rgb(var(--color-border-paper)); font-size: 36px; line-height: 1.3;
+  }
+  .note-date { font-size: 16px; margin-bottom: 6px; }
+  .points { margin: 0; padding-left: 28px; display: flex; flex-direction: column; gap: 28px; font-size: 30px; line-height: 1.45; }
+  .takeaway {
+    margin-top: 32px !important; padding: 24px 32px;
+    background: rgb(var(--color-ink-dark)); color: rgb(var(--color-paper-light));
+    font-size: 32px; font-weight: 600; line-height: 1.35;
+  }
+
+  /* Controls */
+  .controls {
+    position: fixed; right: 18px; bottom: 16px; display: flex; align-items: center; gap: 6px;
+    font-family: 'Oswald', monospace; font-size: 14px; letter-spacing: 0.08em;
+    color: rgb(var(--color-ink-muted)); opacity: 0.35; transition: opacity 0.2s;
+  }
+  .controls:hover, .controls:focus-within { opacity: 1; }
+  .controls button {
+    font: inherit; color: inherit; background: rgb(var(--color-paper-surface));
+    border: 1px solid rgb(var(--color-border-paper)); padding: 4px 10px; cursor: pointer;
+  }
+  .controls #counter { min-width: 52px; text-align: center; }
+  .progress { position: fixed; left: 0; right: 0; bottom: 0; height: 4px; background: transparent; }
+  .progress #bar { height: 100%; width: 0; background: rgb(var(--color-ink-blue)); transition: width 0.25s; }
+  :fullscreen .controls { opacity: 0; }
+  :fullscreen .controls:hover { opacity: 1; }
+</style>
+
+<script>
+  const stage = document.getElementById('stage') as HTMLElement;
+  const slides = Array.from(stage.querySelectorAll<HTMLElement>('.slide'));
+  const counter = document.getElementById('counter') as HTMLElement;
+  const bar = document.getElementById('bar') as HTMLElement;
+  let i = 0;
+
+  const fit = () => {
+    const s = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+    stage.style.setProperty('--s', String(s));
+  };
+
+  const show = (n: number, push = true) => {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((el, k) => el.classList.toggle('active', k === i));
+    counter.textContent = `${i + 1} / ${slides.length}`;
+    bar.style.width = `${((i + 1) / slides.length) * 100}%`;
+    if (push) history.replaceState(null, '', `#${i + 1}`);
+  };
+
+  const fromHash = () => {
+    const n = parseInt(location.hash.slice(1), 10);
+    return Number.isFinite(n) ? n - 1 : 0;
+  };
+
+  const toggleFs = () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen?.();
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === ' ' || k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === 'Enter') {
+      e.preventDefault(); show(e.shiftKey && k === ' ' ? i - 1 : i + 1);
+    } else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') {
+      e.preventDefault(); show(i - 1);
+    } else if (k === 'Home') { e.preventDefault(); show(0); }
+    else if (k === 'End') { e.preventDefault(); show(slides.length - 1); }
+    else if (k === 'f' || k === 'F') { e.preventDefault(); toggleFs(); }
+  });
+
+  let x0: number | null = null;
+  stage.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
+    x0 = null;
+  });
+
+  document.getElementById('prev')!.addEventListener('click', () => show(i - 1));
+  document.getElementById('next')!.addEventListener('click', () => show(i + 1));
+  document.getElementById('fs')!.addEventListener('click', toggleFs);
+  window.addEventListener('resize', fit);
+  window.addEventListener('hashchange', () => show(fromHash(), false));
+
+  fit();
+  show(fromHash(), false);
+</script>

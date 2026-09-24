@@ -1,0 +1,46 @@
+---
+// Slide decks: one entry per talk under /slides/<slug>.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const decks = [
+  {
+    slug: 'lapse',
+    title: 'LAPSE: Memory Consolidation Flattens the Temporal Shape of User Facts',
+    blurb: 'Memory writers turn "I\'m working at" into "works at" and lose the cue that a fact may not last.',
+    slides: 9,
+  },
+];
+---
+
+<BaseLayout
+  title="Slides by Sugam Panthi"
+  description="Talk slides by Sugam Panthi, viewable full screen in the browser."
+  canonical="https://spanthi.com/slides/"
+>
+  <div class="min-h-screen bg-paper-light">
+    <div class="mx-auto max-w-[64rem] px-5 py-8 text-[15px] leading-relaxed text-ink-dark" style="font-family:'IBM Plex Sans','Oswald',sans-serif">
+      <nav class="mb-8 border-b border-border-paper pb-3 text-center text-sm">
+        <a href="/" class="text-ink-blue hover:underline">Full site</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="/blog/" class="text-ink-blue hover:underline">Blog</a>
+        <span class="mx-2 text-ink-muted">/</span>
+        <a href="/posters/" class="text-ink-blue hover:underline">Posters</a>
+      </nav>
+
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold">Slides</h1>
+        <p class="mt-1 text-ink-muted">Space or the arrow keys move between slides. F goes full screen.</p>
+      </header>
+
+      <ul class="space-y-4">
+        {decks.map((d) => (
+          <li class="border border-border-paper bg-paper-surface" style="padding:1.25rem">
+            <a href={`/slides/${d.slug}/`} class="text-lg font-semibold text-ink-blue hover:underline">{d.title}</a>
+            <p class="mt-1 text-ink-muted">{d.blurb}</p>
+            <p class="mt-2 font-mono text-[12px] uppercase tracking-[0.14em] text-ink-muted">{d.slides} slides</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</BaseLayout>
