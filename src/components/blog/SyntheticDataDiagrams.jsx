@@ -85,8 +85,8 @@ const Card = ({ kicker, title, caption, children, wide = false }) => (
 // --- Overview: the whole pipeline in one strip ------------------------------
 const STAGES = [
   { n: 0, name: 'Seed', color: 'ink', lines: ['15 prompts by hand', 'one Pasadena template', 'temporary vs lasting'] },
-  { n: 1, name: 'Probe', color: 'red', lines: ['66 calls, read by eye', '3 rounds: 12, 9, 45', 'found 3 confounds'] },
-  { n: 2, name: 'Design', color: 'ink', lines: ['one control per confound', 'key line in 3 forms', '8 frames, no leaky words'] },
+  { n: 1, name: 'Probe', color: 'red', lines: ['66 calls, read by eye', '3 rounds: 12, 9, 45', 'found 3 problems'] },
+  { n: 2, name: 'Design', color: 'ink', lines: ['one check per problem', 'key line in 3 forms', '8 situations, no leaky words'] },
   { n: 3, name: 'Build', color: 'ink', lines: ['5 slots per item', 'dates from --eval-date', 'invented names'] },
   { n: 4, name: 'Check', color: 'ink', lines: ['pairs byte-identical', 'names: corpus + web', 'v1 rebuilds exactly'] },
   { n: 5, name: 'Smoke test', color: 'red', lines: ['289 calls, $0.04', 'every answer read', '2 scorer bugs fixed'] },
@@ -179,11 +179,11 @@ const OverviewDiagram = () => {
 
 // --- 0. The probe ladder: small runs before the dataset --------------------
 const LADDER = [
-  ['Probe round 1', '12 calls, n=1 per cell', 'Models hedged, but “this week” and “my sister’s place” gave the answer away', 'red'],
-  ['Probe round 2', '9 calls, n=1 per cell', 'staying > living > live gradient on DeepSeek, still with the sister', 'red'],
+  ['Probe round 1', '12 calls, one per variation', 'Models hedged, but “this week” and “my sister’s place” gave the answer away', 'red'],
+  ['Probe round 2', '9 calls, one per variation', 'staying > living > live gradient on DeepSeek, still with the sister', 'red'],
   ['Probe round 3', '45 calls, neutral content', 'The gradient vanished, so it came from “sister’s place”', 'red'],
-  ['Pilot', '2,000 calls, 1 model', 'First controlled rates, 5 frames, 20 clusters each', 'ink'],
-  ['LAPSE v2', '6,008 calls per model', '8 frames, frozen generator, full model table', 'blue'],
+  ['Pilot', '2,000 calls, 1 model', 'First controlled rates, 5 situations, 20 names each', 'ink'],
+  ['LAPSE v2', '6,008 calls per model', '8 situations, frozen generator, full model table', 'blue'],
 ];
 
 const LadderDiagram = () => {
@@ -202,8 +202,8 @@ const LadderDiagram = () => {
   return (
     <Card
       kicker="Building LAPSE: before the dataset"
-      title="66 probe calls found the confounds the dataset had to rule out"
-      caption="Three probe rounds on 2026-08-11 (12, 9 and 45 calls, three models per round, temperature 0, judged by eye), then the pilot and v2. Each probe row is a single observation per cell."
+      title="66 probe calls found the problems the dataset had to rule out"
+      caption="Three probe rounds on 2026-08-11 (12, 9 and 45 calls, three models per round, temperature 0, judged by eye), then the pilot and v2. Each probe row is one call per variation."
     >
       <svg viewBox={`0 0 720 ${18 + LADDER.length * rowH}`} width="100%" height="auto" role="img"
         aria-label="Five steps from three small probe rounds to a 2,000-call pilot to the 6,008-call-per-model benchmark.">
@@ -223,66 +223,94 @@ const LadderDiagram = () => {
   );
 };
 
-// --- 1. Anatomy of one test item -------------------------------------------
-const AnatomyDiagram = () => {
+// --- 1. Building blocks of one test item ------------------------------------
+// A real v2 item: dev split, lodging frame, cluster 3, stale gap, behavioral
+// arm, original carrier (data/stimuli_v2.jsonl, --eval-date 2026-08-11).
+// Key-line piece positions are measured from the rendered text.
+const KEY = { y: 198, size: 22, pieces: [
+  { text: "I'm staying", box: 'red' },
+  { text: 'at the' },
+  { text: 'Larkspur Residences', box: 'blue' },
+  { text: 'on Fifth Street.' },
+] };
+const KEY_X = [52, 168, 233, 432];
+const KEY_W = [95, 47, 181, 119];
+
+const Hl = ({ color, children, weight = 600 }) => (
+  <tspan style={{ fill: col(color) }} fontWeight={weight}>{children}</tspan>
+);
+
+const AtomsDiagram = () => {
   const paths = useMemo(() => {
-    const p = makePen(11);
-    return [
-      ...p.rect(20, 20, 430, 250, { stroke: 'ink' }),
-      // highlight: session date (varies with gap)
-      ...p.rect(34, 36, 196, 24, { stroke: 'blue', strokeWidth: 1.8 }),
-      // highlight: key line (varies with form)
-      ...p.rect(34, 78, 404, 26, { stroke: 'red', strokeWidth: 1.8 }),
-      // witness underline
-      ...p.line(190, 101, 302, 101, { stroke: 'ink', strokeWidth: 2.2 }),
-      // query box
-      ...p.rect(34, 212, 404, 44, { stroke: 'muted', strokeLineDash: [5, 4] }),
-      // arrows to annotations
-      ...p.arrow(478, 48, 236, 48, { stroke: 'blue' }),
-      ...p.arrow(478, 92, 444, 92, { stroke: 'red' }),
-      ...p.arrow(478, 136, 300, 108, { stroke: 'ink' }),
-      ...p.arrow(478, 176, 330, 166, { stroke: 'muted' }),
-      ...p.arrow(478, 234, 444, 234, { stroke: 'muted' }),
-      // variants panel
-      ...p.rect(20, 298, 680, 118, { stroke: 'red' }),
-    ];
+    const p = makePen(17);
+    const out = [];
+    // gap timeline
+    out.push(...p.line(70, 44, 650, 44, { stroke: 'blue', strokeWidth: 1.6 }));
+    out.push(...p.circle(70, 44, 10, { stroke: 'ink', fill: 'ink', fillStyle: 'solid', roughness: 0.5 }));
+    out.push(...p.circle(650, 44, 10, { stroke: 'ink', fill: 'ink', fillStyle: 'solid', roughness: 0.5 }));
+    // old chat card
+    out.push(...p.rect(20, 86, 680, 196, { stroke: 'ink' }));
+    out.push(...p.rect(568, 98, 118, 26, { stroke: 'ink', strokeWidth: 1.1 }));
+    // form and witness boxes + pointers
+    KEY.pieces.forEach((pc, k) => {
+      if (!pc.box) return;
+      out.push(...p.rect(KEY_X[k] - 6, KEY.y - 24, KEY_W[k] + 12, 34, { stroke: pc.box, strokeWidth: 1.8 }));
+    });
+    out.push(...p.arrow(KEY_X[0] + 56, 156, KEY_X[0] + 47, KEY.y - 27, { stroke: 'red' }));
+    out.push(...p.arrow(KEY_X[2] + 99, 156, KEY_X[2] + 90, KEY.y - 27, { stroke: 'blue' }));
+    // today's request card
+    out.push(...p.rect(20, 296, 680, 92, { stroke: 'muted', strokeLineDash: [6, 5] }));
+    out.push(...p.rect(560, 306, 126, 26, { stroke: 'ink', strokeWidth: 1.1 }));
+    // bottom strip: matched items, what varies
+    out.push(...p.rect(20, 412, 408, 150, { stroke: 'red' }));
+    out.push(...p.rect(448, 412, 252, 150, { stroke: 'ink' }));
+    return out;
   }, []);
   return (
     <Card
-      kicker="Building LAPSE: one test item"
-      title="Each item has five slots; a matched pair changes only the key line"
-      caption="A real dev-split item (lodging frame, cluster 3, stale gap, memory-note arm). The date comes from --eval-date, so it moves when you rebuild."
+      kicker="Building LAPSE: the building blocks"
+      title="One test item is an old dated chat plus a request that depends on it"
+      caption="A real item from the development set (lodging, 245-day gap, a task request), built with --eval-date 2026-08-11. Red and blue mark the two slots the builder fills in the key line."
     >
-      <svg viewBox="0 0 720 432" width="100%" height="auto" role="img"
-        aria-label="A chat transcript with its session date, key line, invented place name, filler and query slots labelled, and three versions of the key line below.">
+      <svg viewBox="0 0 720 578" width="100%" height="auto" role="img"
+        aria-label="An old chat dated 2025-12-09 in which the user says I'm staying at the Larkspur Residences on Fifth Street, with the verb form and the invented name marked, 245 days before a request for a car-service pickup note. Below, the three versions of the key line and what varies across the dataset.">
         <Paths paths={paths} />
-        <T x={42} y={53} size={14} color="ink">[Session dated 2025-12-09]</T>
-        <T x={42} y={96} size={14} color="ink" weight={600}>User: … I'm staying at the Larkspur Residences</T>
-        <T x={42} y={122} size={14} color="ink">on Fifth Street. also, any podcast</T>
-        <T x={42} y={142} size={14} color="ink">recommendations for my commute?</T>
-        <T x={42} y={170} size={14} color="muted">Assistant: Nice! For podcasts, try</T>
-        <T x={42} y={190} size={14} color="muted">99% Invisible or Radiolab …</T>
-        <T x={42} y={232} size={14} color="ink">Query: write concise memory notes about</T>
-        <T x={42} y={250} size={14} color="ink">me for your future sessions.</T>
+        <T x={70} y={24} size={14} anchor="middle" weight={600}>2025-12-09</T>
+        <T x={70} y={70} size={14} anchor="middle" color="muted">the old chat</T>
+        <T x={650} y={24} size={14} anchor="middle" weight={600}>2026-08-11</T>
+        <T x={650} y={70} size={14} anchor="middle" color="muted">today (eval date)</T>
+        <T x={360} y={36} size={14} anchor="middle" color="blue" weight={600}>245 days later</T>
 
-        <T x={486} y={44} size={13} color="blue" weight={600}>DATE</T>
-        <T x={486} y={60} size={13} color="muted">set by the gap</T>
-        <T x={486} y={88} size={13} color="red" weight={600}>KEY LINE</T>
-        <T x={486} y={104} size={13} color="muted">the only thing a pair varies</T>
-        <T x={486} y={134} size={13} color="ink" weight={600}>WITNESS</T>
-        <T x={486} y={150} size={13} color="muted">invented name, fixed per cluster</T>
-        <T x={486} y={176} size={13} color="muted" weight={600}>FILLER</T>
-        <T x={486} y={192} size={13} color="muted">identical across the pair</T>
-        <T x={486} y={230} size={13} color="muted" weight={600}>QUERY</T>
-        <T x={486} y={246} size={13} color="muted">chosen by the arm</T>
+        <T x={36} y={114} size={14} color="muted">[Session dated 2025-12-09]</T>
+        <T x={627} y={116} size={14} anchor="middle">situation: lodging</T>
+        <T x={36} y={140} size={14} color="muted">User: hey! quick life update —</T>
+        <T x={KEY_X[0] + 60} y={162} size={14} color="red" weight={600}>verb form</T>
+        <T x={KEY_X[2] + 103} y={162} size={14} color="blue" weight={600}>invented name</T>
+        {KEY.pieces.map((pc, k) => (
+          <T key={pc.text} x={KEY_X[k]} y={KEY.y} size={KEY.size} weight={pc.box ? 600 : 400}>{pc.text}</T>
+        ))}
+        <T x={36} y={234} size={14} color="muted">also, any podcast recommendations for my commute?</T>
+        <T x={36} y={262} size={14} color="muted">Assistant: Nice! For podcasts, try 99% Invisible or Radiolab — both great for commutes.</T>
+        <T x={684} y={234} size={14} anchor="end" color="muted">the rest is identical in every version</T>
 
-        <T x={36} y={326} size={13} color="red" weight={600}>THE KEY LINE, THREE WAYS</T>
-        <T x={36} y={354} size={14} color="muted">progressive</T>
-        <T x={150} y={354} size={14} color="ink">I'm staying at the Larkspur Residences on Fifth Street.</T>
-        <T x={36} y={378} size={14} color="muted">simple</T>
-        <T x={150} y={378} size={14} color="ink">I live at the Larkspur Residences on Fifth Street.</T>
-        <T x={36} y={402} size={14} color="muted">bounded</T>
-        <T x={150} y={402} size={14} color="ink">I'm staying at the Larkspur Residences on Fifth Street until December.</T>
+        <T x={36} y={322} size={14} color="muted" weight={600} letterSpacing="0.12em">TODAY, THE USER ASKS</T>
+        <T x={623} y={324} size={14} anchor="middle">request: a task</T>
+        <T x={36} y={350} size={15}>write a brief pickup request for the car service for Friday morning —</T>
+        <T x={36} y={372} size={15}>it has to state the pickup address.</T>
+
+        <T x={36} y={438} size={14} color="red" weight={600} letterSpacing="0.1em">MATCHED ITEMS: ONLY THE RED WORDS CHANGE</T>
+        <T x={36} y={472} size={14} color="muted">progressive</T>
+        <T x={126} y={472} size={14}><Hl color="red">I'm staying</Hl> at the Larkspur Residences …</T>
+        <T x={36} y={504} size={14} color="muted">simple</T>
+        <T x={126} y={504} size={14}><Hl color="red">I live</Hl> at the Larkspur Residences …</T>
+        <T x={36} y={536} size={14} color="muted">bounded</T>
+        <T x={126} y={536} size={14}><Hl color="red">I'm staying</Hl> at the Larkspur … <Hl color="red">until December</Hl></T>
+
+        <T x={464} y={438} size={14} weight={600} letterSpacing="0.1em">ACROSS THE DATASET</T>
+        <T x={464} y={470} size={14}>8 situations</T>
+        <T x={464} y={496} size={14}>3 main verb forms</T>
+        <T x={464} y={522} size={14}>6 time gaps</T>
+        <T x={464} y={548} size={14}>5 kinds of request</T>
       </svg>
     </Card>
   );
@@ -326,7 +354,7 @@ const TimelineDiagram = () => {
     <Card
       kicker="Building LAPSE: dates"
       title="Every session date is an offset from the day you run the benchmark"
-      caption="One lodging cluster built with --eval-date 2026-08-11. Each bar runs from the session (dot) to the start of the bound month. Red bounds have passed by the eval date; blue ones have not."
+      caption="One lodging item built with --eval-date 2026-08-11. Each bar runs from the session (dot) to the start of the bound month. Red bounds have passed by the eval date; blue ones have not."
     >
       <svg viewBox={`0 0 720 ${axisY + 30}`} width="100%" height="auto" role="img"
         aria-label="Six rows, one per gap, each a bar from the session date to the bound month; stale_long, stale and expired_soon end before the evaluation date, boundary, near and fresh extend past it.">
@@ -354,8 +382,8 @@ const TimelineDiagram = () => {
 const CONFOUNDS = [
   ['The model already knows the place', 'Invented names, checked in two web-scale corpora'],
   ['“Staying” and “live” are different verbs', 'Same-verb pairs: “I’m living at” vs “I live at”'],
-  ['The model always just proceeds', 'Bounded form must change behavior (positive control)'],
-  ['The model does not know the rule', 'Ask the rule directly in a separate arm'],
+  ['The model always just proceeds', 'The “until December” version must change behavior'],
+  ['The model does not know the rule', 'Ask the rule directly in a separate request'],
   ['The wrapper text hints at time', 'Ban “now”, “still”, “recently” and similar in wrappers'],
   ['The scorer counts any rewrite as loss', 'Hand-read the smoke test, lock fixes as tests'],
 ];
@@ -400,7 +428,7 @@ const ConfoundDiagram = () => {
 
 // --- 4. Witness-name funnel -------------------------------------------------
 const FUNNEL = [
-  { w: 660, label: 'Write 60 invented names for the three new frames', note: 'maker, college and project names, style-matched to v1', color: 'ink' },
+  { w: 660, label: 'Write 60 invented names for the three new templates', note: 'maker, college and project names, style-matched to v1', color: 'ink' },
   { w: 580, label: 'Count exact matches in RedPajama and Dolma (infini-gram)', note: 'limit 5: Thornbeck College had 88 and 166, Osperling had 6', color: 'red' },
   { w: 500, label: 'Search the web in context', note: 'rotated Corvain (a real person), Ardenfall (a game), Vexhall (an art series)', color: 'red' },
   { w: 420, label: 'After the runs: scan answers for other cases’ names', note: '7 hits in 3,730,776 pairs, all real car brands', color: 'blue' },
@@ -422,7 +450,7 @@ const FunnelDiagram = () => {
     <Card
       kicker="Building LAPSE: invented names"
       title="Names went through two checks before the run and one scan after it"
-      caption="Corpus and web checks from 2026-08-12; post-run scan from 2026-08-27 across seven model columns. The v1 frames kept their frozen names, some of them real."
+      caption="Corpus and web checks from 2026-08-12; post-run scan from 2026-08-27 across seven models. The v1 templates kept their frozen names, some of them real."
     >
       <svg viewBox="0 0 720 350" width="100%" height="auto" role="img"
         aria-label="Four stages: write 60 names, corpus counts, web search, and a post-run scan that found 7 hits in 3.7 million pairs.">
@@ -444,24 +472,24 @@ const FunnelDiagram = () => {
 // --- 5. The nested grid -----------------------------------------------------
 const GRID = [
   ['PREREGISTERED TESTS', 'red', [
-    ['behavioral, fresh + stale', 960],
-    ['behavioral, boundary', 480],
-    ['carrier variants, memory notes', 400],
-    ['memory notes, stale', 256],
-    ['memory notes, boundary', 256],
-    ['memory notes, fresh gate', 128],
+    ['task, 2 days + 245 days', 960],
+    ['task, 60 days', 480],
+    ['other openings, memory notes', 400],
+    ['memory notes, 245 days', 256],
+    ['memory notes, 60 days', 256],
+    ['memory notes, 2-day check', 128],
     ['ask the rule directly', 96],
   ]],
   ['SECONDARY', 'blue', [
     ['forced choice: send or check', 960],
     ['notes-then-use chains', 768],
-    ['carrier variants, behavioral', 160],
-    ['carrier fresh gate', 80],
+    ['other openings, task', 160],
+    ['other openings, 2-day check', 80],
   ]],
   ['EXPLORATORY', 'muted', [
-    ['gap gradient', 1080],
-    ['perfect forms', 240],
-    ['same-verb and subject cells', 144],
+    ['all six time gaps', 1080],
+    ['“I’ve …” forms', 240],
+    ['same-verb and subject items', 144],
   ]],
 ];
 
@@ -489,7 +517,7 @@ const GridDiagram = () => {
     <Card
       kicker="Building LAPSE: the grid"
       title="6,008 calls per model; axes are crossed only where a test needs them"
-      caption="Calls per model by component, from the frozen spec. Crossing all seven axes would take about 645,000. The 768 notes-then-use calls include 512 second steps built from each model's own notes."
+      caption="Calls per model by component, from the frozen spec. Crossing all seven variables would take about 645,000. The 768 notes-then-use calls include 512 second steps built from each model's own notes."
     >
       <svg viewBox={`0 0 720 ${layout.h}`} width="100%" height="auto" role="img"
         aria-label="Bar sketch of calls per component, grouped into preregistered (2,576), secondary (1,968) and exploratory (1,464).">
@@ -511,7 +539,7 @@ const GridDiagram = () => {
 
 // --- 6. Gates from template to run -----------------------------------------
 const STEPS = [
-  ['Write templates', '8 frames, 3 key-line forms'],
+  ['Write templates', '8 situations, 3 verb forms'],
   ['Build', 'deterministic, --eval-date required'],
   ['Audit', '6 checks, 79 tests'],
   ['Smoke test', '289 calls, $0.04, all read'],
@@ -545,7 +573,7 @@ const GatesDiagram = () => {
     <Card
       kicker="Building LAPSE: gates"
       title="I read all 289 smoke-test answers before freezing the build"
-      caption="The v2 build on 2026-08-12. The smoke test ran DeepSeek V4 Flash on the lowest dev cluster of each new cell type; reading its answers found two scorer bugs, which became regression tests."
+      caption="The v2 build on 2026-08-12. The smoke test ran DeepSeek V4 Flash on one development-set item of each new kind; reading its answers found two scorer bugs, which became regression tests."
     >
       <svg viewBox="0 0 720 336" width="100%" height="auto" role="img"
         aria-label="Six steps from templates to full run, with the smoke test feeding two scorer fixes back before the freeze.">
@@ -570,7 +598,7 @@ const GatesDiagram = () => {
 const SyntheticDataDiagram = ({ type }) => {
   if (type === 'synth-overview') return <OverviewDiagram />;
   if (type === 'synth-ladder') return <LadderDiagram />;
-  if (type === 'synth-anatomy') return <AnatomyDiagram />;
+  if (type === 'synth-atoms') return <AtomsDiagram />;
   if (type === 'synth-timeline') return <TimelineDiagram />;
   if (type === 'synth-confounds') return <ConfoundDiagram />;
   if (type === 'synth-witness-funnel') return <FunnelDiagram />;

@@ -12,6 +12,7 @@ import langPlaintext from 'highlight.js/lib/languages/plaintext';
 import langApache from 'highlight.js/lib/languages/apache';
 import { Copy, Check, AlertTriangle } from 'lucide-react';
 import { citations } from '../../data/citations';
+import GlossaryNote from './GlossaryNote';
 
 const rehypeHighlightOptions = {
   languages: {
@@ -739,6 +740,10 @@ const RichCode = ({ inline, className, children, ...props }) => {
 
   if (language === 'mermaid') {
     return <MermaidBlock chart={rawCode} />;
+  }
+
+  if (language === 'glossary') {
+    return <GlossaryNote raw={rawCode} />;
   }
 
   if (language === 'bibtex') {
