@@ -8,7 +8,7 @@ This file is the canonical writing guide. `AGENTS.md` holds the deeper craft/voi
 
 ## Voice
 
-Precise technical essayist, not a marketer and not a lecturer. Confident but bounded. Personal where the experience earns it, never diary-like. Full craft rules (openings, sentence music, revision passes) live in `AGENTS.md`. The non-negotiables:
+Precise technical essayist, not a marketer and not a lecturer. The page should read like a person explaining work they did, never like a product launch (see "Write like the author, not the marketing team" below). Confident but bounded. Personal where the experience earns it, never diary-like. Full craft rules (openings, sentence music, revision passes) live in `AGENTS.md`. The non-negotiables:
 
 1. **One sharp claim.** If the post does not reduce to one sentence, it is not ready. Write that sentence at the top of the draft and cut anything that does not serve it.
 2. **Felt problem first.** Open with the smallest real scene that contains the whole post. For research posts: here is the thing you thought was stable, here is the exact way it breaks. Never open with "In today's world," a definitions dump, or a list of what the article covers.
@@ -80,6 +80,66 @@ These are warning signs, not automatic bans. Keep one only when the contrast is 
 
 Do not edit to fool an AI detector. Detection is unreliable, and human writing can contain every pattern above. Edit because canned rhetoric hides the experiment and makes several pages sound as if they were generated from the same prompt.
 
+## Write like the author, not the marketing team
+
+A post here is one researcher explaining work to a curious peer. It is not a launch, a pitch, or a keynote. The reader should finish knowing what was done and what was found, and never feel that someone was trying to sell them on it. This applies to posts, posters, slides, and the markdown guides in this repo.
+
+What selling sounds like, and what to do instead:
+
+- **Hype words about your own work.** "Novel," "powerful," "groundbreaking," "first-ever," "unlock," "game-changing," "surprisingly simple." Cut them. If the result is new or large, the number and the comparison show it.
+- **Keynote structure.** A giant hero number, a one-line slogan title, and a dark takeaway banner on every screen. Use one large number only when that number is the result, and give it its denominator. Most slides and sections should just be a plain title, the figure or table, and one sentence on how to read it.
+- **Label-then-slogan titles.** "Result: Writers erase the ongoing form" under a kicker that already says "Result." The kicker labels the section, and the title states the finding in plain words. Do not use an `ABC: XYZ` title just to sound like a paper.
+- **Teaser and question headings.** "The surprising truth about compression," "Why does this happen?" Say what the section shows.
+- **Addressing the reader as a customer.** "You'll learn," "here's why this matters to you," "ready to dive in?" Describe the work. Readers decide whether it matters to them.
+- **Performed humility or performed confidence.** "Humbly," "we boldly," or a staged confession. Report the limitation as a fact next to the claim it limits.
+- **Call-to-action endings.** Stop on the last fact or the open question. Links to the paper, code, and cite block go at the end without a pitch.
+
+What a person who ran the work sounds like:
+
+- They mention what they tried first and why it failed, when that explains the final design.
+- They use the study's own nouns: the model name, the dataset, the exact prompt change, the date of the run.
+- They say "I don't know yet" plainly, and say what would settle it.
+- They are allowed contractions, a dry aside, and the first person. They are not allowed to wink at the reader about their own cleverness.
+- Their emphasis comes from the evidence. A bigger effect gets a clearer figure, not a bigger adjective.
+
+Read the page aloud to one labmate in your head. Any line you would be embarrassed to say out loud in a lab meeting is a line to rewrite.
+
+### Slides and talks
+
+A lab-meeting deck is a working document. Use the paper's own figures and tables, cite each one where it appears ("LAPSE paper, Table 17"), and label what was held fixed. Section titles are plain statements of the finding or plain topics ("Related work" as the kicker, "Three papers closest to LAPSE" as the title). Keep the result slide close to the paper figure rather than redrawing it into a hero graphic.
+
+## Earn every term
+
+Borrowed from the aspect-persistence and paste-boundary paper guides. A reader should never have to guess what kind of thing a term names or scroll back to decode it. A term is earned once the prose has given:
+
+1. its plain meaning;
+2. the kind of thing it names: a model, task, system, score, or condition;
+3. why the distinction matters at that point.
+
+Show the concrete event before naming the phenomenon ("'I'm working at' became 'works at'" comes before "aspectual flattening"). Give a proper name its category on first use: "Graphiti, an installed memory pipeline." If a term would appear only once or twice, use plain words instead of defining it.
+
+Plain words usually beat technical-sounding ones:
+
+| Avoid | Prefer |
+|---|---|
+| "inferential target" | "main outcome" |
+| "reverse discordance" | "the simple form was erased instead" |
+| "causal contrast" | "matched comparison" |
+| "ecological arm" | "installed-pipeline check" |
+| "operationalizes," "localizes," "provides an instrument for" | say what the program or test does |
+
+Keep project history off the page. Words like "rerun," "v3," "original run," "focal models," and internal codes such as `E1`, `c0`, or "tails" belong in the repo, not in the post. Describe the method as it stands. Say "fixed before data collection" unless the protocol was actually deposited in an external registry; only then is it "preregistered."
+
+## Numbers and claims
+
+- Put the denominator next to the rate: "49 of 128," not "38%" alone.
+- Use the exact count when the count is the point. "19 of 20 models" beats "almost every model."
+- Match the strength of the words to the test. A null result is "no significant difference," not "has no effect."
+- Every comparison names what changed and what stayed fixed.
+- Do not put a load-bearing result in parentheses.
+- Do not repeat in prose every value the table or figure already shows. Give the one that carries the claim.
+- Before repeating a claim in the title, opening, a caption, and the ending, ask what new work each repetition does. If the answer is "emphasis," keep the strongest version once.
+
 ### Expand method verbs
 
 A technical term can be correct and still leave the method unexplained. On first use, unpack verbs such as "mine," "derive," "curate," "filter," "align," "validate," "admit," "freeze," and "score." The nearby text should answer the questions that affect trust:
@@ -105,7 +165,7 @@ Every post has a spine. The reader always knows why the next section exists.
 4. **Consequence**: why it matters in practice.
 5. **Resolution**: a better frame, design, or next move.
 
-Headings are turns in the argument, not labels from the notes. A heading should make the reader want the next paragraph. Prefer claim-style headings ("Whitespace is not the lever") over topic headings ("Results").
+Headings are turns in the argument, not labels from the notes. A heading should tell the reader what the next section shows. Prefer plain claim headings ("Boundary markers cut absorption in 19 of 20 models") over topic headings ("Results").
 
 ---
 

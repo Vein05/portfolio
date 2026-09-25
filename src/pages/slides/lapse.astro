@@ -3,20 +3,16 @@
 // to the window. Space, arrows, or PageUp/PageDown move between
 // slides; F toggles full screen; the URL hash keeps the slide number.
 // Numbers come from the LAPSE paper (aspect-persistence/paper/sections):
-// abstract, Table 2 (04_results.tex), 06_pipeline.tex, 05_write_read.tex.
+// abstract, Table 2 and Figure 2 (04_results.tex), scoring (03_lapse.tex and
+// the appendix), 06_pipeline.tex, 05_write_read.tex.
 // The pipeline diagram is the one from the dataset-construction blog post.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SyntheticDataDiagram from '../../components/blog/SyntheticDataDiagrams.jsx';
 
-const confirm = [
-  { model: 'DeepSeek V4 Flash', pairs: 128, prog: 104, simple: 0 },
-  { model: 'GPT-5.6 Luna', pairs: 128, prog: 79, simple: 0 },
-  { model: 'GLM-5.2', pairs: 125, prog: 61, simple: 0 },
-];
 const pipes = [
-  { name: 'mem0', flat: 49, n: 128, note: 'of 128 ongoing facts' },
-  { name: 'Graphiti', flat: 15, n: 32, note: 'of 32 ongoing facts' },
-  { name: 'Letta', flat: 26, n: 29, note: 'of the 29 it stored' },
+  { name: 'mem0', ver: '2.0.19', logo: '/slides/lapse/logos/mem0.svg', flat: 49, n: 128, note: 'of 128 progressive statements' },
+  { name: 'Graphiti', ver: '0.30.1', logo: '/slides/lapse/logos/graphiti.svg', flat: 15, n: 32, note: 'of 32 progressive statements' },
+  { name: 'Letta', ver: '0.16.8', logo: '/slides/lapse/logos/letta.svg', flat: 26, n: 29, note: 'of the 29 it stored' },
 ];
 ---
 
@@ -33,8 +29,8 @@ const pipes = [
         <div class="kicker">LAPSE</div>
         <h1>Memory Consolidation Flattens the Temporal Shape of User Facts</h1>
         <p class="lede">
-          When an AI assistant writes down what you told it, does it keep the part that says
-          the fact might change?
+          When a model writes a memory note from a chat, does it keep the verb form that says a
+          fact is ongoing?
         </p>
         <div class="byline">
           <div>AIMS Lab</div>
@@ -46,41 +42,65 @@ const pipes = [
       <!-- 2. Introduction: paper Figure 1 -->
       <section class="slide" aria-label="The problem">
         <div class="kicker">01 The problem</div>
-        <h2>A memory can keep your fact and lose that it is still happening</h2>
+        <h2>The note keeps the fact and drops the progressive</h2>
         <figure class="paper-fig">
           <img src="/slides/lapse/fig1-lapse-overview.png" alt="A user says 'I'm working at Corvida Analytics.' The memory writer stores 'User works at Corvida Analytics as of August 27, 2026.' The progressive verb, which marks an ongoing event, becomes a simple present, which reads as a standing fact. A write-time test checks whether the form survived; a separate read-time test checks whether a later model uses it." />
         </figure>
         <div class="two-up">
-          <p><span class="blue">“I'm working at”</span> says something is going on right now and may end.</p>
-          <p><span class="red">“Works at”</span> reads as a settled fact. We call this loss <strong>aspectual flattening</strong>.</p>
+          <p><span class="blue">“I'm working at”</span> marks an ongoing situation that can end.</p>
+          <p><span class="red">“Works at”</span> reads as a standing fact. We call the change <strong>aspectual flattening</strong>.</p>
         </div>
       </section>
 
       <!-- 3. Related work -->
       <section class="slide" aria-label="Related work">
         <div class="kicker">02 Related work</div>
-        <h2>Others found pieces of this problem</h2>
+        <h2>Three papers closest to LAPSE</h2>
         <div class="cards">
           <article class="card">
             <div class="badge">ACL 2026 Best Paper</div>
             <h3>The Imperfective Paradox in Large Language Models</h3>
             <div class="cite">Ma and Miyao, ACL 2026</div>
             <p>Models tend to assume an action in progress reached its goal, even when the sentence never says so.</p>
-            <p class="gap"><span class="gap-label">What LAPSE adds</span>There, the original sentence is in front of the model. We ask whether it survives being rewritten into memory.</p>
+            <p class="gap"><span class="gap-label">Difference</span>They give the model the original sentence. We test whether the form survives when the sentence is rewritten into a note.</p>
+            <div class="more">
+              <figure><img src="/slides/lapse/related/imperfective-tab1.png" alt="Table 1 of Ma and Miyao: 'The carpenter was building a gazebo' does not entail 'The carpenter built a gazebo'; 'The boy was running in the park' does entail 'The boy ran in the park'." /></figure>
+              <div class="more-result">
+                <span class="gap-label">Main result</span>
+                <p>Llama-3.1 scored 0.98 on “was running” items and 0.02 on “was building” items: it read an unfinished action as finished.</p>
+                <div class="more-src">Ma and Miyao, ACL 2026, Tables 1 and 3 (zero-shot).</div>
+              </div>
+            </div>
           </article>
           <article class="card">
             <div class="badge plain">arXiv 2026</div>
             <h3>Manufactured Confidence</h3>
             <div class="cite">Kwon, 2026</div>
             <p>Memory consolidation strips hedges like “probably” and “reportedly”, turning tentative reports into facts.</p>
-            <p class="gap"><span class="gap-label">What LAPSE adds</span>Their cue is a hedge word. Ours is carried by the verb form alone.</p>
+            <p class="gap"><span class="gap-label">Difference</span>Their cue is a hedge word. Ours is the verb form, with no hedge word present.</p>
+            <div class="more">
+              <figure><img src="/slides/lapse/related/kwon-fig1.png" alt="Figure 1 of Kwon: a user says Alice was probably promoted to admin; mem0 consolidation drops 'probably' and 'mentioned' and stores 'Alice clearance: ADMIN, 2026-06-12'; the agent then grants Alice an admin request it should not." /></figure>
+              <div class="more-result">
+                <span class="gap-label">Main result</span>
+                <p>With the confident note “Alice's clearance is admin”, all five models granted unauthorized requests at a rate of 0.81. Hedged notes such as “Alice is probably an admin” dropped that to 0.00 to 0.40.</p>
+                <div class="more-src">Kwon, arXiv 2606.29279, Figure 1 and Table 1 (n = 12 × 6 per cell).</div>
+              </div>
+            </div>
           </article>
           <article class="card">
             <div class="badge plain">arXiv 2026</div>
             <h3>STALE</h3>
             <div class="cite">Chao et al., 2026</div>
             <p>Tests whether agents notice a memory is out of date after a later message changes the facts.</p>
-            <p class="gap"><span class="gap-label">What LAPSE adds</span>No later message here. The history is fixed and only the wording changes.</p>
+            <p class="gap"><span class="gap-label">Difference</span>They add a later message that changes the fact. We keep the history fixed and change only the verb.</p>
+            <div class="more side">
+              <figure class="tall"><img src="/slides/lapse/related/stale-fig1.png" alt="Panel 1 of STALE Figure 1: a user first says they ride a bike to work every day; sessions later they say they broke their leg playing basketball." /></figure>
+              <div class="more-result">
+                <span class="gap-label">Main result</span>
+                <p>400 conflict scenarios and 1,200 questions. The best evaluated model answered 55.2% correctly.</p>
+                <div class="more-src">Chao et al., arXiv 2605.06527, Figure 1 (panel 1) and abstract.</div>
+              </div>
+            </div>
           </article>
         </div>
       </section>
@@ -92,15 +112,15 @@ const pipes = [
           <SyntheticDataDiagram type="synth-overview" />
         </div>
         <p class="foot">
-          <span class="red">Red</span> marks the steps where reading the models' answers exposed a
-          mistake. Each fix went back into the design before the dataset was frozen.
+          <span class="red">Red</span>: steps where reading model outputs showed a design error. Each
+          fix was made before the dataset was frozen.
         </p>
       </section>
 
       <!-- 5. The benchmark -->
       <section class="slide" aria-label="The benchmark">
         <div class="kicker">04 The benchmark</div>
-        <h2>Change one word, hold everything else fixed</h2>
+        <h2>Matched pairs that differ only in the verb</h2>
         <div class="bench">
           <div class="pair">
             <div class="pair-label">A matched pair</div>
@@ -113,7 +133,7 @@ const pipes = [
               <p>“I <span class="ink-strong">work</span> at Corvida Analytics.”</p>
             </div>
             <p class="same">Same date, same conversation, same request:<br />“Write memory notes about me.”</p>
-            <p class="question">Does the note still say <span class="blue">working</span>?</p>
+            <p class="question">Measured: does the note still say <span class="blue">working</span>?</p>
           </div>
           <dl class="factors">
             <div><dt>Verb form</dt><dd>5 forms: “I'm working”, “I work”, “until December”, and two perfect forms</dd></div>
@@ -123,76 +143,101 @@ const pipes = [
             <div><dt>Task</dt><dd>7 tasks: write a memory, use a memory, or answer a question about it</dd></div>
           </dl>
         </div>
-        <p class="foot">Main test: 128 matched pairs per model, 8 months after the chat. We fixed the test and its analysis before collecting any data.</p>
+        <p class="foot">Main test: 128 matched pairs per model, with an 8-month gap. The test and analysis plan were fixed before data collection.</p>
       </section>
 
-      <!-- 6. Main result -->
-      <section class="slide" aria-label="Main result">
-        <div class="kicker">05 Result</div>
-        <h2>Writers erase the ongoing form and keep the settled one</h2>
-        <div class="result">
-          <div class="big">
-            <div class="big-num"><span class="red">244</span><span class="colon">:</span><span class="ink-strong">0</span></div>
-            <div class="big-gloss">
-              Out of 381 matched pairs, the writer erased “working” but kept “work” in
-              <span class="red">244</span>. It never did the opposite.
-            </div>
+      <!-- 6. Scoring -->
+      <section class="slide" aria-label="How outputs were scored">
+        <div class="kicker">05 Scoring</div>
+        <h2>Rules score the notes, rules plus an LLM judge score behavior</h2>
+        <div class="scoring">
+          <div class="cascade">
+            <div class="col-label">Memory notes: rule cascade in tools/score.py, no model</div>
+            <p class="cascade-lede">Read only the note line that contains the invented name (“Corvida”). Check in this order; the first match wins.</p>
+            <table class="rules">
+              <tbody>
+                <tr><td class="step">1</td><td class="rule">No line contains the name</td><td class="lab muted">witness-dropped, excluded</td></tr>
+                <tr><td class="step">2</td><td class="rule">Currency word<code>currently|right now|at present|presently|as of now</code></td><td class="lab red">manufacture</td></tr>
+                <tr><td class="step">3</td><td class="rule">Progressive with no date word, e.g. “User is working at Corvida.”<code>(is|are|am) (staying|living|working|taking|…)</code><code class="muted">and no 20xx, month name, until, through</code></td><td class="lab red">manufacture</td></tr>
+                <tr><td class="step">4</td><td class="rule">“Until December” source, bound word gone<code class="muted">no until|through|till|up to</code></td><td class="lab muted">bound-dropped</td></tr>
+                <tr><td class="step">5</td><td class="rule">Ongoing source, settled verb, no progressive<code>lives?|works?|drives?|attends?|owns?|is (a|an) employee|…</code></td><td class="lab red">coerced-stative</td></tr>
+                <tr><td class="step">6</td><td class="rule">Anything else</td><td class="lab blue">preserved</td></tr>
+              </tbody>
+            </table>
+            <p class="cascade-check"><span class="red">Red</span> labels count as destroyed. Before any data, the rules labeled 290 of 290 test items correctly.</p>
           </div>
-          <div class="bars">
-            <div class="bars-head"><span>Pairs where only the ongoing form was erased</span><span>Reverse</span></div>
-            {confirm.map((r) => (
-              <div class="bar-row">
-                <div class="bar-model">{r.model}</div>
-                <div class="bar-track">
-                  <div class="bar-fill" style={`width:${(r.prog / r.pairs) * 100}%`}></div>
-                  <span class="bar-val">{r.prog} <span class="of">of {r.pairs}</span></span>
-                </div>
-                <div class="bar-rev">{r.simple}</div>
+          <div class="side">
+            <div class="scorer">
+              <div class="col-label">Reader behavior: two scorers must agree</div>
+              <p>The same rules plus an LLM judge, <span class="nowrap">Seed-OSS-36B</span>. The judge sees only the request, the reply, and the fact, never the verb form. A label counts only when both give it.</p>
+            </div>
+            <div class="scorer">
+              <div class="col-label">Human check</div>
+              <p>Two blinded annotators labeled 250 behavior outputs.</p>
+              <div class="agree">
+                <div><span class="agree-num">99.1%</span><span class="agree-gloss">human with human</span></div>
+                <div><span class="agree-num">95.2%</span><span class="agree-gloss">judge with humans</span></div>
               </div>
-            ))}
-          </div>
-        </div>
-        <p class="foot">Across all 11 model setups we tested: 807 pairs lost only the ongoing form, and 2 went the other way.</p>
-      </section>
-
-      <!-- 7. Installed pipelines -->
-      <section class="slide" aria-label="Real memory systems">
-        <div class="kicker">06 Real memory systems</div>
-        <h2>Memory systems people actually install do it too</h2>
-        <div class="pipes">
-          {pipes.map((p) => (
-            <div class="pipe">
-              <div class="pipe-name">{p.name}</div>
-              <div class="pipe-num"><span class="red">{p.flat}</span></div>
-              <div class="pipe-note">{p.note} flattened</div>
-              <div class="pipe-track"><div class="pipe-fill" style={`width:${(p.flat / p.n) * 100}%`}></div></div>
             </div>
-          ))}
+          </div>
         </div>
         <p class="foot">
-          Unmodified pipelines, each with DeepSeek V4 Flash writing the memory. mem0 also dropped
-          “for now” from 91 of 128 notes and “at the moment” from 104.
+          Limit: unmatched notes default to preserved. Before the pilot fixes, the rules caught 0 of 98 adversarial paraphrases.
         </p>
       </section>
 
-      <!-- 8. Why it matters -->
+      <!-- 7. Main result: paper Figure 2 -->
+      <section class="slide" aria-label="Main result">
+        <div class="kicker">06 Result</div>
+        <h2>Writers drop the progressive and keep the simple present</h2>
+        <figure class="paper-fig result-fig">
+          <img src="/slides/lapse/fig2-direction-frames.png" alt="Paper Figure 2. Panel a: in every one of 11 model configurations, matched pairs where only the progressive was destroyed far outnumber pairs where only the simple form was; the confirmatory writers show 104, 79, and 61 against 0, and all 11 total 807 against 2. Panel b: progressive destruction per topic frame, highest for vehicle and workplace, alongside the installed mem0 pipeline's lost temporal cues." />
+        </figure>
+      </section>
+
+      <!-- 8. Installed pipelines -->
+      <section class="slide" aria-label="Real memory systems">
+        <div class="kicker">07 Real memory systems</div>
+        <h2>mem0, Graphiti, and Letta also flatten</h2>
+        <div class="pipes-wrap">
+          <div class="pipes">
+            {pipes.map((p) => (
+              <div class="pipe">
+                <img class="pipe-logo" src={p.logo} alt="" width="56" height="56" />
+                <div class="pipe-text">
+                  <div class="pipe-name">{p.name} <span class="pipe-ver">{p.ver}</span></div>
+                  <div class="pipe-note"><span class="red">{p.flat}</span> {p.note} flattened</div>
+                  <div class="pipe-track"><div class="pipe-fill" style={`width:${(p.flat / p.n) * 100}%`}></div></div>
+                </div>
+              </div>
+            ))}
+            <p class="pipe-foot">Each pipeline ran unmodified, with DeepSeek V4 Flash as its writer model.</p>
+          </div>
+          <figure class="paper-fig tab-fig">
+            <img src="/slides/lapse/tab17-mem0-writers.png" alt="Paper Table 17. Temporal cues lost in mem0 notes, by frame, for two writer models, out of 16 inputs per frame. Progressive flattened: DeepSeek 49 of 128, Gemini 15. 'At the moment' lost: DeepSeek 104, Gemini 1. 'For now' lost: DeepSeek 91, Gemini 22." />
+            <figcaption>LAPSE paper, Table 17. Temporal cues lost in mem0 notes by writer model (DeepSeek V4 Flash, Gemini 3 Flash), out of 16 inputs per frame.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 9. Why it matters -->
       <section class="slide" aria-label="Why it matters">
-        <div class="kicker">07 Why it matters</div>
-        <h2>The lost word changes what the next model does</h2>
+        <div class="kicker">08 Why it matters</div>
+        <h2>The stored verb changes what a later model does</h2>
         <div class="matters">
           <div class="note-pair">
             <div class="note"><div class="note-date">Note from 8 months ago</div>User is <span class="blue">working</span> at Corvida.</div>
             <div class="note"><div class="note-date">Note from 8 months ago</div>User <span class="red">works</span> at Corvida.</div>
           </div>
           <ul class="points">
-            <li>Asked whether the note still holds, all three reader models rated the “working” note <span class="blue">16 to 32 points lower</span> on a 0 to 100 scale.</li>
-            <li>When readers could ask the user before acting, two of three acted without asking more often on the flattened note.</li>
+            <li>Asked how likely the fact still holds (0 to 100), all three readers gave the “working” note an estimate <span class="blue">16 to 32 points lower</span>.</li>
+            <li>When they could ask the user first, GLM-5.2 and Gemini 3 Flash acted without asking more often on the “works” note.</li>
           </ul>
         </div>
-        <p class="takeaway">Memory systems should store the user's verb form as evidence, not rewrite it away.</p>
+        <p class="takeaway">Implication: store the original wording and verb form with the note, next to the normalized fact.</p>
       </section>
 
-      <!-- 9. Thanks -->
+      <!-- 10. Thanks -->
       <section class="slide title-slide" aria-label="Thank you">
         <div class="kicker">LAPSE</div>
         <h1>Thank you</h1>
@@ -207,7 +252,7 @@ const pipes = [
 
     <nav class="controls" aria-label="Slide controls">
       <button type="button" id="prev" aria-label="Previous slide">&larr;</button>
-      <span id="counter" aria-live="polite">1 / 9</span>
+      <span id="counter" aria-live="polite">1 / 10</span>
       <button type="button" id="next" aria-label="Next slide">&rarr;</button>
       <button type="button" id="fs" aria-label="Toggle full screen">Full screen</button>
     </nav>
@@ -309,6 +354,24 @@ const pipes = [
   .card .badge.plain { background: transparent; color: rgb(var(--color-ink-muted)); border: 1.5px solid rgb(var(--color-border-paper)); }
   .card .cite { font-size: 20px; color: rgb(var(--color-ink-muted)); margin-top: -8px; }
   .card .gap { padding-top: 18px; border-top: 1.5px dashed rgb(var(--color-border-paper)); }
+  .card { cursor: zoom-in; user-select: none; }
+  .card.expanded { grid-column: 1 / -1; grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr); column-gap: 44px; cursor: zoom-out; }
+  .card > * { grid-column: 1; }
+  .cards.has-expanded .card:not(.expanded) { display: none; }
+  .card .more { display: none; }
+  .card.expanded .more { display: flex; grid-column: 2; grid-row: 1 / -1; flex-direction: column; gap: 20px; min-height: 0; }
+  .more figure {
+    margin: 0; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+    padding: 16px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .more figure img { display: block; max-width: 100%; max-height: 330px; width: auto; height: auto; }
+  .card.expanded .more.side { flex-direction: row; align-items: stretch; }
+  .more.side figure { flex: 0 0 auto; }
+  .more.side .more-result { flex: 1; border-top: 0; padding-top: 0; align-self: center; }
+  .more figure.tall img { max-height: 520px; }
+  .more-result { border-top: 1.5px dashed rgb(var(--color-border-paper)); padding-top: 16px; }
+  .more-result p { font-size: 24px; line-height: 1.4; }
+  .more-src { margin-top: 8px; font-size: 18px; color: rgb(var(--color-ink-muted)); }
   .card .gap-label {
     display: block; font-family: 'Oswald', monospace; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
     color: rgb(var(--color-ink-blue)); margin-bottom: 6px;
@@ -348,36 +411,70 @@ const pipes = [
   .factors dt { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 26px; }
   .factors dd { margin: 0; font-size: 23px; line-height: 1.4; }
 
-  /* Result */
-  .result { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 72px; align-items: center; flex: 1; }
-  .big-num { font-family: 'Oswald', sans-serif; font-size: 190px; line-height: 1; font-weight: 600; }
-  .big-num .colon { color: rgb(var(--color-ink-muted)); margin: 0 18px; font-weight: 400; }
-  .big-gloss { font-size: 28px; line-height: 1.45; margin-top: 20px; }
-  .bars { display: flex; flex-direction: column; gap: 30px; }
-  .bars-head { display: grid; grid-template-columns: 1fr 110px; font-size: 18px; }
-  .bars-head span:last-child { text-align: center; }
-  .bar-row { display: grid; grid-template-columns: 1fr 110px; grid-template-rows: auto auto; column-gap: 0; row-gap: 8px; }
-  .bar-model { grid-column: 1 / -1; font-size: 28px; font-weight: 500; }
-  .bar-track { position: relative; height: 48px; background: rgb(var(--color-blue-soft)); }
-  .bar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: rgb(var(--color-ink-red)); }
-  .bar-val {
-    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-    color: #fff; font-size: 26px; font-weight: 700;
+  /* Scoring */
+  .scoring { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 40px; align-items: stretch; margin-bottom: 24px; }
+  .nowrap { white-space: nowrap; }
+  .col-label {
+    font-family: 'Oswald', monospace; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-blue)); margin-bottom: 10px;
   }
-  .bar-val .of { font-weight: 400; opacity: 0.9; }
-  .bar-rev { display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; }
-
-  /* Pipelines */
-  .pipes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; flex: 1; align-items: center; }
-  .pipe {
-    padding: 36px 36px 40px; background: rgb(var(--color-paper-surface));
+  .cascade {
+    padding: 26px 32px 28px; background: rgb(var(--color-paper-surface));
     border: 1.5px solid rgb(var(--color-border-paper));
   }
+  .cascade-lede { font-size: 21px; line-height: 1.4; margin-bottom: 10px !important; }
+  .rules { width: 100%; border-collapse: collapse; }
+  .rules td { padding: 5px 0; border-top: 1.5px solid rgb(var(--color-border-paper)); vertical-align: top; }
+  .rules .step { width: 34px; font-family: 'Oswald', sans-serif; font-size: 20px; color: rgb(var(--color-ink-muted)); }
+  .rules .rule { font-size: 21px; line-height: 1.3; }
+  .rules code {
+    display: block; margin-top: 3px;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 15px; line-height: 1.35;
+  }
+  .rules tr:last-child td { border-bottom: 1.5px solid rgb(var(--color-border-paper)); }
+  .rules .lab {
+    text-align: right; white-space: nowrap; padding-left: 20px; padding-top: 10px !important;
+    font-family: 'Oswald', monospace; font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .regex {
+    margin: 16px 0 0; padding: 14px 18px; background: rgb(var(--color-paper-light));
+    border: 1.5px dashed rgb(var(--color-border-paper));
+    font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 17px; line-height: 1.6;
+    white-space: pre; overflow: hidden;
+  }
+  .cascade-check { font-size: 19px; line-height: 1.4; margin-top: 12px !important; color: rgb(var(--color-ink-muted)); }
+  .side { display: flex; flex-direction: column; gap: 24px; }
+  .scorer {
+    flex: 1; padding: 24px 26px; background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 21px; line-height: 1.45;
+  }
+  .agree { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px; }
+  .agree-num { display: block; font-family: 'Oswald', sans-serif; font-size: 58px; line-height: 1; font-weight: 600; }
+  .agree-gloss { display: block; font-size: 19px; color: rgb(var(--color-ink-muted)); margin-top: 6px; }
+
+  /* Result */
+  .result-fig { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 16px 20px; }
+  .result-fig img { width: auto; max-width: 100%; max-height: 100%; }
+
+  /* Pipelines */
+  .pipes-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; flex: 1; min-height: 0; align-items: center; }
+  .pipes { display: flex; flex-direction: column; gap: 20px; }
+  .pipe {
+    display: grid; grid-template-columns: 56px 1fr; gap: 24px; align-items: center;
+    padding: 22px 28px; background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .pipe-logo { width: 56px; height: 56px; padding: 6px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper)); box-sizing: content-box; }
   .pipe-name { font-size: 30px; font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: rgb(var(--color-ink-dark)); }
-  .pipe-num { font-family: 'Oswald', sans-serif; font-size: 140px; line-height: 1.05; font-weight: 600; margin-top: 8px; }
-  .pipe-note { font-size: 26px; color: rgb(var(--color-ink-muted)); margin-bottom: 24px; }
-  .pipe-track { height: 18px; background: rgb(var(--color-blue-soft)); }
+  .pipe-ver { font-family: 'IBM Plex Sans', sans-serif; font-size: 18px; font-weight: 400; letter-spacing: 0; color: rgb(var(--color-ink-muted)); }
+  .pipe-note { font-size: 24px; color: rgb(var(--color-ink-muted)); margin: 2px 0 12px; }
+  .pipe-track { height: 12px; background: rgb(var(--color-blue-soft)); }
   .pipe-fill { height: 100%; background: rgb(var(--color-ink-red)); }
+  .pipe-foot { font-size: 21px; line-height: 1.4; color: rgb(var(--color-ink-muted)); }
+  .tab-fig { margin: 0; }
+  .tab-fig img { display: block; width: 100%; height: auto; }
+  .tab-fig figcaption { margin-top: 14px; font-size: 19px; line-height: 1.4; color: #555; }
 
   /* Why it matters */
   .matters { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; flex: 1; }
@@ -413,6 +510,10 @@ const pipes = [
 </style>
 
 <script>
+  import { gsap } from 'gsap';
+  import { Flip } from 'gsap/Flip';
+  gsap.registerPlugin(Flip);
+
   const stage = document.getElementById('stage') as HTMLElement;
   const slides = Array.from(stage.querySelectorAll<HTMLElement>('.slide'));
   const counter = document.getElementById('counter') as HTMLElement;
@@ -461,6 +562,37 @@ const pipes = [
     const dx = e.changedTouches[0].clientX - x0;
     if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
     x0 = null;
+  });
+
+  // Related-work cards: double-click one to widen it to the full row with its
+  // figure and main result; double-click again (or Escape) to return to three.
+  const cardRow = stage.querySelector<HTMLElement>('.cards');
+  const cards = cardRow ? Array.from(cardRow.querySelectorAll<HTMLElement>('.card')) : [];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const toggleCard = (card: HTMLElement | null) => {
+    if (!cardRow) return;
+    const opening = !!card && !card.classList.contains('expanded');
+    const state = Flip.getState(cards);
+    cards.forEach((c) => c.classList.remove('expanded'));
+    if (opening) card!.classList.add('expanded');
+    cardRow.classList.toggle('has-expanded', opening);
+    Flip.from(state, {
+      duration: reduceMotion ? 0 : 0.6,
+      ease: 'power3.inOut',
+      absolute: true,
+      onEnter: (els) => gsap.fromTo(els, { opacity: 0 }, { opacity: 1, duration: 0.35, delay: 0.25 }),
+      onLeave: (els) => gsap.to(els, { opacity: 0, duration: 0.2 }),
+    });
+    if (opening && !reduceMotion) {
+      gsap.fromTo(card!.querySelector('.more'), { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.45, delay: 0.35, ease: 'power2.out' });
+    }
+  };
+  cards.forEach((card) => card.addEventListener('dblclick', () => {
+    window.getSelection()?.removeAllRanges();
+    toggleCard(card);
+  }));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && cardRow?.classList.contains('has-expanded')) toggleCard(null);
   });
 
   document.getElementById('prev')!.addEventListener('click', () => show(i - 1));
