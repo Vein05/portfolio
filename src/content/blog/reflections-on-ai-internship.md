@@ -9,7 +9,7 @@ At Prediction3d, a model that produced acceptable outputs could still fail the d
 
 ## Production data required cleaning before training
 
-In school, you are typically handed a clean dataset (like MNIST or Titanic) and told to build a model. In the real world, the data is messy, incomplete, and sometimes explicitly wrong.
+The production data I worked with was messy, incomplete, and sometimes explicitly wrong.
 
 ### Cleaning and normalization took more time than tuning
 

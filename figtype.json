@@ -1,0 +1,293 @@
+{
+  "memory-targets": [
+    {
+      "fig": "poster-figure",
+      "vbW": 720,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "15.4pt x14: 0.0 | 0.1 | 0.2",
+        "16.3pt x8: all-MiniLM | mxbai-large | Lexical",
+        "19.2pt x6: RAW | SOURCE | CANONICAL",
+        "24pt x2: LOCOMO | LONGMEMEVAL-S"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 720,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "28.8pt x3: Fully supports | Partially supporti | Does not support",
+        "55.8pt x3: 29.2% | 39.6% | 31.2%"
+      ]
+    }
+  ],
+  "outcome-monitors": [
+    {
+      "fig": "poster-figure loud-silent",
+      "vbW": 900,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "15.4pt x2: LOUD | SILENT",
+        "17.7pt x4: agent sees the fai | routes around it | expected format, w",
+        "18.5pt x2: timeout, HTTP 504 | 200 OK, cached pag"
+      ]
+    },
+    {
+      "fig": "poster-figure lanes-figure",
+      "vbW": 1440,
+      "renderedPt": 943,
+      "widthPctOfCell": 78,
+      "sizes": [
+        "14.1pt x11: available = -3 | all left to the ag | value consumed as ",
+        "15.4pt x1: ADVISORY RECEIPT",
+        "16pt x6: lookup_inventory | detect, localize,  | silent failure",
+        "17.3pt x2: RAW INTERFACE | DETECT AND ADVISE"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 1440,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "15.8pt x6: 14→27 / 80 | 13→23 / 80 | 3→15 / 80",
+        "17.2pt x6: W/L 15/2 | W/L 14/4 | W/L 12/0",
+        "17.8pt x5: 0% | 10% | 20%",
+        "19.8pt x6: DeepSeek V4 Flash | DeepSeek V4 Pro | Qwen 3.7 Plus",
+        "21.1pt x6: +16.25 | +12.50 | +15.00"
+      ]
+    },
+    {
+      "fig": "poster-figure contrast-figure",
+      "vbW": 1440,
+      "renderedPt": 1040,
+      "widthPctOfCell": 86,
+      "sizes": [
+        "16.6pt x5: -10 | 0 | +10",
+        "17.3pt x2: RECOVERY TOOLS ADD | RECOVERY TOOLS UNC",
+        "18.7pt x5: receipt − stripped | receipt − baseline | stripped − baselin",
+        "19.4pt x5: +11.4 | +12.3 | +0.9"
+      ]
+    },
+    {
+      "fig": "poster-figure action-figure",
+      "vbW": 1440,
+      "renderedPt": 1209,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "21.8pt x4: switch to listed s | call another tool | retry",
+        "26.9pt x3: 48.6% | 33.5% | 14%"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 1440,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "15pt x6: 0% | 25% | 50%",
+        "15.6pt x3: CLEAN | DEV | DEV",
+        "16.2pt x6: ToolMaze implicit  | τ-bench status | ToolMaze clean P0",
+        "17.5pt x6: +17.2 | +28.0 | 0.0"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 720,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "21.2pt x2: 25/30 | 6/27",
+        "25pt x2: Violations over st | Corruption inside ",
+        "30.8pt x2: 83% | 22%"
+      ]
+    }
+  ],
+  "rag-compression": [
+    {
+      "fig": "poster-figure span-collapse",
+      "vbW": 900,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "25.3pt x2: RAW EVIDENCE | SAME PAIR, FIXED R",
+        "26.4pt x4: 12.6 | 44.4 | 36.4",
+        "29.6pt x2: 31.8pp | 7.8pp"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 1440,
+      "renderedPt": 1209,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "17.6pt x4: rows, retrieval, p | the declared refer | content hash must ",
+        "20.1pt x2: upgrade retention  | excess ranking fli",
+        "21pt x4: saved candidate po | raw evidence | one compressed art"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 720,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "11.8pt x2: identity | identity",
+        "12.5pt x12: 0% | 0% | 25%",
+        "13.2pt x6: 20 readers, same r | compressed score | raw score",
+        "16.2pt x2: retains 24.5% of a | retains 0.8% of an",
+        "17.6pt x2: HOTPOTQA, FIXED RE | MUSIQUE, SHARED SU"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 800,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "12.5pt x1: raw replay floor",
+        "15pt x6: 0 | +10 | +20",
+        "17.6pt x4: HotpotQA, EM | HotpotQA, F1 | MuSiQue, EM",
+        "18.8pt x4: +16.7 | +16.7 | +32.7"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 760,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "17.3pt x4: rescued: raw-wrong | damaged: raw-corre | rescued: raw-wrong",
+        "27.3pt x4: 19.1% | 35.7% | 22.9%",
+        "28.2pt x2: HotpotQA | MuSiQue"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 760,
+      "renderedPt": 692,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "17.3pt x1: endpoint EM retent",
+        "23.6pt x4: EXIT | RECOMP extractive | LLM summary",
+        "25.4pt x4: .836 | .245 | .181"
+      ]
+    }
+  ],
+  "seam": [
+    {
+      "fig": "poster-figure seam-figure",
+      "vbW": 1400,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "12.9pt x1: </artifact-9164bf2",
+        "13.6pt x2: PASTED ARTIFACT | TYPED AFTER",
+        "14.3pt x4: USER MESSAGE | ✕  WITHOUT MARKER | ✓  WITH MARKER",
+        "14.9pt x19: …important roles i | bar code. | (no marker)",
+        "16.3pt x8: Improve the follow | for clarity and co | The users, especia"
+      ]
+    },
+    {
+      "fig": "poster-figure board-figure",
+      "vbW": 1820,
+      "renderedPt": 1984,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "15.3pt x3: EXPLICIT SEAM INFO | 0 | 75% absorbed. Lowe",
+        "17.4pt x13: Bare | newline | Blank",
+        "20.7pt x140: Llama-3.1-8B | 7.7 | 11.7"
+      ]
+    },
+    {
+      "fig": "poster-figure native-figure",
+      "vbW": 900,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "20.1pt x6: code examples 0 →  | code examples 0 →  | code examples 0 → ",
+        "21.1pt x6: 0 | 25 | 50",
+        "24.3pt x4: 31.3 → 51.3 | 32.7 → 52.7 | 19.0 → 56.0",
+        "26.4pt x4: DeepSeek V4 Flash | Qwen3-32B | Claude Opus 4.8"
+      ]
+    },
+    {
+      "fig": "poster-figure syntax-figure",
+      "vbW": 860,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "22.1pt x1: OPUS OUTPUTS THAT ",
+        "27.6pt x6: Clean control | 0 | Boundary tags"
+      ]
+    }
+  ],
+  "aspect-persistence": [
+    {
+      "fig": "poster-figure lapse-schematic",
+      "vbW": 1180,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "16.9pt x2: 1 · SOURCE UTTERAN | 2 · STORED MEMORY",
+        "18.5pt x3: 244 of 381 pairs:  | no mediation | every reader says ",
+        "19.3pt x5: an ongoing event,  | may stop holding | as of August 27, 2",
+        "20.1pt x7: progressive | simple present | aspect flattened",
+        "20.9pt x3: memory writer | Write-time test | Read-time test",
+        "23.4pt x4: “I’m working at | Corvida Analytics. | User works at"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 620,
+      "renderedPt": 519,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "15.9pt x3: adjusted p = 1.5 × | adjusted p = 3.3 × | adjusted p = 4.3 ×",
+        "17.6pt x5: SIMPLE ONLY | PROGRESSIVE ONLY | 128 matched pairs",
+        "19.3pt x3: 0 | 0 | 0",
+        "22.6pt x6: DeepSeek V4 Flash | 104 | GPT-5.6 Luna"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 900,
+      "renderedPt": 661,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "16.2pt x5: 0 | 25 | 50",
+        "17.6pt x4: DeepSeek V4 Flash | GPT-5.6 Luna | GLM-5.2",
+        "18.4pt x1: FLATTENING BY WHAT",
+        "20.6pt x8: Vehicle | Workplace | Equipment"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 900,
+      "renderedPt": 951,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "16.1pt x3: stored all 128, fl | flattened 15 of 32 | kept a progressive",
+        "16.9pt x1: Ongoing facts stor",
+        "18.6pt x3: 38% | 47% | 91%",
+        "20.3pt x3: 49/128 | 15/32 | 29/32",
+        "22pt x3: mem0 2.0.19 | Graphiti 0.30.1 | Letta 0.16.8"
+      ]
+    },
+    {
+      "fig": "poster-figure",
+      "vbW": 700,
+      "renderedPt": 606,
+      "widthPctOfCell": 100,
+      "sizes": [
+        "16.5pt x5: 0 | 25 | 50",
+        "18.2pt x4: baseline | instruction helps | instruction hurts",
+        "19.1pt x7: 3.1 | 0.0 | 57.5",
+        "21.6pt x7: GPT-5.6 Luna | Qwen3-8B | DeepSeek V4 Flash"
+      ]
+    }
+  ]
+}

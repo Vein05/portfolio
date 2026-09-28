@@ -30,8 +30,10 @@ body {
 
 /* ── View toggle (screen only): fit-to-width or A4-width ── */
 .poster-view-toggle {
+  /* Bottom-right, not top-right: the landscape header carries the acceptance
+     line in its top-right corner and this chrome sat on top of it. */
   position: fixed;
-  top: 12px;
+  bottom: 12px;
   right: 12px;
   z-index: 10;
   display: flex;
@@ -196,10 +198,12 @@ body[data-poster-view='a4'] {
   transform-origin: top left;
 }
 
-/* ── Canvas: true A0 portrait ────────────────── */
+/* ── Canvas: sheet size comes from the format (see src/data/posters.js) ──
+   portrait  = A0,        841 x 1189 mm
+   landscape = 44 x 32 in, 1117.6 x 812.8 mm                              */
 .poster-canvas {
-  width: 841mm;
-  height: 1189mm;
+  width: var(--sheet-w, 841mm);
+  height: var(--sheet-h, 1189mm);
   box-sizing: border-box;
   background-color: rgb(var(--color-paper-light));
   color: rgb(var(--color-ink-dark));
@@ -210,6 +214,20 @@ body[data-poster-view='a4'] {
   gap: 8mm;
   align-content: start;
   font-family: 'Oswald', sans-serif;
+  /* One knob for the whole type scale. Every poster font-size is a multiple of
+     it, so a sheet format sets legibility once instead of per rule. A0 is the
+     baseline the sizes were tuned at; the 44 x 32 sheet is a third wider and is
+     read from further back, so its type steps up. */
+  --type-scale: 1;
+}
+
+/* 1.4, not 1.14: measured off the printed PDF, the old value put body copy at
+   25 pt against a 66 pt house title, well under what the group's other 44 x 32
+   sheets run. 1.4 puts body at 30.8 pt, headlines at 44.7 pt and captions at
+   28.7 pt. It is the largest step every sheet takes without a cell clipping;
+   raising it further needs copy cut, not CSS (see poster-landscape.md). */
+body[data-format='landscape'] .poster-canvas {
+  --type-scale: 1.4;
 }
 
 .poster-canvas *,
@@ -219,7 +237,78 @@ body[data-poster-view='a4'] {
   margin: 0;
 }
 
+/* ── Landscape: fill the sheet rather than stacking at the top ──────────
+   A0 lets rows take their natural height and leaves any slack at the foot of
+   the sheet, which is invisible on a tall poster. On the much shorter 44 x 32
+   sheet that slack pools into one dead band, so the two content bands share
+   the leftover height and each figure grows into the space its cell gains.
+   Figures stay aspect-correct: they are sized by height and centred, with
+   `max-width` keeping a wide chart inside its column.                      */
+body[data-format='landscape'] .poster-canvas {
+  /* `minmax(0, 1fr)` rather than `1fr`: the two content bands may compress
+     below their natural height, so when type grows it is the figures (capped
+     by `max-height`) that give up room, instead of the last band overflowing
+     the sheet and being clipped by the print rules. */
+  /* The upper band carries the argument (problem, method, core result) and the
+     lower one the supporting checks, which are thinner. An equal split leaves
+     the lower cells padding out height they have nothing to fill with, so the
+     upper band takes the larger share. */
+  grid-template-rows: auto minmax(0, 1.12fr) minmax(0, 0.88fr) auto;
+  align-content: stretch;
+}
+
+body[data-format='landscape'] .poster-figure {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Take the full cell width, then let height cap it. A figure whose aspect is
+   taller than the space it was given shrinks to fit rather than overflowing;
+   a very wide one (the slope chart is 4.2:1) stays width-bound and its leftover
+   height is split above and below by the `justify-content` above, instead of
+   collecting as one gap under the cell. */
+body[data-format='landscape'] .poster-figure svg,
+body[data-format='landscape'] .poster-figure img {
+  width: var(--fig-w, 100%);
+  height: auto;
+  max-height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  margin-inline: auto;
+}
+
+body[data-format='landscape'] .poster-figure > .poster-caption {
+  flex: 0 0 auto;
+}
+
+/* The lab header is a full-bleed band: it spans every column and cancels the
+   canvas padding so the USM mark sits flush to the sheet edge, as it does on
+   the group's other posters. */
+/* The doubled class is deliberate. LabHeader's own scoped rule compiles to
+   `.lab-header[data-astro-cid-…]`, which is (0,2,0) — exactly the specificity
+   of `.poster-canvas > .lab-header`. A tie is resolved by stylesheet load
+   order, so importing LabHeader after poster.css silently left the band short
+   of the sheet edge. Repeating the class makes this (0,3,0) and order-proof. */
+.poster-canvas > .lab-header.lab-header {
+  grid-column: 1 / -1;
+  margin: -16mm -16mm 0;
+  width: auto;
+}
+
 /* ── Cells ───────────────────────────────────── */
+/* The span is carried as a custom property so one authored cell can hold a
+   different width per format (see PosterCell's `landscapeSpan`). */
+.poster-cell {
+  grid-column: span var(--span);
+}
+
+body[data-format='landscape'] .poster-cell {
+  grid-column: span var(--span-landscape);
+}
+
 .poster-cell {
   border: 0.6mm solid rgb(var(--color-border-paper));
   border-radius: 0;
@@ -274,27 +363,82 @@ body[data-poster-view='a4'] {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 21pt;
+  font-size: calc(21pt * var(--type-scale, 1));
   font-weight: 600;
+}
+
+/* ── Header band (landscape sheets) ───────────
+   The landscape sheet follows the lab's earlier poster, where each section
+   opened with a filled band rather than bare type on white. Portrait keeps the
+   plain heading, and `.cell-head` is then just a wrapper. */
+.poster-cell .cell-head {
+  background-color: var(--cell-head-bg, transparent);
+}
+
+body[data-format='landscape'][data-poster] {
+  --cell-head-bg: rgb(140 59 47);
+  --cell-head-ink: rgb(var(--color-paper-light));
+}
+
+body[data-format='landscape'][data-poster] .poster-cell .cell-head {
+  /* full-bleed to the cell's border, against the cell's 8mm/10mm padding */
+  margin: -8mm -10mm 4mm;
+  /* right padding clears the badge, which sits in the band's top-right */
+  padding: 3mm 26mm 3mm 10mm;
+  color: var(--cell-head-ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* Titles run one or two lines. Without a floor the bands in a row step up and
+   down; this holds kicker-and-title bands level and bottom-aligns the title.
+   A band with no kicker takes only the height its title needs, so it does not
+   carry an empty strip above the title; `head="long"` on PosterCell floors it
+   anyway and `head="short"` lifts the floor. Kicker-only cells (the TL;DR
+   band) have no title to level against. */
+body[data-format='landscape'][data-poster] .poster-cell:not(.head-short) .cell-head:has(.cell-kicker):has(.cell-title),
+body[data-format='landscape'][data-poster] .poster-cell.head-long .cell-head:has(.cell-title) {
+  min-height: calc(28pt * var(--type-scale, 1) * 2.3 + 16pt * var(--type-scale, 1) * 1.5 + 6mm);
+}
+
+body[data-format='landscape'][data-poster] .poster-cell .cell-head .cell-kicker {
+  color: var(--cell-head-ink);
+  opacity: 0.82;
+}
+
+body[data-format='landscape'][data-poster] .poster-cell .cell-head .cell-title {
+  color: var(--cell-head-ink);
+  margin-bottom: 0;
+}
+
+/* The badge would be cut in half by the band's top edge, so on a banded sheet
+   it moves inside the band and inverts to stay legible. */
+body[data-format='landscape'][data-poster] .poster-cell .cell-marker {
+  top: 4mm;
+  left: auto;
+  right: 6mm;
+  background-color: rgb(var(--color-paper-light));
+  color: rgb(140 59 47);
 }
 
 .poster-cell .cell-kicker {
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 16pt;
+  font-size: calc(16pt * var(--type-scale, 1));
   color: rgb(var(--color-ink-muted));
   margin-bottom: 3mm;
 }
 
 .poster-cell .cell-title {
-  font-size: 28pt;
+  font-size: calc(28pt * var(--type-scale, 1));
   font-weight: 600;
   line-height: 1.15;
   margin-bottom: 6mm;
 }
 
 .poster-body {
-  font-size: 22pt;
+  font-size: calc(22pt * var(--type-scale, 1));
   line-height: 1.4;
   font-weight: 300;
 }
@@ -314,7 +458,7 @@ body[data-poster-view='a4'] {
 }
 
 .poster-caption {
-  font-size: 18pt;
+  font-size: calc(18pt * var(--type-scale, 1));
   line-height: 1.35;
   color: rgb(var(--color-ink-muted));
   margin-top: 4mm;
@@ -326,8 +470,14 @@ body[data-poster-view='a4'] {
 
 .poster-figure svg,
 .poster-figure img {
-  width: 100%;
+  /* Figure width is a variable, not a literal, so a figure can be given a
+     different share of its cell per sheet format. The landscape sheet puts
+     most cells in narrower columns, so a percentage tuned for A0 leaves the
+     artwork too small there; each figure's landscape value is set alongside
+     its portrait one rather than in a separate stylesheet. */
+  width: var(--fig-w, 100%);
   height: auto;
+  margin-inline: auto;
   display: block;
 }
 
@@ -346,17 +496,17 @@ body[data-poster-view='a4'] {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 22pt;
+  font-size: calc(22pt * var(--type-scale, 1));
 }
 
 .winner-label {
-  font-size: 21pt;
+  font-size: calc(21pt * var(--type-scale, 1));
   color: rgb(var(--color-ink-muted));
 }
 
 .winner-chip {
   text-align: center;
-  font-size: 24pt;
+  font-size: calc(24pt * var(--type-scale, 1));
   font-weight: 600;
   border: 0.6mm solid rgb(var(--color-border-paper));
   border-radius: 0;
@@ -369,12 +519,25 @@ body[data-poster-view='a4'] {
   border-color: rgb(var(--color-ink-dark));
 }
 
+/* Landscape only: at 1.4 the type grew but these gaps did not, so six rows of
+   chips plus a caption no longer fit the cell. The paddings are fixed mm and
+   were tuned against 22 pt copy; tightening them buys back the height the
+   larger type needs without shrinking a single numeral. */
+body[data-format='landscape'] .winner-grid {
+  gap: 3mm 4mm;
+  margin: 4mm 0;
+}
+
+body[data-format='landscape'] .winner-chip {
+  padding: 2mm 0;
+}
+
 /* ── TL;DR band ──────────────────────────────── */
 .tldr-band {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10mm;
-  font-size: 23pt;
+  font-size: calc(23pt * var(--type-scale, 1));
 }
 
 .tldr-band > div {
@@ -382,10 +545,58 @@ body[data-poster-view='a4'] {
   padding-left: 6mm;
 }
 
+/* A QR column rides along the TL;DR band: it is the end of the reading order,
+   where a reader who wants to take the poster away is standing. It carries no
+   rule and takes only the width it needs, so the three prose columns keep
+   their equal share. */
+.tldr-band:has(.tldr-qr) {
+  grid-template-columns: repeat(3, 1fr) auto;
+}
+.tldr-band > .tldr-qr {
+  border-left: 0;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3mm;
+}
+.tldr-qr img {
+  width: var(--qr-size, 26mm);
+  height: var(--qr-size, 26mm);
+  display: block;
+}
+
+body[data-format='landscape'] .tldr-qr {
+  --qr-size: 42mm;
+}
+
+/* Acceptance line (landscape). It used to sit in the header's chip slot, where
+   a two-line "Accepted at ..." crowded the AIMS mark. As the sheet's last line,
+   flush left under the bottom band, it is outside every cell and reads as a
+   stamp on the paper rather than as poster content. */
+.poster-canvas > .poster-venue-line {
+  grid-column: 1 / -1;
+  align-self: end;
+  text-align: left;
+  font-size: calc(20pt * var(--type-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c00000;
+}
+.tldr-qr-label {
+  font-size: calc(15pt * var(--type-scale, 1));
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--color-ink-muted));
+  text-align: center;
+}
+
 .tldr-head {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 20pt;
+  font-size: calc(20pt * var(--type-scale, 1));
   font-weight: 600;
   margin-bottom: 3mm;
 }
@@ -396,8 +607,18 @@ body[data-poster-view='a4'] {
   margin: 0;
 }
 
+@page poster-landscape {
+  size: 1117.6mm 812.8mm;
+  margin: 0;
+}
+
 @page poster-a4 {
   size: 210mm 297mm;
+  margin: 0;
+}
+
+@page poster-letter {
+  size: 279.4mm 215.9mm;
   margin: 0;
 }
 
@@ -408,12 +629,24 @@ body[data-poster-view='a4'] {
     overflow: hidden;
   }
 
+  /* Landscape sheet: 44 x 32 in. */
+  html:has(body[data-format='landscape']),
+  body[data-format='landscape'] {
+    height: 812.8mm;
+  }
+
+  body[data-format='landscape'] {
+    page: poster-landscape;
+  }
+
   .poster-menu,
   .poster-lightbox {
     display: none;
   }
 
-  /* A4 export: the A0 canvas scaled by 210/841 onto one A4 sheet. */
+  /* Small-sheet export: the full canvas scaled onto one A4 (portrait) or one
+     Letter (landscape) sheet. The zoom is the sheet-width ratio, derived here
+     rather than hardcoded so it stays correct if a sheet size changes. */
   html:has(body[data-print-size='a4']),
   body[data-print-size='a4'] {
     height: 297mm;
@@ -432,7 +665,25 @@ body[data-poster-view='a4'] {
 
   body[data-print-size='a4'] .poster-scaler .poster-canvas {
     transform: none !important;
-    zoom: 0.2497;
+    zoom: 0.2497; /* 210 / 841 */
+  }
+
+  html:has(body[data-format='landscape'][data-print-size='a4']),
+  body[data-format='landscape'][data-print-size='a4'] {
+    height: 215.9mm;
+  }
+
+  body[data-format='landscape'][data-print-size='a4'] {
+    page: poster-letter;
+  }
+
+  body[data-format='landscape'][data-print-size='a4'] .poster-scaler {
+    width: 279.4mm !important;
+    height: 215.9mm !important;
+  }
+
+  body[data-format='landscape'][data-print-size='a4'] .poster-scaler .poster-canvas {
+    zoom: 0.25; /* 279.4 / 1117.6 */
   }
 
   .poster-view-toggle {

@@ -43,3 +43,4 @@ AGENTS.md
 .codex/
 .codex-ui-screens/
 pptx/
+scripts/__pycache__/

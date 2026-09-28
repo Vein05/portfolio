@@ -15,7 +15,7 @@ The city is correct. The timeline is not.
 
 “I’m staying” presents a temporary situation. “I live” presents a standing one. A human hears that difference before reaching the place name. A memory pipeline can preserve every noun in the sentence and still destroy what the sentence said about time.
 
-I have been testing where that destruction happens. The first measured pilot points less to a model forgetting tense at retrieval than to something more mechanical: the consolidation step rewrites temporary forms into permanent facts, and the date stamp it leaves behind barely changes later behavior.
+I have been testing where that destruction happens. The pilot did not find a model forgetting tense at retrieval. The mechanism is more specific: the consolidation step rewrites temporary forms into permanent facts, and the date stamp it leaves behind barely changes later behavior.
 
 The public benchmark for this work is **LAPSE**: Linguistic Aspect Persistence and Stability Evaluation. The evidence here is an initial 2,000-call pilot on one model, not yet a cross-model result. Within that boundary, the mechanism is sharp.
 
@@ -41,7 +41,7 @@ Positive controls matter. A model that always “helpfully” proceeds could loo
 
 On stale behavioral cases, DeepSeek V4 Flash produced **0 hedges across 300 trials**. It proceeded on simple, progressive, and explicitly bounded forms alike. Even facts marked “until December” were acted on eight months later: 92 direct commitments and 8 commitments with a caveat.
 
-The frozen validity gate calls this model **policy-flat**. Because it did not distinguish even the explicit boundary from the simple form, the pilot does not support a clean claim that aspect itself caused the behavior. A global bias toward proceeding can explain the result.
+The validity gate (the test of whether the model treats stale forms differently from standing ones) calls this model **policy-flat**. Because it did not distinguish even the explicit boundary from the simple form, the pilot does not support a clean claim that aspect itself caused the behavior. A global bias toward proceeding can explain the result.
 
 Then the same model was asked the rule directly. It answered correctly 98% of the time for progressive forms and 91% for simple forms: no, the old statement should not automatically be assumed current.
 
@@ -150,7 +150,5 @@ The pilot suggests that this schema is missing the field that matters:
 ```
 
 That representation is a design direction, not an evaluated solution. But it makes the responsibility explicit. Consolidation should preserve the user’s temporal commitment or translate it into a validity field. It should not silently promote a visit into a residence and hope a later model notices the date.
-
-The missing information was when the statement stopped being true.
 
 This article reports the current LAPSE pilot. The benchmark, paper, and reproducibility materials will be linked here as the study clears its cross-model gates.

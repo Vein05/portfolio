@@ -77,6 +77,12 @@ These are warning signs, not automatic bans. Keep one only when the contrast is 
 - **Interpretive padding:** "highlights," "underscores," "reflects," "serves as," "demonstrates the importance of," and claims about a broader landscape. Replace the interpretation with the observed consequence.
 - **Repeated defense:** claim, caveat, then a second sentence restating the claim in safer words. State the bounded claim once.
 - **Poster advertising:** headings that tease, warn, or promise instead of reporting the result. A poster heading should survive being read without its kicker or body.
+- **Closing flourish:** a last sentence in a section or post that sums up in a slogan ("each one was wrong in a useful way," "the lesson is concrete," "X buys control and gives up realism"). End on the last fact instead.
+- **Lessons listicle ending:** a bulleted "what I learned" list that repeats the post. If the lessons matter, write them as a short paragraph with the specific practice.
+- **Slogan headings vs topic labels:** a heading should be a plain claim ("Invented names still need checking"). Avoid both one-word labels ("Dates") and punchy templates ("Controls are rows in the grid").
+- **Long captions:** a figure caption is one or two sentences, about 40 words at most: the takeaway, then model and sample size. Anything longer belongs in the prose. Figure titles are one line and follow the same contrast rules as prose.
+
+Wikipedia keeps a longer catalog of these patterns: https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing. Check headings, captions, and the last sentence of each section against it before publishing.
 
 Do not edit to fool an AI detector. Detection is unreliable, and human writing can contain every pattern above. Edit because canned rhetoric hides the experiment and makes several pages sound as if they were generated from the same prompt.
 

@@ -20,7 +20,7 @@ Paper-and-ink technical aesthetic: restrained, hand-drawn, editorial. Think a we
 
 - Every figure is a `<figure>` built with the shared `ChartCard` wrapper in `src/components/blog/ResearchCharts.jsx`: a bordered `bg-paper-surface` card with a kicker (uppercase mono), a bold one-line title that states the takeaway, the chart, and a caption.
 - **Centered on desktop.** `.blog-prose figure { margin: 2rem auto }` in `global.css` centers all figures. Cards use `max-w-[720px] mx-auto`. Do not reintroduce a left/right margin that overrides the auto centering.
-- **Captions state the takeaway, then the provenance.** Lead with the claim the figure proves. For any data chart, the caption must name the model and sample size (e.g., "DeepSeek V4 Flash, 300 clusters per condition"). This is non-negotiable and mirrors the honesty rule in `writing.md`.
+- **Captions state the takeaway, then the provenance.** Lead with the claim the figure proves. For any data chart, the caption must name the model and sample size (e.g., "DeepSeek V4 Flash, 300 clusters per condition"). This is non-negotiable and mirrors the honesty rule in `writing.md`. Keep captions to one or two sentences (about 40 words); explanation belongs in the post body.
 - **Responsive.** SVGs use a `viewBox` with `width="100%" height="auto"`. Include a real `role="img"` + `aria-label` describing the finding.
 
 ### Figure-text minimums

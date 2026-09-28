@@ -31,7 +31,6 @@ I kept seeing teams wrap LLM HTTP APIs with throwaway utilities. It works for we
 - streaming paths diverge from non-streaming paths,
 - error surfaces become ambiguous.
 
-So I treated this SDK like production infrastructure, not demo code.
 
 ## The first architecture decision
 
@@ -101,10 +100,7 @@ The `NewClientWithOptions(...)` API came from a practical need: avoid constructo
 
 ## How I viewed adoption from the beginning
 
-I never thought, "I need to make this famous."
-I thought, "If this package is stable under real pressure, adoption follows."
-
-That mindset changed how I shipped:
+I assumed stable behavior under real load would drive adoption. That changed how I shipped:
 
 - fewer flashy abstractions,
 - more boring correctness,

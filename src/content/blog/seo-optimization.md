@@ -355,13 +355,7 @@ flowchart TD
 
 The work changed the site’s machine-readable structure. It did not by itself establish that rankings or traffic improved.
 
-The improvements were:
-
-- clearer indexing signals,
-- better language targeting,
-- stronger coverage for informational + transactional intents,
-- better social-sharing previews,
-- stronger technical foundations for crawl and speed.
+Each page now has one canonical URL, one declared intent, complete hreflang alternates, and matching structured data.
 
 ## Mistakes I intentionally avoided
 
@@ -372,7 +366,6 @@ The improvements were:
 - Treating `robots.txt` as the only crawl/index control.
 - Ignoring non-homepage SEO for setup/history/faq pages.
 
-These are common SEO failures in otherwise strong indie projects.
 
 ## SEO checklist I now use for pages like this
 
@@ -388,7 +381,6 @@ Before shipping a new route, I verify:
 - clean internal links from relevant pages,
 - acceptable performance and cache headers.
 
-That checklist keeps SEO quality consistent as the site grows.
 
 ```mermaid
 stateDiagram-v2

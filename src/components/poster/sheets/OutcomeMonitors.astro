@@ -1,0 +1,831 @@
+---
+// Sheet content for "Outcome Monitors: Recovery Affordances for Silent Tool
+// Failures" (arXiv:2608.19303; under review, venue not named), authored once
+// and rendered into both formats. `format` selects the sheet (A0 portrait or
+// the lab's 44 x 32 landscape) and is what the figure geometry branches on: a
+// wide, short sheet gives each chart a narrower column, so charts that cannot
+// fill it get a deeper viewBox rather than a CSS override.
+//
+// Every number comes from the camera-ready; keep in sync with it. All figures
+// are drawn poster-native in this file (Oswald, poster-scale strokes) from the
+// paper's TikZ sources (arxiv/figures/*.tex). The compiled paper SVGs were too
+// small and font-mismatched at A0. Color code used everywhere: advisory/monitor
+// = oc green, silent failure/harm = oc red, detection/flag = oc amber.
+// LabHeader is imported first, before PosterShell pulls in poster.css. The
+// full-bleed rule there (`.poster-canvas > .lab-header { width: auto }`) and
+// LabHeader's own scoped `width: 100%` have equal specificity, so whichever
+// stylesheet comes last wins: import it after poster.css and the band stops
+// 16 mm short of the right edge of the sheet.
+import LabHeader from '../LabHeader.astro';
+import PosterShell from '../PosterShell.astro';
+import PosterCell from '../PosterCell.astro';
+import TitleBand from '../TitleBand.astro';
+
+export interface Props {
+  format?: 'portrait' | 'landscape';
+}
+const { format = 'portrait' } = Astro.props;
+const isLandscape = format === 'landscape';
+
+const ink = 'rgb(var(--color-oc-ink))';
+const muted = 'rgb(var(--color-oc-muted))';
+const mainC = 'rgb(var(--color-oc-main))';
+const warnC = 'rgb(var(--color-oc-warn))';
+const flagC = 'rgb(var(--color-oc-flag))';
+const paper = 'rgb(var(--color-paper-surface))';
+const mono = "ui-monospace, 'SF Mono', Menlo, monospace";
+
+// ── Figure ③: frozen paired ToolMaze completion (paper Table 1) ──
+// Percentages are completions / 80 episodes per model.
+const toolmazeRows = [
+  { label: 'DeepSeek V4 Flash', base: 17.5, mon: 33.75, delta: '+16.25', wl: '15/2', counts: '14→27 / 80' },
+  { label: 'DeepSeek V4 Pro', base: 16.25, mon: 28.75, delta: '+12.50', wl: '14/4', counts: '13→23 / 80' },
+  { label: 'Qwen 3.7 Plus', base: 3.75, mon: 18.75, delta: '+15.00', wl: '12/0', counts: '3→15 / 80' },
+  { label: 'Qwen 3.7 Max', base: 6.25, mon: 31.25, delta: '+25.00', wl: '21/1', counts: '5→25 / 80' },
+  { label: 'Primary aggregate', base: 10.94, mon: 28.13, delta: '+17.19', wl: '62/7', counts: '35→90 / 320', bold: true },
+  { label: 'MiniMax M3, replication', base: 6.25, mon: 25.0, delta: '+18.75', wl: '17/2', counts: '5→20 / 80' },
+];
+// Dumbbell geometry: viewBox 1440 x 304, plot x ∈ [420, 1180] for 0–40%.
+// A0 gives this cell the full 12 columns; the landscape sheet gives it four,
+// where a 4.7:1 strip is 85 mm tall in a 250 mm band and its row labels fall
+// under the 14 pt floor. Same arrangement, deeper box: the row pitch and every
+// numeral grow together, so the chart fills the cell and still reads at 2 m.
+const tm = isLandscape
+  ? { h: 620, y0: 86, pitch: 86, gridTop: 44, gridBot: 560, tickY: 604,
+      fCount: 24, fWl: 26, fTick: 27, fLabel: 30, fDelta: 32,
+      r: 13, rBold: 16, sw: 6, swBold: 8, swRing: 4, dy: 10, bandH: 68, countX: 400 }
+  : { h: 304, y0: 42, pitch: 42, gridTop: 24, gridBot: 262, tickY: 288,
+      fCount: 15, fWl: 16, fTick: 17, fLabel: 19, fDelta: 20,
+      r: 8, rBold: 10, sw: 3.5, swBold: 5, swRing: 2.5, dy: 6, bandH: 38, countX: 405 };
+const tmX = (v) => 420 + (v / 40) * 760;
+const tmY = (i) => tm.y0 + i * tm.pitch;
+const tmTicks = [0, 10, 20, 30, 40];
+
+// ── Figure ④a: receipt-component contrasts (paper Figure 3 / decomposition) ──
+// Centers and 95% bootstrap intervals in completion points, 114 paired
+// workflows per contrast; intervals decoded from the TikZ x(v) mapping.
+const contrastGroups = [
+  {
+    head: 'RECOVERY TOOLS ADDED',
+    active: true,
+    rows: [
+      { label: 'receipt − stripped', c: 11.4, lo: 2.6, hi: 20.2 },
+      { label: 'receipt − baseline', c: 12.3, lo: 3.5, hi: 21.9 },
+    ],
+  },
+  {
+    head: 'RECOVERY TOOLS UNCHANGED',
+    active: false,
+    rows: [
+      { label: 'stripped − baseline', c: 0.9, lo: -6.1, hi: 7.9 },
+      { label: 'localized − generic', c: -2.6, lo: -11.4, hi: 6.1 },
+      { label: 'on-time − deferred', c: 0.9, lo: -4.4, hi: 6.1 },
+    ],
+  },
+];
+// Contrast geometry: plot x ∈ [470, 1250] for −15…+25 pts. A0 draws it 1440 x
+// 528, sized for a half-width cell on a tall sheet. That cell is height-bound
+// on the landscape sheet (it also carries the action bar below), and a figure
+// that is height-bound only gets wider, and so more legible, if it is flatter.
+// Landscape therefore tightens the row pitch and the two group blocks into
+// 1440 x 366 and keeps every type size, rather than scaling the whole chart
+// down into the space.
+const ct = isLandscape
+  ? { h: 372, r1y: 16, r1h: 128, r2y: 156, r2h: 154, gTop: 16, gBot: 310,
+      zTop: 12, zBot: 314, tickY: 340, h1y: 46, row1: 84, h2y: 172, row2: 210,
+      pitch: 40, axisY: 364 }
+  : { h: 528, r1y: 24, r1h: 152, r2y: 194, r2h: 188, gTop: 24, gBot: 396,
+      zTop: 20, zBot: 400, tickY: 434, h1y: 64, row1: 106, h2y: 234, row2: 276,
+      pitch: 48, axisY: 500 };
+const ctX = (v) => 470 + ((v + 15) / 40) * 780;
+const ctTicks = [-10, 0, 10, 20];
+
+// Landscape cell 4 puts the contrast chart and the action split side by side,
+// so the chart gets the cell's full height instead of sharing it with the bar.
+// Its own geometry: a 2.1:1 frame with larger type, same −15…+25 scale.
+const ctL = { w: 1100, h: 514, h1y: 46, row1: 98, h2y: 234, row2: 286, pitch: 54,
+  r1y: 8, r1h: 176, r2y: 194, r2h: 228, gTop: 8, gBot: 422, tickY: 462, axisY: 504 };
+const ctLX = (v) => 370 + ((v + 15) / 40) * 580;
+// The action split as one row per action: a narrow column cannot hold the
+// A0 stacked bar's inline labels.
+const abL = { w: 700, pitch: 104, barH: 42, x1: 560 };
+
+// ── Figure ②: lane diagram geometry ──
+// Two vertical lanes side by side. The arrangement is right for both sheets,
+// but A0's vertical rhythm (100-unit connectors, a deep receipt block) makes it
+// 2.4:1, and in the landscape method cell, which also carries the method note,
+// it is height-bound: the drawing letterboxes and its smallest annotations fall
+// to 11.6 pt. Landscape keeps every box and every type size and only closes the
+// gaps between them, so the same drawing lands wider and reads at 15 pt up.
+// Offsets inside a box are constant; only the box tops move.
+const ln = isLandscape
+  ? { h: 545, aY: [90, 240, 390], bY: [74, 166, 466], recY: 258, recH: 180,
+      inY: 310, inH: 118, t2: 76, tLine: 88, tItal: 110, fSm: 22 }
+  : { h: 600, aY: [90, 280, 470], bY: [74, 172, 500], recY: 270, recH: 200,
+      inY: 322, inH: 134, t2: 80, tLine: 94, tItal: 122, fSm: 20 };
+
+// Action-bar geometry. Portrait's 8.5:1 strip becomes 11:1 on the landscape
+// sheet: flat enough to be width-bound in its cell, so it draws at the full
+// column width and its labels stay above the 14 pt floor instead of being
+// squeezed by the contrast chart above it.
+const ab = isLandscape
+  ? { h: 130, barY: 8, barH: 62, pctY: 52, fPct: 32, labelY: 116, fLabel: 26 }
+  : { h: 170, barY: 16, barH: 76, pctY: 64, fPct: 30, labelY: 140, fLabel: 24 };
+
+// ── Figure ④b: action after a receipt (484 detector events) ──
+const actionSplit = [
+  { label: 'switch to listed substitute', pct: 48.6, color: mainC },
+  { label: 'call another tool', pct: 33.5, color: flagC },
+  { label: 'retry', pct: 14.0, color: muted },
+  { label: 'stop', pct: 3.9, color: warnC },
+];
+
+// ── Figure ⑤: cross-environment paired completion (paper Figure 2) ──
+const crossRows = [
+  { label: 'ToolMaze implicit (4 models)', base: 10.9, mon: 28.1, delta: '+17.2' },
+  { label: 'τ-bench status', base: 12.0, mon: 40.0, delta: '+28.0' },
+  { label: 'ToolMaze clean P0', base: 64.9, mon: 64.9, delta: '0.0', tag: 'CLEAN' },
+  { label: 'AppWorld type flip', base: 66.7, mon: 83.3, delta: '+16.7', tag: 'DEV' },
+  { label: 'τ-bench conservation', base: 70.0, mon: 70.0, delta: '0.0' },
+  { label: 'AppWorld missing field', base: 85.0, mon: 85.0, delta: '0.0', tag: 'DEV' },
+];
+// Cross-env geometry: viewBox 1440 x 640, plot x ∈ [600, 1180] for 0–100%.
+// The plot gave up 210 units of width to the label column so the row labels
+// can be set at 34 rather than 26: at the landscape column's 0.66 scale the
+// old size printed at 17 pt against 31 pt body copy. The dumbbells are shorter
+// for it, which costs nothing here because every value is read off the tick
+// axis and the delta column, not off bar length.
+const ceX = (v) => 600 + (v / 100) * 580;
+const ceY = (i) => 56 + i * 84;
+const ceTicks = [0, 25, 50, 75, 100];
+const ceTagF = isLandscape ? 28 : 22;
+
+// Recall-bar geometry: two bars, 3.8:1 on A0. The landscape sheet puts this in
+// a narrow, tall cell where that strip cannot fill the height, so it takes a
+// deeper box with thicker bars and larger numerals (same treatment as the
+// dumbbell above), rather than sitting in a band of dead whitespace.
+const rc = isLandscape
+  ? { h: 264, y0: 18, pitch: 120, barY: 32, barH: 52, fLabel: 26, fPct: 32, fN: 22, nX: 590 }
+  : { h: 190, y0: 18, pitch: 88, barY: 26, barH: 34, fLabel: 20, fPct: 24, fN: 18, nX: 600 };
+
+// ── Figure ⑥: incident-suite recall by fault surface (paper §6) ──
+const recallRows = [
+  { label: 'Violations over structured values', pct: 83, n: '25/30', color: flagC },
+  { label: 'Corruption inside plausible strings', pct: 22, n: '6/27', color: warnC },
+];
+---
+
+<PosterShell
+  author="Sugam Panthi"
+  title="Poster: Outcome Monitors"
+  description="Research poster: recovery affordances for silent tool failures (arXiv:2608.19303)."
+  slug="outcome-monitors"
+  format={format}
+>
+  {isLandscape ? (
+    /* No venue: the paper is an unaccepted preprint, and poster.md 7b keeps a
+       submission venue off a poster under review. */
+    <LabHeader
+      title="Outcome Monitors: Recovery Affordances for Silent Tool Failures"
+      authors="Sugam Panthi, Rabab Abdelfattah"
+    />
+  ) : (
+    <TitleBand
+      kicker="arXiv:2608.19303, cs.AI, cs.CL, cs.SE"
+      title="Outcome Monitors: Recovery Affordances for Silent Tool Failures"
+      authors="Sugam Panthi and Rabab Abdelfattah"
+      affiliation="Detect and advise: a nonbinding in-band receipt naming the violated property and public recovery tools"
+      qrSrc="/poster/outcome-monitors-qr.svg"
+      qrLabel="Scan for paper"
+    />
+  )}
+
+  <PosterCell span={5} landscapeSpan={3} marker="1" kicker="The problem" title="A cached error page looks valid, so the agent uses it as fact">
+    <div class="poster-body">
+      <p>
+        A timeout labels the failure, so the agent can choose another route. A cached error page or
+        a <span class="oc-warn">negative price</span> arrives in the expected format. Nothing tells
+        the agent to doubt it, and the wrong value enters the next decision as fact.
+      </p>
+    </div>
+    <figure class="poster-figure loud-silent">
+      <svg viewBox="0 0 695 248" role="img" aria-label="Two rows: a loud timeout is visibly broken and the agent routes around it; a silent cached error page looks valid and is consumed as fact">
+        <text x="10" y="30" font-size="20" font-weight="600" letter-spacing="2" fill={muted}>LOUD</text>
+        <rect x="10" y="44" width="330" height="62" fill="none" stroke={muted} stroke-width="3" stroke-dasharray="10 8" />
+        <text x="30" y="82" font-size="24" font-family={mono} fill={ink}>timeout, HTTP 504</text>
+        <line x1="356" y1="75" x2="420" y2="75" stroke={muted} stroke-width="3" />
+        <path d="M 420 75 l -14 -8 v 16 z" fill={muted} />
+        <text x="436" y="70" font-size="23" fill={ink}>agent sees the failure,</text>
+        <text x="436" y="98" font-size="23" fill={mainC} font-weight="600">routes around it</text>
+
+        <text x="10" y="166" font-size="20" font-weight="600" letter-spacing="2" fill={warnC}>SILENT</text>
+        <rect x="10" y="180" width="330" height="62" fill={paper} stroke={ink} stroke-width="2.5" />
+        <text x="30" y="218" font-size="24" font-family={mono} fill={ink}>200 OK, cached page</text>
+        <line x1="356" y1="211" x2="420" y2="211" stroke={warnC} stroke-width="3" />
+        <path d="M 420 211 l -14 -8 v 16 z" fill={warnC} />
+        <text x="436" y="206" font-size="23" fill={ink}>expected format, wrong value,</text>
+        <text x="436" y="234" font-size="23" fill={warnC} font-weight="600">consumed as fact</text>
+      </svg>
+    </figure>
+    {!isLandscape && (
+      <p class="big-stat">
+        <span class="stat-number">10.9%</span>
+        of ToolMaze episodes complete under injected silent faults (35 of 320 across four models),
+        with a fault-aware system prompt already in place.
+      </p>
+    )}
+  </PosterCell>
+
+  <PosterCell span={7} landscapeSpan={5} marker="2" kicker="Method" title="Detect and advise: an in-band receipt, not a controller">
+    <figure class="poster-figure lanes-figure">
+      <svg viewBox={`0 0 1440 ${ln.h}`} role="img" aria-label="Two lanes: in the raw interface the agent consumes a silent failure as fact; with detect-and-advise the result is kept, a contract violation is flagged, and an advisory receipt with a witness and recovery tools is appended, leaving verify, retry, and switch available.">
+        <defs>
+          <marker id="oc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={muted} />
+          </marker>
+        </defs>
+
+        <!-- lane A: raw interface -->
+        <rect x="0" y="0" width="695" height={ln.h} fill={warnC} opacity="0.06" />
+        <text x="30" y="52" font-size="27" font-weight="600" letter-spacing="2" fill={warnC}>RAW INTERFACE</text>
+        <rect x="30" y={ln.aY[0]} width="635" height="84" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="56" y={ln.aY[0] + 38} font-size="25" font-family={mono} fill={ink}>lookup_inventory</text>
+        <text x="56" y={ln.aY[0] + 70} font-size="22" font-family={mono} fill={muted}>available = -3</text>
+        <line x1="90" y1={ln.aY[0] + 84} x2="90" y2={ln.aY[1] - 6} stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="30" y={ln.aY[1]} width="635" height="84" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="56" y={ln.aY[1] + 38} font-size="25" font-weight="600" fill={ink}>detect, localize, recover</text>
+        <text x="56" y={ln.aY[1] + 70} font-size="22" fill={muted}>all left to the agent</text>
+        <line x1="90" y1={ln.aY[1] + 84} x2="90" y2={ln.aY[2] - 6} stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="30" y={ln.aY[2]} width="635" height="84" fill={warnC} fill-opacity="0.1" stroke={warnC} stroke-width="2.5" />
+        <text x="56" y={ln.aY[2] + 38} font-size="25" font-weight="600" fill={warnC}>silent failure</text>
+        <text x="56" y={ln.aY[2] + 70} font-size="22" fill={muted}>value consumed as fact</text>
+
+        <!-- lane B: detect and advise -->
+        <rect x="745" y="0" width="695" height={ln.h} fill={mainC} opacity="0.06" />
+        <text x="775" y="52" font-size="27" font-weight="600" letter-spacing="2" fill={mainC}>DETECT AND ADVISE</text>
+        <rect x="775" y={ln.bY[0]} width="635" height="64" fill={paper} stroke={muted} stroke-width="2" />
+        <text x="801" y={ln.bY[0] + 41} font-size="25" font-family={mono} fill={ink}>lookup_inventory</text>
+        <text x="1080" y={ln.bY[0] + 41} font-size="22" fill={muted}>raw result kept</text>
+        <line x1="835" y1={ln.bY[0] + 64} x2="835" y2={ln.bY[1] - 6} stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="775" y={ln.bY[1]} width="635" height="64" fill={flagC} fill-opacity="0.12" stroke={flagC} stroke-width="2.5" />
+        <text x="801" y={ln.bY[1] + 41} font-size="25" font-weight="600" fill={flagC}>contract violated</text>
+        <text x="1080" y={ln.bY[1] + 41} font-size="22" fill={muted}>clean traces or public rules</text>
+        <line x1="835" y1={ln.bY[1] + 64} x2="835" y2={ln.recY - 6} stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="775" y={ln.recY} width="635" height={ln.recH} fill={mainC} />
+        <text x="801" y={ln.recY + 36} font-size="24" font-weight="600" letter-spacing="2" fill={paper}>ADVISORY RECEIPT</text>
+        <rect x="791" y={ln.inY} width="603" height={ln.inH} fill={paper} />
+        <text x="811" y={ln.inY + 38} font-size="22" font-weight="600" fill={ink}>witness</text>
+        <text x="930" y={ln.inY + 38} font-size={ln.fSm} font-family={mono} fill={ink}>expected ≥ 0, observed -3</text>
+        <text x="811" y={ln.inY + ln.t2} font-size="22" font-weight="600" fill={ink}>recovery</text>
+        <text x="930" y={ln.inY + ln.t2} font-size={ln.fSm} font-family={mono} fill={ink}>query_warehouse, get_stock_by_sku</text>
+        <line x1="930" y1={ln.inY + ln.tLine} x2="1340" y2={ln.inY + ln.tLine} stroke={mainC} stroke-width="2.5" />
+        <text x="930" y={ln.inY + ln.tItal} font-size={ln.fSm} font-style="italic" fill={mainC}>the active content</text>
+        <line x1="835" y1={ln.recY + ln.recH} x2="835" y2={ln.bY[2] - 6} stroke={muted} stroke-width="3.5" marker-end="url(#oc-arrow)" />
+        <rect x="775" y={ln.bY[2]} width="635" height="64" fill={mainC} fill-opacity="0.1" stroke={mainC} stroke-width="2.5" />
+        <text x="801" y={ln.bY[2] + 41} font-size="25" font-weight="600" fill={mainC}>verify, retry, switch</text>
+        <text x="1080" y={ln.bY[2] + 41} font-size="22" fill={muted}>action set intact</text>
+      </svg>
+    </figure>
+    <div class="method-note poster-body">
+      <p>
+        A deterministic program learns rules from clean tool executions: required fields, stable
+        types, positive values, ordered dates. It keeps a rule only if it holds in every qualifying
+        example, and five-fold splitting keeps each tested workflow out of its own checker.
+      </p>
+      <p>
+        On a violation the monitor keeps the raw result and appends the violated rule, a witness,
+        and callable recovery tools. It makes no model call and chooses no repair.
+      </p>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={4} marker="3" kicker="Core result: frozen paired ToolMaze, Table 1" title="Completion rises from 10.9% to 28.1%: every model, every stratum nonnegative">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 1440 ${tm.h}`} role="img" aria-label="Dumbbell chart: baseline versus monitor completion for four primary models, their aggregate, and the MiniMax M3 replication">
+        <rect x="12" y={tmY(4) - tm.bandH / 2} width="1416" height={tm.bandH} fill={mainC} opacity="0.07" />
+        {tmTicks.map((t) => (
+          <>
+            <line x1={tmX(t)} y1={tm.gridTop} x2={tmX(t)} y2={tm.gridBot} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+            <text x={tmX(t)} y={tm.tickY} text-anchor="middle" font-size={tm.fTick} fill={muted}>{t}%</text>
+          </>
+        ))}
+        {toolmazeRows.map((r, i) => (
+          <g>
+            <text x="12" y={tmY(i) + tm.dy} font-size={tm.fLabel} font-weight={r.bold ? '600' : '400'} fill={ink}>{r.label}</text>
+            <text x={tm.countX} y={tmY(i) + tm.dy} text-anchor="end" font-size={tm.fCount} fill={muted}>{r.counts}</text>
+            <line x1={tmX(r.base)} y1={tmY(i)} x2={tmX(r.mon)} y2={tmY(i)} stroke={mainC} stroke-width={r.bold ? tm.swBold : tm.sw} opacity="0.55" />
+            <circle cx={tmX(r.base)} cy={tmY(i)} r={r.bold ? tm.rBold : tm.r} fill="rgb(var(--color-paper-surface))" stroke={ink} stroke-width={tm.swRing} />
+            <circle cx={tmX(r.mon)} cy={tmY(i)} r={r.bold ? tm.rBold : tm.r} fill={mainC} />
+            <text x="1210" y={tmY(i) + tm.dy} font-size={tm.fDelta} font-weight="600" fill={mainC}>{r.delta}</text>
+            <text x="1320" y={tmY(i) + tm.dy} font-size={tm.fWl} fill={muted}>W/L {r.wl}</text>
+          </g>
+        ))}
+        <line x1="12" y1={tmY(4) - tm.bandH / 2 - 2} x2="1428" y2={tmY(4) - tm.bandH / 2 - 2} stroke={muted} stroke-width="1" opacity="0.35" />
+        <line x1="12" y1={tmY(5) - tm.bandH / 2 - 2} x2="1428" y2={tmY(5) - tm.bandH / 2 - 2} stroke={muted} stroke-width="1" opacity="0.35" />
+      </svg>
+      <figcaption class="poster-caption">
+        Open circles are baseline, <span class="oc-main">filled green</span> the monitor arm; Δ in
+        points, W/L discordant pairs. Aggregate effect <strong>+17.2 points</strong> (95% bootstrap
+        [11.25, 23.44], p&nbsp;&lt;&nbsp;.00001); MiniMax M3 is a frozen third-family replication
+        (p&nbsp;=&nbsp;.00073). Data: paper Table 1.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={5} kicker={isLandscape ? undefined : 'Ablations: 114 paired workflows'} marker="4" title="The recovery-tool list is the active content">
+    {isLandscape ? (
+    <div class="c4-side">
+    <figure class="poster-figure contrast-figure">
+      <svg viewBox={`0 0 ${ctL.w} ${ctL.h}`} role="img" aria-label="Contrast estimates with 95% intervals: receipt minus stripped +11.4 and receipt minus baseline +12.3 clear zero; stripped minus baseline, localized minus generic, and on-time minus deferred do not.">
+        <rect x="6" y={ctL.r1y} width={ctL.w - 12} height={ctL.r1h} fill={mainC} opacity="0.07" />
+        <rect x="6" y={ctL.r2y} width={ctL.w - 12} height={ctL.r2h} fill={ink} opacity="0.03" />
+        {ctTicks.map((t) => (
+          <>
+            <line x1={ctLX(t)} y1={ctL.gTop} x2={ctLX(t)} y2={ctL.gBot} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity={t === 0 ? 0 : 0.35} />
+            <text x={ctLX(t)} y={ctL.tickY} text-anchor="middle" font-size="30" fill={muted}>{t > 0 ? `+${t}` : t}</text>
+          </>
+        ))}
+        <line x1={ctLX(0)} y1={ctL.gTop} x2={ctLX(0)} y2={ctL.gBot} stroke={muted} stroke-width="2.5" stroke-dasharray="8 8" opacity="0.7" />
+        {contrastGroups.map((g, gi) => (
+          <>
+            <text x="22" y={gi === 0 ? ctL.h1y : ctL.h2y} font-size="27" font-weight="600" letter-spacing="2" fill={g.active ? mainC : muted}>{g.head}</text>
+            {g.rows.map((r, i) => {
+              const y = (gi === 0 ? ctL.row1 : ctL.row2) + i * ctL.pitch;
+              const c = g.active ? mainC : muted;
+              return (
+                <g>
+                  <text x="22" y={y + 12} font-size="34" fill={ink}>{r.label}</text>
+                  <line x1={ctLX(r.lo)} y1={y} x2={ctLX(r.hi)} y2={y} stroke={c} stroke-width={g.active ? 8 : 6} stroke-linecap="round" />
+                  {g.active
+                    ? <circle cx={ctLX(r.c)} cy={y} r="15" fill={mainC} />
+                    : <circle cx={ctLX(r.c)} cy={y} r="13" fill={paper} stroke={muted} stroke-width="4" />}
+                  <text x={ctL.w - 16} y={y + 12} text-anchor="end" font-size="34" font-weight="600" fill={c}>{r.c > 0 ? `+${r.c.toFixed(1)}` : r.c.toFixed(1)}</text>
+                </g>
+              );
+            })}
+          </>
+        ))}
+        <text x={ctLX(5)} y={ctL.axisY} text-anchor="middle" font-size="28" fill={muted}>completion difference (points), 95% interval</text>
+      </svg>
+      <figcaption class="poster-caption">
+        A receipt stripped of its recovery-tool list performs at baseline; restoring the list adds
+        <strong>+11.4 points</strong> (p&nbsp;=&nbsp;.028). Witness detail and delivery timing show no
+        detectable difference (≈18-point MDE bounds the nulls). Data: paper Figure 3.
+      </figcaption>
+    </figure>
+    <div class="c4-actions">
+    <p class="poster-body after-receipt">What agents do after a receipt, across 484 detector events:</p>
+    <figure class="poster-figure action-figure">
+      <svg viewBox={`0 0 ${abL.w} ${actionSplit.length * abL.pitch}`} role="img" aria-label="After a receipt agents switch to a listed substitute 48.6% of the time, call another tool 33.5%, retry 14.0%, and stop 3.9%.">
+        {actionSplit.map((seg, i) => {
+          const y = i * abL.pitch;
+          const w = (seg.pct / 100) * abL.x1;
+          const stop = i === actionSplit.length - 1;
+          return (
+            <g>
+              <text x="0" y={y + 34} font-size="31" fill={stop ? warnC : ink}>{seg.label}</text>
+              <rect x="0" y={y + 48} width={w} height={abL.barH} fill={seg.color} opacity={i === 0 ? 0.9 : 0.75} />
+              <text x={w + 12} y={y + 81} font-size="34" font-weight="600" fill={stop ? warnC : ink}>{seg.pct}%</text>
+            </g>
+          );
+        })}
+      </svg>
+      <figcaption class="poster-caption">
+        91.5% of detector events retain at least two admissible recovery actions.
+      </figcaption>
+    </figure>
+    </div>
+    </div>
+    ) : (
+    <>
+    <figure class="poster-figure contrast-figure">
+      <svg viewBox={`0 0 1440 ${ct.h}`} role="img" aria-label="Contrast estimates with 95% intervals: receipt minus stripped +11.4 and receipt minus baseline +12.3 clear zero; stripped minus baseline, localized minus generic, and on-time minus deferred do not.">
+        <rect x="12" y={ct.r1y} width="1416" height={ct.r1h} fill={mainC} opacity="0.07" />
+        <rect x="12" y={ct.r2y} width="1416" height={ct.r2h} fill={ink} opacity="0.03" />
+        {ctTicks.map((t) => (
+          <>
+            <line x1={ctX(t)} y1={ct.gTop} x2={ctX(t)} y2={ct.gBot} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity={t === 0 ? 0 : 0.35} />
+            <text x={ctX(t)} y={ct.tickY} text-anchor="middle" font-size="24" fill={muted}>{t > 0 ? `+${t}` : t}</text>
+          </>
+        ))}
+        <line x1={ctX(0)} y1={ct.zTop} x2={ctX(0)} y2={ct.zBot} stroke={muted} stroke-width="2.5" stroke-dasharray="8 8" opacity="0.7" />
+        <text x="30" y={ct.h1y} font-size="25" font-weight="600" letter-spacing="2" fill={mainC}>{contrastGroups[0].head}</text>
+        {contrastGroups[0].rows.map((r, i) => {
+          const y = ct.row1 + i * ct.pitch;
+          return (
+            <g>
+              <text x="30" y={y + 9} font-size="27" fill={ink}>{r.label}</text>
+              <line x1={ctX(r.lo)} y1={y} x2={ctX(r.hi)} y2={y} stroke={mainC} stroke-width="7" stroke-linecap="round" />
+              <circle cx={ctX(r.c)} cy={y} r="13" fill={mainC} />
+              <text x="1420" y={y + 9} text-anchor="end" font-size="28" font-weight="600" fill={mainC}>+{r.c.toFixed(1)}</text>
+            </g>
+          );
+        })}
+        <text x="30" y={ct.h2y} font-size="25" font-weight="600" letter-spacing="2" fill={muted}>{contrastGroups[1].head}</text>
+        {contrastGroups[1].rows.map((r, i) => {
+          const y = ct.row2 + i * ct.pitch;
+          return (
+            <g>
+              <text x="30" y={y + 9} font-size="27" fill={ink}>{r.label}</text>
+              <line x1={ctX(r.lo)} y1={y} x2={ctX(r.hi)} y2={y} stroke={muted} stroke-width="5" stroke-linecap="round" />
+              <circle cx={ctX(r.c)} cy={y} r="12" fill={paper} stroke={muted} stroke-width="4" />
+              <text x="1420" y={y + 9} text-anchor="end" font-size="28" font-weight="600" fill={muted}>{r.c > 0 ? `+${r.c.toFixed(1)}` : r.c.toFixed(1)}</text>
+            </g>
+          );
+        })}
+        <text x={ctX(5)} y={ct.axisY} text-anchor="middle" font-size="24" fill={muted}>completion difference (points), 95% interval</text>
+      </svg>
+      <figcaption class="poster-caption">
+        A receipt stripped of its recovery-tool list performs at baseline; restoring the list adds
+        <strong>+11.4 points</strong> (p&nbsp;=&nbsp;.028). Witness detail and delivery timing show no
+        detectable difference (≈18-point MDE bounds the nulls). Data: paper Figure 3.
+      </figcaption>
+    </figure>
+    <p class="poster-body after-receipt">What agents do after a receipt, across 484 detector events:</p>
+    <figure class="poster-figure action-figure">
+      <svg viewBox={`0 0 1440 ${ab.h}`} role="img" aria-label="Stacked bar: after a receipt agents switch to a listed substitute 48.6% of the time, call another tool 33.5%, retry 14.0%, and stop 3.9%.">
+        {(() => {
+          let acc = 0;
+          return actionSplit.map((seg, i) => {
+            const x = 10 + (acc / 100) * 1420;
+            const w = (seg.pct / 100) * 1420 - 6;
+            acc += seg.pct;
+            const cx = x + w / 2;
+            const last = i === actionSplit.length - 1;
+            return (
+              <g>
+                <rect x={x} y={ab.barY} width={w} height={ab.barH} fill={seg.color} opacity={i === 0 ? 0.9 : 0.75} />
+                {!last && <text x={i === 0 ? cx : x + w - 12} y={ab.pctY} text-anchor={i === 0 ? 'middle' : 'end'} font-size={ab.fPct} font-weight="600" fill={paper}>{seg.pct}%</text>}
+                <text x={last ? 1430 : cx} y={ab.labelY} text-anchor={last ? 'end' : 'middle'} font-size={ab.fLabel} fill={last ? warnC : muted}>{seg.label}{last ? ` ${seg.pct}%` : ''}</text>
+              </g>
+            );
+          });
+        })()}
+      </svg>
+      <figcaption class="poster-caption">
+        91.5% of detector events retain at least two admissible recovery actions.
+      </figcaption>
+    </figure>
+    </>
+    )}
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={4} marker="5" kicker="Generalization: frozen studies + dev rows" title="Gains concentrate where the fault blocks completion">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 640" role="img" aria-label="Paired baseline and advisory completion by study: ToolMaze +17.2, tau-bench status +28.0, AppWorld type flip +16.7 improve; clean P0, tau-bench conservation, and AppWorld missing field are unchanged.">
+        {ceTicks.map((t) => (
+          <>
+            <line x1={ceX(t)} y1="24" x2={ceX(t)} y2="520" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+            <text x={ceX(t)} y="560" text-anchor="middle" font-size="30" fill={muted}>{t}%</text>
+          </>
+        ))}
+        {crossRows.map((r, i) => {
+          const same = r.base === r.mon;
+          return (
+            <g>
+              <text x="12" y={ceY(i) + 9} font-size="34" fill={ink}>{r.label}</text>
+              {r.tag && <text x="570" text-anchor="end" y={ceY(i) + 8} font-size={ceTagF} font-weight="600" letter-spacing="2" fill={muted}>{r.tag}</text>}
+              {!same && <line x1={ceX(r.base)} y1={ceY(i)} x2={ceX(r.mon)} y2={ceY(i)} stroke={mainC} stroke-width="5" opacity="0.55" />}
+              {same ? (
+                <>
+                  <circle cx={ceX(r.base)} cy={ceY(i)} r="13" fill={paper} stroke={ink} stroke-width="3" />
+                  <circle cx={ceX(r.base)} cy={ceY(i)} r="6" fill={mainC} />
+                </>
+              ) : (
+                <>
+                  <circle cx={ceX(r.base)} cy={ceY(i)} r="11" fill={paper} stroke={ink} stroke-width="3" />
+                  <circle cx={ceX(r.mon)} cy={ceY(i)} r="11" fill={mainC} />
+                </>
+              )}
+              <text x="1430" y={ceY(i) + 9} text-anchor="end" font-size="36" font-weight="600" fill={same ? muted : mainC}>{r.delta}</text>
+            </g>
+          );
+        })}
+        <text x={ceX(50)} y="616" text-anchor="middle" font-size="30" fill={muted}>task completion (%); concentric marker = identical rates</text>
+      </svg>
+      <figcaption class="poster-caption">
+        τ-bench retail replicates the effect: <strong>+14.0 points</strong> on V4 Flash
+        (p&nbsp;=&nbsp;.028) and <strong>+12.0</strong> on V4 Pro (p&nbsp;=&nbsp;.023). Where
+        baselines already complete despite the fault (≥&nbsp;65%), rescues are offset by harms.
+        Clean traffic stays quiet: one spurious receipt in 100 episodes. Data: paper Figure 2.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} marker="6" kicker="Validity check: incident-derived faults, authored blind" title="The contract vocabulary bounds detection">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 720 ${rc.h}`} role="img" aria-label="Bar chart: detection recall is 83% for violations over structured values and 22% for corruption inside plausible strings">
+        {recallRows.map((r, i) => {
+          const y = rc.y0 + i * rc.pitch;
+          const w = (r.pct / 100) * 470;
+          return (
+            <g>
+              <text x="10" y={y + rc.fLabel * 0.7} font-size={rc.fLabel} fill={ink}>{r.label}</text>
+              <rect x="10" y={y + rc.barY} width="470" height={rc.barH} fill={r.color} opacity="0.14" />
+              <rect x="10" y={y + rc.barY} width={w} height={rc.barH} fill={r.color} opacity="0.9" />
+              <text x={10 + w + 12} y={y + rc.barY + rc.barH * 0.68} font-size={rc.fPct} font-weight="600" fill={r.color}>{r.pct}%</text>
+              <text x={rc.nX} y={y + rc.barY + rc.barH * 0.68} font-size={rc.fN} fill={muted}>{r.n}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </figure>
+    <div class="validity-stats">
+      <div>
+        <p class="mini-stat oc-flag-stat">46%</p>
+        <p class="mini-stat-label">of injected incident faults flagged (46.1 / 45.3 Flash / Pro)</p>
+      </div>
+      <div>
+        <p class="mini-stat oc-warn-stat">1 in 5</p>
+        <p class="mini-stat-label">trackable episodes propagate a corrupted value; ⅔ still pass</p>
+      </div>
+      <div>
+        <p class="mini-stat oc-main-stat">0.80%</p>
+        <p class="mini-stat-label">fire rate on 53,078 organic responses</p>
+      </div>
+    </div>
+    <p class="poster-caption">
+      Suite transcribed from published production incidents; detector unchanged. Rules learned from
+      clean traces catch structured violations, not plausible-string corruption. Data: paper §6.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={12} marker="7" kicker="Takeaway" title="Attach recovery affordances at the point of failure" fill>
+    <ol class="poster-body takeaway-list">
+      <li>Silent failures need an <strong>in-band signal</strong>: fault-aware prompts and extended reasoning budgets do not substitute for the receipt.</li>
+      <li>Put <span class="oc-main">recovery tools</span> in the receipt: diagnostics without them perform at baseline in our controls.</li>
+      <li>Keep it <strong>nonbinding and cheap</strong>: +$0.13 (+7%) per episode with no extra model call beats a five-call reviewer port (+$9.24, +498%) by +11.25 points.</li>
+      <li>Expect gains where the fault <strong>blocks completion</strong> (baseline ≤ 16%); elsewhere rescues and harms roughly cancel.</li>
+      <li>Detection stops at the <span class="oc-flag">learned rule classes</span>: corruption inside plausible strings mostly slips through. Extending it is open.</li>
+    </ol>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={12} marker="8" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we did</p>
+        <p>
+          Outcome Monitors check tool results against <strong>rules learned from clean
+          traces</strong> or public schemas. On a violation they keep the result and append a
+          <span class="oc-main">nonbinding receipt</span>: violated property, witness, and recovery
+          tools. Frozen, prespecified evaluations with injected failures.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we found</p>
+        <p>
+          ToolMaze completion rises <strong>10.9% → 28.1%</strong> across four models in two families
+          and replicates in a third; τ-bench retail improves +14.0 / +12.0 points. Ablations identify
+          the <strong>recovery-tool list</strong>, not diagnostic detail or timing, as the active
+          content.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What you should do</p>
+        <p>
+          When a tool result can be silently wrong, <strong>deliver recovery options with the
+          flag</strong>: a one-line in-band receipt outperforms a 5-call reviewer at 1/70th the added
+          cost. And treat the contract vocabulary as the boundary of trust: outside it, detection
+          drops to 46%.
+        </p>
+      </div>
+      <div class="tldr-qr">
+        <img src="/poster/outcome-monitors-online-qr.svg" alt="QR code linking to this poster online at spanthi.com" />
+        <p class="tldr-qr-label">This poster online</p>
+      </div>
+    </div>
+  </PosterCell>
+</PosterShell>
+
+<style is:global>
+  /* A0 only, and only on this poster. This sheet carries nine cells in six
+     rows where the others carry seven in five, so its gutters and cell
+     paddings alone add a row's worth of height and the TL;DR band landed
+     exactly on the sheet edge: 0 mm bottom margin, nothing visibly cut, and a
+     trim at the print shop would have taken the border off. Buying the margin
+     back from the gutters costs no copy and no numbers; the alternative was
+     cutting three captions. The landscape sheet has height to spare and keeps
+     the house values. This rule is scoped to this poster because it ships in
+     this sheet's own global block.
+
+     If a future poster hits the same wall, prefer this over cutting content,
+     and never go below 6 mm: at 5 mm the cells stop reading as separate
+     panels from across a room. */
+  body[data-format='portrait'] .poster-canvas {
+    gap: 6mm 8mm;
+  }
+
+  body[data-format='portrait'] .poster-cell {
+    padding: 6mm 10mm;
+  }
+
+  /* Paper palette (arXiv:2608.19303 LaTeX definecolor): ocmain #206945
+     (advisory green), ocwarn #B0392E (failure red), ocflag #9E6C14 (flag
+     amber), ocink #272E34, ocmuted #696F74. */
+  :root {
+    --color-oc-main: 32 105 68;
+    --color-oc-warn: 176 57 46;
+    --color-oc-flag: 158 108 20;
+    --color-oc-ink: 39 46 52;
+    --color-oc-muted: 105 111 116;
+  }
+
+  /* Eight cells, two of them figure-heavy, do not fit the three-band shape the
+     shared landscape rule assumes: the takeaway takes a full-width band of its
+     own between the supporting checks and the TL;DR. The two figure bands are
+     near-equal here because the ablation cell in the lower band carries two
+     charts, so the default 1.12 / 0.88 split would clip it. */
+  body[data-format='landscape'] .poster-canvas {
+    grid-template-rows: auto minmax(0, 1.04fr) minmax(0, 0.96fr) auto auto;
+  }
+</style>
+
+<style>
+  .oc-main {
+    color: rgb(var(--color-oc-main));
+    font-weight: 600;
+  }
+
+  .oc-warn {
+    color: rgb(var(--color-oc-warn));
+    font-weight: 600;
+  }
+
+  .oc-flag {
+    color: rgb(var(--color-oc-flag));
+    font-weight: 600;
+  }
+
+  .loud-silent {
+    margin-top: 6mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 5mm;
+  }
+
+  /* The viewBox was cropped to the drawing (900 x 264 -> 695 x 248), which
+     closed a 24% dead gutter on its right but also made the figure taller for
+     its width. A0 is width-bound and had no height to spare, so it takes the
+     drawing back to its previous printed size; landscape is height-bound and
+     simply gains the gutter. */
+  /* Set on the svg directly: poster.css consumes `--fig-w` on an <img> in
+     portrait and only reaches an inline <svg> under the landscape rules, so a
+     custom property alone would have done nothing on A0. */
+  .loud-silent svg {
+    width: 82%;
+  }
+
+  :global(body[data-format='landscape']) .loud-silent svg {
+    width: 100%;
+  }
+
+  .big-stat {
+    margin-top: 6mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+    font-size: calc(20pt * var(--type-scale, 1));
+    line-height: 1.35;
+    font-weight: 300;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: calc(48pt * var(--type-scale, 1));
+    font-weight: 600;
+    color: rgb(var(--color-oc-warn));
+    line-height: 1.05;
+  }
+
+  .method-note {
+    margin-top: 6mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8mm;
+  }
+
+  .after-receipt {
+    margin-top: 3mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 3mm;
+    font-size: calc(19pt * var(--type-scale, 1));
+  }
+
+  .tldr-band {
+    font-size: calc(21pt * var(--type-scale, 1));
+  }
+
+  .validity-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6mm;
+    margin: 5mm 0;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 5mm;
+  }
+
+  .mini-stat {
+    font-size: calc(34pt * var(--type-scale, 1));
+    font-weight: 600;
+    line-height: 1.05;
+  }
+
+  .oc-flag-stat {
+    color: rgb(var(--color-oc-flag));
+  }
+
+  .oc-warn-stat {
+    color: rgb(var(--color-oc-warn));
+  }
+
+  .oc-main-stat {
+    color: rgb(var(--color-oc-main));
+  }
+
+  .mini-stat-label {
+    font-size: calc(15pt * var(--type-scale, 1));
+    line-height: 1.3;
+    color: rgb(var(--color-ink-muted));
+    margin-top: 2mm;
+  }
+
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    margin-bottom: 4mm;
+    padding-left: 15mm;
+    position: relative;
+  }
+
+  /* ── Landscape tuning (44 x 32) ────────────────────────────────────────
+     Only where the wide, short sheet changes an arrangement. Sizes come from
+     --type-scale and the shared figure rules, not from here. */
+
+  /* The lane diagram is 2.4:1 and its cell is height-bound, so at full column
+     width the drawing letterboxes and leaves a gutter either side. Narrowing
+     the box to the width it actually draws at closes the gutter. */
+  :global(body[data-format='landscape']) .lanes-figure {
+    --fig-w: 78%;
+  }
+
+  /* Cell 4: contrast chart left, action split right, each a full-height
+     column so neither figure gives up height to the other. */
+  .c4-side {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 10mm;
+  }
+
+  .c4-side > .poster-figure,
+  .c4-actions {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .c4-actions {
+    justify-content: center;
+  }
+
+  .c4-actions .after-receipt {
+    margin-top: 0;
+    border-top: 0;
+    padding-top: 0;
+    margin-bottom: 4mm;
+  }
+
+  /* The takeaway runs the full width of the sheet as its own band, so the list
+     splits into columns rather than setting 200-character lines. */
+  /* `display: block` undoes PosterCell's `fill`, which spreads list items down
+     a tall cell. Here the cell is a wide band, so the items spread sideways. */
+  :global(body[data-format='landscape']) .takeaway-list {
+    display: block;
+    columns: 3;
+    column-gap: 14mm;
+  }
+
+  :global(body[data-format='landscape']) .takeaway-list li {
+    break-inside: avoid;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    width: 9mm;
+    height: 9mm;
+    border: 0.6mm solid rgb(var(--color-ink-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(15pt * var(--type-scale, 1));
+    font-weight: 600;
+  }
+</style>

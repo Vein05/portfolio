@@ -11,13 +11,13 @@ You paste a cover letter into a chat and type one line after it:
 
 The model returns a tighter cover letter. It also puts “I still need to add my address at the top” inside the letter, polished into the applicant’s voice.
 
-The interface treated the final line as a request to the assistant. The model treated it as part of the document.
+The interface knew the final line was a request to the assistant, but the model edited it into the document.
 
 This failure has a simple cause. The chat interface knew exactly which characters came from the clipboard and which ones you typed afterward. The model received one flat string. A boundary that existed at composition time was discarded before inference, leaving the model to reconstruct it from prose.
 
-I call the pasted content the **artifact**, the typed tail the **afterthought**, and the invisible boundary between them the **paste seam**. When the afterthought enters the returned artifact, that is **instruction absorption**.
+I call the pasted content the artifact, the typed tail the afterthought, and the invisible boundary between them the paste seam. When the afterthought enters the returned artifact, that is **instruction absorption**.
 
-Across 19 models, the failure is not rare, and larger models do not make it disappear. The strongest cue is not extra space. It is provenance markup.
+I measured this on 19 models using constructed prompts, not logged chat traffic. Every model absorbed some afterthoughts, larger models included, and marking where the paste ends reduced absorption far more than adding blank lines.
 
 ## The test uses statements that contain no instruction
 
@@ -34,11 +34,11 @@ That distinction lets the benchmark isolate boundary inference instead of task o
 - **clean:** no afterthought;
 - **newline:** one line break before the afterthought;
 - **blank:** a blank line before it;
-- **boundary:** collision-safe tags wrap the artifact;
+- **boundary:** tags wrap the artifact, with a random suffix checked so the tag text never appears inside the artifact itself;
 - **mitigation:** the boundary plus one instruction explaining that outside text is conversational context;
 - **register-matched:** the bare newline remains, but the afterthought is rewritten in the artifact’s own style.
 
-The artifacts come from six licensed code and prose sources. Because every condition belongs to the same 300 composition clusters, the comparisons are paired: the seam changes; the underlying document does not.
+The artifacts come from six licensed code and prose sources. Because every condition belongs to the same 300 composition clusters, the comparisons are paired: only the seam changes between conditions.
 
 ## Blank lines did not reduce absorption
 
@@ -56,7 +56,7 @@ Explicit boundary markup reduced absorption in 18 of 19 models, by as much as 22
 type: seam-model-panel
 ```
 
-The exception is instructive. Llama 3.1 8B had the panel’s lowest bare-seam rate, 7.7%, but boundary markup left it at 7.3%. A low number alone does not prove that a model found the seam. It may simply omit afterthoughts regardless of whether the boundary is marked.
+Llama 3.1 8B is the exception. It had the panel’s lowest bare-seam rate, 7.7%, and boundary markup left it at 7.3%. A low number alone does not prove that a model found the seam. It may simply omit afterthoughts regardless of whether the boundary is marked.
 
 ## Matching the artifact's register raised absorption by 20 to 37 points
 
@@ -79,15 +79,15 @@ Every paired contrast was highly significant. The cleanest diagnostic came from 
 type: seam-register
 ```
 
-The low rate on code came from a mismatch between casual afterthoughts and code syntax, not from an inherent code boundary.
+So the low rate on code came from casual afterthoughts not fitting code syntax.
 
 When explicit provenance is missing, models use linguistic fit as a proxy. Text that sounds like the artifact is treated as part of the artifact, even when the interface knows it was typed after the paste.
 
 ## Claude exposed some boundary mistakes; GPT-5.6-sol rewrote them silently
 
-Under boundary markup, Claude Opus 4.8 often noticed the outside text and mentioned it separately. A complete candidate review found 17.7% visibly flagged cases and 1.3% silent absorption after accounting for two scorer residuals. The model frequently found the seam and said so.
+Under boundary markup, Claude Opus 4.8 often noticed the outside text and mentioned it separately. A complete candidate review found 17.7% visibly flagged cases and 1.3% silent absorption. That figure corrects two cases the automatic scorer still counts as absorbed, which a manual read showed were replies to the user.
 
-GPT-5.6-sol never produced a flagged outcome in 1,500 seam-condition cases. Its boundary rate remained 11.7%, and 62 positives were visible only to the semantic detector because the afterthought had been paraphrased. One model tended to fail loudly; the other failed silently through fluent rewriting.
+GPT-5.6-sol never produced a flagged outcome in 1,500 seam-condition cases. Its boundary rate remained 11.7%, and 62 positives were visible only to the semantic detector because the afterthought had been paraphrased. When Claude got the boundary wrong it often said so; GPT-5.6-sol's mistakes showed up only as paraphrased text inside the artifact.
 
 Both reached 0/300 detected absorption under the added mitigation instruction, but the utility check found a separate failure.
 
@@ -97,15 +97,15 @@ The benchmark measures whether afterthought content enters the artifact. It does
 
 On a deterministic Python syntax check, Opus returned invalid extracted code in 16 of 50 mitigation cases, compared with 0 of 50 matched clean cases. Half of those failures echoed boundary wrappers into the code; the other half remained invalid after wrapper removal. Another model refused a mitigation case outright.
 
-The instruction reduced absorption while damaging task completion in this code check.
+The instruction reduced absorption and also broke about a third of the returned Python in this check.
 
 This is why the interface-level fix matters more than asking users to paste special instructions around their documents. The application already owns exact clipboard offsets. It can pass provenance as structured input without making the model reproduce wrapper syntax or making the user manage tags manually.
 
 ## A manual audit found the message pattern in WildChat
 
-The controlled prompts are synthetic by construction. That is what makes the seam causal, but it leaves an ecological question: do people naturally place an artifact and then continue speaking in the same message?
+The controlled prompts are synthetic by construction. That lets me change only the seam, but it leaves an ecological question: do people naturally place an artifact and then continue speaking in the same message?
 
-A deterministic screen searched 477,103 English first-turn WildChat messages for that textual shape. It found 82,050 paste-shaped messages and 16,134 deduplicated candidates. Those are retrieval counts, not prevalence.
+A deterministic screen searched 477,103 English first-turn WildChat messages for that textual shape. It found 82,050 paste-shaped messages and 16,134 deduplicated candidates. Those are retrieval counts; they say nothing about how often the pattern occurs.
 
 One author then reviewed 50 screen-selected candidates without seeing earlier model-assisted labels. Twenty-three were clear artifact-then-user-continuation cases spanning code debugging, email and document editing, coursework, product design, academic writing, and creative generation.
 
@@ -117,17 +117,17 @@ Each afterthought contains an atomic proposition with distinctive witnesses. The
 
 Every semantic positive was read end to end. New model families received lexical spot checks, unusable completions were excluded with their matched controls, and placebo sweeps stayed effectively at zero. The audit still treats measured absorption as a lower bound: a paraphrase missed by the entailment tier remains invisible.
 
-That measurement work matters because chatty models often acknowledge an afterthought without inserting it. “I left out your comment about coffee” is not absorption. “After an exhausting coffee-fueled night…” inside the returned essay is.
+That measurement work matters because chatty models often acknowledge an afterthought without inserting it. “I left out your comment about coffee” counts as a mention, and “After an exhausting coffee-fueled night…” inside the returned essay counts as absorption.
 
 ## Preserve clipboard provenance in the model input
 
-The model does not need to infer every paste boundary from language. The application already observed the boundary as an input event.
+The application already observed the paste boundary as an input event, so the model should not have to infer it from language.
 
 The 19-model study supports a narrow practical rule:
 
 > If provenance exists at composition time, preserve it as markup at inference time.
 
-Whitespace is presentation. Register is an unreliable guess. Explicit provenance is the actual signal.
+In these tests blank lines did not help, register fit misled models, and explicit markup reduced absorption in 18 of 19 models.
 
 Until chat systems carry that signal forward, models will keep editing the user’s afterthought into the thing the user asked them to edit.
 

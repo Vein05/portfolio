@@ -1,0 +1,605 @@
+---
+// Sheet content for "Fixed RAG Compression Collapses Measured Reader Scaling"
+// (arXiv:2606.21807), authored once and rendered into both formats. `format`
+// selects the sheet (A0 portrait or the lab's 44 x 32 landscape) and is also
+// what figure geometry branches on: this poster's charts are wide and short,
+// which is exactly the arrangement a wide, short sheet cannot afford, so the
+// four data figures carry a second viewBox rather than a CSS override.
+//
+// Every number comes from the frozen official-score analysis in the research
+// repo (memory-eligibility-feasibility,
+// journal/results/official-score-analysis/summary.json) via the current
+// manuscript; keep in sync with it. All figures are drawn poster-native here
+// (see poster.md principle 6). Color code: HotpotQA/RECOMP = rc blue,
+// MuSiQue/shared summary = rc amber, raw evidence = neutral ink.
+import PosterShell from '../PosterShell.astro';
+import PosterCell from '../PosterCell.astro';
+import TitleBand from '../TitleBand.astro';
+import LabHeader from '../LabHeader.astro';
+
+export interface Props {
+  format?: 'portrait' | 'landscape';
+}
+const { format = 'portrait' } = Astro.props;
+const isLandscape = format === 'landscape';
+
+const ink = 'rgb(var(--color-ink-dark))';
+const muted = 'rgb(var(--color-ink-muted))';
+const hpC = 'rgb(var(--color-rc-hp))';
+const mqC = 'rgb(var(--color-rc-mq))';
+const paper = 'rgb(var(--color-paper-surface))';
+
+// ── Figure ①: the raw endpoint span against the same pair under one fixed
+// RECOMP artifact. A 3.6:1 dumbbell pair cannot fill the landscape cell it
+// gets, so the landscape sheet gives it a deeper viewBox (more air between the
+// two dumbbells, larger numerals) rather than leaving a dead band above it.
+const dm = isLandscape
+  ? { h: 470, l1: 52, r1: 104, v1: 154, p1: 113, l2: 298, r2: 350, v2: 400, p2: 359,
+      capSize: 24, numSize: 25, ppSize: 28, dot: 14, rule: 6 }
+  : { h: 250, l1: 30, r1: 62, v1: 102, p1: 69, l2: 152, r2: 184, v2: 224, p2: 191,
+      capSize: 20, numSize: 21, ppSize: 23, dot: 12, rule: 5 };
+
+// ── Figure ③: reader scaling under one fixed artifact (paper Figure 2) ──
+// Per-reader means from the frozen row_scores matrix; raw ascending.
+// Endpoints (first/last) are the raw-selected pair used for retention.
+const hpPts = [
+  [0.126, 0.364], [0.144, 0.358], [0.182, 0.388], [0.188, 0.338],
+  [0.234, 0.378], [0.306, 0.454], [0.342, 0.404], [0.344, 0.392],
+  [0.344, 0.412], [0.346, 0.412], [0.358, 0.38], [0.366, 0.43],
+  [0.37, 0.39], [0.384, 0.456], [0.384, 0.366], [0.43, 0.418],
+  [0.432, 0.434], [0.436, 0.412], [0.438, 0.442], [0.444, 0.442],
+];
+const mqPts = [
+  [0.045, 0.426], [0.053, 0.43], [0.065, 0.414], [0.08, 0.364],
+  [0.085, 0.395], [0.088, 0.419], [0.138, 0.437], [0.148, 0.43],
+  [0.149, 0.426], [0.166, 0.438], [0.168, 0.454], [0.183, 0.436],
+  [0.217, 0.436], [0.221, 0.437], [0.232, 0.428],
+];
+const scalePanels = [
+  {
+    title: 'HOTPOTQA, FIXED RECOMP, EM',
+    pts: hpPts,
+    color: hpC,
+    readers: '20 readers',
+    note: 'retains 24.5% of a 31.8pp contrast',
+  },
+  {
+    title: 'MUSIQUE, SHARED SUMMARY, F1',
+    pts: mqPts,
+    color: mqC,
+    readers: '15 readers',
+    note: 'retains 0.8% of an 18.7pp contrast',
+  },
+];
+// Scatter geometry per panel: plot 520x300 in user units, both axes 0-50%.
+// A0 sets the two panels side by side (1440 x 400, 3.6:1). The landscape sheet
+// puts this cell in a three-column slot, where a 3.6:1 block would print at
+// thumbnail height, so the panels stack into a near-square. That is an
+// arrangement change, not a size change: no CSS turns two side-by-side panels
+// into two stacked ones.
+const sc = isLandscape
+  ? { w: 720, h: 806, ox: () => 0, oy: (p) => p * 404, k: 1.6 }
+  : { w: 1440, h: 400, ox: (p) => p * 740, oy: () => 0, k: 1 };
+// Stacked into a narrow cell the panels are height-bound, so the drawing lands
+// at about 0.74 of its viewBox units and every label printed at 12 pt against
+// 31 pt body copy. `k` is this figure's own type step (see poster-landscape.md:
+// `--type-scale` never reaches inside a viewBox).
+const scf = (n) => Math.round(n * sc.k);
+const scX = (p, v) => sc.ox(p) + 120 + (v / 0.5) * 520;
+const scY = (p, v) => sc.oy(p) + 330 - (v / 0.5) * 300;
+const scTicks = [0, 0.25, 0.5];
+
+// ── Figure ④: excess ranking flips vs the raw replay floor (paper Fig. 3) ──
+const flipRows = [
+  { label: 'HotpotQA, EM', c: 16.7, lo: 8.7, hi: 24.4, color: hpC },
+  { label: 'HotpotQA, F1', c: 16.7, lo: 8.5, hi: 24.1, color: hpC },
+  { label: 'MuSiQue, EM', c: 32.7, lo: 18.6, hi: 45.8, color: mqC },
+  { label: 'MuSiQue, F1', c: 21.2, lo: 6.5, hi: 37.7, color: mqC },
+];
+// Flip geometry: A0 is 1440 x 470 with the plot at x in [430, 1290] for
+// -5...+50 points. The landscape sheet re-proportions it (800 x 520): the row
+// labels keep their printed size while the plot gives up width, so the chart
+// reads in a three-column cell instead of shrinking whole.
+const fl = isLandscape
+  ? {
+      // 800 x 380, not 800 x 520: at 1.54:1 this box could not be width-bound
+      // in a cell that also carries a caption and the decision-change note, so
+      // it drew at 0.44 scale and its tick labels printed at 9 pt. Flattening
+      // it to 2.1:1 lets the full column width set the size instead.
+      w: 800, h: 380, x0: 220, x1: 690, rowY: (i) => 54 + i * 70,
+      labelX: 10, labelSize: 28, valX: 790, valSize: 30,
+      axisTop: 18, axisBot: 292, tickY: 322, tickSize: 24,
+      floorY: 366, dotR: 13, barW: 8,
+    }
+  : {
+      w: 1440, h: 470, x0: 430, x1: 1290, rowY: (i) => 60 + i * 80,
+      labelX: 26, labelSize: 27, valX: 1420, valSize: 28,
+      axisTop: 24, axisBot: 356, tickY: 396, tickSize: 24,
+      floorY: 440, dotR: 13, barW: 7,
+    };
+const flX = (v) => fl.x0 + ((v + 5) / 55) * (fl.x1 - fl.x0);
+const flTicks = [0, 10, 20, 30, 40, 50];
+
+// ── Figure ⑤: rescue and damage transitions (paper Table 3) ──
+const transRows = [
+  { label: 'HotpotQA', rescue: 19.1, damage: 35.7, color: hpC },
+  { label: 'MuSiQue', rescue: 22.9, damage: 33.8, color: mqC },
+];
+// A0 runs the dataset label, both bars, and both descriptors in one wide band
+// (1440 x 420, 3.4:1). In a three-column landscape cell those 19-unit
+// descriptors would print near 9 pt, under the poster floor, so the landscape
+// arrangement drops the label onto its own line and stacks the block.
+const tr = isLandscape
+  ? {
+      w: 760, h: 510, y0: (i) => 34 + i * 250,
+      labelX: 10, labelSize: 31, barX: 10, barMax: 560, barH: 44, valSize: 30,
+      rescueBarDY: 22, rescueTxtDY: 96, damageBarDY: 118, damageTxtDY: 192,
+      noteSize: 19,
+    }
+  : {
+      w: 1440, h: 420, y0: (i) => 40 + i * 190,
+      labelX: 26, labelSize: 26, barX: 290, barMax: 1080, barH: 46, valSize: 26,
+      rescueBarDY: -20, rescueTxtDY: 56, damageBarDY: 70, damageTxtDY: 146,
+      noteSize: 19,
+    };
+
+// ── Figure ⑥: endpoint retention by HotpotQA policy (EM) ──
+const policyRows = [
+  { label: 'EXIT', ret: 0.836 },
+  { label: 'RECOMP extractive', ret: 0.245 },
+  { label: 'LLM summary', ret: 0.181 },
+  { label: 'RECOMP abstractive', ret: 0.138 },
+];
+// Same reason as the transition bars: at 1440 x 400 the policy names print
+// around 12 pt in a landscape column. The landscape arrangement narrows the
+// track and deepens the rows instead.
+const po = isLandscape
+  ? {
+      w: 760, h: 500, rowY: (i) => 40 + i * 108,
+      labelX: 10, labelSize: 26, trackX: 250, trackW: 440, barH: 52,
+      valSize: 28, valDY: 30, footY: 470, footSize: 19,
+    }
+  : {
+      w: 1440, h: 400, rowY: (i) => 30 + i * 92,
+      labelX: 26, labelSize: 25, trackX: 330, trackW: 1000, barH: 44,
+      valSize: 27, valDY: 24, footY: 392, footSize: 20,
+    };
+---
+
+<PosterShell
+  author="Sugam Panthi"
+  title="Poster: Fixed RAG Compression"
+  description="Research poster: fixed RAG compression collapses measured reader scaling (arXiv:2606.21807)."
+  slug="rag-compression"
+  format={format}
+>
+  {isLandscape ? (
+    <LabHeader
+      title="Fixed RAG Compression Collapses Measured Reader Scaling"
+      authors="Sugam Panthi, Rabab Abdelfattah"
+    />
+  ) : (
+    <TitleBand
+      kicker="arXiv:2606.21807, cs.CL. 176,864-row reader-by-compression matrix released"
+      title="Fixed RAG Compression Collapses Measured Reader Scaling"
+      authors="Sugam Panthi and Rabab Abdelfattah"
+      affiliation="Fixed-Artifact Reader Replay: byte-identical compressed evidence replayed across 8 to 20 reader panels"
+      qrSrc="/poster/rag-compression-qr.svg"
+      qrLabel="Scan for paper"
+    />
+  )}
+
+  <PosterCell span={5} landscapeSpan={4} marker="1" kicker="The problem" title="Fixed compression shrinks the measured gap between readers">
+    <div class="poster-body">
+      <p>
+        Compression is evaluated as a deployment layer: does a shorter context preserve accuracy?
+        The same layer is then reused while <strong>readers are compared</strong>. These roles
+        conflict. A compressor can raise several pipeline scores while
+        <span class="rc-hp">absorbing the reader upgrade</span> the evaluation was built to measure.
+      </p>
+    </div>
+    <figure class="poster-figure span-collapse">
+      {isLandscape ? (
+      <svg viewBox="0 0 900 400" role="img" aria-label="All 20 readers on 500 HotpotQA rows. Under raw evidence their EM spans 12.6 to 44.4 with mean 33.0; under one fixed RECOMP artifact the same readers span 33.8 to 45.6 with mean 40.4. The raw-selected endpoint pair goes from a 31.8pp gap to 7.8pp.">
+        {(() => {
+          // All 20 readers (hpPts), raw row above, fixed-RECOMP row below.
+          const x = (v) => 40 + ((v - 0.1) / 0.4) * 820;
+          const yR = 96, yC = 262;
+          const ends = [hpPts[0], hpPts[hpPts.length - 1]];
+          const mean = (k) => hpPts.reduce((a, pt) => a + pt[k], 0) / hpPts.length;
+          return (
+            <>
+              {[0.1, 0.2, 0.3, 0.4, 0.5].map((t) => (
+                <>
+                  <line x1={x(t)} y1="70" x2={x(t)} y2="288" stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+                  <text x={x(t)} y="356" text-anchor="middle" font-size="26" fill={muted}>{Math.round(t * 100)}</text>
+                </>
+              ))}
+              <text x="10" y="40" font-size="25" font-weight="600" letter-spacing="2" fill={ink}>RAW EVIDENCE</text>
+              <text x="890" y="40" font-size="28" font-weight="600" fill={ink} text-anchor="end">range 31.8pp, mean {(mean(0) * 100).toFixed(1)}</text>
+              {hpPts.map(([r, c]) => (
+                <line x1={x(r)} y1={yR} x2={x(c)} y2={yC} stroke={muted} stroke-width="2" opacity="0.35" />
+              ))}
+              {ends.map(([r, c]) => (
+                <line x1={x(r)} y1={yR} x2={x(c)} y2={yC} stroke={hpC} stroke-width="5" />
+              ))}
+              {hpPts.map(([r]) => <circle cx={x(r)} cy={yR} r="11" fill={ink} fill-opacity="0.75" stroke={paper} stroke-width="2" />)}
+              {hpPts.map(([, c]) => <circle cx={x(c)} cy={yC} r="11" fill={hpC} fill-opacity="0.85" stroke={paper} stroke-width="2" />)}
+              <line x1={x(mean(0))} y1={yR - 30} x2={x(mean(0))} y2={yR + 30} stroke={ink} stroke-width="4" />
+              <line x1={x(mean(1))} y1={yC - 30} x2={x(mean(1))} y2={yC + 30} stroke={hpC} stroke-width="4" />
+              <text x={x(ends[0][0])} y={yR - 26} text-anchor="middle" font-size="24" fill={muted}>{(ends[0][0] * 100).toFixed(1)}</text>
+              <text x={x(ends[1][0])} y={yR - 26} text-anchor="middle" font-size="24" fill={muted}>{(ends[1][0] * 100).toFixed(1)}</text>
+              <text x="10" y="318" font-size="25" font-weight="600" letter-spacing="2" fill={hpC}>SAME READERS, ONE FIXED RECOMP ARTIFACT</text>
+              <text x="890" y="318" font-size="28" font-weight="600" fill={hpC} text-anchor="end">range 11.8pp, mean {(mean(1) * 100).toFixed(1)}</text>
+              <text x="450" y="394" text-anchor="middle" font-size="23" fill={muted}>HotpotQA EM per reader; bold lines: the raw-selected endpoint pair; tick: panel mean</text>
+            </>
+          );
+        })()}
+      </svg>
+      ) : (
+      <svg viewBox={`0 0 900 ${dm.h}`} role="img" aria-label="Two dumbbells: the raw endpoint readers span 12.6 to 44.4 EM; under one fixed RECOMP artifact the same pair spans 36.4 to 44.2.">
+        <text x="10" y={dm.l1} font-size={dm.capSize} font-weight="600" letter-spacing="2" fill={ink}>RAW EVIDENCE</text>
+        <line x1={10 + (0.126 / 0.5) * 800} y1={dm.r1} x2={10 + (0.444 / 0.5) * 800} y2={dm.r1} stroke={ink} stroke-width={dm.rule} opacity="0.45" />
+        <circle cx={10 + (0.126 / 0.5) * 800} cy={dm.r1} r={dm.dot} fill={paper} stroke={ink} stroke-width="3" />
+        <circle cx={10 + (0.444 / 0.5) * 800} cy={dm.r1} r={dm.dot} fill={ink} />
+        <text x={10 + (0.126 / 0.5) * 800} y={dm.v1} text-anchor="middle" font-size={dm.numSize} fill={muted}>12.6</text>
+        <text x={10 + (0.444 / 0.5) * 800} y={dm.v1} text-anchor="middle" font-size={dm.numSize} fill={muted}>44.4</text>
+        <text x="866" y={dm.p1} font-size={dm.ppSize} font-weight="600" fill={ink} text-anchor="end">31.8pp</text>
+
+        <text x="10" y={dm.l2} font-size={dm.capSize} font-weight="600" letter-spacing="2" fill={hpC}>SAME PAIR, FIXED RECOMP</text>
+        <line x1={10 + (0.364 / 0.5) * 800} y1={dm.r2} x2={10 + (0.442 / 0.5) * 800} y2={dm.r2} stroke={hpC} stroke-width={dm.rule} opacity="0.55" />
+        <circle cx={10 + (0.364 / 0.5) * 800} cy={dm.r2} r={dm.dot} fill={paper} stroke={hpC} stroke-width="3" />
+        <circle cx={10 + (0.442 / 0.5) * 800} cy={dm.r2} r={dm.dot} fill={hpC} />
+        <text x={10 + (0.364 / 0.5) * 800} y={dm.v2} text-anchor="middle" font-size={dm.numSize} fill={muted}>36.4</text>
+        <text x={10 + (0.442 / 0.5) * 800} y={dm.v2} text-anchor="middle" font-size={dm.numSize} fill={muted}>44.2</text>
+        <text x="866" y={dm.p2} font-size={dm.ppSize} font-weight="600" fill={hpC} text-anchor="end">7.8pp</text>
+      </svg>
+      )}
+    </figure>
+    <p class="big-stat">
+      <span class="stat-number">7.8pp</span>
+      is all that remains of a 31.8pp raw reader contrast after one useful in-domain RECOMP
+      artifact. Same 500 HotpotQA rows, same candidate pools, same endpoint pair.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={7} landscapeSpan={5} marker="2" kicker="Method" title="Fixed-Artifact Reader Replay: change only the evidence policy">
+    <figure class="poster-figure">
+      <svg viewBox="0 0 1440 520" role="img" aria-label="Flow diagram: frozen candidate pools branch into raw evidence and one hashed compressed artifact per row; both are replayed across 8 to 20 readers, yielding upgrade retention and excess ranking flips.">
+        <defs>
+          <marker id="rc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={muted} />
+          </marker>
+        </defs>
+        <rect x="360" y="16" width="720" height="76" fill={paper} stroke={ink} stroke-width="2.5" />
+        <text x="720" y="49" font-size="25" font-weight="600" fill={ink} text-anchor="middle">saved candidate pools per row</text>
+        <text x="720" y="78" font-size="21" fill={muted} text-anchor="middle">rows, retrieval, prompts, and scorer fixed before replay</text>
+        <line x1="540" y1="92" x2="380" y2="148" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
+        <line x1="900" y1="92" x2="1060" y2="148" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
+
+        <rect x="30" y="154" width="640" height="102" fill={ink} fill-opacity="0.04" stroke={ink} stroke-width="2.5" />
+        <text x="350" y="196" font-size="25" font-weight="600" fill={ink} text-anchor="middle">raw evidence</text>
+        <text x="350" y="228" font-size="21" fill={muted} text-anchor="middle">the declared reference policy</text>
+        <rect x="770" y="154" width="640" height="102" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
+        <text x="1090" y="196" font-size="25" font-weight="600" fill={hpC} text-anchor="middle">one compressed artifact per row</text>
+        <text x="1090" y="228" font-size="21" fill={muted} text-anchor="middle">content hash must match for every reader record</text>
+
+        <line x1="350" y1="256" x2="640" y2="316" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
+        <line x1="1090" y1="256" x2="800" y2="316" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
+        <rect x="360" y="322" width="720" height="76" fill={paper} stroke={ink} stroke-width="2.5" />
+        <text x="720" y="355" font-size="25" font-weight="600" fill={ink} text-anchor="middle">replay both policies across the panel</text>
+        <text x="720" y="384" font-size="21" fill={muted} text-anchor="middle">8 to 20 readers per panel, 11 model families</text>
+
+        <line x1="540" y1="398" x2="380" y2="438" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
+        <line x1="900" y1="398" x2="1060" y2="438" stroke={muted} stroke-width="3.5" marker-end="url(#rc-arrow)" />
+        <rect x="30" y="444" width="640" height="64" fill={hpC} fill-opacity="0.08" stroke={hpC} stroke-width="2.5" />
+        <text x="350" y="484" font-size="24" font-weight="600" fill={hpC} text-anchor="middle">upgrade retention ρ = Δcomp / Δraw</text>
+        <rect x="770" y="444" width="640" height="64" fill={mqC} fill-opacity="0.08" stroke={mqC} stroke-width="2.5" />
+        <text x="1090" y="484" font-size="24" font-weight="600" fill={mqC} text-anchor="middle">excess ranking flips vs raw replay floor</text>
+      </svg>
+    </figure>
+    <div class="method-note poster-body">
+      <p>
+        The endpoint pair is selected by <strong>raw score only</strong>, before compressed scores
+        are inspected, and its compressed span reuses the same pair. Excess flips subtract the
+        reversal rate of repeated raw-evidence evaluation on held-out rows, so ordering changes are
+        counted <strong>beyond the panel's own row-sampling floor</strong>.
+      </p>
+      <p>
+        The primary study covers <strong>4 benchmarks and 5 compression families</strong> in a
+        released 176,864-row interaction matrix. A method enters a panel only when every reader
+        record has the same content hash for that row-level artifact. The analysis code performs
+        this check; a shared method label alone does not admit the panel.
+      </p>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={3} kicker={isLandscape ? undefined : 'Core result: prespecified confirmatory panels'} marker="3" title="Compression raises low-reader scores more and reduces the reader gap">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${sc.w} ${sc.h}`} role="img" aria-label="Two scatter panels of reader score under raw versus compressed evidence. HotpotQA with fixed RECOMP retains 24.5% of a 31.8 point contrast across 20 readers; MuSiQue with a shared summary retains 0.8% of an 18.7 point contrast across 15 readers. Points sit far above the identity line at the low end.">
+        {scalePanels.map((panel, p) => (
+          <g>
+            <text x={sc.ox(p) + 380} y={sc.oy(p) + scf(24)} text-anchor="middle" font-size={scf(24)} font-weight="600" letter-spacing="2" fill={panel.color}>{panel.title}</text>
+            {scTicks.map((t) => (
+              <>
+                <line x1={scX(p, t)} y1={sc.oy(p) + 30} x2={scX(p, t)} y2={sc.oy(p) + 330} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.3" />
+                <text x={scX(p, t)} y={sc.oy(p) + 360} text-anchor="middle" font-size={scf(17)} fill={muted}>{t * 100}%</text>
+                <line x1={scX(p, 0)} y1={scY(p, t)} x2={scX(p, 0.5)} y2={scY(p, t)} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.3" />
+                <text x={scX(p, 0) - 14} y={scY(p, t) + 6} text-anchor="end" font-size={scf(17)} fill={muted}>{t * 100}%</text>
+              </>
+            ))}
+            <line x1={scX(p, 0)} y1={scY(p, 0)} x2={scX(p, 0.5)} y2={scY(p, 0.5)} stroke={muted} stroke-width="2" stroke-dasharray="8 8" opacity="0.6" />
+            <text x={scX(p, 0.335)} y={scY(p, 0.3)} font-size={scf(16)} fill={muted}>identity</text>
+            {panel.pts.map((pt, i) => (
+              <g>
+                <circle cx={scX(p, pt[0])} cy={scY(p, pt[1])} r="9" fill={panel.color} stroke={paper} stroke-width="2" />
+                {(i === 0 || i === panel.pts.length - 1) && (
+                  <circle cx={scX(p, pt[0])} cy={scY(p, pt[1])} r="16" fill="none" stroke={ink} stroke-width="2.5" />
+                )}
+              </g>
+            ))}
+            <text x={scX(p, 0.48)} y={scY(p, 0.06)} text-anchor="end" font-size={scf(22)} font-weight="600" fill={panel.color}>{panel.note}</text>
+            <text x={scX(p, 0.48)} y={scY(p, 0.06) + 34} text-anchor="end" font-size={scf(18)} fill={muted}>{panel.readers}, same rows, same pools</text>
+            {isLandscape && (
+              <>
+                <text x="34" y={sc.oy(p) + 180} font-size={scf(18)} fill={muted} transform={`rotate(-90 34 ${sc.oy(p) + 180})`} text-anchor="middle">compressed score</text>
+                <text x="380" y={sc.oy(p) + 394} text-anchor="middle" font-size={scf(18)} fill={muted}>raw score</text>
+              </>
+            )}
+          </g>
+        ))}
+        {isLandscape ? (
+          <line x1="60" y1="398" x2="690" y2="398" stroke={muted} stroke-width="1" opacity="0.3" />
+        ) : (
+          <>
+            <text x="34" y="180" font-size="18" fill={muted} transform="rotate(-90 34 180)" text-anchor="middle">compressed score</text>
+            <text x="720" y="394" text-anchor="middle" font-size="18" fill={muted}>raw score</text>
+          </>
+        )}
+      </svg>
+      <figcaption class="poster-caption">
+        One point per reader, raw against byte-identical compressed evidence; ringed points are the
+        raw-selected endpoints. The panel mean rises in both cases: floor-lifting with
+        reader-dependent gains, not a common failure floor. Data: paper Figure 2 and Table 2.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} kicker={isLandscape ? undefined : 'Decision consequence: 5,000 row splits'} marker="4" title="Compression reverses reader orderings beyond row noise">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${fl.w} ${fl.h}`} role="img" aria-label="Excess flip estimates with split-stability intervals: HotpotQA 16.7 points under EM and F1, MuSiQue 32.7 under EM and 21.2 under F1, all above the zero raw replay floor.">
+        {flTicks.map((t) => (
+          <>
+            <line x1={flX(t)} y1={fl.axisTop} x2={flX(t)} y2={fl.axisBot} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity={t === 0 ? 0 : 0.35} />
+            <text x={flX(t)} y={fl.tickY} text-anchor="middle" font-size={fl.tickSize} fill={muted}>{t > 0 ? `+${t}` : t}</text>
+          </>
+        ))}
+        <line x1={flX(0)} y1={fl.axisTop - 4} x2={flX(0)} y2={fl.axisBot + 4} stroke={muted} stroke-width="2.5" stroke-dasharray="8 8" opacity="0.7" />
+        <text x={flX(0)} y={fl.floorY} text-anchor="middle" font-size="20" fill={muted}>raw replay floor</text>
+        {flipRows.map((r, i) => {
+          const y = fl.rowY(i);
+          return (
+            <g>
+              <text x={fl.labelX} y={y + 9} font-size={fl.labelSize} fill={ink}>{r.label}</text>
+              <line x1={flX(r.lo)} y1={y} x2={flX(r.hi)} y2={y} stroke={r.color} stroke-width={fl.barW} stroke-linecap="round" />
+              <circle cx={flX(r.c)} cy={y} r={fl.dotR} fill={r.color} />
+              <text x={fl.valX} y={y + 9} text-anchor="end" font-size={fl.valSize} font-weight="600" fill={r.color}>+{r.c.toFixed(1)}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <figcaption class="poster-caption">
+        Median excess flips across 5,000 row splits; bars are 95% split-stability intervals. Raw
+        replay flips 1.5% of eligible HotpotQA pairs. Data: paper Figure 3.
+      </figcaption>
+    </figure>
+    <div class="winner-flip poster-body">
+      <p class="winner-flip-head">One concrete decision change (MuSiQue F1, raw top-3 shortlist):</p>
+      <p>
+        <strong>DeepSeek R1 Distill Llama 70B</strong> wins under raw evidence.
+        <span class="rc-mq">GPT-4.1-mini</span> wins under the shared summary.
+      </p>
+    </div>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} kicker={isLandscape ? undefined : 'The account: row transitions'} marker="5" title="Rescue and damage coexist inside a rising average">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${tr.w} ${tr.h}`} role="img" aria-label="Paired bars: HotpotQA RECOMP rescues 19.1% of row-reader pairs while damaging 35.7% of raw-correct pairs; MuSiQue rescues 22.9% and damages 33.8%.">
+        {transRows.map((r, i) => {
+          const y0 = tr.y0(i);
+          const wR = (r.rescue / 40) * tr.barMax;
+          const wD = (r.damage / 40) * tr.barMax;
+          return (
+            <g>
+              <text x={tr.labelX} y={y0} font-size={tr.labelSize} font-weight="600" fill={r.color}>{r.label}</text>
+              <rect x={tr.barX} y={y0 + tr.rescueBarDY} width={wR} height={tr.barH} fill={r.color} opacity="0.85" />
+              <text x={tr.barX + wR + 14} y={y0 + tr.rescueBarDY + 32} font-size={tr.valSize} font-weight="600" fill={r.color}>{r.rescue}%</text>
+              <text x={tr.barX} y={y0 + tr.rescueTxtDY} font-size={tr.noteSize} fill={muted}>rescued: raw-wrong, correct after compression (share of all row-reader pairs)</text>
+              <rect x={tr.barX} y={y0 + tr.damageBarDY} width={wD} height={tr.barH} fill={ink} opacity="0.55" />
+              <text x={tr.barX + wD + 14} y={y0 + tr.damageBarDY + 32} font-size={tr.valSize} font-weight="600" fill={ink}>{r.damage}%</text>
+              <text x={tr.barX} y={y0 + tr.damageTxtDY} font-size={tr.noteSize} fill={muted}>damaged: raw-correct pairs that become incorrect</text>
+            </g>
+          );
+        })}
+      </svg>
+      <figcaption class="poster-caption">
+        The two rates have different denominators and do not net into an accuracy change: readers
+        reach similar compressed averages through different paths. Data: paper Table 3.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} kicker={isLandscape ? undefined : 'Validity check: four HotpotQA policies'} marker="6" title="Not every compressor collapses the curve">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${po.w} ${po.h}`} role="img" aria-label="Bar chart of endpoint EM retention by HotpotQA policy: EXIT 0.836, RECOMP extractive 0.245, LLM summary 0.181, RECOMP abstractive 0.138.">
+        {policyRows.map((r, i) => {
+          const y = po.rowY(i);
+          const w = r.ret * po.trackW;
+          return (
+            <g>
+              <text x={po.labelX} y={y + 14} font-size={po.labelSize} fill={ink}>{r.label}</text>
+              <rect x={po.trackX} y={y - 8} width={po.trackW} height={po.barH} fill={hpC} opacity="0.12" />
+              <rect x={po.trackX} y={y - 8} width={w} height={po.barH} fill={hpC} opacity={i === 0 ? 0.9 : 0.55} />
+              <text x={po.trackX + w + 14} y={y + po.valDY} font-size={po.valSize} font-weight="600" fill={hpC}>.{Math.round(r.ret * 1000)}</text>
+            </g>
+          );
+        })}
+        <text x={po.trackX} y={po.footY} font-size={po.footSize} fill={muted}>endpoint EM retention (1.0 = upgrade fully preserved)</text>
+      </svg>
+      <figcaption class="poster-caption">
+        EXIT preserves most of the curve and its excess-flip intervals cross zero. Fixed
+        compression <strong>can</strong> distort a comparison, not every compressor does, so each
+        deployed compressor needs its own audit. Data: paper §6.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} marker="7" kicker="Takeaway" title="Audit fidelity separately from utility" fill>
+    <ol class="poster-body takeaway-list">
+      <li><strong>Freeze the evidence.</strong> One retrieval pool and one compressed artifact per row, with recorded hashes; regenerated summaries are different evidence.</li>
+      <li>Select weak, middle, and strong readers <strong>by raw score, before</strong> inspecting compressed scores.</li>
+      <li>Replay both policies and report pipeline means, <span class="rc-hp">upgrade retention</span>, <span class="rc-mq">excess flips</span>, and rescue and damage.</li>
+      <li>A rising average is not evidence of a preserved comparison: RECOMP helps several pipelines while hiding most of the HotpotQA upgrade.</li>
+      <li>Raw evidence is the <strong>declared reference policy</strong>, not a claim about intrinsic model capability.</li>
+    </ol>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={12} marker="8" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we did</p>
+        <p>
+          Fixed-Artifact Reader Replay: freeze rows, retrieval, and one
+          <strong>byte-identical compressed artifact</strong> per row, then replay raw and
+          compressed evidence across 8 to 20 readers. Four benchmarks, five compression families,
+          and a released 176,864-row interaction matrix.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we found</p>
+        <p>
+          One useful in-domain RECOMP artifact cuts a <strong>31.8pp HotpotQA reader contrast to
+          7.8pp</strong> (24.5% retention); MuSiQue F1 retains 0.8%. Both benchmarks reverse
+          separated reader orderings beyond the raw replay floor, up to <strong>+32.7pp excess
+          flips</strong>.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What you should do</p>
+        <p>
+          Never compare readers behind an unaudited compression layer. Freeze the artifact, report
+          raw and compressed scaling, and quantify retention and excess flips; a compressor that
+          raises the average can still <strong>absorb the very upgrade you are measuring</strong>.
+        </p>
+      </div>
+      <div class="tldr-qr">
+        <img src="/poster/rag-compression-online-qr.svg" alt="QR code linking to this poster online at spanthi.com" />
+        <p class="tldr-qr-label">This poster online</p>
+      </div>
+    </div>
+  </PosterCell>
+</PosterShell>
+
+<style is:global>
+  /* Paper palette (build_figures.py): HotpotQA/RECOMP blue #2F6F9F,
+     MuSiQue/shared-summary amber #A65F00. */
+  :root {
+    --color-rc-hp: 47 111 159;
+    --color-rc-mq: 166 95 0;
+  }
+</style>
+
+<style>
+  .rc-hp {
+    color: rgb(var(--color-rc-hp));
+    font-weight: 600;
+  }
+
+  .rc-mq {
+    color: rgb(var(--color-rc-mq));
+    font-weight: 600;
+  }
+
+  .span-collapse {
+    margin-top: 6mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 5mm;
+  }
+
+  .big-stat {
+    margin-top: 5mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+    font-size: calc(20pt * var(--type-scale, 1));
+    line-height: 1.35;
+    font-weight: 300;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: calc(48pt * var(--type-scale, 1));
+    font-weight: 600;
+    color: rgb(var(--color-rc-hp));
+    line-height: 1.05;
+  }
+
+  .method-note {
+    margin-top: 6mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8mm;
+  }
+
+  .winner-flip {
+    margin-top: 4mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+    font-size: calc(20pt * var(--type-scale, 1));
+  }
+
+  .winner-flip-head {
+    font-size: calc(16pt * var(--type-scale, 1));
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgb(var(--color-ink-muted));
+    margin-bottom: 2mm;
+  }
+
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    margin-bottom: 4mm;
+    padding-left: 15mm;
+    position: relative;
+  }
+
+  /* Landscape: the header band's height floor took the room this gap had. */
+  :global(body[data-format='landscape']) .takeaway-list li {
+    margin-bottom: 1.5mm;
+  }
+
+  :global(body[data-format='landscape']) .takeaway-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    width: 9mm;
+    height: 9mm;
+    border: 0.6mm solid rgb(var(--color-ink-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(15pt * var(--type-scale, 1));
+    font-weight: 600;
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+// The lab's house poster header, rebuilt to match the group's existing 44 x 32
+// sheets so this poster sits alongside them at a venue without looking foreign.
+//
+// Every dimension below is a fraction of the SHEET WIDTH, measured off the
+// reference PDF (page 3168 x 2304 pt = 44 x 32 in, 72 pt/in):
+//
+//   band height  251    pt -> 7.9230%    gray rule 10 pt -> 0.31566%, #7F7F7F
+//   USM logo     530.2 x 226.5 pt at x=0, y=3.7    (flush left, flush top)
+//   chip         529.5 x  72.8 pt at x=2625, y=17.2   fill #F2F2F2
+//   AIMS logo    480.8 x  83.2 pt at x=2645.2, y=120
+//   title        Times New Roman Bold 66 pt, #000, baseline 116.05 pt from top
+//   authors      Times New Roman Bold 48 pt, #595959, baseline 210.58 pt
+//
+// Expressed as fractions of `--sheet-w` (set on the canvas by PosterShell), so
+// the proportions hold at any rendered size: screen, print, or thumbnail.
+// Deliberately NOT container-query units: Chrome resolves `cqw` inconsistently
+// in the interactive print path, which collapsed this band in Save-as-PDF while
+// headless print-to-pdf rendered it correctly.
+// Title and author baselines are placed by `top = baseline - 0.891em`, 0.891
+// being the Times New Roman ascent.
+//
+// The two logos are the real institutional marks, not redrawings. They were
+// lifted from the reference PDF at ~200 ppi effective; if the lab has vector
+// originals they are a drop-in replacement for the files in /poster/logos/.
+export interface Props {
+  title: string;
+  authors: string;
+  /** Acceptance line, set in red where the reference poster puts a lab chip.
+      It is the one piece of news a passer-by should catch from a distance. */
+  venue?: string;
+}
+
+const { title, authors, venue } = Astro.props;
+---
+
+<header class="lab-header">
+  <img class="lab-header-usm" src="/poster/logos/usm.png" alt="The University of Southern Mississippi" />
+
+  <div class="lab-header-text">
+    <p class="lab-header-title">{title}</p>
+    <p class="lab-header-authors">{authors}</p>
+  </div>
+
+  {venue && <p class="lab-header-venue">{venue}</p>}
+  <img
+    class:list={['lab-header-aims', { 'is-alone': !venue }]}
+    src="/poster/logos/aims-lab.png"
+    alt="AIMS Lab: Artificial Intelligence and Multimodal Systems"
+  />
+
+  <div class="lab-header-rule"></div>
+</header>
+
+<style>
+  .lab-header {
+    position: relative;
+    width: 100%;
+    /* Measured band ratio: 251 pt on a 3168 pt sheet. */
+    height: calc(var(--sheet-w, 841mm) * 0.0792298);
+    background-color: #ffffff;
+  }
+
+  .lab-header-usm {
+    position: absolute;
+    left: 0;
+    top: calc(var(--sheet-w, 841mm) * 0.0011679);
+    width: calc(var(--sheet-w, 841mm) * 0.1673610);
+    height: calc(var(--sheet-w, 841mm) * 0.0714960);
+  }
+
+  /* The text block occupies exactly the gap between the two logo zones — left
+     edge where the USM mark ends (16.736%), right edge where the chip begins
+     (82.860%) — and centres vertically inside the band. The reference poster
+     positions its title on a fixed baseline, which only works for a one-line
+     title; centring a flex column keeps short titles in the same place while
+     letting a longer one wrap to two lines without colliding with a logo. */
+  .lab-header-text {
+    position: absolute;
+    left: calc(var(--sheet-w, 841mm) * 0.1673610);
+    right: calc(var(--sheet-w, 841mm) * 0.1714010);
+    top: 0;
+    bottom: calc(var(--sheet-w, 841mm) * 0.0031566); /* clear the rule */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--sheet-w, 841mm) * 0.0044192); /* 14 pt */
+    text-align: center;
+  }
+
+  .lab-header-title,
+  .lab-header-authors {
+    font-family: 'Times New Roman', Times, 'Liberation Serif', serif;
+    font-weight: 700;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+
+  .lab-header-title {
+    font-size: calc(var(--sheet-w, 841mm) * 0.0208333); /* 66 pt */
+    color: #000000;
+  }
+
+  .lab-header-authors {
+    font-size: calc(var(--sheet-w, 841mm) * 0.0151515); /* 48 pt */
+    color: #595959;
+  }
+
+  /* Occupies the slot the reference poster gives its lab chip, but set as
+     plain red type rather than black-on-gray: this is the poster's headline
+     news, and the gray box would mute it. */
+  .lab-header-venue {
+    position: absolute;
+    left: calc(var(--sheet-w, 841mm) * 0.8285980);
+    top: calc(var(--sheet-w, 841mm) * 0.0054293);
+    width: calc(var(--sheet-w, 841mm) * 0.1671400);
+    height: calc(var(--sheet-w, 841mm) * 0.0229800);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Times New Roman', Times, 'Liberation Serif', serif;
+    font-weight: 700;
+    font-size: calc(var(--sheet-w, 841mm) * 0.0120000);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    color: #c00000;
+    text-transform: uppercase;
+  }
+
+  .lab-header-aims {
+    position: absolute;
+    left: calc(var(--sheet-w, 841mm) * 0.8349750);
+    top: calc(var(--sheet-w, 841mm) * 0.0378788);
+    width: calc(var(--sheet-w, 841mm) * 0.1517680);
+    height: calc(var(--sheet-w, 841mm) * 0.0262630);
+  }
+
+  /* No co-badge chip: the mark centres in the band's inner height
+     ((251 - 10) / 3168 = calc(var(--sheet-w, 841mm) * 0.0760730)) instead of sitting below the chip. */
+  .lab-header-aims.is-alone {
+    top: calc(var(--sheet-w, 841mm) * 0.0249050);
+  }
+
+  .lab-header-rule {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: calc(var(--sheet-w, 841mm) * 0.0031566);
+    background-color: #7f7f7f;
+  }
+</style>

@@ -14,11 +14,11 @@ caption: Canvas, Painting
 width: 480px
 ```
 
-Most modern portfolio UIs lean toward glass, blur, gradient blobs, and soft cards. I intentionally moved in the opposite direction: tighter structure, physical texture, and ink-like contrast. The north star was simple:
+Most modern portfolio UIs lean toward glass, blur, gradient blobs, and soft cards. I intentionally moved in the opposite direction: tighter structure, physical texture, and ink-like contrast. The goal was simple:
 
 **Make the interface feel like paper and ink, but keep the ergonomics of a modern React app.**
 
-This post started as a quick style note, but during implementation we made a lot of concrete decisions that shaped the final system. This is the fuller version of those decisions.
+This post started as a quick style note, but during implementation I made a lot of concrete decisions that shaped the final system. This is the fuller version of those decisions.
 
 ## Choosing the Color Palette
 
@@ -105,7 +105,7 @@ A big decision was to stop thinking in floating cards and design around a fixed 
 * Sticky sidebars use `top-[3.5rem] h-[calc(100vh-3.5rem)]`
 * Breadcrumb is always the first child and acts like a fixed masthead
 
-This gave the site a "publication spine." On smaller screens, the table of contents collapses into a single mobile panel, so navigation still exists without crushing the reading flow.
+That frame gives every page the same two-column reading layout. On smaller screens, the table of contents collapses into a single mobile panel, so navigation still exists without crushing the reading flow.
 
 ### Exact code (layout frame)
 
@@ -270,16 +270,4 @@ No design language is free. The main tradeoffs:
 
 I still think these were the right tradeoffs. The portfolio now feels authored, not assembled.
 
-## What I Learned
-
-The biggest lesson from this project is that "aesthetic" is mostly system design.
-
-The final look came from repeatable rules:
-
-* named tokens instead of ad hoc colors
-* reusable utility surfaces for material consistency
-* a stable layout skeleton
-* explicit interaction conventions
-* a markdown pipeline that preserves visual language at scale
-
-That combination made the site easier to extend. New pages and posts inherit the same DNA instead of forcing another design reset each time.
+The final look came from repeatable rules: named tokens instead of ad hoc colors, a stable layout skeleton, explicit interaction conventions, and a markdown pipeline that preserves visual language at scale. New pages and posts inherit the same tokens and layout instead of forcing another design reset each time.

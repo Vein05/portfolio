@@ -1,0 +1,492 @@
+---
+// Sheet content for "Same Ranking, Different Winner" (arXiv:2605.24060),
+// authored once and rendered into both formats. `format` selects the sheet
+// (A0 portrait or the lab's 44 x 32 landscape) and is also what figure
+// geometry branches on, since a wider, shorter sheet needs flatter charts.
+import LabHeader from '../LabHeader.astro';
+
+export interface Props {
+  format?: 'portrait' | 'landscape';
+}
+const { format = 'portrait' } = Astro.props;
+const isLandscape = format === 'landscape';
+// A0 poster for "Same Ranking, Different Winner" (arXiv:2605.24060).
+// Every number here comes from the paper; keep in sync with the camera-ready.
+// Embedded figures are the paper's own vector PDFs converted to SVG
+// (public/poster/figures/). Custom charts rebuild Tables 2, 5, and 6 and use
+// the paper's target palette: Raw = blue, Source = green, Canonical = red.
+import PosterShell from '../PosterShell.astro';
+import PosterCell from '../PosterCell.astro';
+import TitleBand from '../TitleBand.astro';
+
+const ink = 'rgb(var(--color-ink-dark))';
+const muted = 'rgb(var(--color-ink-muted))';
+const rawC = 'rgb(var(--color-target-raw))';
+const sourceC = 'rgb(var(--color-target-source))';
+const canonC = 'rgb(var(--color-target-canonical))';
+const partialC = 'rgb(var(--color-audit-partial))';
+
+const targetColor = { Raw: rawC, Source: sourceC, Canonical: canonC };
+
+// ── Figure ③: fixed-subset rescoring, nDCG@60 (paper Table 2) ──
+const slopeData = [
+  {
+    dataset: 'LoCoMo',
+    runs: [
+      { label: 'Lexical', raw: 0.1876, source: 0.3809, canonical: 0.3556 },
+      { label: 'all-MiniLM', raw: 0.2118, source: 0.4198, canonical: 0.3875 },
+      { label: 'BGE-M3', raw: 0.2548, source: 0.4109, canonical: 0.3231 },
+      { label: 'mxbai-large', raw: 0.212, source: 0.4195, canonical: 0.387 },
+    ],
+  },
+  {
+    dataset: 'LongMemEval-S',
+    runs: [
+      { label: 'Lexical', raw: 0.1877, source: 0.4041, canonical: 0.4558 },
+      { label: 'all-MiniLM', raw: 0.2001, source: 0.4561, canonical: 0.5309 },
+      { label: 'BGE-M3', raw: 0.1969, source: 0.4576, canonical: 0.5326 },
+      { label: 'mxbai-large', raw: 0.1815, source: 0.5032, canonical: 0.6015 },
+    ],
+  },
+];
+
+// Slope panel geometry. Each panel is ~720 x 340 in user units. A0 sets them
+// side by side (1440 x 340, 4.2:1); the landscape sheet stacks them into a
+// near-square block, which is what lets cell 3 give width back to cell 1.
+const slope = isLandscape
+  ? { w: 720, h: 690, ox: () => 0, oy: (p) => p * 345, k: 1.3 }
+  : { w: 1440, h: 340, ox: (p) => p * 730, oy: () => 0, k: 1 };
+// Text inside a figure is in viewBox units, so it does not follow
+// `--type-scale`: at the portrait numbers this chart printed its tick labels at
+// 15 pt against 31 pt body copy. `k` is the figure's own type step, applied to
+// every font-size and to the label dodge so the gaps scale with the type.
+const sfs = (n) => Math.round(n * slope.k);
+
+// ── Figure ⑤: transfer runs, full-run nDCG@60 (paper Table 4) ──
+// Redrawn poster-native rather than embedding the paper's 2 x 2 matplotlib
+// panel: four 3-point panels shrunk into one column print at about 10 pt, and
+// the same four runs read better as one slope panel in the same visual
+// language as cell ③. `reversed` is the paper's non-monotonic case, where
+// Canonical lands below Raw; it is drawn dashed.
+const transferRuns = [
+  { label: 'Mem0 / LoCoMo', raw: 0.275, source: 0.662, canonical: 0.617, reversed: false },
+  { label: 'Mem0 / LongMemEval-S', raw: 0.567, source: 0.717, canonical: 0.435, reversed: true },
+  { label: 'MemoryOS / LoCoMo', raw: 0.434, source: 0.579, canonical: 0.409, reversed: true },
+  { label: 'MemoryOS / LongMemEval-S', raw: 0.231, source: 0.812, canonical: 0.730, reversed: false },
+];
+// One panel, both formats: 720 x 440 user units lands at roughly 1:1 with
+// printed points in portrait and is scaled up by the cell in landscape, so
+// only the type needs the figure's own step (`slope.k`).
+const tY = (v) => 360 - ((v - 0.15) / 0.75) * 290;
+const tXs = [110, 255, 400];
+const tGrid = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
+const transferLabels = (() => {
+  const ls = transferRuns
+    .map((r) => ({ label: r.label, y: tY(r.canonical), reversed: r.reversed }))
+    .sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ls.length; i++) ls[i].y = Math.max(ls[i].y, ls[i - 1].y + 30 * slope.k);
+  return ls;
+})();
+
+// Slope panel geometry: viewBox 1440×340, two 660-wide panels.
+const slopeY = (v) => 292 - (v / 0.65) * 252;
+const slopeXs = [150, 340, 530];
+const gridVals = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6];
+
+// Dodge end labels so runs with near-identical canonical values don't overlap.
+const dodgedLabels = (runs) => {
+  const labels = runs
+    .map((r) => ({ label: r.label, y: slopeY(r.canonical) }))
+    .sort((a, b) => a.y - b.y);
+  for (let i = 1; i < labels.length; i++) {
+    labels[i].y = Math.max(labels[i].y, labels[i - 1].y + 21 * slope.k);
+  }
+  return labels;
+};
+
+// ── Figure ④: parser-density winners on fixed subset, n=453 (paper Table 5) ──
+const winnerRows = [
+  { provider: 'Lexical', cmp: 'F1 vs F5', raw: 'F1', source: 'F5', canonical: 'F1' },
+  { provider: 'Lexical', cmp: 'F1 vs F8', raw: 'F1', source: 'F8', canonical: 'F1' },
+  { provider: 'Lexical', cmp: 'F5 vs F8', raw: 'F5', source: 'F8', canonical: 'F8' },
+  { provider: 'all-MiniLM', cmp: 'F1 vs F5', raw: 'F1', source: 'F5', canonical: 'F1' },
+  { provider: 'all-MiniLM', cmp: 'F1 vs F8', raw: 'F1', source: 'F8', canonical: 'F1' },
+  { provider: 'all-MiniLM', cmp: 'F5 vs F8', raw: 'F8', source: 'F8', canonical: 'F8' },
+];
+const denser = (cmp, winner) => winner === cmp.split(' vs ')[1];
+
+// ── Figure ⑥: semantic audit of contested credit (paper Table 6) ──
+// Verdict colors follow the paper's audit iconography: supports green,
+// partial orange, contradicts red.
+// Figure geometry for the audit bar. A 4.5:1 bar cannot grow into a narrow,
+// tall landscape cell, so the landscape sheet uses a deeper viewBox: a thicker
+// bar with larger numerals, which fills the cell and reads from further back.
+const bar = isLandscape
+  ? { h: 360, barY: 24, barH: 232, pctY: 158, pctSize: 58, labelY: 312, labelSize: 30 }
+  : { h: 160, barY: 26, barH: 60, pctY: 65, pctSize: 26, labelY: 124, labelSize: 19 };
+
+const audit = [
+  { label: 'Fully supports', pct: 29.2, color: sourceC },
+  { label: 'Partially supportive', pct: 39.6, color: partialC },
+  { label: 'Does not support', pct: 31.2, color: canonC },
+];
+---
+
+<PosterShell
+  author="Sugam Panthi"
+  title="Poster: Same Ranking, Different Winner"
+  description="Research poster: how scoring targets shape LLM memory benchmarks (EMNLP Findings 2026)."
+  slug="memory-targets"
+  format={format}
+>
+  {isLandscape ? (
+    <LabHeader
+      title="Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks"
+      authors="Sugam Panthi, Rabab Abdelfattah"
+    />
+  ) : (
+    <TitleBand
+      kicker="Findings of EMNLP 2026, arXiv:2605.24060, cs.IR"
+      title="Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks"
+      authors="Sugam Panthi and Rabab Abdelfattah"
+      affiliation="TIAP: a fixed-output audit of scoring-target choice in conversational-memory evaluation"
+      qrSrc="/poster/memory-targets-qr.svg"
+      qrLabel="Scan for paper"
+    />
+  )}
+
+  <PosterCell span={7} landscapeSpan={5} marker="1" kicker="The problem" title="Rescoring the same ranked output changes the winning system">
+    <div class="poster-body">
+      <p>
+        Memory systems store one piece of evidence in several forms: the <strong>raw turn</strong>,
+        a <strong>source-linked observation</strong>, and a <strong>canonical fact</strong>.
+        Benchmarks silently pick which form earns retrieval credit, so conclusions flip while the
+        ranked output is held completely fixed. We call it
+        <span class="noninv">target non-invariance</span>.
+      </p>
+    </div>
+    <figure class="poster-figure example-figure">
+      <img
+        src="/poster/figures/fig_target_noninvariance.svg"
+        alt="Worked example: the rank-1 derived memory answers the query, but Raw scores a miss because the raw-turn ID is absent, while Source and Canonical score hits."
+      />
+      <figcaption class="poster-caption">
+        The retrieved item never moves. <span class="t-raw">Raw scores it a miss</span> (no raw-turn ID);
+        <span class="t-source">Source</span> and <span class="t-canonical">Canonical</span> score the same
+        item a hit.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={5} landscapeSpan={4} marker="2" kicker="Method" title="A deterministic script rescores saved output against three targets">
+    <figure class="poster-figure">
+      <img
+        src="/poster/figures/A_framework_overview.svg"
+        alt="TIAP pipeline: construct Raw, Source, and Canonical scoring targets; rescore saved ranked outputs on shared subsets without rerunning retrieval; measure score shifts, winner flips, and design flips, plus a 1,902-case semantic audit."
+      />
+    </figure>
+    <p class="poster-body method-note">
+      We construct three targets for each query, then a deterministic script rescores the
+      same saved outputs: <span class="t-raw">Raw</span> (exact turn),
+      <span class="t-source">Source</span> (same source family), and
+      <span class="t-canonical">Canonical</span> (serving form). The script never reruns retrieval.
+      LoCoMo &amp; LongMemEval-S, 4 retrievers, transfer: Mem0, MemoryOS.
+    </p>
+    {!isLandscape && (
+      <p class="big-stat">
+        <span class="stat-number">83.4–94.0%</span>
+        of shared queries change per-query nDCG when only the credited target changes.
+      </p>
+    )}
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={3} kicker={isLandscape ? undefined : 'Core result: nDCG@60, fixed ranked outputs (n = 899–963 / 299–332)'} marker="3" title="Changing only the credited target moves every score">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${slope.w} ${slope.h}`} role="img" aria-label="Slope chart: nDCG under Raw, Source, and Canonical targets for eight runs on LoCoMo and LongMemEval-S">
+        {slopeData.map((panel, p) => {
+          const ox = slope.ox(p);
+          const oy = slope.oy(p);
+          return (
+            <g>
+              <text x={ox + 340} y={oy + sfs(24)} text-anchor="middle" font-size={sfs(25)} font-weight="600" fill={ink} letter-spacing="2">{panel.dataset.toUpperCase()}</text>
+              {gridVals.map((v) => (
+                <>
+                  <line x1={ox + 120} y1={oy + slopeY(v)} x2={ox + 580} y2={oy + slopeY(v)} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+                  <text x={ox + 108} y={oy + slopeY(v) + 6} text-anchor="end" font-size={sfs(16)} fill={muted}>{v.toFixed(1)}</text>
+                </>
+              ))}
+              {['Raw', 'Source', 'Canonical'].map((t, i) => (
+                <text x={ox + slopeXs[i]} y={oy + 328} text-anchor="middle" font-size={sfs(20)} font-weight="600" fill={targetColor[t]} letter-spacing="1">{t.toUpperCase()}</text>
+              ))}
+              {panel.runs.map((run) => (
+                <g>
+                  <polyline
+                    points={`${ox + slopeXs[0]},${oy + slopeY(run.raw)} ${ox + slopeXs[1]},${oy + slopeY(run.source)} ${ox + slopeXs[2]},${oy + slopeY(run.canonical)}`}
+                    fill="none"
+                    stroke={ink}
+                    stroke-width="2.5"
+                    opacity="0.45"
+                  />
+                  <circle cx={ox + slopeXs[0]} cy={oy + slopeY(run.raw)} r="7" fill={rawC} />
+                  <circle cx={ox + slopeXs[1]} cy={oy + slopeY(run.source)} r="7" fill={sourceC} />
+                  <circle cx={ox + slopeXs[2]} cy={oy + slopeY(run.canonical)} r="7" fill={canonC} />
+                </g>
+              ))}
+              {dodgedLabels(panel.runs).map((l) => (
+                <text x={ox + slopeXs[2] + 18} y={oy + l.y + 6} font-size={sfs(17)} fill={ink} opacity="0.8">{l.label}</text>
+              ))}
+            </g>
+          );
+        })}
+        {isLandscape
+          ? <line x1="90" y1="338" x2="660" y2="338" stroke={muted} stroke-width="1" opacity="0.3" />
+          : <line x1="712" y1="34" x2="712" y2="302" stroke={muted} stroke-width="1" opacity="0.3" />}
+      </svg>
+      <figcaption class="poster-caption">
+        The margin swings six-fold, +0.068 to +0.420. Source beats Canonical on every LoCoMo
+        subset; the order reverses on LongMemEval-S. Data: paper Table 2.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} kicker={isLandscape ? undefined : 'Engineering consequence: fixed subset, n = 453'} marker="4" title="Pick a target, pick a different memory-store design">
+    <div class="winner-grid poster-body">
+      <div class="winner-head"></div>
+      <div class="winner-head" style={`color:${rawC}`}>Raw</div>
+      <div class="winner-head" style={`color:${sourceC}`}>Source</div>
+      <div class="winner-head" style={`color:${canonC}`}>Canonical</div>
+      {winnerRows.map((row) => (
+        <>
+          <div class="winner-label">{row.provider}, {row.cmp}</div>
+          {['raw', 'source', 'canonical'].map((t) => (
+            <div class="winner-chip" data-denser={denser(row.cmp, row[t])}>{row[t]}</div>
+          ))}
+        </>
+      ))}
+    </div>
+    <p class="poster-caption">
+      Data: paper Table 5.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} marker="5" kicker="Transfer: full-run nDCG@60" title="It follows real architectures, in no clean direction">
+    <figure class="poster-figure transfer-figure">
+      <svg viewBox="0 0 720 440" role="img" aria-label="Slope chart: full-run nDCG@60 under Raw, Source, and Canonical targets for Mem0 and MemoryOS on LoCoMo and LongMemEval-S; two runs preserve the Raw-to-Canonical ordering and two reverse it.">
+        {tGrid.map((v) => (
+          <>
+            <line x1={90} y1={tY(v)} x2={430} y2={tY(v)} stroke={muted} stroke-width="1" stroke-dasharray="4 6" opacity="0.35" />
+            <text x={78} y={tY(v) + 7} text-anchor="end" font-size={sfs(16)} fill={muted}>{v.toFixed(1)}</text>
+          </>
+        ))}
+        {['Raw', 'Source', 'Canonical'].map((t, i) => (
+          <text x={tXs[i]} y={400} text-anchor="middle" font-size={sfs(20)} font-weight="600" fill={targetColor[t]} letter-spacing="1">{t.toUpperCase()}</text>
+        ))}
+        {transferRuns.map((run) => (
+          <g>
+            <polyline
+              points={`${tXs[0]},${tY(run.raw)} ${tXs[1]},${tY(run.source)} ${tXs[2]},${tY(run.canonical)}`}
+              fill="none"
+              stroke={ink}
+              stroke-width="2.5"
+              stroke-dasharray={run.reversed ? '10 7' : undefined}
+              opacity="0.45"
+            />
+            <circle cx={tXs[0]} cy={tY(run.raw)} r="7" fill={rawC} />
+            <circle cx={tXs[1]} cy={tY(run.source)} r="7" fill={sourceC} />
+            <circle cx={tXs[2]} cy={tY(run.canonical)} r="7" fill={canonC} />
+          </g>
+        ))}
+        {transferLabels.map((l) => (
+          <text x={tXs[2] + 18} y={l.y + 6} font-size={sfs(17)} fill={ink} opacity={l.reversed ? 1 : 0.8} font-weight={l.reversed ? 600 : 400}>{l.label}</text>
+        ))}
+        <text x={0} y={432} font-size={sfs(15)} fill={muted}>Dashed: Canonical falls below Raw, reversing the ordering.</text>
+      </svg>
+      <figcaption class="poster-caption">
+        Rescoring published Mem0 and MemoryOS runs preserves non-invariance, but the ordering flips
+        between datasets: two monotonic, two non-monotonic. On Mem0 with LongMemEval-S,
+        raw-vs-canonical switching changes MRR on 466 of 470 queries.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} marker="6" title="Relaxed credit is fully justified only 29.2% of the time">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 720 ${bar.h}`} role="img" aria-label="Stacked bar: 29.2% fully supports, 39.6% partially supportive, 31.2% does not support">
+        {(() => {
+          let acc = 0;
+          return audit.map((seg) => {
+            const x = 10 + (acc / 100) * 700;
+            const w = (seg.pct / 100) * 700;
+            acc += seg.pct;
+            return (
+              <g>
+                <rect x={x} y={bar.barY} width={w - 4} height={bar.barH} fill={seg.color} opacity="0.85" />
+                <text x={x + (w - 4) / 2} y={bar.pctY} text-anchor="middle" font-size={bar.pctSize} font-weight="600" fill="rgb(var(--color-paper-light))">{seg.pct}%</text>
+                <text x={x + (w - 4) / 2} y={bar.labelY} text-anchor="middle" font-size={bar.labelSize} fill={ink}>{seg.label}</text>
+              </g>
+            );
+          });
+        })()}
+      </svg>
+      <figcaption class="poster-caption">
+        Cases where Raw scored a miss but Source/Canonical scored a hit, audited for whether the credited
+        memory actually answers the query. Human validation: Fleiss κ = 0.83 on a 115-case subset.
+        Permissive targets are not free, but the failures do not rescue the raw-only default either.
+        Data: paper Table 6.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={6} landscapeSpan={3} marker="7" kicker="Takeaway" title="Report the target, or the benchmark reports noise" fill>
+    <ol class="poster-body takeaway-list">
+      <li><span class="t-canonical">Canonical</span> is the primary target when the deployed system serves transformed memories.</li>
+      <li>Always report <span class="t-raw">Raw</span> alongside it as a strict floor.</li>
+      <li><span class="t-source">Source family</span> is a stress test, not a standalone leaderboard target.</li>
+      <li>Rescore on <strong>shared subsets</strong> whenever ontology coverage differs across systems.</li>
+      <li>Treat <strong>winner flips</strong> across targets as a result, not noise to smooth away.</li>
+    </ol>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={12} marker="8" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we did</p>
+        <p>
+          TIAP rescored <strong>saved ranked outputs</strong> (retrieval never rerun) under three
+          scoring targets (<span class="t-raw">Raw</span>, <span class="t-source">Source</span> ·
+          <span class="t-canonical">Canonical</span>) on LoCoMo and LongMemEval-S, plus Mem0 and
+          MemoryOS transfer runs.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we found</p>
+        <p>
+          The target choice alone changes per-query nDCG on <strong>83.4–94.0%</strong> of shared
+          queries, flips which system wins, and reverses store-design recommendations; relaxed
+          credit is fully justified only <strong>29.2%</strong> of the time.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What you should do</p>
+        <p>
+          A memory benchmark score is meaningless without its target. <strong>Declare it, report
+          Canonical with a Raw floor, and treat cross-target disagreement as a finding</strong>;
+          otherwise the benchmark measures your ontology choice, not your retriever.
+        </p>
+      </div>
+      <div class="tldr-qr">
+        <img src="/poster/memory-targets-online-qr.svg" alt="QR code linking to this poster online at spanthi.com" />
+        <p class="tldr-qr-label">This poster online</p>
+      </div>
+    </div>
+  </PosterCell>
+
+  {isLandscape && <p class="poster-venue-line">Accepted at EMNLP Findings 2026</p>}
+</PosterShell>
+
+<style is:global>
+  /* Paper palette (LaTeX definecolor / seaborn deep): RawTurnColor #4C72B0,
+     SourceFamilyColor #55A868, CanonicalColor #C44E52; partial-verdict
+     orange is seaborn deep #DD8452. Custom charts must match the figures. */
+  :root {
+    --color-target-raw: 76 114 176;
+    --color-target-source: 85 168 104;
+    --color-target-canonical: 196 78 82;
+    --color-audit-partial: 221 132 82;
+  }
+</style>
+
+<style>
+  .t-raw {
+    color: rgb(var(--color-target-raw));
+    font-weight: 600;
+  }
+
+  .t-source {
+    color: rgb(var(--color-target-source));
+    font-weight: 600;
+  }
+
+  .t-canonical {
+    color: rgb(var(--color-target-canonical));
+    font-weight: 600;
+  }
+
+  .noninv {
+    color: rgb(var(--color-ink-red));
+    font-weight: 600;
+  }
+
+  .big-stat {
+    margin-top: 5mm;
+    border-top: 0.6mm solid rgb(var(--color-border-paper));
+    padding-top: 4mm;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: calc(48pt * var(--type-scale, 1));
+    font-weight: 600;
+    color: rgb(var(--color-ink-blue));
+    line-height: 1.05;
+  }
+
+  .method-note {
+    margin-top: 5mm;
+  }
+
+  .example-figure {
+    margin-top: 5mm;
+  }
+
+  .example-figure {
+    --fig-w: 62%;
+  }
+
+  .transfer-figure {
+    --fig-w: 65%;
+  }
+
+  /* Landscape columns are narrower than A0's, so these two figures take a
+     larger share of their cell to land at a comparable printed size. */
+  :global(body[data-format='landscape']) .example-figure,
+  :global(body[data-format='landscape']) .transfer-figure {
+    --fig-w: 100%;
+  }
+
+
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+    padding: 0;
+  }
+
+  /* The takeaway is the cell a passer-by reads from furthest back and it is the
+     shortest copy on the sheet, so it can carry a step above body size. */
+  .takeaway-list li {
+    font-size: calc(22pt * 1.15 * var(--type-scale, 1));
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    margin-bottom: 4mm;
+    padding-left: 15mm;
+    position: relative;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    width: 9mm;
+    height: 9mm;
+    border: 0.6mm solid rgb(var(--color-ink-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(15pt * 1.15 * var(--type-scale, 1));
+    font-weight: 600;
+  }
+</style>

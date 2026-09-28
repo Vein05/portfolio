@@ -88,9 +88,9 @@ My rule:
 
 That keeps upgrade risk predictable for teams pinning versions.
 
-## Provider-specific setup needs dedicated documentation
+## Provider docs live in three places
 
-No. I keep provider docs in three places:
+I keep provider docs in three places:
 
 1. README quick links for discovery.
 2. Package-level docs/examples for `pkg.go.dev`.
@@ -106,4 +106,4 @@ Trying to hide provider differences with magic feels convenient short-term, but 
 
 ---
 
-This wraps the deepseek-go series. If you’re building your own Go SDK, design for maintainability first, because adoption amplifies every architectural decision.
+This wraps the deepseek-go series.

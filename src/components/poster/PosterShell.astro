@@ -1,20 +1,36 @@
 ---
 // Poster shell: the page IS the poster. No site chrome, no theme machinery —
-// a fixed A0-portrait canvas scaled to fill the window width; browser zoom
-// and browser print work directly on it. Content is static — no islands —
-// so print-to-PDF never depends on hydration.
+// a fixed canvas scaled to fill the window width; browser zoom and browser
+// print work directly on it. Content is static — no islands — so
+// print-to-PDF never depends on hydration.
+//
+// Two sheet formats: `portrait` (A0, the original) and `landscape`
+// (44 x 32 in, what the lab's print shop runs). The format reaches CSS as
+// `data-format` on <body> and reaches each sheet's frontmatter as a prop, so
+// figure geometry can branch on it too.
 import '../../styles/poster.css';
+import { FORMATS } from '../../data/posters.js';
 
 export interface Props {
   title: string;
   description: string;
   slug: string;
   author?: string;
+  format?: 'portrait' | 'landscape';
 }
 
-const { title, description, slug, author } = Astro.props;
-// Canonical URL comes from `site` in astro.config; omitted when unset.
+const { title, description, slug, author, format = 'portrait' } = Astro.props;
+const sheet = FORMATS[format];
+// Canonical URL comes from `site` in astro.config; omitted when unset. Both
+// formats carry the same content, so the landscape sheet points at portrait.
 const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : undefined;
+// The alternate sheet of the same poster, for the in-page switch.
+const otherFormat = format === 'portrait' ? 'landscape' : 'portrait';
+const otherHref = otherFormat === 'portrait' ? `/poster/${slug}/` : `/poster/${slug}/landscape/`;
+// Only posters with a landscape page get the switch; the older hand-built
+// ones (stale-policy) have a portrait sheet only.
+const hasLandscape = Object.keys(import.meta.glob('../../pages/poster/*/landscape.astro'))
+  .some((f) => f.includes(`/poster/${slug}/landscape.astro`));
 ---
 
 <!doctype html>
@@ -34,13 +50,17 @@ const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : un
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body data-format={format} data-poster={slug}>
     <div class="poster-view-toggle" role="group" aria-label="Poster view">
       <button type="button" data-view="fit">Fit width</button>
       <button type="button" data-view="a4">A4</button>
+      {hasLandscape && <a class="poster-format-switch" href={otherHref}>{FORMATS[otherFormat].label}</a>}
     </div>
     <div class="poster-scaler">
-      <div class="poster-canvas">
+      <div
+        class="poster-canvas"
+        style={`--sheet-w: ${sheet.w}mm; --sheet-h: ${sheet.h}mm;`}
+      >
         <slot />
       </div>
     </div>
@@ -59,14 +79,15 @@ const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : un
       </div>
     </dialog>
     <ul class="poster-menu" role="menu" hidden>
-      <li role="menuitem" data-print="a0">Download A0 PDF (full size)</li>
-      <li role="menuitem" data-print="a4">Download A4 PDF</li>
+      <li role="menuitem" data-print="full">Download {sheet.label} PDF (full size)</li>
+      <li role="menuitem" data-print="a4">Download {format === 'portrait' ? 'A4' : 'Letter'} PDF</li>
     </ul>
     <script is:inline>
       (() => {
-        // Two on-screen views of the same A0 canvas: "fit" scales the sheet
-        // to the window width; "a4" shows it at A4 width (210mm), centred.
-        // Print ignores both (poster.css resets the transform).
+        // Two on-screen views of the same canvas: "fit" scales the sheet to
+        // the window width; "a4" shows it at the small-sheet width (A4 210mm
+        // portrait, Letter 279.4mm landscape), centred. Print ignores both
+        // (poster.css resets the transform).
         const scaler = document.querySelector('.poster-scaler');
         const canvas = document.querySelector('.poster-canvas');
         const buttons = document.querySelectorAll('.poster-view-toggle button');
@@ -84,8 +105,9 @@ const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : un
         }
         const apply = () => {
           const winW = document.documentElement.clientWidth;
+          const smallW = document.body.dataset.format === 'landscape' ? '279.4mm' : '210mm';
           const a4 = document.createElement('div');
-          a4.style.cssText = 'position:absolute;visibility:hidden;width:210mm';
+          a4.style.cssText = `position:absolute;visibility:hidden;width:${smallW}`;
           document.body.appendChild(a4);
           const a4px = a4.offsetWidth;
           a4.remove();
@@ -107,9 +129,10 @@ const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : un
         window.addEventListener('resize', apply);
         apply();
 
-        // Right-click menu: print to PDF at A0 (native) or A4 (canvas scaled
-        // 210/841). The browser's print dialog does the saving; poster.css
-        // carries the @page rules keyed on body[data-print-size].
+        // Right-click menu: print to PDF at full sheet size (native) or on one
+        // small sheet (the canvas scaled down). The browser's print dialog does
+        // the saving; poster.css carries the @page rules keyed on
+        // body[data-print-size] and body[data-format].
         const menu = document.querySelector('.poster-menu');
         const hideMenu = () => { menu.hidden = true; };
         const printAs = (size) => {
@@ -192,8 +215,12 @@ const canonical = Astro.site ? new URL(`/poster/${slug}/`, Astro.site).href : un
           }, { passive: false });
           dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
           dlg.addEventListener('close', () => { stage.innerHTML = ''; });
+          // `?print=` preselects a sheet for headless checks. Only the small
+          // sheet has print CSS keyed to it; `full`/`a0` are accepted so the
+          // documented URLs keep working, and simply leave the default @page.
           const want = new URLSearchParams(location.search).get('print');
-          if (want === 'a4' || want === 'a0') document.body.dataset.printSize = want;
+          if (want === 'a4') document.body.dataset.printSize = 'a4';
+          else if (want === 'full' || want === 'a0') document.body.dataset.printSize = 'full';
         }
       })();
     </script>

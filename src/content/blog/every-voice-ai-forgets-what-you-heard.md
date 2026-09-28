@@ -19,8 +19,7 @@ Sometimes it starts over. Sometimes it skips ahead. Sometimes it says "as I was 
 
 It does not know what actually reached your ears, or what thread should be resumed from there.
 
-Voice agents can stop speaking, but most current stacks do not expose a first-class record of what was heard, what was only generated, and which conversational thread should resume. The rest of this article shows the failure, explains the timing mismatch that causes it, compares four current stacks, and describes a protocol that records the missing state.
-
+Voice agents can stop speaking, but most current stacks do not expose a first-class record of what was heard, what was only generated, and which conversational thread should resume.
 ## The go-back test exposes the missing state
 
 I do not care only whether a system claims to support barge-in. I care whether it passes the go-back test.
@@ -106,7 +105,7 @@ The agent loses the record of which part of the response both sides share.
 
 This problem shows up differently across frameworks. The point is not that these projects are careless. Most of them have reasonable mechanisms for barge-in, truncation, cancellation, or transcript repair.
 
-The architectural gap is narrower and more interesting: interruption is usually exposed first as cancellation or truncation. A first-class resumable thread model is still left to the application.
+The architectural gap is specific: interruption is usually exposed first as cancellation or truncation. A first-class resumable thread model is still left to the application.
 
 ### OpenAI Realtime truncates unheard output
 

@@ -1,39 +1,12 @@
 ---
-// Poster gallery: one card per A0 poster under /poster/<slug>. Each card
-// embeds the live poster page in a scaled iframe (the poster route fits
-// itself to its window width, so a narrow iframe shows the whole sheet).
+// Poster gallery: one card per poster under /poster/<slug>. Each card embeds
+// the live poster page in a scaled iframe (the poster route fits itself to its
+// window width, so a narrow iframe shows the whole sheet). The poster list is
+// the shared registry, so a poster is declared once and the routes and this
+// gallery stay in step.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { posters } from '../data/posters.js';
 
-const posters = [
-  {
-    slug: 'memory-targets',
-    title: 'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks',
-    venue: 'Findings of EMNLP 2026, arXiv:2605.24060',
-    authors: 'Sugam Panthi and Rabab Abdelfattah',
-    status: 'published',
-  },
-  {
-    slug: 'outcome-monitors',
-    title: 'Outcome Monitors: Recovery Affordances for Silent Tool Failures',
-    venue: 'arXiv:2608.19303',
-    authors: 'Sugam Panthi and Rabab Abdelfattah',
-    status: 'published',
-  },
-  {
-    slug: 'rag-compression',
-    title: 'Fixed RAG Compression Collapses Measured Reader Scaling',
-    venue: 'arXiv:2606.21807',
-    authors: 'Sugam Panthi and Rabab Abdelfattah',
-    status: 'published',
-  },
-  {
-    slug: 'stale-policy',
-    title: 'The Stale Answer Problem: Where the Current Statement Drops Out',
-    venue: 'Draft idea proposition, no paper yet, 2026-09-04',
-    authors: 'Sugam Panthi',
-    status: 'draft',
-  },
-];
 ---
 
 <BaseLayout
@@ -83,6 +56,9 @@ const posters = [
               <a href={`/poster/${p.slug}/`} class="text-ink-blue hover:underline">Open poster</a>
               <span class="mx-2 text-ink-muted">/</span>
               <a href={`/poster/${p.slug}/`} target="_blank" rel="noopener noreferrer" class="text-ink-blue hover:underline">New tab</a>
+              {p.formats?.includes('landscape') && (
+                <span> · <a href={`/poster/${p.slug}/landscape/`} class="text-ink-blue hover:underline">44 &times; 32</a></span>
+              )}
             </p>
           </li>
         ))}

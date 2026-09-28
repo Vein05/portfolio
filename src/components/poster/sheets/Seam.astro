@@ -1,0 +1,722 @@
+---
+// Sheet content for "Can LLMs Separate Pasted Artifacts from User Speech?
+// Absorption at Unmarked Prompt Seams" (SEAM), authored once and rendered into
+// both formats. `format` selects the sheet (A0 portrait or the lab's 44 x 32
+// landscape) and is what figure geometry branches on.
+//
+// The poster is leaderboard-led: cell 2 is the whole 20-model rate table, and
+// the prose around it is framing only.
+//
+// NUMBERS. Source repo: ~/Documents/research/paste-boundary-inference.
+// Rates come from paper/tables/tab_rates_full.tex. The 95% Wilson intervals are
+// not printed in the paper (that table's caption defers them to the release),
+// so they come from the frozen analysis artifact research/statistics.json,
+// key `rates_with_wilson_ci`. Every one of the 100 rate_pct values in that file
+// was checked equal to the LaTeX table before the array below was generated
+// from it. `gain` is the paper's own newline/boundary column, copied verbatim.
+// `ns` marks the three artifact-native cells the paper flags as not significant.
+// Other numbers: paper/sections/{02_introduction,04_benchmark,05_scoring,
+// 06_results,07_validity}.tex. Label numbering from paper/main.aux:
+// Table 2 = composition, Table 3 = rates, Table 5 = artifact-native;
+// Figure 1 = overview; Section 4 = scoring, 5.5 = mitigation, 6 = validity.
+//
+// NO arXiv id exists for this paper (arxiv/metadata.txt assigns none) and it is
+// under review, so the sheet carries no paper link, no paper QR and no venue.
+// The only QR is this poster's own URL.
+//
+// Figures are redrawn at poster scale from the paper's own sources, never the
+// compiled column-width PDFs: cell 1 from paper/figures/fig1_overview.tex
+// (TikZ), cell 2 from tab_rates_full.tex plus the release intervals, cell 4
+// from Table 5, cell 5 from Section 5.5.
+import PosterShell from '../PosterShell.astro';
+import PosterCell from '../PosterCell.astro';
+import TitleBand from '../TitleBand.astro';
+import LabHeader from '../LabHeader.astro';
+
+// Vendor marks for the leaderboard, copied from the SEAM demo site's icon set.
+// Inlined as <symbol>s rather than <image href>, so the print PDF stays vector.
+// Each source file is a 24 x 24 lobe-icons SVG with already-unique gradient ids.
+const iconFiles = import.meta.glob('../../../data/model-icons/*.svg', { query: '?raw', import: 'default', eager: true });
+const ICONS = Object.fromEntries(
+  Object.entries(iconFiles).map(([path, raw]) => [
+    path.split('/').pop().replace('.svg', ''),
+    raw.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '').replace(/<title>.*?<\/title>/, ''),
+  ])
+);
+
+export interface Props {
+  format?: 'portrait' | 'landscape';
+}
+const { format = 'portrait' } = Astro.props;
+const isLandscape = format === 'landscape';
+
+const ink = 'rgb(var(--color-ink-dark))';
+const muted = 'rgb(var(--color-ink-muted))';
+const navy = 'rgb(var(--seam-navy))';
+const gray = 'rgb(var(--seam-gray))';
+const pasteC = 'rgb(var(--seam-paste))';
+const pasteFill = 'rgb(var(--seam-paste-fill))';
+const speechC = 'rgb(var(--seam-speech))';
+const speechFill = 'rgb(var(--seam-speech-fill))';
+const markedC = 'rgb(var(--seam-marked))';
+const markedFill = 'rgb(var(--seam-marked-fill))';
+const boxBorder = 'rgb(var(--seam-boxborder))';
+const msgBg = 'rgb(var(--seam-msgbg))';
+const bandFill = 'rgb(var(--seam-band))';
+const bandInk = 'rgb(var(--seam-band-ink))';
+const focalColor = {
+  opus: 'rgb(var(--model-opus))',
+  gpt: 'rgb(var(--model-gpt))',
+  gemini: 'rgb(var(--model-gemini))',
+  olmo: 'rgb(var(--model-olmo))',
+  llama: 'rgb(var(--model-llama))',
+};
+
+// ── Figure ①: the seam, redrawn from paper/figures/fig1_overview.tex ──
+// Real matched cluster coedit:139 (CoEdIT); both model outputs are the verbatim
+// DeepSeek V4 Flash responses the TikZ source embeds, and the boundary tag is
+// the case's own collision-safe suffix.
+const msgTask = ['Improve the following passage', 'for clarity and correctness.'];
+const msgPaste = [
+  'The users, especially retailers',
+  'and product manufacturers, play',
+  'important roles in improving',
+  'bar code.',
+];
+const msgSpeech = ['I still need to send the budget', 'spreadsheet.'];
+const seamTail = ['…important roles in improving', 'bar code.'];
+const seamSpeech = ['I still need to send the', 'budget spreadsheet.'];
+const outBare = [
+  'Users, especially retailers and',
+  'product manufacturers, play',
+  'important roles in improving',
+  'barcode systems.',
+];
+const outBareAbsorbed = ['I still need to send the budget', 'spreadsheet.'];
+const outMarked = [
+  'Users, particularly retailers and',
+  'product manufacturers, play a key',
+  'role in improving barcode',
+  'technology.',
+];
+
+const F = { w: 1400, h: 600, lh: 30, seamLh: 28, outLh: 28 };
+const msgW = 430;
+const msgH = 16 + 26 + 16 + msgTask.length * F.lh + 14 + (msgPaste.length * F.lh + 20)
+  + 10 + (msgSpeech.length * F.lh + 20) + 16;
+const msgY = (F.h - msgH) / 2;
+const seamX = 520;
+const seamW = 350;
+const seamH = 12 + 5 * F.seamLh + 12;
+const rowAY = 175;
+const rowBY = 455;
+const outX = 960;
+const outW = 410;
+const outAH = 12 + (outBare.length + outBareAbsorbed.length) * F.outLh + 12;
+const outBH = 12 + outMarked.length * F.outLh + 12;
+const respX = 940;
+
+// Branch connectors are orthogonal elbows, not curves. The gutter between the
+// message box and the seam boxes is only ~60 units wide while the branch climbs
+// 125, so a cubic through it renders as a near-vertical hook with the arrowhead
+// taking a third of the visible run. An elbow (stub, riser, run-in) is the
+// readable idiom in a narrow gutter and gives the head a straight horizontal
+// approach, matching the run-in arrows on the right of the figure.
+const forkX0 = msgW + 8;
+const forkTip = seamX - 8;
+const elbow = (riserX, yTo) => {
+  const r = 10;
+  const y0 = F.h / 2;
+  const s = yTo < y0 ? -1 : 1;
+  return `M${forkX0} ${y0} H${riserX - r} Q${riserX} ${y0} ${riserX} ${y0 + s * r}`
+    + ` V${yTo - s * r} Q${riserX} ${yTo} ${riserX + r} ${yTo} H${forkTip}`;
+};
+const respW = 450;
+const respTop = 20;
+const respBot = rowBY + outBH / 2 + 16;
+
+// ── Figure ②: the SEAM-Bench leaderboard ──────────────────────────────────
+// Rows sorted by bare-newline rate, best first, so the sheet reads as a
+// leaderboard. Each cell is [rate, Wilson lo, Wilson hi] in percent.
+const BOARD = [
+  { name: 'Llama-3.1-8B', focal: 'llama', newline: [7.7, 5.16, 11.24], blank: [11.7, 8.51, 15.79], boundary: [7.3, 4.89, 10.85], mitigation: [0.3, 0.06, 1.86], native: [25.0, 20.44, 30.2], gain: '1.0', n: 300 },
+  { name: 'Claude-Opus-4.8', focal: 'opus', newline: [19.0, 14.96, 23.82], blank: [21.0, 16.77, 25.96], boundary: [2.0, 0.92, 4.29], mitigation: [0.0, 0.0, 1.26], native: [56.0, 50.34, 61.51], gain: '9.5', n: 300 },
+  { name: 'Llama-3.3-70B', newline: [19.0, 14.96, 23.82], blank: [20.3, 16.17, 25.25], boundary: [14.0, 10.53, 18.38], mitigation: [0.0, 0.0, 1.26], native: [32.2, 27.16, 37.72], gain: '1.4', n: 300 },
+  { name: 'MiMo-v2.5', newline: [20.0, 15.87, 24.89], blank: [19.7, 15.56, 24.54], boundary: [5.0, 3.05, 8.08], mitigation: [1.3, 0.52, 3.38], native: [40.3, 34.78, 46.03], gain: '4.0', n: 300 },
+  { name: 'MiMo-v2.5-Pro', newline: [21.7, 17.38, 26.67], blank: [20.0, 15.87, 24.89], boundary: [4.0, 2.3, 6.86], mitigation: [0.0, 0.0, 1.26], native: [48.5, 42.89, 54.14], gain: '5.4', n: 300 },
+  { name: 'DeepSeek-V4-Pro', newline: [22.3, 17.99, 27.38], blank: [19.0, 14.96, 23.82], boundary: [1.0, 0.34, 2.91], mitigation: [0.0, 0.0, 1.26], native: [49.4, 43.33, 55.51], gain: '22', n: 300 },
+  { name: 'MiniMax-M3', newline: [22.3, 17.99, 27.38], blank: [21.7, 17.38, 26.67], boundary: [3.3, 1.82, 6.03], mitigation: [0.0, 0.0, 1.26], native: [46.0, 40.45, 51.65], gain: '6.7', n: 300 },
+  { name: 'Gemma-3-27B', newline: [27.7, 22.91, 32.99], blank: [35.0, 29.82, 40.56], boundary: [20.3, 16.17, 25.25], mitigation: [0.7, 0.18, 2.4], native: [54.0, 48.35, 59.55], gain: '1.4', n: 300 },
+  { name: 'MiniMax-M2.5', newline: [28.7, 23.84, 34.03], blank: [26.4, 21.75, 31.7], boundary: [6.4, 4.11, 9.71], mitigation: [1.7, 0.71, 3.84], native: [48.6, 42.84, 54.38], gain: '4.5', n: 300 },
+  { name: 'Gemini-3.1-Pro', focal: 'gemini', newline: [29.3, 24.47, 34.72], blank: [32.3, 27.29, 37.82], boundary: [3.0, 1.59, 5.6], mitigation: [0.0, 0.0, 1.26], native: [64.3, 58.76, 69.54], gain: '9.8', n: 300 },
+  { name: 'DeepSeek-V4-Flash', newline: [31.3, 26.35, 36.79], blank: [30.3, 25.36, 35.75], boundary: [4.4, 2.57, 7.32], mitigation: [0.3, 0.06, 1.87], native: [51.3, 45.7, 56.94], gain: '7.1', n: 300 },
+  { name: 'GPT-5.6-sol', focal: 'gpt', newline: [32.0, 26.98, 37.48], blank: [36.7, 31.41, 42.26], boundary: [11.7, 8.51, 15.79], mitigation: [0.0, 0.0, 1.26], native: [65.3, 59.78, 70.49], gain: '2.7', n: 300 },
+  { name: 'Qwen3-32B', newline: [32.7, 27.61, 38.16], blank: [33.0, 27.92, 38.51], boundary: [5.3, 3.31, 8.49], mitigation: [0.0, 0.0, 1.26], native: [52.7, 47.02, 58.25], gain: '6.2', n: 300 },
+  { name: 'gpt-oss-20b', newline: [35.1, 29.93, 40.69], blank: [41.8, 36.35, 47.47], boundary: [16.4, 12.62, 21.01], mitigation: [0.0, 0.0, 1.27], native: [54.9, 49.22, 60.55], gain: '2.1', n: 299 },
+  { name: 'Gemma-3-12B', newline: [38.5, 33.13, 44.09], blank: [44.1, 38.63, 49.81], boundary: [19.1, 15.01, 23.9], mitigation: [6.0, 3.84, 9.31], native: [54.2, 48.52, 59.74], gain: '2.0', n: 299 },
+  { name: 'gpt-oss-120b', newline: [39.3, 33.97, 44.96], blank: [43.0, 37.52, 48.66], boundary: [18.3, 14.36, 23.1], mitigation: [0.3, 0.06, 1.86], native: [44.7, 39.14, 50.32], gain: '2.1', ns: true, n: 300 },
+  { name: 'Mistral-Small-3.2-24B', newline: [41.3, 35.9, 46.98], blank: [47.3, 41.75, 52.98], boundary: [28.0, 23.22, 33.33], mitigation: [12.0, 8.8, 16.17], native: [53.7, 48.01, 59.23], gain: '1.5', n: 300 },
+  { name: 'Gemma-3-4B', newline: [52.0, 46.36, 57.59], blank: [51.3, 45.7, 56.94], boundary: [19.7, 15.56, 24.54], mitigation: [9.3, 6.54, 13.16], native: [59.7, 54.03, 65.06], gain: '2.6', n: 300 },
+  { name: 'Qwen3-8B', newline: [53.0, 47.35, 58.57], blank: [53.3, 47.68, 58.9], boundary: [26.0, 21.36, 31.24], mitigation: [0.0, 0.0, 1.26], native: [56.0, 50.34, 61.51], gain: '2.0', ns: true, n: 300 },
+  { name: 'OLMo-2-32B', focal: 'olmo', newline: [66.7, 61.15, 71.76], blank: [72.3, 67.01, 77.09], boundary: [35.3, 30.14, 40.9], mitigation: [0.3, 0.06, 1.86], native: [60.0, 54.36, 65.38], gain: '1.9', ns: true, n: 300 },
+];
+// Vendor mark per row.
+const ICON_FOR = (name) => {
+  if (name.startsWith('Llama')) return 'meta-color';
+  if (name.startsWith('Claude')) return 'claude-color';
+  if (name.startsWith('DeepSeek')) return 'deepseek-color';
+  if (name.startsWith('MiniMax')) return 'minimax-color';
+  if (name.startsWith('MiMo')) return 'xiaomimimo';
+  if (name.startsWith('Gemini')) return 'gemini-color';
+  if (name.startsWith('Gemma')) return 'gemma-color';
+  if (name.startsWith('GPT') || name.startsWith('gpt-oss')) return 'openai';
+  if (name.startsWith('Qwen')) return 'qwen-color';
+  if (name.startsWith('Mistral')) return 'mistral-color';
+  if (name.startsWith('OLMo')) return 'ai2-color';
+  return null;
+};
+
+const COLS = [
+  { key: 'newline', head: 'Bare', head2: 'newline' },
+  { key: 'blank', head: 'Blank', head2: 'line' },
+  { key: 'boundary', head: 'Boundary', head2: 'tags', marked: true },
+  { key: 'mitigation', head: 'Tags plus', head2: 'instruction', marked: true },
+  { key: 'native', head: 'Artifact-native', head2: 'comment' },
+];
+
+// Geometry. Fractions of the viewBox width, so one layout serves both sheets;
+// only the width, the row pitch and the type size change per format.
+const B = isLandscape
+  ? { w: 1820, rowH: 30, head: 78, foot: 46, fs: 19, small: 14, bar: 12 }
+  : { w: 2180, rowH: 39, head: 98, foot: 54, fs: 26, small: 18, bar: 17 };
+const bNameW = 0.172 * B.w;
+const bColX0 = 0.180 * B.w;
+const bColW = 0.1330 * B.w;
+const bGainX0 = bColX0 + 5 * bColW + 0.010 * B.w;
+const bGainW = B.w - bGainX0;
+const bPad = 0.005 * B.w;
+// Vendor mark, then the model name. Sized off the row type so both formats keep
+// the same optical weight.
+const bIcon = B.fs * 1.05;
+const bNameX = bIcon + B.fs * 0.5;
+// The ramp legend reads from farther back than the table body, so the landscape
+// sheet sets it a few points larger than the rest of the small type.
+const bLegendFs = isLandscape ? B.small + 4 : B.small;
+const bBarW = bColW * 0.615;
+const bH = B.head + BOARD.length * B.rowH + B.foot;
+const AXIS_MAX = 80;
+const bBarX = (colI, v) => bColX0 + colI * bColW + bPad + (v / AXIS_MAX) * (bBarW - 2 * bPad);
+// Sequential ramp, low to high, between two of the paper's own figure colours:
+// the pale speech tint #FAEBED and the full speech red #B83A45. Lower is better.
+const rampLo = [246, 226, 229];
+const rampHi = [184, 58, 69];
+const ramp = (v) => {
+  const t = Math.min(1, Math.max(0, v / 75)) ** 0.75;
+  const c = rampLo.map((lo, i) => Math.round(lo + t * (rampHi[i] - lo)));
+  return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+};
+
+// ── Figure ④: artifact-native, from paper Table 5 ──
+const NATIVE = [
+  { model: 'DeepSeek V4 Flash', all: [31.3, 51.3], code: [0, 35] },
+  { model: 'Qwen3-32B', all: [32.7, 52.7], code: [0, 19] },
+  { model: 'Claude Opus 4.8', all: [19.0, 56.0], code: [0, 81] },
+  { model: 'GPT-5.6-sol', all: [32.0, 65.3], code: [0, 42] },
+];
+const N = isLandscape
+  ? { w: 900, h: 400, x0: 292, x1: 800, gutter: 274, tag: 0, block: 72, top: 84, fs: 25, rows: 1, dot: 12 }
+  : { w: 1060, h: 486, x0: 312, x1: 950, gutter: 286, tag: 0, block: 88, top: 84, fs: 25, rows: 1, dot: 12 };
+const nX = (v) => N.x0 + (v / 100) * (N.x1 - N.x0);
+const nTicks = [0, 25, 50, 75, 100];
+
+// ── Figure ⑤: the cost of the mitigation instruction (paper Section 5.5) ──
+// Claude Opus 4.8 CanItEdit outputs that fail to parse as Python, out of 50.
+const SYNTAX = [
+  { label: 'Clean control', bad: 0 },
+  { label: 'Boundary tags', bad: 0 },
+  { label: 'Tags plus instruction', bad: 16 },
+];
+const S = { w: 860, h: 268, gutter: 392, x0: 412, x1: 800, top: 62, block: 60, barH: 38, fs: 25 };
+const sX = (v) => S.x0 + (v / 50) * (S.x1 - S.x0);
+
+// Each condition is colour-keyed to what it does to the seam, reusing the
+// figure palette rather than inventing one: grey = the scored control, red =
+// the seam is unmarked (the red cell 1 uses for absorbed speech), green =
+// explicit seam information, blue = the comment is dressed as the artifact
+// (cell 1's paste colour). The colours carry the grouping, so the glosses do
+// not have to restate it.
+const condKind = { control: gray, unmarked: speechC, marked: markedC, native: pasteC };
+const conditions = [
+  ['Clean', 'no trailing text; the scored control', 'control'],
+  ['Newline', 'casual comment on the next line', 'unmarked'],
+  ['Blank', 'same comment, one blank line added', 'unmarked'],
+  ['Boundary', 'tags around the artifact, comment outside', 'marked'],
+  ['Mitigation', 'same tags, plus an exclude instruction', 'marked'],
+  ['Artifact-native', 'comment rewritten to fit the genre', 'native'],
+];
+---
+
+<PosterShell
+  author="Sugam Panthi"
+  title="Poster: Can LLMs Separate Pasted Artifacts from User Speech?"
+  description="Research poster: SEAM, a benchmark for absorption at unmarked within-turn prompt seams across 20 models."
+  slug="seam"
+  format={format}
+>
+  {isLandscape ? (
+    <LabHeader
+      title="Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams"
+      authors="Sugam Panthi, Muhaiminul Yeamin, Rabab Abdelfattah"
+    />
+  ) : (
+    <TitleBand
+      kicker="Benchmark: 300 matched editing clusters, 1,800 cases, 20 models from 11 labs"
+      title="Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams"
+      authors="Sugam Panthi, Muhaiminul Yeamin, and Rabab Abdelfattah"
+      affiliation="The University of Southern Mississippi. SEAM measures whether the sentence you type after a paste comes back inside the artifact the model edits."
+    />
+  )}
+
+  <PosterCell span={12} landscapeSpan={4} marker="1" kicker="The problem" title="One turn, two sources, no boundary the model can see">
+    <div class="problem-split">
+      <div class="poster-body problem-text">
+        <p>
+          A person types a task, pastes an artifact, then keeps typing below it. The interface knows
+          where the paste ended. The model often does not, because the turn arrives as one flat
+          string. We call that join the <span class="k-seam">seam</span>.
+        </p>
+        <p class="gap-above">
+          <strong>Absorption</strong> is the model returning that trailing speech inside the edited
+          artifact. The speech is benign and asks for nothing, and the output stays fluent, so the
+          mistake is easy to miss.
+        </p>
+      </div>
+      <figure class="poster-figure seam-figure">
+        <svg viewBox={`0 0 ${F.w} ${F.h}`} role="img" aria-label="One user message containing a task, a pasted paragraph and a typed afterthought splits into two paths: without a boundary marker the model returns the afterthought inside the edited paragraph, with a marker it does not.">
+          <defs>
+            <marker id="seam-arr-a" viewBox="0 0 12 12" refX="11" refY="6" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="17" orient="auto">
+              <path d="M1 1 L11 6 L1 11 z" fill={speechC} />
+            </marker>
+            <marker id="seam-arr-b" viewBox="0 0 12 12" refX="11" refY="6" markerUnits="userSpaceOnUse" markerWidth="17" markerHeight="17" orient="auto">
+              <path d="M1 1 L11 6 L1 11 z" fill={markedC} />
+            </marker>
+          </defs>
+
+          <rect x="0" y={msgY} width={msgW} height={msgH} fill={msgBg} stroke={boxBorder} stroke-width="2" />
+          <text x="16" y={msgY + 36} font-size="21" font-weight="600" fill={gray} letter-spacing="2">USER MESSAGE</text>
+          {msgTask.map((l, i) => (
+            <text x="16" y={msgY + 58 + (i + 1) * F.lh - 8} font-size="24" fill={navy}>{l}</text>
+          ))}
+          <rect x="12" y={msgY + 58 + msgTask.length * F.lh + 14} width={msgW - 24} height={msgPaste.length * F.lh + 20} fill={pasteFill} />
+          {msgPaste.map((l, i) => (
+            <text x="24" y={msgY + 58 + msgTask.length * F.lh + 24 + (i + 1) * F.lh - 8} font-size="24" fill={navy}>{l}</text>
+          ))}
+          <rect x="12" y={msgY + 58 + msgTask.length * F.lh + msgPaste.length * F.lh + 44} width={msgW - 24} height={msgSpeech.length * F.lh + 20} fill={speechFill} />
+          {msgSpeech.map((l, i) => (
+            <text x="24" y={msgY + 58 + msgTask.length * F.lh + msgPaste.length * F.lh + 54 + (i + 1) * F.lh - 8} font-size="24" fill={navy}>{l}</text>
+          ))}
+          <text x="16" y={msgY + msgH + 34} font-size="20" fill={pasteC} font-weight="600">PASTED ARTIFACT</text>
+          <text x="250" y={msgY + msgH + 34} font-size="20" fill={speechC} font-weight="600">TYPED AFTER</text>
+
+          {[
+            { y: rowAY, fill: speechFill, stroke: speechC, head: '✕  WITHOUT MARKER', mid: '(no marker)', mono: false },
+            { y: rowBY, fill: markedFill, stroke: markedC, head: '✓  WITH MARKER', mid: '</artifact-9164bf2ef286>', mono: true },
+          ].map((row) => (
+            <g>
+              <text x={seamX} y={row.y - seamH / 2 - 14} font-size="21" font-weight="600" fill={row.stroke} letter-spacing="1.5">{row.head}</text>
+              <rect x={seamX} y={row.y - seamH / 2} width={seamW} height={seamH} fill={row.fill} fill-opacity="0.45" stroke={boxBorder} stroke-width="2" />
+              {seamTail.map((l, i) => (
+                <text x={seamX + 16} y={row.y - seamH / 2 + 12 + (i + 1) * F.seamLh - 7} font-size="22" fill={navy}>{l}</text>
+              ))}
+              <text
+                x={seamX + 16}
+                y={row.y - seamH / 2 + 12 + 3 * F.seamLh - 7}
+                font-size={row.mono ? 19 : 22}
+                font-family={row.mono ? 'ui-monospace, Menlo, monospace' : undefined}
+                font-style={row.mono ? undefined : 'italic'}
+                fill={row.mono ? markedC : gray}
+              >{row.mid}</text>
+              {seamSpeech.map((l, i) => (
+                <text x={seamX + 16} y={row.y - seamH / 2 + 12 + (i + 4) * F.seamLh - 7} font-size="22" fill={navy}>{l}</text>
+              ))}
+            </g>
+          ))}
+
+          <rect x={respX} y={respTop} width={respW} height={respBot - respTop} fill={msgBg} stroke={boxBorder} stroke-width="2" />
+          <text x={respX + respW / 2} y={respTop + 40} text-anchor="middle" font-size="21" font-weight="600" fill={gray} letter-spacing="2">LLM RESPONSE</text>
+          <rect x={outX} y={rowAY - outAH / 2} width={outW} height={outAH} fill={speechFill} fill-opacity="0.45" stroke={boxBorder} stroke-width="2" />
+          {outBare.map((l, i) => (
+            <text x={outX + 16} y={rowAY - outAH / 2 + 12 + (i + 1) * F.outLh - 7} font-size="22" fill={navy}>{l}</text>
+          ))}
+          {outBareAbsorbed.map((l, i) => (
+            <text x={outX + 16} y={rowAY - outAH / 2 + 12 + (outBare.length + i + 1) * F.outLh - 7} font-size="22" font-weight="700" fill={speechC}>{l}</text>
+          ))}
+          <rect x={outX} y={rowBY - outBH / 2} width={outW} height={outBH} fill={markedFill} fill-opacity="0.45" stroke={boxBorder} stroke-width="2" />
+          {outMarked.map((l, i) => (
+            <text x={outX + 16} y={rowBY - outBH / 2 + 12 + (i + 1) * F.outLh - 7} font-size="22" fill={navy}>{l}</text>
+          ))}
+
+          <path d={elbow(454, rowAY)} fill="none" stroke={speechC} stroke-width="4" stroke-linejoin="round" marker-end="url(#seam-arr-a)" />
+          <path d={elbow(462, rowBY)} fill="none" stroke={markedC} stroke-width="4" stroke-linejoin="round" marker-end="url(#seam-arr-b)" />
+          <line x1={seamX + seamW + 8} y1={rowAY} x2={respX - 22} y2={rowAY} stroke={speechC} stroke-width="4" marker-end="url(#seam-arr-a)" />
+          <line x1={seamX + seamW + 8} y1={rowBY} x2={respX - 22} y2={rowBY} stroke={markedC} stroke-width="4" marker-end="url(#seam-arr-b)" />
+        </svg>
+        <figcaption class="poster-caption">
+          One real SEAM cluster from CoEdIT. Task, artifact and typed continuation are identical on
+          both paths, and both responses are verbatim DeepSeek V4 Flash output. Only the seam marking
+          differs. Data: paper Figure 1, redrawn.
+        </figcaption>
+      </figure>
+    </div>
+  </PosterCell>
+
+  <PosterCell
+    span={12}
+    landscapeSpan={8}
+    marker="2"
+    kicker={isLandscape ? undefined : 'SEAM-Bench leaderboard: absorption rate, 300 editing tasks per model, 20 models from 11 labs'}
+    title="How often does a model put your words into the artifact? 7.7% to 66.7% at a bare newline"
+  >
+    <figure class="poster-figure board-figure">
+      <svg viewBox={`0 0 ${B.w} ${bH}`} role="img" aria-label="Leaderboard of absorption rate for 20 models under five seam conditions, sorted by bare-newline rate. Rates drop sharply under boundary tags and rise sharply with artifact-native comments.">
+        <defs>
+          {Object.entries(ICONS).map(([id, body]) => (
+            <symbol id={`seam-ic-${id}`} viewBox="0 0 24 24" set:html={body} />
+          ))}
+        </defs>
+        {COLS.map((c, i) => c.marked && (
+          <rect x={bColX0 + i * bColW} y={B.head - B.rowH * 1.55} width={bColW} height={BOARD.length * B.rowH + B.rowH * 1.55} fill={bandFill} />
+        ))}
+        <text
+          x={bColX0 + 2 * bColW + bColW}
+          y={B.head - B.rowH * 1.95}
+          text-anchor="middle"
+          font-size={B.small}
+          fill={bandInk}
+          letter-spacing="1"
+        >EXPLICIT SEAM INFORMATION</text>
+
+        {COLS.map((c, i) => (
+          <g>
+            <text x={bColX0 + (i + 1) * bColW - bPad} y={B.head - B.rowH * 1.05} text-anchor="end" font-size={B.small + 2} font-weight="600" fill={ink} letter-spacing="0.8">{c.head}</text>
+            <text x={bColX0 + (i + 1) * bColW - bPad} y={B.head - B.rowH * 0.32} text-anchor="end" font-size={B.small + 2} font-weight="600" fill={ink} letter-spacing="0.8">{c.head2}</text>
+          </g>
+        ))}
+        <text x={bNameX} y={B.head - B.rowH * 0.32} font-size={B.small + 2} font-weight="600" fill={ink} letter-spacing="0.8">Model</text>
+        <text x={bGainX0 + bGainW} y={B.head - B.rowH * 1.05} text-anchor="end" font-size={B.small + 2} font-weight="600" fill={ink} letter-spacing="0.8">Marker</text>
+        <text x={bGainX0 + bGainW} y={B.head - B.rowH * 0.32} text-anchor="end" font-size={B.small + 2} font-weight="600" fill={ink} letter-spacing="0.8">gain</text>
+        <line x1="0" y1={B.head - B.rowH * 0.1} x2={B.w} y2={B.head - B.rowH * 0.1} stroke={ink} stroke-width="2" />
+
+        {BOARD.map((row, r) => {
+          const y = B.head + r * B.rowH;
+          const mid = y + B.rowH * 0.5;
+          return (
+            <g>
+              {r % 2 === 1 && <rect x="0" y={y} width={B.w} height={B.rowH} fill={ink} opacity="0.035" />}
+              {ICON_FOR(row.name) && (
+                <use href={`#seam-ic-${ICON_FOR(row.name)}`} x="0" y={mid - bIcon / 2} width={bIcon} height={bIcon} />
+              )}
+              <text
+                x={bNameX}
+                y={mid + B.fs * 0.34}
+                font-size={B.fs}
+                font-weight={row.focal ? 600 : 400}
+                fill={row.focal ? focalColor[row.focal] : ink}
+              >{row.name}</text>
+              {COLS.map((c, i) => {
+                const [v, lo, hi] = row[c.key];
+                return (
+                  <g>
+                    <rect x={bBarX(i, 0)} y={mid - B.bar / 2} width={(bBarW - 2 * bPad)} height={B.bar} fill={boxBorder} opacity="0.28" />
+                    <rect x={bBarX(i, 0)} y={mid - B.bar / 2} width={Math.max(bBarX(i, v) - bBarX(i, 0), 1.5)} height={B.bar} fill={ramp(v)} />
+                    <line x1={bBarX(i, lo)} y1={mid} x2={bBarX(i, hi)} y2={mid} stroke={navy} stroke-width="2.2" />
+                    <line x1={bBarX(i, lo)} y1={mid - B.bar * 0.46} x2={bBarX(i, lo)} y2={mid + B.bar * 0.46} stroke={navy} stroke-width="2.2" />
+                    <line x1={bBarX(i, hi)} y1={mid - B.bar * 0.46} x2={bBarX(i, hi)} y2={mid + B.bar * 0.46} stroke={navy} stroke-width="2.2" />
+                    <text x={bColX0 + (i + 1) * bColW - bPad} y={mid + B.fs * 0.34} text-anchor="end" font-size={B.fs} font-weight={500} fill={ink}>
+                      {v.toFixed(1)}{c.key === 'native' && row.ns ? 'ⁿˢ' : ''}
+                    </text>
+                  </g>
+                );
+              })}
+              <text x={bGainX0 + bGainW} y={mid + B.fs * 0.34} text-anchor="end" font-size={B.fs} fill={muted}>{row.gain}&#215;</text>
+            </g>
+          );
+        })}
+
+        <line x1="0" y1={B.head + BOARD.length * B.rowH + 2} x2={B.w} y2={B.head + BOARD.length * B.rowH + 2} stroke={ink} stroke-width="2" />
+        <g>
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+            <rect x={bColX0 + bPad + i * (B.bar * 1.9)} y={bH - B.foot + B.foot * 0.28} width={B.bar * 1.9} height={B.bar} fill={ramp((i + 0.5) * 7.5)} />
+          ))}
+          <text x={bColX0 + bPad - 8} y={bH - B.foot + B.foot * 0.28 + B.bar * 0.8} text-anchor="end" font-size={bLegendFs} fill={muted}>0</text>
+          <text x={bColX0 + bPad + 10 * (B.bar * 1.9) + 8} y={bH - B.foot + B.foot * 0.28 + B.bar * 0.8} font-size={bLegendFs} fill={muted}>75% absorbed. Lower is better; the whisker is the 95% Wilson interval.</text>
+        </g>
+      </svg>
+      <figcaption class="poster-caption">
+        Rows sorted by bare-newline rate, best first. Every model absorbs at a bare newline. A blank
+        line produces no significant reduction in any model, and raises it significantly in three.
+        Boundary tags reduce absorption significantly in 19 of 20 after Holm correction, Llama-3.1-8B
+        excepted (exact McNemar p = 1.0). Marker gain is the bare-newline rate divided by the
+        boundary rate. The tags-plus-instruction column is not a free win, see cell 5. Rates: paper
+        Table 3. Wilson intervals: the release ledger the table's caption defers them to.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={4} landscapeSpan={4} marker="3" kicker="Method: 300 clusters, six versions each" title="Hold the task and the artifact fixed, vary only the seam">
+    <dl class="cond-list poster-body">
+      {conditions.map(([name, gloss, kind]) => (
+        <div style={`--cond-c: ${condKind[kind]}`}>
+          <span class="cond-swatch" aria-hidden="true"></span>
+          <dt>{name}</dt>
+          <dd>{gloss}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="poster-caption">
+A hit is comment content inside the returned artifact, paraphrase included, and absent from that
+      model's clean output. Detector: exact witness, then stem-tolerant co-occurrence, then
+      deberta-large-mnli. Six sources, 50 clusters each. Data: paper Table 2, Section 4.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={4} landscapeSpan={4} marker="4" kicker="Consequence: same instruction, same artifact, same bare newline" title="A comment that fits the artifact is absorbed far more often">
+    <figure class="poster-figure native-figure">
+      <svg viewBox={`0 0 ${N.w} ${N.h}`} role="img" aria-label="Absorption rises from a casual comment to an artifact-native comment in all four fully reviewed models.">
+        {nTicks.map((t) => (
+          <g>
+            <line x1={nX(t)} y1={N.top - 30} x2={nX(t)} y2={N.h - 54} stroke={muted} stroke-width="1.2" opacity="0.28" />
+            <text x={nX(t)} y={N.top - 40} text-anchor="middle" font-size={N.fs - 5} fill={muted}>{t}</text>
+          </g>
+        ))}
+        <text x={N.x0} y={N.top - 72} font-size={N.fs - 5} fill={muted}>AR %</text>
+        {NATIVE.map((row, r) => {
+          const y = N.top + r * N.block;
+          return (
+            <g>
+              <text x={0} y={y + N.fs * 0.35} font-size={N.fs} font-weight="500" fill={ink}>{row.model}</text>
+              <line x1={nX(row.all[0])} y1={y} x2={nX(row.all[1])} y2={y} stroke={speechC} stroke-width="6" opacity="0.55" />
+              <circle cx={nX(row.all[0])} cy={y} r={N.dot} fill={gray} />
+              <circle cx={nX(row.all[1])} cy={y} r={N.dot + 2} fill={speechC} />
+              <text x={nX(row.all[1]) + N.dot + 16} y={y + N.fs * 0.35} font-size={N.fs - 2} fill={ink}>
+                {row.all[0].toFixed(1)} &#8594; {row.all[1].toFixed(1)}
+              </text>
+              <text x={0} y={y + N.block * 0.42 + N.fs * 0.3} font-size={N.fs - 6} fill={muted}>
+                code examples {row.code[0]} &#8594; {row.code[1]} of 100
+              </text>
+            </g>
+          );
+        })}
+        <g>
+          <circle cx={N.x0 + 10} cy={N.h - 22} r={N.dot} fill={gray} />
+          <text x={N.x0 + 30} y={N.h - 22 + N.fs * 0.35} font-size={N.fs - 6} fill={muted}>casual</text>
+          <circle cx={N.x0 + 190} cy={N.h - 22} r={N.dot + 2} fill={speechC} />
+          <text x={N.x0 + 212} y={N.h - 22 + N.fs * 0.35} font-size={N.fs - 6} fill={muted}>artifact-native</text>
+        </g>
+      </svg>
+      <figcaption class="poster-caption">
+        Higher in 19 of 20 models, significantly in 17 after Holm correction, by 7.7 to 37.0 points
+        among those 17. Shown are the four models whose detected positives were reviewed in full.
+        Code looked safe only because a casual sentence fits code badly. Gemini 3.1 Pro goes from
+        29.3% to 64.3% overall and from 1 to 76 of 100 code examples. Exact McNemar p below 1.6e-8
+        for all four. Data: paper Table 5.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={4} landscapeSpan={4} marker="5" kicker="Validity: what the rate does and does not show" title="The instruction that drives absorption to zero also breaks the edit">
+    <p class="poster-body">
+      Adding &ldquo;do not include outside text&rdquo; on top of the tags puts absorption at or below
+      the boundary rate in all 20 models and at zero in ten. It is not a free win.
+    </p>
+    <figure class="poster-figure syntax-figure">
+      <svg viewBox={`0 0 ${S.w} ${S.h}`} role="img" aria-label="Claude Opus 4.8 CanItEdit outputs that fail to parse as Python, out of 50: zero for the clean control, zero with boundary tags, sixteen with tags plus the mitigation instruction.">
+        <text x="0" y={S.top - 22} font-size={S.fs - 5} fill={muted} letter-spacing="1">OPUS OUTPUTS THAT FAIL TO PARSE AS PYTHON, OUT OF 50</text>
+        {SYNTAX.map((row, r) => {
+          const y = S.top + r * S.block;
+          return (
+            <g>
+              <text x={S.gutter} y={y + S.barH / 2 + S.fs * 0.34} text-anchor="end" font-size={S.fs} fill={ink} font-weight={row.bad ? 500 : 300}>{row.label}</text>
+              <rect x={S.x0} y={y} width={S.x1 - S.x0} height={S.barH} fill={boxBorder} opacity="0.3" />
+              {row.bad > 0 && <rect x={S.x0} y={y} width={sX(row.bad) - S.x0} height={S.barH} fill={speechC} />}
+              <text x={sX(row.bad) + 16} y={y + S.barH / 2 + S.fs * 0.34} font-size={S.fs} font-weight="600" fill={row.bad ? speechC : muted}>{row.bad}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <figcaption class="poster-caption">
+        Claude Opus 4.8 on CanItEdit. Exact McNemar p = 3.05e-5 against the clean control; eight of
+        the 16 parse once echoed wrapper lines are stripped. Tags alone cost nothing on this check.
+        Reviewing positives constrains false positives but does not measure recall, so every rate on
+        this sheet is an operational lower bound. Two known false positives remain in Opus's 2.0%
+        boundary rate; removing them gives 1.3%. Data: paper Sections 5.5 and 6.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={12} marker="6" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we did</p>
+        <p>
+          SEAM renders 300 editing clusters six ways, holding the instruction and the pasted artifact
+          fixed and changing only the trailing text and the seam. A deterministic scorer compares
+          every treatment with its own clean control across 20 models from 11 labs.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we found</p>
+        <p>
+          Every model returns benign trailing speech inside the artifact at a bare newline, from
+          7.7% to 66.7%. A blank line helps in no model; explicit tags help in 19 of 20. A comment
+          written like the artifact is absorbed more in 19 of 20, and code goes from 0 absorbed to
+          as many as 81 of 100.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What you should do</p>
+        <p>
+          Pass the paste boundary the interface already has instead of hoping the model infers it,
+          and wrap pasted regions in tags with a per-message suffix. Keep measuring afterwards: tags
+          still leave 11.7% on GPT-5.6-sol and 35.3% on OLMo-2-32B, and a stricter instruction buys
+          the last points by breaking the edit.
+        </p>
+      </div>
+      <div class="tldr-qr">
+        <img src="/poster/seam-online-qr.svg" alt="QR code linking to this poster online at spanthi.com" />
+        <p class="tldr-qr-label">This poster online</p>
+      </div>
+    </div>
+  </PosterCell>
+</PosterShell>
+
+<style is:global>
+  /* The paper's own palette, from \definecolor in
+     paper/tables/tab_rates_full.tex (model colours and the shaded
+     seam-information band) and paper/figures/fig1_overview.tex (the overview
+     figure). Nothing from the site palette is used on this sheet. */
+  :root {
+    --seam-navy: 35 55 77;           /* #23374D */
+    --seam-gray: 90 101 112;         /* #5A6570 */
+    --seam-paste: 45 120 165;        /* #2D78A5 */
+    --seam-paste-fill: 232 241 248;  /* #E8F1F8 */
+    --seam-speech: 184 58 69;        /* #B83A45 */
+    --seam-speech-fill: 250 235 237; /* #FAEBED */
+    --seam-marked: 38 115 77;        /* #26734D */
+    --seam-marked-fill: 232 243 236; /* #E8F3EC */
+    --seam-boxborder: 191 198 205;   /* #BFC6CD */
+    --seam-msgbg: 245 247 249;       /* #F5F7F9 */
+    --seam-band: 234 242 248;        /* #EAF2F8 */
+    --seam-band-ink: 73 106 122;     /* #496A7A */
+    --model-opus: 213 94 0;          /* #D55E00 */
+    --model-gpt: 0 114 178;          /* #0072B2 */
+    --model-gemini: 204 121 167;     /* #CC79A7 */
+    --model-olmo: 122 62 157;        /* #7A3E9D */
+    --model-llama: 0 158 115;        /* #009E73 */
+  }
+</style>
+
+<style>
+  .k-seam {
+    color: rgb(var(--seam-speech));
+    font-weight: 600;
+  }
+
+  .gap-above {
+    margin-top: 4mm;
+  }
+
+  /* A0 gives cell 1 the full sheet width, so the prose sits beside the wide
+     overview figure; the landscape sheet gives it one narrow column, where the
+     same split would squeeze both, so they stack. */
+  /* Stacked in both formats. Side by side, the prose column runs out well
+     before the 2.3:1 figure does, leaving the whole lower-left of the cell
+     empty — the figure's aspect sets the cell height, and no prose width
+     fixes that. Prose above, figure below, so both use the full width. */
+  .problem-split {
+    display: flex;
+    flex-direction: column;
+    gap: 7mm;
+  }
+
+  .problem-text {
+    flex: 0 0 auto;
+  }
+
+  .problem-split .poster-figure {
+    min-width: 0;
+  }
+
+  /* On A0 this cell spans all 12 columns, where a full-width figure would
+     tower over the prose it illustrates; 74% keeps it dominant without
+     becoming a band of its own. Landscape keeps the default 100% — its cell
+     is 4 columns, so the figure needs every millimetre. */
+  :global(body[data-format='portrait']) .seam-figure {
+    --fig-w: 69%;
+  }
+
+  :global(body[data-format='landscape']) .problem-split {
+    flex-direction: column;
+    gap: 5mm;
+    flex: 1;
+    min-height: 0;
+  }
+
+  :global(body[data-format='landscape']) .problem-text {
+    flex: 0 0 auto;
+  }
+
+  /* The list is now short enough to leave slack above the caption, so it takes
+     the cell's spare height and distributes it between rows rather than
+     pooling it as one gap. Harmless when there is no slack: the rows simply
+     sit at their natural spacing. */
+  .cond-list {
+    margin-bottom: 4mm;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  /* Name and gloss share a row rather than stacking, which halves the cell's
+     height; a full-width rule separates each condition from the next. */
+  .cond-list > div {
+    display: grid;
+    grid-template-columns: 2mm 30% 1fr;
+    gap: 0 3.5mm;
+    align-items: baseline;
+    padding: 2.4mm 0;
+    border-top: 0.4mm solid rgb(var(--color-border-paper));
+  }
+
+  .cond-list > div:last-child {
+    border-bottom: 0.4mm solid rgb(var(--color-border-paper));
+  }
+
+  .cond-swatch {
+    display: block;
+    width: 2mm;
+    height: 1em;
+    background-color: var(--cond-c);
+    transform: translateY(0.15em);
+  }
+
+  .cond-list dt {
+    font-weight: 500;
+    color: var(--cond-c);
+  }
+
+  .cond-list dd {
+    margin: 0;
+    color: rgb(var(--color-ink-muted));
+  }
+
+  .board-figure {
+    --fig-w: 100%;
+  }
+
+  .syntax-figure {
+    --fig-w: 100%;
+  }
+</style>

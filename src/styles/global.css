@@ -1062,6 +1062,160 @@ h6,
     margin: 2rem auto;
   }
 
+  /* Notebook-style glossary side note (```glossary fence, GlossaryNote.jsx).
+     Ruled lines share the text's line height so every line sits on a rule. */
+  .glossary-note {
+    --gn-line: 1.6rem;
+    position: relative;
+    margin: 0.25rem 0 1.75rem;
+    padding: var(--gn-line) 1.1rem calc(var(--gn-line) * 0.5) 2.6rem;
+    font-size: 0.875rem;
+    line-height: var(--gn-line);
+    color: rgb(var(--color-ink-dark));
+    background-color: rgb(var(--color-paper-surface));
+    background-image: linear-gradient(
+      to bottom,
+      transparent calc(var(--gn-line) - 1px),
+      rgb(var(--color-ink-blue) / 0.22) calc(var(--gn-line) - 1px)
+    );
+    background-size: 100% var(--gn-line);
+    background-position: 0 calc(var(--gn-line) - 0.2rem);
+    border: 1px solid rgb(var(--color-border-paper));
+    box-shadow: 3px 3px 0 rgb(var(--color-border-paper));
+  }
+
+  /* red margin rule */
+  .glossary-note::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1.9rem;
+    border-left: 1.5px solid rgb(var(--color-ink-red) / 0.55);
+  }
+
+  /* punched holes */
+  .glossary-note::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0.55rem;
+    width: 0.7rem;
+    background-image: radial-gradient(circle, rgb(var(--color-main)) 0.3rem, rgb(var(--color-border-paper)) 0.33rem, transparent 0.36rem);
+    background-size: 0.7rem 4.8rem;
+    background-position: 0 1.6rem;
+    background-repeat: repeat-y;
+  }
+
+  .glossary-note__title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgb(var(--color-ink-red));
+  }
+
+  .glossary-note dl {
+    margin: 0;
+  }
+
+  .glossary-note__entry dt {
+    display: inline;
+    font-weight: 700;
+    color: rgb(var(--color-ink-dark));
+  }
+
+  .glossary-note__entry dt::after {
+    content: ' ';
+  }
+
+  .glossary-note__entry dd {
+    display: inline;
+    margin: 0;
+  }
+
+  @media (min-width: 900px) {
+    .glossary-note {
+      float: right;
+      width: 17.5rem;
+      margin: 0.35rem 0 1.25rem 2rem;
+    }
+
+    .glossary-note ~ h2,
+    .glossary-note ~ figure {
+      clear: both;
+    }
+
+    /* the list scrolls inside the note so a long glossary never pushes the
+       first figure down; rules scroll with the text */
+    .glossary-note dl {
+      max-height: calc(var(--gn-line) * 9);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+      background-color: inherit;
+      background-image: inherit;
+      background-size: inherit;
+      background-attachment: local;
+      background-position: 0 calc(0px - 0.2rem);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .glossary-note {
+      width: 23rem;
+    }
+  }
+
+  .glossary-note__scroll {
+    position: relative;
+  }
+
+  .glossary-note__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .glossary-note__list:focus-visible {
+    outline: 1px dotted rgb(var(--color-ink-muted));
+    outline-offset: 2px;
+  }
+
+  /* soft fades at whichever edge has more to read */
+  .glossary-note__list.has-more-down {
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4rem), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4rem), transparent);
+  }
+
+  .glossary-note__list.has-more-up {
+    -webkit-mask-image: linear-gradient(to top, #000 calc(100% - 1.4rem), transparent);
+    mask-image: linear-gradient(to top, #000 calc(100% - 1.4rem), transparent);
+  }
+
+  .glossary-note__list.has-more-up.has-more-down {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 1.4rem, #000 calc(100% - 1.4rem), transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 1.4rem, #000 calc(100% - 1.4rem), transparent);
+  }
+
+  /* thin scroll track in the right margin */
+  .glossary-note__track {
+    position: absolute;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    right: -0.7rem;
+    width: 2px;
+    border-radius: 1px;
+    background: rgb(var(--color-ink-muted) / 0.15);
+  }
+
+  .glossary-note__thumb {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-radius: 1px;
+    background: rgb(var(--color-ink-dark) / 0.45);
+  }
+
   .blog-prose figcaption {
     margin-top: 0.5rem;
   }

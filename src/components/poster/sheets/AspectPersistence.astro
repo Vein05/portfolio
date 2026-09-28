@@ -1,0 +1,801 @@
+---
+// Sheet content for "Memory Consolidation Flattens the Temporal Shape of User
+// Facts" (LAPSE), authored once and rendered into both formats. `format`
+// selects the sheet (A0 portrait or the lab's 44 x 32 landscape) and is what
+// figure geometry branches on.
+//
+// NUMBERS. Source repo: ~/Documents/research/aspect-persistence. Every value
+// here is read off the compiled paper, paper/paper-preprint.pdf, which is the
+// authority; the repo's analysis files are not consulted.
+//   Table 2  confirmatory matched pairs      381 pairs, 244 progressive-only, 0 reverse
+//   Table 9  all 11 configurations           1,397 pairs, 807 : 2
+//   Table 10 frame profile, C.2              progressive-minus-simple, percentage points
+//   Table 13 validity control, C.7
+//   Table 14 dated-note reader test, E
+//   Table 15 minimal edits to mem0 notes
+//   C.6      write intervention rates        baseline -> guided
+//   D        installed-pipeline detail       mem0 by frame, Graphiti, Letta
+//
+// NO arXiv id exists for this paper and it is under review, so the sheet
+// carries no paper link, no paper QR and no venue (poster.md 7b). The only QR
+// is this poster's own URL. The paper compiles anonymous; the author line
+// follows the lab's other sheets.
+//
+// FIGURES. The paper has three. They are redrawn here at poster scale from the
+// paper's own numbers, never scaled up from the column-width PDFs:
+//   cell 1 from paper Figure 1, the write/read schematic
+//   cell 3 panel B from paper Figure 2A, the frame profile
+//   cell 5 panel A from paper Figure 3A, the write intervention
+// Row order in the frame profile is derived from the data, not transcribed.
+import PosterShell from '../PosterShell.astro';
+import PosterCell from '../PosterCell.astro';
+import TitleBand from '../TitleBand.astro';
+import LabHeader from '../LabHeader.astro';
+
+export interface Props {
+  format?: 'portrait' | 'landscape';
+}
+const { format = 'portrait' } = Astro.props;
+const isLandscape = format === 'landscape';
+
+const ink = 'rgb(var(--color-ink-dark))';
+const muted = 'rgb(var(--color-ink-muted))';
+const progC = 'rgb(var(--lapse-prog))';
+const progFill = 'rgb(var(--lapse-prog-fill))';
+const simpleC = 'rgb(var(--lapse-simple))';
+const simpleFill = 'rgb(var(--lapse-simple-fill))';
+const lunaC = 'rgb(var(--lapse-luna))';
+const glmC = 'rgb(var(--lapse-glm))';
+const readC = 'rgb(var(--lapse-read))';
+const readFill = 'rgb(var(--lapse-read-fill))';
+const boxBorder = 'rgb(var(--lapse-box))';
+const panelBg = 'rgb(var(--lapse-panel))';
+const rail = 'rgb(var(--lapse-rail))';
+
+// ── Figure ①: the write and the read, redrawn from paper Figure 1 ──────────
+// The specimen is the paper's own: a progressive source utterance, the memory
+// mem0's writer produced from it, and the date anchor it kept.
+const S = { w: 1180, h: 600 };
+const srcX = 0;
+const srcW = 470;
+const dstX = 710;
+const dstW = 470;
+const midX = (srcX + srcW + dstX) / 2;
+const topH = 330;
+const testY = 404;
+const testH = 182;
+// Landscape redraw: the cell is a third of the sheet wide, so the A0 geometry's
+// 21-29 unit type came out small and its fixed panel heights left gaps. Same
+// content, larger type, rewrapped lines, panels sized to what they hold.
+const SL = { w: 1180, h: 574, panelW: 470, dstX: 710, topY: 46, topH: 300, testY: 374, testH: 196 };
+const slMid = (SL.panelW + SL.dstX) / 2;
+
+// ── Figure ③A: the confirmatory asymmetry, paper Table 2 ──────────────────
+// b = pairs where the writer destroyed the progressive but not its matched
+// simple-present twin; c = the reverse. c is zero in all three.
+const CONF = [
+  { model: 'DeepSeek V4 Flash', pairs: 128, prog: 104, simple: 0, p: '1.5 × 10⁻³¹' },
+  { model: 'GPT-5.6 Luna', pairs: 128, prog: 79, simple: 0, p: '3.3 × 10⁻²⁴' },
+  { model: 'GLM-5.2', pairs: 125, prog: 61, simple: 0, p: '4.3 × 10⁻¹⁹' },
+];
+const confTotal = CONF.reduce(
+  (a, r) => ({ pairs: a.pairs + r.pairs, prog: a.prog + r.prog, simple: a.simple + r.simple }),
+  { pairs: 0, prog: 0, simple: 0 }
+);
+const A = isLandscape
+  ? { w: 620, rowH: 76, top: 72, lab: 240, x0: 250, x1: 480, fs: 27 }
+  : { w: 900, rowH: 104, top: 96, lab: 330, x0: 350, x1: 700, fs: 27 };
+const aMax = 128;
+const aX = (v) => A.x0 + (v / aMax) * (A.x1 - A.x0);
+const aH = A.top + CONF.length * A.rowH + 8;
+
+// ── Figure ③B: the frame profile, paper Table 10 / Figure 2A ──────────────
+// Progressive-minus-simple destruction in percentage points, per writer.
+const FRAMES = [
+  { frame: 'Affiliate role', deepseek: 81.2, luna: 100.0, glm: 46.7 },
+  { frame: 'Class', deepseek: 81.2, luna: 18.8, glm: 100.0 },
+  { frame: 'Equipment', deepseek: 100.0, luna: 100.0, glm: 50.0 },
+  { frame: 'Household', deepseek: 43.8, luna: 25.0, glm: 6.2 },
+  { frame: 'Lodging', deepseek: 100.0, luna: 50.0, glm: 18.8 },
+  { frame: 'Project', deepseek: 43.8, luna: 0.0, glm: 18.8 },
+  { frame: 'Vehicle', deepseek: 100.0, luna: 100.0, glm: 81.2 },
+  { frame: 'Workplace', deepseek: 100.0, luna: 100.0, glm: 73.3 },
+];
+// The paper orders rows by the unweighted mean across writers. Derive it here
+// rather than transcribing the order, so a corrected value reorders the chart.
+const frameRows = FRAMES.map((f) => ({
+  ...f,
+  mean: (f.deepseek + f.luna + f.glm) / 3,
+  lo: Math.min(f.deepseek, f.luna, f.glm),
+  hi: Math.max(f.deepseek, f.luna, f.glm),
+})).sort((a, b) => b.mean - a.mean);
+
+const B = isLandscape
+  ? { w: 900, rowH: 72, top: 120, lab: 300, x0: 330, x1: 870, fs: 28, dot: 15 }
+  : { w: 1020, rowH: 54, top: 110, lab: 330, x0: 350, x1: 980, fs: 26, dot: 13 };
+const bX = (v) => B.x0 + (v / 100) * (B.x1 - B.x0);
+const bH = B.top + frameRows.length * B.rowH + 86;
+const bTicks = [0, 25, 50, 75, 100];
+const writers = [
+  { key: 'deepseek', name: 'DeepSeek V4 Flash', c: progC, shape: 'circle' },
+  { key: 'luna', name: 'GPT-5.6 Luna', c: lunaC, shape: 'square' },
+  { key: 'glm', name: 'GLM-5.2', c: glmC, shape: 'triangle' },
+];
+
+// ── Figure ④: installed pipelines, paper Section 7.1 and Appendix D ───────
+// "Flattened" is the writer removing the progressive from a stored ongoing
+// fact. Letta is reported the other way round in the paper (it kept a
+// progressive verb in 3 of 32), so the complement is taken once, here.
+const PIPES = [
+  { name: 'mem0 2.0.19', flat: 49, n: 128, note: 'stored all 128, flattened 49' },
+  { name: 'Graphiti 0.30.1', flat: 15, n: 32, note: 'flattened 15 of 32 grid progressives' },
+  { name: 'Letta 0.16.8', flat: 29, n: 32, note: 'kept a progressive verb in only 3' },
+];
+const P = isLandscape
+  ? { w: 900, rowH: 108, top: 44, lab: 300, x0: 320, x1: 840, fs: 26, barH: 34 }
+  : { w: 900, rowH: 112, top: 44, lab: 300, x0: 320, x1: 850, fs: 26, barH: 36 };
+const pX = (v) => P.x0 + (v / 100) * (P.x1 - P.x0);
+const pH = P.top + PIPES.length * P.rowH + 58;
+
+// ── Figure ⑤: the write intervention, paper Figure 3A and Appendix C.6 ────
+// Baseline vs the preservation instruction, progressive destruction in percent.
+// The instruction is not a repair: it moves two writers the wrong way.
+const WRITE = [
+  { model: 'GPT-5.6 Luna', base: 61.7, guided: 3.1 },
+  { model: 'Qwen3-8B', base: 53.1, guided: 0.0 },
+  { model: 'DeepSeek V4 Flash', base: 81.2, guided: 57.5 },
+  { model: 'GLM-5.2', base: 55.2, guided: 38.6 },
+  { model: 'Mistral Small 3.2', base: 56.7, guided: 46.5 },
+  { model: 'GPT-OSS-20B', base: 67.2, guided: 75.0 },
+  { model: 'OLMo-2-32B', base: 59.4, guided: 100.0 },
+];
+const writeRows = WRITE.map((w) => ({ ...w, worse: w.guided > w.base }));
+const W = isLandscape
+  ? { w: 700, rowH: 52, top: 100, lab: 245, x0: 250, x1: 640, fs: 25, dot: 12 }
+  : { w: 1000, rowH: 54, top: 106, lab: 330, x0: 350, x1: 900, fs: 25, dot: 12 };
+const wX = (v) => W.x0 + (v / 100) * (W.x1 - W.x0);
+const wH = W.top + writeRows.length * W.rowH + 66;
+const wTicks = [0, 25, 50, 75, 100];
+
+// Read-time side of the same cell, paper Table 14. Persistence difference is
+// progressive minus simple-present stated persistence, in points.
+const READERS = [
+  { reader: 'DeepSeek, official', diff: -31.5, fills: '26 : 3', p: '1.5 × 10⁻⁵' },
+  { reader: 'GLM, OpenRouter', diff: -18.5, fills: '17 : 3', p: '.003' },
+  { reader: 'Luna, OpenRouter', diff: -16.1, fills: '23 : 15', p: '.26' },
+];
+
+const takeaways = [
+  ['Temporal form is evidence, not style.', 'A progressive verb says the fact may stop holding; normalizing it deletes that.'],
+  ['Keep form in its own field.', 'Store the normalized fact, the temporal form, and the observation time separately.'],
+  ['Do not trust a preservation instruction alone.', 'It nearly fixes two writers and makes GPT-OSS and OLMo worse.'],
+  ['Audit the installed pipeline, not the model.', 'mem0, Graphiti, and Letta each flatten through unmodified write paths.'],
+  ['A saturated task hides the cost.', 'Readers proceed on almost every stale fact, so good downstream numbers prove nothing about storage.'],
+];
+---
+
+<PosterShell
+  author="Sugam Panthi"
+  title="Poster: Memory Consolidation Flattens the Temporal Shape of User Facts"
+  description="Research poster: LAPSE, a matched-pair benchmark showing that LLM memory writers erase the progressive form of user facts and never the reverse."
+  slug="aspect-persistence"
+  format={format}
+>
+  {isLandscape ? (
+    <LabHeader
+      title="Memory Consolidation Flattens the Temporal Shape of User Facts"
+      authors="Sugam Panthi, Rabab Abdelfattah"
+    />
+  ) : (
+    <TitleBand
+      kicker="LAPSE: 1,397 matched pairs, 11 model configurations, three installed memory pipelines"
+      title="Memory Consolidation Flattens the Temporal Shape of User Facts"
+      authors="Sugam Panthi and Rabab Abdelfattah"
+      affiliation="The University of Southern Mississippi. LAPSE asks whether a memory writer keeps the cue that says a user's fact is still going on, or stores it as a fact that simply holds."
+    />
+  )}
+
+  <PosterCell span={7} landscapeSpan={4} marker="1" kicker="The problem" title="A memory can keep your fact and lose that it is still happening">
+    <div class="poster-body lapse-intro">
+      <p>
+        A user says "I am driving a Peugeot." A writer stores <em>The user drives a Peugeot</em>. The
+        object and the relation survive. The cue that the activity is ongoing does not. Months later
+        the assistant has less evidence for deciding whether the fact still holds. We call that
+        transformation <span class="k-flat">aspectual flattening</span>.
+      </p>
+    </div>
+
+    <figure class="poster-figure lapse-schematic">
+      {isLandscape ? (
+      <svg viewBox={`0 0 ${SL.w} ${SL.h}`} role="img" aria-label="A progressive source utterance passes through a memory writer and is stored in the simple present, losing the cue that the activity is ongoing. Two separate tests follow: a write-time test on the stored memory and a read-time test on the later action.">
+        <defs>
+          <marker id="lapse-arr" viewBox="0 0 12 12" refX="11" refY="6" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" orient="auto">
+            <path d="M1 1 L11 6 L1 11 z" fill={muted} />
+          </marker>
+        </defs>
+
+        <text x="0" y="30" font-size="26" font-weight="600" fill={muted} letter-spacing="2.5">1 · SOURCE UTTERANCE</text>
+        <rect x="0" y={SL.topY} width={SL.panelW} height={SL.topH} fill={panelBg} stroke={boxBorder} stroke-width="2" />
+        <rect x="22" y="68" width={SL.panelW - 44} height="124" fill="#ffffff" stroke={boxBorder} stroke-width="2" />
+        <text x="42" y="120" font-size="38" fill={ink}>&#8220;I&#8217;m <tspan fill={progC} font-weight="600">working</tspan> at</text>
+        <text x="42" y="168" font-size="38" fill={ink}>Corvida Analytics.&#8221;</text>
+        <text x="22" y="246" font-size="33" font-weight="600" fill={progC}>progressive</text>
+        <text x="22" y="288" font-size="30" fill={muted}>an ongoing event, the fact</text>
+        <text x="22" y="326" font-size="30" fill={muted}>may stop holding</text>
+
+        <text x={SL.dstX} y="30" font-size="26" font-weight="600" fill={muted} letter-spacing="2.5">2 · STORED MEMORY</text>
+        <rect x={SL.dstX} y={SL.topY} width={SL.panelW} height={SL.topH} fill={panelBg} stroke={boxBorder} stroke-width="2" />
+        <rect x={SL.dstX + 22} y="68" width={SL.panelW - 44} height="164" fill="#ffffff" stroke={boxBorder} stroke-width="2" />
+        <text x={SL.dstX + 42} y="120" font-size="38" fill={ink}>User <tspan fill={simpleC} font-weight="600">works</tspan> at</text>
+        <text x={SL.dstX + 42} y="168" font-size="38" fill={ink}>Corvida Analytics</text>
+        <text x={SL.dstX + 42} y="210" font-size="30" fill={muted}>as of August 27, 2026</text>
+        <text x={SL.dstX + 22} y="286" font-size="33" font-weight="600" fill={simpleC}>simple present</text>
+        <text x={SL.dstX + 22} y="326" font-size="30" fill={muted}>a standing fact</text>
+
+        <line x1={SL.panelW + 4} y1="150" x2={slMid - 104} y2="150" stroke={muted} stroke-width="3" marker-end="url(#lapse-arr)" />
+        <rect x={slMid - 100} y="104" width="200" height="92" fill="#ffffff" stroke={boxBorder} stroke-width="2" />
+        <text x={slMid} y="143" font-size="31" font-weight="600" fill={ink} text-anchor="middle">memory</text>
+        <text x={slMid} y="179" font-size="31" font-weight="600" fill={ink} text-anchor="middle">writer</text>
+        <line x1={slMid + 100} y1="150" x2={SL.dstX - 4} y2="150" stroke={muted} stroke-width="3" marker-end="url(#lapse-arr)" />
+        <rect x={slMid - 100} y="222" width="200" height="98" fill={simpleFill} />
+        <text x={slMid} y="263" font-size="31" font-weight="600" fill={simpleC} text-anchor="middle">aspect</text>
+        <text x={slMid} y="301" font-size="31" font-weight="600" fill={simpleC} text-anchor="middle">flattened</text>
+
+        <rect x="0" y={SL.testY} width={SL.panelW} height={SL.testH} fill={progFill} stroke={progC} stroke-width="2.5" />
+        <text x="22" y={SL.testY + 46} font-size="32" font-weight="600" fill={progC}>Write-time test</text>
+        <text x="22" y={SL.testY + 90} font-size="29" fill={ink}>Was the source&#8217;s temporal</text>
+        <text x="22" y={SL.testY + 128} font-size="29" fill={ink}>form preserved in the memory?</text>
+        <text x="22" y={SL.testY + 172} font-size="27" fill={muted}>244 of 381 pairs: no</text>
+
+        <rect x={slMid - 100} y={SL.testY + 42} width="200" height="112" fill="#ffffff" stroke={boxBorder} stroke-width="2" stroke-dasharray="7 6" />
+        <text x={slMid} y={SL.testY + 88} font-size="28" font-weight="600" fill={muted} text-anchor="middle">separate tests</text>
+        <text x={slMid} y={SL.testY + 126} font-size="27" fill={muted} text-anchor="middle">no mediation</text>
+
+        <rect x={SL.dstX} y={SL.testY} width={SL.panelW} height={SL.testH} fill={readFill} stroke={readC} stroke-width="2.5" />
+        <text x={SL.dstX + 22} y={SL.testY + 46} font-size="32" font-weight="600" fill={readC}>Read-time test</text>
+        <text x={SL.dstX + 22} y={SL.testY + 90} font-size="29" fill={ink}>Did the later action use the</text>
+        <text x={SL.dstX + 22} y={SL.testY + 128} font-size="29" fill={ink}>form that survived the write?</text>
+        <text x={SL.dstX + 22} y={SL.testY + 172} font-size="27" fill={muted}>every reader says less persistent</text>
+      </svg>
+      ) : (
+      <svg viewBox={`0 0 ${S.w} ${S.h}`} role="img" aria-label="A progressive source utterance passes through a memory writer and is stored in the simple present, losing the cue that the activity is ongoing. Two separate tests follow: a write-time test on the stored memory and a read-time test on the later action.">
+        <defs>
+          <marker id="lapse-arr" viewBox="0 0 12 12" refX="11" refY="6" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="16" orient="auto">
+            <path d="M1 1 L11 6 L1 11 z" fill={muted} />
+          </marker>
+        </defs>
+
+        <text x={srcX} y="24" font-size="21" font-weight="600" fill={muted} letter-spacing="2.5">1 · SOURCE UTTERANCE</text>
+        <rect x={srcX} y="42" width={srcW} height={topH} fill={panelBg} stroke={boxBorder} stroke-width="2" />
+        <rect x={srcX + 26} y="82" width={srcW - 52} height="112" fill="#ffffff" stroke={boxBorder} stroke-width="2" />
+        <text x={srcX + 48} y="130" font-size="29" fill={ink}>&#8220;I&#8217;m <tspan fill={progC} font-weight="600">working</tspan> at</text>
+        <text x={srcX + 48} y="170" font-size="29" fill={ink}>Corvida Analytics.&#8221;</text>
+        <text x={srcX + 26} y="252" font-size="25" font-weight="600" fill={progC}>progressive</text>
+        <text x={srcX + 26} y="290" font-size="24" fill={muted}>an ongoing event, the fact</text>
+        <text x={srcX + 26} y="322" font-size="24" fill={muted}>may stop holding</text>
+
+        <text x={dstX} y="24" font-size="21" font-weight="600" fill={muted} letter-spacing="2.5">2 · STORED MEMORY</text>
+        <rect x={dstX} y="42" width={dstW} height={topH} fill={panelBg} stroke={boxBorder} stroke-width="2" />
+        <rect x={dstX + 26} y="82" width={dstW - 52} height="152" fill="#ffffff" stroke={boxBorder} stroke-width="2" />
+        <text x={dstX + 48} y="130" font-size="29" fill={ink}>User <tspan fill={simpleC} font-weight="600">works</tspan> at</text>
+        <text x={dstX + 48} y="170" font-size="29" fill={ink}>Corvida Analytics</text>
+        <text x={dstX + 48} y="210" font-size="24" fill={muted}>as of August 27, 2026</text>
+        <text x={dstX + 26} y="292" font-size="25" font-weight="600" fill={simpleC}>simple present</text>
+        <text x={dstX + 26} y="330" font-size="24" fill={muted}>a standing fact</text>
+
+        <line x1={srcX + srcW + 14} y1="196" x2={midX - 116} y2="196" stroke={muted} stroke-width="3" marker-end="url(#lapse-arr)" />
+        <rect x={midX - 106} y="164" width="212" height="64" fill="#ffffff" stroke={boxBorder} stroke-width="2" />
+        <text x={midX} y="204" font-size="26" font-weight="600" fill={ink} text-anchor="middle">memory writer</text>
+        <line x1={midX + 116} y1="196" x2={dstX - 14} y2="196" stroke={muted} stroke-width="3" marker-end="url(#lapse-arr)" />
+        <rect x={midX - 106} y="256" width="212" height="58" fill={simpleFill} />
+        <text x={midX} y="293" font-size="25" font-weight="600" fill={simpleC} text-anchor="middle">aspect flattened</text>
+
+        <rect x={srcX} y={testY} width={srcW} height={testH} fill={progFill} stroke={progC} stroke-width="2.5" />
+        <text x={srcX + 26} y={testY + 46} font-size="26" font-weight="600" fill={progC}>Write-time test</text>
+        <text x={srcX + 26} y={testY + 92} font-size="25" fill={ink}>Was the source&#8217;s temporal form</text>
+        <text x={srcX + 26} y={testY + 128} font-size="25" fill={ink}>preserved in the memory?</text>
+        <text x={srcX + 26} y={testY + 172} font-size="23" fill={muted}>244 of 381 pairs: no</text>
+
+        <rect x={midX - 106} y={testY + 44} width="212" height="112" fill="#ffffff" stroke={boxBorder} stroke-width="2" stroke-dasharray="7 6" />
+        <text x={midX} y={testY + 86} font-size="24" font-weight="600" fill={muted} text-anchor="middle">separate tests</text>
+        <text x={midX} y={testY + 122} font-size="23" fill={muted} text-anchor="middle">no mediation</text>
+
+        <rect x={dstX} y={testY} width={dstW} height={testH} fill={readFill} stroke={readC} stroke-width="2.5" />
+        <text x={dstX + 26} y={testY + 46} font-size="26" font-weight="600" fill={readC}>Read-time test</text>
+        <text x={dstX + 26} y={testY + 92} font-size="25" fill={ink}>Did the later action use the form</text>
+        <text x={dstX + 26} y={testY + 128} font-size="25" fill={ink}>that survived the write?</text>
+        <text x={dstX + 26} y={testY + 172} font-size="23" fill={muted}>every reader says less persistent</text>
+      </svg>
+      )}
+      <figcaption class="poster-caption">
+        One observed pipeline specimen: the writer replaces progressive <em>working</em> with
+        simple-present <em>works</em> and keeps a date anchor. Data: paper Figure 1.
+      </figcaption>
+    </figure>
+  </PosterCell>
+
+  <PosterCell span={5} landscapeSpan={3} kicker={isLandscape ? undefined : 'Method: matched pairs differing only in temporal form'} marker="2" title="Change the tense, hold everything else fixed" fill>
+    <dl class="axis-list poster-body">
+      <div>
+        <dt>Form</dt>
+        <dd>progressive against its simple-present match; the lexical head is fixed.</dd>
+      </div>
+      <div>
+        <dt>Frame</dt>
+        <dd>lodging, workplace, vehicle, class, household, equipment, role, project.</dd>
+      </div>
+      <div>
+        <dt>Carrier</dt>
+        <dd>one main verb plus five alternatives, so the result cannot rest on one wording.</dd>
+      </div>
+      <div>
+        <dt>Gap</dt>
+        <dd>six elapsed-time bins from a timestamp; fresh and boundary are positive controls.</dd>
+      </div>
+      <div>
+        <dt>Task</dt>
+        <dd>memory write, guided write, memory use, validity question, send-or-check choice.</dd>
+      </div>
+      <div>
+        <dt>Destructive</dt>
+        <dd>
+          the rewrite removes ongoingness or invents an unsupported durable fact; paraphrase and
+          politeness do not count.
+        </dd>
+      </div>
+      <div>
+        <dt>Labels</dt>
+        <dd>
+          the destructive group: <span class="k-label">coerced-stative</span> removes ongoingness,
+          <span class="k-label">manufacture</span> invents a durable fact.
+        </dd>
+      </div>
+    </dl>
+    <p class="poster-caption">
+      45,000 requests; protocol frozen before outcomes were opened. Data: paper Table 1.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={5} marker="3" kicker="Core result: 381 confirmatory matched pairs, three prospectively fixed writers" title="Writers erase the progressive, and never the reverse">
+    <div class="result-split">
+      <div class="asym-col">
+      <figure class="poster-figure">
+        <svg viewBox={`0 0 ${A.w} ${aH}`} role="img" aria-label="For all three confirmatory writers, matched pairs are destroyed only on the progressive side. The reverse count is zero in every model.">
+          <text x={A.x0 - 22} y="34" font-size={A.fs - 6} font-weight="600" fill={simpleC} text-anchor="end">SIMPLE ONLY</text>
+          <text x={A.x0 + 16} y="34" font-size={A.fs - 6} font-weight="600" fill={progC}>PROGRESSIVE ONLY</text>
+          {CONF.map((r, i) => {
+            const y = A.top + i * A.rowH;
+            return (
+              <g>
+                <text x="0" y={y + 4} font-size={A.fs} font-weight="500" fill={ink}>{r.model}</text>
+                {isLandscape ? (
+                  <>
+                    <text x={A.w} y={y + 4} font-size={A.fs - 8} fill={muted} text-anchor="end">adjusted p = {r.p}</text>
+                    <text x="0" y={y + 38} font-size={A.fs - 6} fill={muted}>{r.pairs} matched pairs</text>
+                  </>
+                ) : (
+                  <text x="0" y={y + 38} font-size={A.fs - 6} fill={muted}>
+                    {r.pairs} matched pairs, adjusted p = {r.p}
+                  </text>
+                )}
+                <line x1={A.x0} y1={y + 46} x2={A.x1} y2={y + 46} stroke={rail} stroke-width="10" />
+                <line x1={A.x0} y1={y + 46} x2={aX(r.prog)} y2={y + 46} stroke={progC} stroke-width="10" />
+                <circle cx={aX(r.prog)} cy={y + 46} r="15" fill={progC} />
+                <text x={aX(r.prog) + 26} y={y + 46 + A.fs * 0.36} font-size={A.fs} font-weight="600" fill={progC}>{r.prog}</text>
+                <rect x={A.x0 - 8} y={y + 38} width="16" height="16" fill={simpleC} />
+                <text x={A.x0 - 22} y={y + 46 + A.fs * 0.36} font-size={A.fs - 4} fill={simpleC} text-anchor="end">{r.simple}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </figure>
+      <p class="asym-stat">
+        <span class="asym-figure">{confTotal.prog} : {confTotal.simple}</span>
+        <span class="asym-gloss">
+          of {confTotal.pairs} matched pairs destroyed on the progressive side, against the reverse
+        </span>
+      </p>
+      </div>
+
+      <figure class="poster-figure">
+        <svg viewBox={`0 0 ${B.w} ${bH}`} role="img" aria-label="Progressive-minus-simple destruction by frame for the three confirmatory writers. Vehicle and workplace frames are near total for every writer; project and household frames are much lower.">
+          <text x="0" y="26" font-size={B.fs - 3} font-weight="600" fill={muted} letter-spacing="2">FLATTENING BY WHAT THE FACT IS ABOUT</text>
+          {writers.map((w, i) => {
+            const x = i * (B.w / 3.1) + 4;
+            return (
+              <g>
+                {w.shape === 'circle' && <circle cx={x + 10} cy="62" r={B.dot} fill={w.c} />}
+                {w.shape === 'square' && <rect x={x + 10 - B.dot} y={62 - B.dot} width={B.dot * 2} height={B.dot * 2} fill={w.c} />}
+                {w.shape === 'triangle' && <path d={`M${x + 10} ${62 - B.dot - 2} L${x + 10 + B.dot + 1} ${62 + B.dot} L${x + 10 - B.dot - 1} ${62 + B.dot} z`} fill={w.c} />}
+                <text x={x + 10 + B.dot + 14} y={62 + B.fs * 0.34} font-size={B.fs - 4} fill={ink}>{w.name}</text>
+              </g>
+            );
+          })}
+          {bTicks.map((t) => (
+            <g>
+              <line x1={bX(t)} y1={B.top - 30} x2={bX(t)} y2={bH - 62} stroke={muted} stroke-width="1.2" opacity="0.26" />
+              <text x={bX(t)} y={bH - 34} font-size={B.fs - 6} fill={muted} text-anchor="middle">{t}</text>
+            </g>
+          ))}
+          {frameRows.map((r, i) => {
+            const y = B.top + i * B.rowH;
+            return (
+              <g>
+                <text x="0" y={y + B.fs * 0.34} font-size={B.fs} fill={ink}>{r.frame}</text>
+                <line x1={bX(r.lo)} y1={y} x2={bX(r.hi)} y2={y} stroke={rail} stroke-width="6" />
+                <circle cx={bX(r.deepseek)} cy={y} r={B.dot} fill={progC} />
+                <rect x={bX(r.luna) - B.dot} y={y - B.dot} width={B.dot * 2} height={B.dot * 2} fill={lunaC} />
+                <path d={`M${bX(r.glm)} ${y - B.dot - 2} L${bX(r.glm) + B.dot + 1} ${y + B.dot} L${bX(r.glm) - B.dot - 1} ${y + B.dot} z`} fill={glmC} />
+              </g>
+            );
+          })}
+          <text x={(B.x0 + B.x1) / 2} y={bH - 2} font-size={B.fs - 4} fill={muted} text-anchor="middle">
+            Progressive-minus-simple destruction (pp)
+          </text>
+        </svg>
+      </figure>
+    </div>
+    <p class="poster-caption">
+      Every writer, every tested carrier, the same-lexeme subset, and eight further configurations
+      show the same direction. Across all 11 configurations 807 usable pairs lose only the
+      progressive and two show the reverse. Leaving out any one frame preserves the result. An
+      exhaustive placebo audit over 4,263,744 cells flags seven benign matches. Data: paper Tables 2,
+      9, and 10.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={4} landscapeSpan={4} kicker={isLandscape ? undefined : 'Installed pipelines: mem0 2.0.19, Graphiti 0.30.1, Letta 0.16.8'} marker="4" title="Shipping memory systems lose the same cue">
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${P.w} ${pH}`} role="img" aria-label="Three unmodified memory pipelines flatten stored ongoing facts: mem0 49 of 128, Graphiti 15 of 32, Letta 29 of 32.">
+        {PIPES.map((p, i) => {
+          const y = P.top + i * P.rowH;
+          const pct = (p.flat / p.n) * 100;
+          return (
+            <g>
+              <text x="0" y={y + P.fs * 0.34} font-size={P.fs} font-weight="500" fill={ink}>{p.name}</text>
+              <text x="0" y={y + 40} font-size={P.fs - 7} fill={muted}>{p.note}</text>
+              <rect x={P.x0} y={y - P.barH / 2} width={pX(100) - P.x0} height={P.barH} fill={rail} />
+              <rect x={P.x0} y={y - P.barH / 2} width={pX(pct) - P.x0} height={P.barH} fill={simpleC} />
+              <text x={P.x0 + 14} y={y + P.fs * 0.34} font-size={P.fs - 2} font-weight="600" fill="#ffffff">
+                {p.flat}/{p.n}
+              </text>
+              <text x={pX(100) + 14} y={y + P.fs * 0.34} font-size={P.fs - 4} fill={muted}>{pct.toFixed(0)}%</text>
+            </g>
+          );
+        })}
+        <text x="0" y={pH - 12} font-size={P.fs - 6} fill={muted}>Ongoing facts stored, then flattened</text>
+      </svg>
+    </figure>
+    <p class="poster-body">
+      mem0 flattened 49 of 128 ongoing facts and added progressive wording to none of the 128
+      controls. The loss is not confined to grammar: it also removed "for now" from 91 of 128 notes
+      and "at the moment" from 104 of 128.
+    </p>
+    <p class="poster-caption">
+      Graphiti writes <code>valid_at</code> for all 287 stored edges whatever the source form and
+      never sets <code>invalid_at</code>. Data: paper Section 7.1, Appendix D.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={5} landscapeSpan={5} marker="5" kicker="The write-read boundary: seven writers, three readers" title="An instruction moves the write, not the tested action">
+    <div class:list={['wr-split', { side: isLandscape }]}>
+    <figure class="poster-figure">
+      <svg viewBox={`0 0 ${W.w} ${wH}`} role="img" aria-label="A preservation instruction lowers progressive destruction sharply for GPT-5.6 Luna and Qwen3-8B, partly for others, and raises it for GPT-OSS-20B and OLMo-2-32B.">
+        {[
+          ['baseline', muted, 0],
+          ['instruction helps', progC, 0.2],
+          ['instruction hurts', simpleC, 0.56],
+        ].map(([label, c, f]) => (
+          <g>
+            <circle cx={f * W.w + 10} cy="40" r={W.dot} fill={c} />
+            <text x={f * W.w + 34} y={40 + W.fs * 0.34} font-size={W.fs - 4} fill={ink}>{label}</text>
+          </g>
+        ))}
+        {wTicks.map((t) => (
+          <g>
+            <line x1={wX(t)} y1={W.top - 30} x2={wX(t)} y2={wH - 58} stroke={muted} stroke-width="1.2" opacity="0.26" />
+            <text x={wX(t)} y={wH - 30} font-size={W.fs - 6} fill={muted} text-anchor="middle">{t}</text>
+          </g>
+        ))}
+        {writeRows.map((r, i) => {
+          const y = W.top + i * W.rowH;
+          const end = r.worse ? simpleC : progC;
+          return (
+            <g>
+              <text x="0" y={y + W.fs * 0.34} font-size={W.fs} fill={ink}>{r.model}</text>
+              <line x1={wX(r.base)} y1={y} x2={wX(r.guided)} y2={y} stroke={end} stroke-width="6" opacity="0.5" />
+              <circle cx={wX(r.base)} cy={y} r={W.dot} fill={muted} />
+              <circle cx={wX(r.guided)} cy={y} r={W.dot + 2} fill={end} />
+              <text
+                x={r.worse ? wX(r.guided) + W.dot + 16 : wX(r.guided) - W.dot - 16}
+                y={y + W.fs * 0.34}
+                font-size={W.fs - 3}
+                font-weight="600"
+                fill={end}
+                text-anchor={r.worse ? 'start' : 'end'}
+              >
+                {r.guided.toFixed(1)}
+              </text>
+            </g>
+          );
+        })}
+        <text x={(W.x0 + W.x1) / 2} y={wH - 2} font-size={W.fs - 4} fill={muted} text-anchor="middle">
+          Progressive destruction (%)
+        </text>
+      </svg>
+    </figure>
+
+    <div class="wr-read">
+    <p class="poster-body">
+      The prospectively fixed downstream task showed no effect: readers use the fact on 97% to
+      100% of stale memories, so it cannot show that better storage helps later.
+    </p>
+
+    <table class="reader-table poster-body">
+      <thead>
+        <tr><th>Reader, dated-note test</th><th class="num">Persistence</th><th class="num">Field fills</th><th class="num">p</th></tr>
+      </thead>
+      <tbody>
+        {READERS.map((r) => (
+          <tr>
+            <td>{r.reader}</td>
+            <td class="num">{r.diff.toFixed(1)}</td>
+            <td class="num">{r.fills}</td>
+            <td class="num">{r.p}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    </div>
+    </div>
+    <p class="poster-caption">
+      In an exploratory dated-note test every reader rates a stale progressive 16 to 32 points less
+      likely to still hold, but only two change whether they fill the field. Data: paper Figure 3.
+    </p>
+  </PosterCell>
+
+  <PosterCell span={3} landscapeSpan={3} marker="6" kicker="Takeaway" title="Store temporal form as evidence, not as style" fill={true}>
+    <ol class="takeaway-list poster-body">
+      {takeaways.map(([head, body]) => (
+        <li>
+          <span class="takeaway-head">{head}</span> {body}
+        </li>
+      ))}
+    </ol>
+  </PosterCell>
+
+  <PosterCell span={12} landscapeSpan={12} marker="7" kicker="TL;DR">
+    <div class="tldr-band poster-body">
+      <div>
+        <p class="tldr-head">What we did</p>
+        <p>
+          LAPSE sends matched user statements that differ only in temporal form to the same
+          memory-writing instruction, holding topic, predicate, carrier verb, and elapsed time
+          identical, then scores what the writer stored and what a later reader did with it.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What we found</p>
+        <p>
+          Across three prospectively fixed writers, 244 of 381 matched pairs lose only the
+          progressive form and not one loses only the simple present. The same asymmetry appears in
+          eight further configurations and in mem0, Graphiti, and Letta. Readers rate a flattened
+          fact more likely to still hold.
+        </p>
+      </div>
+      <div>
+        <p class="tldr-head">What you should do</p>
+        <p>
+          Keep the normalized fact, the temporal form, and the observation time in separate fields,
+          and let a later rule decide expiry. A preservation instruction is not a repair: it nearly
+          fixes two writers and makes two others worse. Audit the pipeline you ship, not the model.
+        </p>
+      </div>
+      <div class="tldr-qr">
+        <img src="/poster/aspect-persistence-online-qr.svg" alt="QR code linking to this poster online at spanthi.com" />
+        <p class="tldr-qr-label">This poster online</p>
+      </div>
+    </div>
+  </PosterCell>
+</PosterShell>
+
+<style is:global>
+  /* The paper's own figure palette, sampled from paper/figures/*.png: the teal
+     used for the progressive form and DeepSeek, the terracotta used for the
+     simple present and for flattened pipeline memories, the green used for
+     GPT-5.6 Luna, the near-black used for GLM-5.2, and the purple the overview
+     figure gives the read-time test. Nothing from the site palette is used. */
+  :root {
+    --lapse-prog: 36 96 122;         /* #24607A */
+    --lapse-prog-fill: 230 239 244;  /* #E6EFF4 */
+    --lapse-simple: 196 78 82;       /* #C44E52 */
+    --lapse-simple-fill: 250 235 236; /* #FAEBEC */
+    --lapse-luna: 59 127 92;         /* #3B7F5C */
+    --lapse-glm: 51 51 51;           /* #333333 */
+    --lapse-read: 126 34 206;        /* #7E22CE */
+    --lapse-read-fill: 244 236 252;  /* #F4ECFC */
+    --lapse-box: 191 198 205;        /* #BFC6CD */
+    --lapse-panel: 245 246 248;      /* #F5F6F8 */
+    --lapse-rail: 218 220 224;       /* #DADCE0 */
+  }
+</style>
+
+<style>
+  .k-label {
+    color: rgb(var(--lapse-simple));
+    font-weight: 500;
+  }
+
+  .k-flat {
+    color: rgb(var(--lapse-simple));
+    font-weight: 600;
+  }
+
+  .gap-above {
+    margin-top: 4mm;
+  }
+
+  .lapse-intro {
+    margin-bottom: 6mm;
+  }
+
+  /* The schematic is 1.7:1 and the prose column would run out well before it,
+     so they stack rather than sitting side by side. */
+  .lapse-schematic {
+    width: 100%;
+  }
+
+  /* Cell 3 carries two panels. A0 gives the cell the full sheet width, so they
+     sit side by side; the landscape sheet gives it one column of five, where
+     the pair would squeeze both, so `stacked` puts them in one column. */
+  .result-split {
+    display: grid;
+    grid-template-columns: 0.88fr 1.12fr;
+    gap: 10mm;
+    align-items: center;
+  }
+
+  .asym-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6mm;
+  }
+
+  .asym-stat {
+    margin: 0;
+    border-top: 0.6mm solid rgb(var(--lapse-prog));
+    padding-top: 4mm;
+  }
+
+  .asym-figure {
+    display: block;
+    font-size: 54pt;
+    font-weight: 600;
+    line-height: 1;
+    color: rgb(var(--lapse-prog));
+    letter-spacing: -0.01em;
+  }
+
+  .asym-gloss {
+    display: block;
+    margin-top: 2.5mm;
+    font-size: 18pt;
+    color: rgb(var(--color-ink-muted));
+    max-width: 110mm;
+  }
+
+  .axis-list > div {
+    display: grid;
+    /* The term column is sized in em, not mm, so it holds the longest term
+       ("Destructive") at both sheets' type scales. The terms and their
+       glosses share one list, so the cell's height goes into row spacing
+       rather than into prose written to fill the slack. */
+    grid-template-columns: 4.9em 1fr;
+    gap: 0 1.1em;
+    padding: 2.4mm 0;
+    border-top: 0.4mm solid rgb(var(--lapse-box));
+  }
+
+  .axis-list > div:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .axis-list dt {
+    font-weight: 500;
+    color: rgb(var(--lapse-prog));
+  }
+
+  .axis-list dd {
+    margin: 0;
+  }
+
+  /* Landscape only: seven glosses in a three-column cell at the 1.4 type scale.
+     Leading is the one place left to take height from once the wording is as
+     short as it can be without dropping a dimension of the design. */
+  :global(body[data-format='landscape']) .axis-list dd,
+  :global(body[data-format='landscape']) .axis-list dt {
+    line-height: 1.3;
+  }
+
+  /* The header band's height floor took the rest of the room this cell had. */
+  :global(body[data-format='landscape']) .axis-list > div {
+    padding: 0.5mm 0;
+  }
+
+  :global(body[data-format='landscape']) .axis-list > div:first-child {
+    padding-top: 0;
+  }
+
+  .wr-split.side {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 9mm;
+    align-items: start;
+  }
+
+  .wr-split.side .wr-read > :first-child {
+    margin-top: 0;
+  }
+
+  .reader-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4mm;
+  }
+
+  .reader-table th {
+    text-align: left;
+    font-weight: 500;
+    color: rgb(var(--color-ink-muted));
+    border-bottom: 0.5mm solid rgb(var(--lapse-box));
+    padding-bottom: 1.6mm;
+    /* A step below body size so the four heads hold one line each. */
+    font-size: 0.72em;
+    vertical-align: bottom;
+  }
+
+  .reader-table td {
+    padding: 2mm 0;
+    border-bottom: 0.3mm solid rgb(var(--lapse-box));
+  }
+
+  .reader-table .num {
+    text-align: right;
+    padding-left: 5mm;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .takeaway-list {
+    list-style: none;
+    counter-reset: takeaway;
+    margin: 0;
+    padding: 0;
+  }
+
+  .takeaway-list li {
+    counter-increment: takeaway;
+    padding-left: 10mm;
+    position: relative;
+  }
+
+  .takeaway-list li::before {
+    content: counter(takeaway);
+    position: absolute;
+    left: 0;
+    top: 0.2mm;
+    width: 7mm;
+    height: 7mm;
+    display: grid;
+    place-items: center;
+    font-size: 16pt;
+    color: rgb(var(--lapse-prog));
+    border: 0.4mm solid rgb(var(--lapse-prog));
+  }
+
+  .takeaway-head {
+    font-weight: 500;
+    color: rgb(var(--lapse-prog));
+  }
+</style>

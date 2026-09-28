@@ -270,6 +270,6 @@ Adding the camera added roughly 3 KB to the bundle. The quality improvement is d
 
 ## What changed
 
-Part one was proof you could replace a video. Part two is the part where it starts to feel directed instead of recorded. The camera is the difference. A flat cursor clicking through scenes looks like a screen recording with better compression. A cursor with zoom and pan looks like someone designed the experience.
+Part one replaced a video. Part two added camera control: zoom, pan, and a directed focal point. A flat cursor clicking through scenes looks like a screen recording with better compression. A cursor with zoom and pan looks like someone designed the experience.
 
-The upfront cost is real. The ongoing cost is near zero. Updates are code changes, not re-recordings.
+The upfront engineering cost is real, but updates are code changes, not re-recordings.

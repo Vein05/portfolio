@@ -50,13 +50,11 @@ caption: Small models and OLMo abstain on 37-43% of answerable questions. Compil
 
 I classified every row into four outcomes: the reader went from wrong to correct (rescued), from unknown to correct (also rescued), stayed the same, or went from correct to wrong (damaged).
 
-Across all eight models I decomposed, 15.3% of rows the reader already answered correctly were broken by compression. That is 261 out of 1,711 correct-answer pairs. The compiler selected the wrong framing, dropped a critical fact, or overwrote a current answer with a stale one.
+Across all eight models I decomposed, 15.3% of rows the reader already answered correctly were broken by compression. That is 261 out of 1,711 correct-answer pairs. The compressor selected the wrong framing, dropped a critical fact, or overwrote a current answer with a stale one.
 
 For small readers, this damage is outweighed by the rescue rate. For strong readers, the rescue pool shrinks while the damage pool stays the same. That is why the ratio collapses.
 
 ## Temporal and preference questions gain; knowledge updates regress
-
-The most useful finding is the per-question-type breakdown.
 
 ```image
 src: /posts/images/compression-is-a-coin-flip/question_type.png

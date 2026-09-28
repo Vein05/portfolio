@@ -5,9 +5,9 @@ category: "Research"
 status: "cooking"
 ---
 
-No ACL Rolling Review paper has ever scored a 5.0. Across five years and 69,781 scored submissions, the top of the scale is empty. That does not mean reviewers hate everything. A 5.0 here is an average, and reaching it would take a paper whose whole review panel converged on a perfect score, which in five years never happened.
+No ACL Rolling Review paper has ever scored a 5.0. Across five years and 69,781 scored submissions, the top of the scale is empty. A 5.0 here is an average, and reaching it would take a paper whose whole review panel converged on a perfect score, which in five years never happened.
 
-It is still worth sitting with, because on a different scale it does happen. ICLR publishes every reviewer's individual number instead of averaging them, and in 2025 the relighting model [IC-Light](https://openreview.net/forum?id=u1cQYxRI1H), by ControlNet's creator, drew a straight 10, 10, 10, 10 from all four reviewers. ARR's averaging into a single 1-to-5 number makes the same outcome almost arithmetically invisible.
+On a scale that reports each reviewer separately, top scores do happen. ICLR publishes every reviewer's individual number instead of averaging them, and in 2025 the relighting model [IC-Light](https://openreview.net/forum?id=u1cQYxRI1H), by ControlNet's creator, drew a straight 10, 10, 10, 10 from all four reviewers. ARR's averaging into a single 1-to-5 number makes the same outcome almost arithmetically invisible.
 
 I found the empty ceiling while checking whether my own middling scores were harsh or normal. The important detail was how ARR constructs the published number: it averages a paper’s reviews before adding that paper to the histogram.
 
@@ -25,7 +25,7 @@ The number in the ARR histogram is one aggregate score per paper, not one per re
 
 The match to the paper count is exact, every cycle. So each row is one number per submission, the aggregate of that paper's three-or-so reviews (which is why the values still land on clean half-point steps). The 69,781 figure is submissions summed across 35 cycles, not reviews, and a resubmitted paper counts once per cycle. The individual reviewer scores that go into each average are not published anywhere.
 
-That distinction matters because it kills the tempting headline. "No reviewer gives a five" is unsupported: individual 5.0s almost certainly exist and get averaged away. What the data actually shows is that **no paper ever earns a 5.0 average**, which is a claim about consensus, not about reviewer generosity.
+That distinction matters because it kills the tempting headline. "No reviewer gives a five" is unsupported: individual 5.0s almost certainly exist and get averaged away. What the data actually shows is that **no paper ever earns a 5.0 average**, which is a claim about how often a whole panel agrees.
 
 ## No published paper-level average reaches 5.0
 
@@ -35,7 +35,7 @@ Across five years, the top of the aggregate scale is unused. Of 69,781 scored su
 type: arr-score-ceiling
 ```
 
-Part of this is real and part is arithmetic. Averaging three scores mechanically pulls a paper toward the middle: to average a 5.0, every reviewer has to give roughly a 5.0, so the extremes wash out before they reach the histogram. The empty ceiling is therefore weak evidence about how any individual reviewer behaves and strong evidence about how rarely three reviewers agree a paper is flawless. Read it as a statement about consensus. Nothing in five years of ACL submissions cleared the bar of unanimous enthusiasm.
+Part of this is real and part is arithmetic. Averaging three scores mechanically pulls a paper toward the middle: to average a 5.0, every reviewer has to give roughly a 5.0, so the extremes wash out before they reach the histogram. The empty ceiling is therefore weak evidence about how any individual reviewer behaves and strong evidence about how rarely three reviewers agree a paper is flawless. In five years, no paper had every reviewer give it roughly a 5.
 
 The pattern is not an artifact of tiny early cycles. It holds where it carries weight: the November 2021 cohort (2,585 papers), January 2026 (9,177), and May 2026 (13,668) all have zero 5.0s.
 
@@ -47,9 +47,9 @@ Each paper carries two numbers: the aggregate of its reviews, and a single meta 
 type: arr-reviewer-vs-ac
 ```
 
-Before reading this as "area chairs are the generous ones," note the confound I could not remove. The review number is an average of three scores; the meta number is one person's single score. A single score has more variance than an average of three by construction, so the meta distribution has fatter tails on both ends: it reaches 4.0 more often, and it also drops to 2.0 or below more often (26% versus 23%). Some unknown share of the gap is that arithmetic, not area-chair courage.
+Before reading this as "area chairs are the generous ones," note the confound I could not remove. The review number is an average of three scores; the meta number is one person's single score. A single score has more variance than an average of three by construction, so the meta distribution has fatter tails on both ends: it reaches 4.0 more often, and it also drops to 2.0 or below more often (26% versus 23%). Some unknown share of the gap comes from that arithmetic.
 
-What survives the confound is the middle. Averaged reviews pile onto the 2.5 fence: 36% of papers sit exactly there. Meta scores refuse it, dropping the 2.5 share to 22% and pushing that mass outward. The area chair is the one point in the pipeline that resolves a hedged 2.5 into a verdict. I restricted this comparison to the half-point-scale era, February 2025 through May 2026 (43,458 papers), because ARR used an integer-only meta scale before then and mixing the two manufactures a difference that is really a scale change.
+What survives the confound is the middle. Averaged reviews pile onto the 2.5 fence: 36% of papers sit exactly there. Meta scores avoid it, dropping the 2.5 share to 22% and pushing that mass outward. Area chairs write the meta score after reading the reviews, so the two numbers are not independent opinions: what this shows is that area chairs, given a set of reviews averaging 2.5, usually pick a side. I restricted this comparison to the half-point-scale era, February 2025 through May 2026 (43,458 papers), because ARR used an integer-only meta scale before then and mixing the two manufactures a difference that is really a scale change.
 
 ## Mean paper scores stayed between 2.24 and 2.80 as volume grew 100-fold
 
@@ -59,14 +59,13 @@ The one finding here that needs no caveat is stability. A single cycle grew from
 type: arr-mean-vs-volume
 ```
 
-This is the observation [David Jurgens flagged](https://medium.com/@jurgens_24580/is-the-acl-rolling-review-actually-broken-e86fc92d49d2) from the same public data. I read the flatness less as reassurance than as a property of a compressed instrument. When paper-level scores are averages clustered on a two-point band around "revisions needed," the mean has almost nowhere to move regardless of what gets submitted. A flat average under a 100x load increase is what a compressed scale looks like, not proof that quality held.
+This is the observation [David Jurgens flagged](https://medium.com/@jurgens_24580/is-the-acl-rolling-review-actually-broken-e86fc92d49d2) from the same public data. I read the flatness less as reassurance than as a property of a compressed instrument. When paper-level scores are averages clustered on a two-point band around "revisions needed," the mean has almost nowhere to move regardless of what gets submitted. A flat average under a 100x load increase is what a compressed scale would produce whether or not quality held.
 
 ## What this data cannot tell you
 
 These are aggregated per-paper histograms, and the aggregation is the whole caveat. There are no individual reviewer scores, no paper identifiers, no accept or reject labels, no review text. You cannot recover how any single reviewer scores, measure disagreement inside a paper's review set, or join a score to an outcome.
 
-It also cannot answer whether an automated reviewer would reproduce this distribution. There are no matched papers to score, and ACL reviews are public on OpenReview, so a model may have seen a paper's reception during training. That is contamination, not calibration, and it is the reason I keep [my own reviewer-model work](https://spanthi.com/blog/where-does-the-paste-end/) on held-out material rather than published venues. The honest scope of this post is one sentence: this is the distribution of paper-level aggregate scores across five years, and no paper ever averaged a perfect one.
-
+It also cannot answer whether an automated reviewer would reproduce this distribution. There are no matched papers to score, and ACL reviews are public on OpenReview, so a model may have seen a paper's reception during training. A model scoring such a paper could be recalling its reviews, which is why I keep [my own reviewer-model work](https://spanthi.com/blog/where-does-the-paste-end/) on held-out material rather than published venues.
 ## Sources
 
 - [ACL Rolling Review stats dashboard](https://stats.aclrollingreview.org/) and the [`acl-org/arr-health`](https://github.com/acl-org/arr-health) data repository, including the per-cycle `dashboard_stats.json` that reports active submissions and review counts (primary source for every number here).

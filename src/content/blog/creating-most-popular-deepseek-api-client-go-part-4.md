@@ -78,8 +78,6 @@ Now I optimize for "works for maintainers and users I may never meet."
 
 That shift changed how I write code, tests, docs, and release notes.
 
-If this series helps someone build a better Go SDK, then it did its job.
-
 ```image
 src: /.netlify/images?url=/posts/images/creating-most-popular-deepseek-api-client-go-part-4/deepseek-go-big.png&w=1200&fit=cover
 alt: deepseek-go project logo

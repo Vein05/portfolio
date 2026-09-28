@@ -154,7 +154,7 @@ The full production animation at costumary.com, four scenes with multi-cursor co
 
 The GIF option is worth mentioning because people still try it. A 15-second GIF of a product walkthrough is easily 10 MB. It has no pause button, no accessibility, no scrubbing, and it loops whether the user wants it to or not. The only thing a GIF has going for it is that it autoplays everywhere. GSAP also autoplays everywhere, at 0.3% of the file size.
 
-The real test is whether the animation needs to change with the product. If it does, you will curse this approach within a month. If the animation *is* the product's story and the story is stable, it is worth the effort.
+The deciding factor is whether the animation needs to change with the product. If it does, you will curse this approach within a month. If the animation *is* the product's story and the story is stable, it is worth the effort.
 
 ## The production version
 

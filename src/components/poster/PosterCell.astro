@@ -2,8 +2,23 @@
 // Generic bento cell. `span` is the 12-column grid span; `marker` is the
 // numbered reading-spine badge (bento grids are ambiguous about reading
 // order, so every content cell states its place in the sequence).
+//
+// `landscapeSpan` is the same cell's span on the 44 x 32 sheet, which is wider
+// and much shorter than A0 and so wants fewer, wider rows. It falls back to
+// `span`, so a cell that reads the same in both formats states it once.
+//
+// Kicker and title sit in one `.cell-head` so a sheet can put a tinted band
+// behind the pair (see the `data-poster` rule in poster.css); on sheets that
+// do not, the wrapper is inert.
+//
+// `head` sets the band's height floor on the landscape sheet. By default a
+// band with a kicker is floored at kicker plus two title lines, so the bands
+// in a row stay level; a band without a kicker only takes the room its title
+// needs. `head="long"` forces the floor (to level a kicker-less cell with
+// row-mates that have one), `head="short"` removes it.
 export interface Props {
   span: number;
+  landscapeSpan?: number;
   marker?: string;
   kicker?: string;
   title?: string;
@@ -11,15 +26,24 @@ export interface Props {
   rowSpan?: number;
   /** list-only cell: distribute items over the cell height */
   fill?: boolean;
+  head?: 'short' | 'long';
 }
 
-const { span, marker, kicker, title, plain = false, rowSpan, fill = false } = Astro.props;
-const style = `grid-column: span ${span};${rowSpan ? ` grid-row: span ${rowSpan};` : ''}`;
+const { span, landscapeSpan, marker, kicker, title, plain = false, rowSpan, fill = false, head } = Astro.props;
+const style = [
+  `--span: ${span}`,
+  `--span-landscape: ${landscapeSpan ?? span}`,
+  rowSpan ? `grid-row: span ${rowSpan}` : '',
+].filter(Boolean).join(';');
 ---
 
-<section class:list={['poster-cell', { plain, fill }]} style={style}>
+<section class:list={['poster-cell', { plain, fill }, head && `head-${head}`]} style={style}>
   {marker && <span class="cell-marker" aria-hidden="true">{marker}</span>}
-  {kicker && <p class="cell-kicker">{kicker}</p>}
-  {title && <h2 class="cell-title">{title}</h2>}
+  {(kicker || title) && (
+    <header class="cell-head">
+      {kicker && <p class="cell-kicker">{kicker}</p>}
+      {title && <h2 class="cell-title">{title}</h2>}
+    </header>
+  )}
   <slot />
 </section>

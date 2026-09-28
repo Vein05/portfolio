@@ -9,11 +9,11 @@ The tool call did not fail. It returned valid JSON, in the expected shape, with 
 
 The agent accepted it anyway.
 
-It used the bad value in its next decision, called another tool, and built a confident answer on top of the mistake. By the time the failure became visible, the observation that caused it was several steps behind. Nothing crashed. No exception pointed back to the source. The agent had already turned the error into a story.
+It used the bad value in its next decision, called another tool, and built a confident answer on top of the mistake. By the time the failure became visible, the observation that caused it was several steps behind. Nothing crashed, and no exception pointed back to the tool call that caused it.
 
 The difficult case is a call that succeeds at the transport layer but returns plausible-looking bad data. A cached error page arrives as content. A price is negative. An order status falls outside every state the system knows. Because the call itself succeeded, the agent has no explicit error telling it to stop.
 
-In one study of a production agent runtime, humans reading the final output were the first to catch 70% of its silent failures. The system had logs. What it lacked was a useful moment of doubt.
+In [one study of a production agent runtime](https://arxiv.org/abs/2606.14589), humans reading the final output were the first to catch 70% of its silent failures. The system had logs, but nothing flagged the bad result while the agent was still acting on it.
 
 ## A corrupted result leaves detection and recovery to the agent
 
@@ -47,7 +47,7 @@ A simplified receipt looks like this:
 
 The original result is preserved. The monitor does not call a tool, delete an action, choose a repair, read the evaluator, or reveal a benchmark fault label. It says what property broke and which public alternatives remain. The agent still decides what to do.
 
-That distinction matters. A hard guard can improve a score by preventing the wrong action itself. Here, the runtime only changes what the agent can see.
+A hard guard could improve a score by blocking the wrong action itself. This runtime only changes what the agent can see.
 
 ## A deterministic program learns per-tool rules from clean executions
 
@@ -55,9 +55,9 @@ There is no universal list of impossible tool results. A negative price is suspi
 
 In the main experiment, a deterministic program scanned clean tool executions while keeping every evaluated workflow out of the data used to build its checker. For each tool, it tested candidate rules about required fields, stable types, positive quantities, small categorical domains, echoed arguments, date ordering, and exact affine relationships between fields. It kept a rule only if the rule held in every qualifying training example and had enough supporting examples. This is what “mined” means here: the program proposed and filtered rules from observed executions. A researcher chose the candidate rule families and support threshold; the program applied those choices without a model call.
 
-In other environments, the same interface used contracts derived from public API schemas or a public retail database. Contract construction was deterministic, local, and required no model calls. The five cross-fitted registries contained 15,041 accepted invariants mined from 400 nominal workflows and built in under two seconds.
+In other environments, the same interface used contracts derived from public API schemas or a public retail database. Contract construction was deterministic, local, and required no model calls. The workflows were split into five folds, and each fold's checker was built only from the other four, so no evaluated workflow fed its own checker. The five resulting rule sets contained 15,041 accepted invariants mined from 400 nominal workflows and built in under two seconds.
 
-Recovery tools came from the public tool interface, not from solutions or hidden recovery paths. At 443 of 484 receipt events in the primary study, or 91.5%, the agent still had at least two advertised recovery actions. The receipt usually exposed a choice rather than collapsing the task to an oracle answer.
+Recovery tools came from the public tool interface; the monitor had no access to solutions or hidden recovery paths. At 443 of 484 receipt events in the primary study, or 91.5%, the agent still had at least two advertised recovery actions. So the receipt usually left the agent a choice between routes.
 
 ## Receipts raised ToolMaze completion from 10.9% to 28.1%
 
@@ -65,7 +65,7 @@ The primary evaluation used 80 difficult ToolMaze workflows with implicit tool f
 
 Without the monitor, the models completed 35 of 320 model-workflow pairs: 10.9%. With the receipt, they completed 90: 28.1%. That is a **17.2 percentage-point gain**, with a task-clustered 95% bootstrap interval from 11.25 to 23.44 points and a sign-flip test below .00001.
 
-Even with receipts, 230 of 320 episodes failed. The intervention improved recovery on this benchmark but did not make most tasks succeed.
+Even with receipts, 230 of 320 episodes failed. Most tasks still failed with the receipt in place.
 
 ```chart
 type: outcome-contracts
@@ -80,27 +80,23 @@ The models did not all react the same way after a receipt. Across 484 receipt ev
 - 14.0% retried the same tool;
 - 3.9% made no further tool call.
 
-A receipt made the inconsistency visible. It did not prescribe a single policy.
+So the receipt led to different next steps in different models.
 
 ## The recovery-tool list produced the detectable gain
 
-This is the result I did not expect.
-
 I began with a story about localization: tell the model exactly which property is inconsistent, and it can reason its way back. The controls tell a more specific story.
 
-The baseline prompt already warned every model that tools could return unexpected data and instructed it to inspect fields, values, and types. Giving two DeepSeek tiers an 8,192-token reasoning budget did not remove the monitor's effect. A generic warning triggered at the same moment performed about as well as a detailed, localized witness. Moving the warning or changing its salience produced no detectable advantage either.
+The baseline prompt already warned every model that tools could return unexpected data and instructed it to inspect fields, values, and types. In a separate follow-up, I turned extended reasoning back on for two DeepSeek tiers with an 8,192-token budget, and the monitor's effect remained. A generic warning triggered at the same moment performed about as well as a detailed, localized witness. Moving the warning or changing its salience produced no detectable advantage either.
 
 Then I removed the recovery-tool list.
 
-The stripped receipt fell back to baseline. Restoring the list added **11.4 percentage points** on the same paired workflows. The diagnostic detail told the agent *what looked wrong*. The recovery affordances told it *where it could go next*.
+The stripped receipt fell back to baseline. Restoring the list added **11.4 percentage points** on the same paired workflows. The diagnostic detail described what looked wrong; the gain came from listing where the agent could go next.
 
 ```chart
 type: recovery-affordances
 ```
 
 The null contrasts are power-bounded, so this does not prove that diagnostic wording never matters. It does identify the component that carried the detectable gain in these experiments: make the viable alternatives legible at the moment of failure.
-
-In these experiments, identifying the inconsistency was insufficient. The receipt also had to name callable alternatives the agent could use next.
 
 ## Receipts helped when the corrupted result blocked completion
 
@@ -116,15 +112,15 @@ The same pattern appeared elsewhere. In held-out AppWorld, baseline and monitore
 type: outcome-boundaries
 ```
 
-Across the frozen studies, gains were largest where the injected fault usually blocked baseline completion. Where agents often completed despite the corrupted observation, rescues were offset by harms. That relationship is post hoc and descriptive, not a deployment formula, but it puts a clear boundary around the headline result.
+Across the frozen studies, gains were largest where the injected fault usually blocked baseline completion. Where agents often completed despite the corrupted observation, rescues were offset by harms. That relationship is post hoc and descriptive, and it bounds where the headline result applies.
 
 ## False receipts can redirect an agent even when they block nothing
 
 On clean ToolMaze workflows, baseline and monitored agents both completed 74 of 114 model-workflow pairs. The aggregate difference was zero. Underneath it were five paired rescues and five paired harms.
 
-Every action remains available in a nonbinding interface. A false alarm can still redirect attention, add context, and make an agent overreact. Preserving choice is not a safety proof.
+Every action remains available in a nonbinding interface. A false alarm can still redirect attention, add context, and make an agent overreact. Leaving every action available does not make the monitor safe on its own.
 
-A noisier schema-only detector makes the tradeoff visible. On a fault-enriched sample it recovered much of the completion gain: +10 points versus +15 for the learned monitor, with no significant head-to-head difference. But it emitted 166 receipts to the learned monitor's 111. Only 12% of its receipts exposed multiple recovery actions, compared with 91.9% for learned contracts. The learned system's clearest advantage was selectivity and better recovery lists, not a proven larger completion effect.
+A noisier schema-only detector makes the tradeoff visible. On a fault-enriched sample it recovered much of the completion gain: +10 points versus +15 for the learned monitor, with no significant head-to-head difference. But it emitted 166 receipts to the learned monitor's 111. Only 12% of its receipts exposed multiple recovery actions, compared with 91.9% for learned contracts. The learned system's clearest advantage was firing less often and listing more recovery options; its completion gain was not significantly larger.
 
 Deployment therefore depends on the traffic mixture. A monitor that helps on faulted calls can still lose value if faults are rare and false receipts are common. Any real deployment needs to measure both.
 
@@ -142,17 +138,15 @@ The split explains why. The monitor caught 25 of 30 violations expressible over 
 type: detector-vocabulary
 ```
 
-This is the open problem. Outcome monitoring works when a tool's promises can be stated as checkable properties. Wrong results that remain well-formed pass through. No receipt can help if nothing fires.
+Outcome monitoring works when a tool's promises can be stated as checkable properties. Wrong results that stay well-formed pass through, and no receipt is sent for them.
 
 ## Treat tool results as claims that may need a recovery path
 
 The usual agent loop treats a successful tool response as an observation of the world. A safer interface treats it as a claim that can sometimes be checked before the agent builds on it.
 
-The experiments support a bounded conclusion. Outcome monitors improved recovery across five models from three families and transferred to a second positive environment. They helped most when silent failure actually blocked the task. They did not help everywhere, they sometimes hurt individual clean runs, and their reach ended at the edge of their contract vocabulary.
+Outcome monitors improved recovery across five models from three families and transferred to a second positive environment. They helped most when silent failure actually blocked the task. They did not help everywhere, they sometimes hurt individual clean runs, and their reach ended at the edge of their contract vocabulary.
 
 The interface result is specific: agents often already have another route, but the runtime must identify the inconsistent result and name the available recovery tools at the moment the failure appears.
-
-That is what the receipt is for.
 
 ## Research context
 

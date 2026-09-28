@@ -63,8 +63,8 @@ export const SeamAbsorptionChart = () => {
   return (
     <ChartCard
       kicker="SEAM: instruction absorption"
-      title="A boundary marker cuts absorption ~7×. A bigger gap does nothing."
-      caption="Absorption rate by seam condition. DeepSeek V4 Flash, 300 clusters per condition, scored against the matched clean output. clean is the reference; newline and blank add whitespace; boundary marks the paste seam; mitigation adds one instruction line."
+      title="A boundary marker cut absorption about 7×; a blank line did not reduce it"
+      caption="Absorption by seam condition, scored against the matched clean output. DeepSeek V4 Flash, 300 clusters per condition."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Bar chart: absorption is 31% under newline, 30% under blank, 4.4% under boundary, 0.3% under mitigation, and near zero for clean.">
@@ -131,7 +131,7 @@ export const SeamModelPanelChart = () => {
     <ChartCard
       kicker="SEAM: 19-model panel"
       title="Boundary markup reduces absorption in 18 of 19 models"
-      caption="Absorption rate across the current full-cascade panel, sorted by bare-newline rate. Lines connect the same 300 composition clusters under a bare newline and explicit boundary; diamonds show boundary-plus-mitigation. Cells use n=297–300 after completed-output exclusions."
+      caption="Lines connect the same clusters under a bare newline and a boundary; diamonds add the mitigation line. 19 models, 297 to 300 clusters per cell after excluding unusable outputs."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Nineteen-row chart comparing absorption after a newline, explicit boundary markup, and mitigation. Boundary markup reduces the rate in all models except Llama 3.1 8B.">
@@ -185,7 +185,7 @@ export const SeamRegisterChart = () => {
     <ChartCard
       kicker="Register manipulation: four models"
       title="When the afterthought sounds like the artifact, absorption rises"
-      caption="The left panel holds artifact and bare-newline seam fixed and changes only the afterthought’s register. The right panel isolates code, where casual afterthought absorption is 0% in every model and register-matched absorption rises to 19–81%. Each rate uses 300 overall clusters or 100 pooled code conditions per model."
+      caption="Only the afterthought’s register changes; the right panel shows code alone, where absorption rose from 0% to 19–81%. Four models, 300 clusters each (100 for code)."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Four model rows showing overall absorption rising by 20 to 37 points when afterthought register matches the artifact, and code rising from zero to between 19 and 81 percent.">
@@ -247,7 +247,7 @@ export const OutcomeContractsChart = () => {
     <ChartCard
       kicker="ToolMaze: paired completion"
       title="Every evaluated model recovered more often with the monitor"
-      caption="Eighty workflows per model; baseline and monitor episodes were paired, randomized, and interleaved. The four-model primary aggregate rose from 35/320 to 90/320 (+17.2 points; task-cluster p < .00001). MiniMax M3 is a separately frozen replication and is not pooled. Model marks identify the evaluated families."
+      caption="Completion rose from 35/320 to 90/320 across four models (80 paired workflows each, +17.2 points). MiniMax M3 is a separate replication and is not pooled."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Dumbbell chart showing higher ToolMaze completion with an outcome monitor for four primary models and a separate MiniMax replication.">
@@ -314,7 +314,7 @@ export const RecoveryAffordancesChart = () => {
     <ChartCard
       kicker="Receipt ablations: 114 paired workflows"
       title="The recovery-tool list carried the detectable gain"
-      caption="Completion differences with task-cluster bootstrap intervals. Filled points clear zero; open points do not. The null contrasts are bounded by an approximately 18-point minimum detectable effect, so they do not establish equivalence."
+      caption="Completion differences with task-cluster bootstrap intervals; filled points clear zero. Contrasts near zero could hide effects up to about 18 points."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Forest plot showing significant gains when recovery tools are added, and no detected effect for a stripped receipt, localized wording, or immediate timing.">
@@ -361,7 +361,7 @@ export const OutcomeBoundariesChart = () => {
     <ChartCard
       kicker="Cross-study pattern: descriptive"
       title="Receipts help when the fault leaves room to recover"
-      caption="Baseline and monitored task completion in selected frozen rows. The two strongest gains occur where faulted baseline completion is lowest. Rows differ in task, fault, and sample and are not pooled; this is a post-hoc descriptive pattern, not a deployment threshold."
+      caption="The largest gains came where the fault usually stopped the baseline from finishing. Rows differ in task, fault, and sample, are not pooled, and the pattern was noticed after the runs."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Dumbbell chart showing large monitor gains in low-baseline ToolMaze and tau-bench status faults, but no net change on clean ToolMaze, tau-bench conservation, or held-out AppWorld.">
@@ -413,8 +413,8 @@ export const DetectorVocabularyChart = () => {
   return (
     <ChartCard
       kicker="Incident-derived faults: detector recall"
-      title="The monitor catches broken structure, not polished lies"
-      caption="Recall on faults authored from a production-incident taxonomy without access to the contract vocabulary. Overall detection was about 46% on each evaluated tier. Counts show the expressibility breakdown reported in the manuscript."
+      title="The monitor caught most broken structure and few wrong-but-fluent strings"
+      caption="Recall on 57 faults written from a production-incident taxonomy by someone who had not seen the contract vocabulary. Overall detection was about 46%."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Bar chart showing 83 percent recall on structured-value violations and 22 percent on plausible-string corruption.">
@@ -607,7 +607,7 @@ export const TraceChainDiagram = () => {
     <ChartCard
       kicker="Provenance: the trace chain"
       title="Every number in the paper resolves to a command"
-      caption="The trace test, using a real value from an internal scoring audit. A table cell points to a ledger row, the row carries the run ID and scorer version, and the reproducer regenerates the value from frozen outputs. If any link is missing, the number is a rumor with good posture."
+      caption="A real value from an internal scoring audit: the table cell points to a ledger row with the run ID and scorer version, and a reproducer regenerates the value from frozen outputs."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Flow: a paper table cell links to a results-ledger row, which links to a run ID and scorer version, which link to the exact command that reproduces the value.">
@@ -681,7 +681,7 @@ export const SmokeGateCatchesChart = () => {
     <ChartCard
       kicker="Cost gates: one overnight sweep"
       title="Three catches in one night, each before money was spent"
-      caption="A scaling sweep of roughly 3,600 scored calls across 0.6B to 32B checkpoints, 2026-08-05. Every stage ran a ten-item smoke test before its full run. All three failures were caught at the smoke or engine-init stage; total overhead was about 50 smoke calls and 25 minutes, against rescoring or rerunning 3,600 calls if any had shipped."
+      caption="A sweep of about 3,600 scored calls across 0.6B to 32B checkpoints, 2026-08-05. Ten-item smoke tests caught all three failures for about 50 calls and 25 minutes."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Three smoke-test catches in one overnight run: answer-tag leakage, reasoning-token cap saturation, and a KV-cache memory miss, each caught before the paid run. Total overhead about 50 smoke calls and 25 minutes, protecting a 3,600-call sweep.">
@@ -731,8 +731,8 @@ export const SignFlipAuditChart = () => {
   return (
     <ChartCard
       kicker="Manual audit: reasoning-toggle experiment"
-      title="The 40-point reasoning collapse was the scorer, not the model"
-      caption="Yes/no subgroup of a multi-hop QA benchmark, n=130 items, 177 damaged seed-pairs read by hand. Strict exact match against a one-token gold scored the toggle at −39.7 points; a scorer that extracts the verdict from the sentence scores the same frozen outputs at −0.0. Token-F1 co-moved (mean 0.077 on damaged rows) because it shares the failure mode, so metric agreement was the artifact's signature, not a check."
+      title="The 40-point reasoning collapse came from the scorer"
+      caption="Strict exact match scored reasoning mode at −39.7 points; reading the verdict out of each sentence scored the same outputs at 0.0. Yes/no subgroup of a multi-hop QA benchmark, 130 items, 177 damaged pairs read by hand."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Under strict exact match the reasoning toggle loses 39.7 points; under verdict extraction the effect is 0. Of 177 damaged rows read by hand, 65 percent were correct but verbose answers, 20.3 percent genuine wrong verdicts, 11.9 percent committed no verdict, and 2.8 percent were ambiguous.">
@@ -793,8 +793,8 @@ export const ArrScoreCeilingChart = () => {
   return (
     <ChartCard
       kicker="ARR: aggregate review score per paper, 2021–2026"
-      title="No ACL paper ever averages a perfect score: zero 5.0s in 69,781 submissions."
-      caption="Distribution of per-paper aggregate review scores (one score per submission, the average of its roughly three reviews) across all 35 ACL Rolling Review cycles, May 2021 to May 2026 (69,781 scored submissions, public ARR dashboard). The 1–5 scale behaves as a 2-to-3 scale: 83% of papers land at 2.0–3.0, the mode is 2.5, and the 5.0 bin is empty. A 4.5 appears 28 times (0.04%). These are paper aggregates; individual reviewer scores are not published."
+      title="Zero of 69,781 ARR submissions averaged a 5.0"
+      caption="83% of papers land at 2.0–3.0 and the 5.0 bin is empty. One averaged score per submission, 35 ARR cycles from May 2021 to May 2026, public ARR dashboard."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Bar chart of ARR per-paper aggregate scores: mode at 2.5 (33.7%), 3.0 at 29.7%, 2.0 at 19.5%, 4.0 at 1.3%, and zero papers at 5.0.">
@@ -849,8 +849,8 @@ export const ArrReviewerVsAcChart = () => {
   return (
     <ChartCard
       kicker="ARR: averaged reviews vs meta, per paper, 2025–2026"
-      title="A paper's meta score swings wider than its averaged reviews."
-      caption="Per-paper aggregate review score vs the area chair's meta score, half-point-scale era only (ARR switched the meta scale from integer to half-points in Feb 2025), 43,458 papers. The meta score reaches 4.0 seven times more often (7.5% vs 0.8%) and cuts the hedged 2.5 fence from 36% to 22%. Caveat: the review number is an average of three scores and the meta is a single score, so a single score's higher variance explains part of the wider tails, not area-chair generosity alone."
+      title="Meta scores spread wider than averaged review scores"
+      caption="Meta scores reach 4.0 more often (7.5% vs 0.8%) and land on 2.5 less often (22% vs 36%); part of the spread is a single score varying more than an average. 43,458 papers, February 2025 to May 2026."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Grouped bar chart per paper: at 2.5 averaged reviews 36% vs meta 22%; at 4.0 averaged reviews 0.8% vs meta 7.5%.">
@@ -954,8 +954,8 @@ export const ArrMeanVsVolumeChart = () => {
   return (
     <ChartCard
       kicker="ARR: mean review score vs volume, 2021–2026"
-      title="ARR grew more than 100× in five years. The average score didn't move."
-      caption="Per-cycle scored-paper count (bars, left axis) and mean per-paper aggregate review score (line, right axis) across 35 ACL Rolling Review cycles, May 2021 to May 2026. Volume rose from 23 scored papers in mid-2021 to 13,668 in May 2026 while the mean stayed inside a 2.24–2.80 band. The two lowest means (2023/10, 2025/07) are small off-cadence cycles."
+      title="ARR grew more than 100× in five years while the mean score stayed between 2.24 and 2.80"
+      caption="Scored papers per cycle (bars) and mean averaged score (line), 35 ARR cycles from May 2021 to May 2026. The two lowest means are small off-cadence cycles."
     >
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
         aria-label="Bars show review volume rising sharply to 13,668 by 2026; the overlaid mean-score line stays flat near 2.6 throughout.">
