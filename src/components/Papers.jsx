@@ -8,6 +8,27 @@ import {
 import { citations } from "../data/citations";
 
 const Thumb = {
+  Flatten: () => (
+    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
+      {/* what the user said: an ongoing activity */}
+      <text x="30" y="36" fontFamily="monospace" fontSize="10" fill="rgb(var(--color-ink-dark))" opacity="0.7">
+        I am <tspan fill="rgb(var(--color-ink-blue))">driving</tspan> a Peugeot
+      </text>
+      {/* memory writer */}
+      <line x1="110" y1="46" x2="110" y2="70" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.35" />
+      <path d="M106 66 l4 6 l4 -6" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.35" />
+      {/* what the note keeps: a standing fact */}
+      <rect x="30" y="78" width="160" height="22" fill="rgb(var(--color-ink-dark))" opacity="0.05" />
+      <rect x="30" y="78" width="160" height="22" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1.2" opacity="0.3" />
+      <text x="40" y="93" fontFamily="monospace" fontSize="10" fill="rgb(var(--color-ink-dark))" opacity="0.7">
+        User <tspan fill="rgb(var(--color-ink-red))">drives</tspan> a Peugeot
+      </text>
+      <text x="22" y="126" fontFamily="monospace" fontSize="8" fill="rgb(var(--color-ink-muted))" opacity="0.75">
+        Write-time aspect audit
+      </text>
+    </svg>
+  ),
   Seam: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="140" fill="rgb(var(--color-paper-surface))" />
@@ -101,6 +122,25 @@ const Thumb = {
 };
 
 export const papers = [
+  {
+    title: "Memory Consolidation Flattens the Temporal Shape of User Facts",
+    thumb: "Flatten",
+    anchorId: "research-lapse",
+    citeKey: "lapse",
+    tag: "Research Paper · arXiv 2026",
+    summary: "Memory writers store \"I am driving a Peugeot\" as \"The user drives a Peugeot\" and lose the cue that the fact may not last. On LAPSE, three writers flattened the progressive but kept its simple-present match in 244 of 381 pairs, never the reverse; mem0, Graphiti, and Letta do it too.",
+    link: "https://arxiv.org/abs/2609.36457",
+    linkLabel: "Read on arXiv",
+    linkIcon: "external",
+    posterHref: "/poster/aspect-persistence/",
+    doi: "10.48550/arXiv.2609.36457",
+    details: [
+      "Authors: Sugam Panthi, Muhaiminul Yeamin, Siyan Luo, Rabab Abdelfattah",
+      "Submitted to arXiv on September 29, 2026",
+      "LAPSE benchmark: matched user statements that differ only in temporal form",
+      "Asymmetry holds in all 11 model configurations and in the installed mem0, Graphiti, and Letta pipelines",
+    ],
+  },
   {
     title: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams",
     thumb: "Seam",

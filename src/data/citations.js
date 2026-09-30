@@ -4,6 +4,19 @@
 // it anywhere.
 
 export const citations = {
+  "lapse": {
+    label: "Memory Consolidation Flattens the Temporal Shape of User Facts (arXiv 2026)",
+    bibtex: `@misc{panthi2026lapse,
+  title         = {Memory Consolidation Flattens the Temporal Shape of User Facts},
+  author        = {Panthi, Sugam and Yeamin, Muhaiminul and Luo, Siyan and Abdelfattah, Rabab},
+  year          = {2026},
+  eprint        = {2609.36457},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  doi           = {10.48550/arXiv.2609.36457},
+  url           = {https://arxiv.org/abs/2609.36457}
+}`,
+  },
   "seam": {
     label: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams (alphaXiv 2026)",
     bibtex: `@misc{panthi2026seam,

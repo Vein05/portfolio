@@ -37,8 +37,8 @@ export const posters = [
   {
     slug: 'aspect-persistence',
     title: 'Memory Consolidation Flattens the Temporal Shape of User Facts',
-    venue: 'Manuscript under review, no preprint posted',
-    authors: 'Sugam Panthi and Rabab Abdelfattah',
+    venue: 'arXiv:2609.36457',
+    authors: 'Sugam Panthi, Muhaiminul Yeamin, Siyan Luo, and Rabab Abdelfattah',
     status: 'under-review',
     formats: ['portrait', 'landscape'],
   },
