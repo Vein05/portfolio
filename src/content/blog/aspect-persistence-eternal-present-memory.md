@@ -151,4 +151,10 @@ The pilot suggests that this schema is missing the field that matters:
 
 That representation is a design direction, not an evaluated solution. But it makes the responsibility explicit. Consolidation should preserve the user’s temporal commitment or translate it into a validity field. It should not silently promote a visit into a residence and hope a later model notices the date.
 
-This article reports the current LAPSE pilot. The benchmark, paper, and reproducibility materials will be linked here as the study clears its cross-model gates.
+This article reports the current LAPSE pilot. The paper is on arXiv as [2609.36457](https://arxiv.org/abs/2609.36457). The benchmark and reproducibility materials will be linked here as the study clears its cross-model gates.
+
+## Cite this
+
+```bibtex
+key: lapse
+```

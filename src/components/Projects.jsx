@@ -74,19 +74,6 @@ const Thumb = {
       <text x="18" y="128" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Python · Discord API · MongoDB</text>
     </svg>
   ),
-  Moksha: () => (
-    <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
-      {[0,1,2,3,4].map(i => (
-        <circle key={i} cx={44 + i*34} cy="62" r="16" fill="none" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity={0.15 + i*0.05}/>
-      ))}
-      {[0,1,2,3].map(i => (
-        <line key={i} x1={60 + i*34} y1="62" x2={78 + i*34} y2="62" stroke="rgb(var(--color-ink-dark))" strokeWidth="1" opacity="0.2"/>
-      ))}
-      <text x="18" y="105" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-muted))" opacity="0.7">Self-help · Community · React</text>
-      <text x="18" y="120" fontFamily="monospace" fontSize="9" fill="rgb(var(--color-ink-dark))" opacity="0.4">50+ users · 1k+ views</text>
-    </svg>
-  ),
   Pali: () => (
     <svg viewBox="0 0 220 140" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
       <rect width="220" height="140" fill="rgb(var(--color-paper-surface))"/>
@@ -193,21 +180,6 @@ export const items = [
       "Discord-verified bot with 1,000,000+ users and 2,000,000+ API calls",
       "Server management tools and entertainment commands for community engagement",
       "Python, Discord API, Flask, MongoDB — scalable and maintainable architecture"
-    ]
-  },
-  {
-    title: "Moksha",
-    thumb: "Moksha",
-    tag: "Full Stack · React",
-    type: "project",
-    description: "Full-stack self-help social media platform.",
-    link: "https://mokshaa.vercel.app/",
-    linkLabel: "View Live",
-    linkIcon: "external",
-    achievements: [
-      "React JS + Tailwind CSS frontend with Firebase community forum backend",
-      "Google Auth login — 50+ users, 1,000+ page views",
-      "OpenSource teen-focused self-help platform with guides, testimonials, and community support"
     ]
   },
   {

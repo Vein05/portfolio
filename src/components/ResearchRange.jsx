@@ -51,6 +51,10 @@ const RANGES = [
         href: "/blog/aspect-persistence-eternal-present-memory/",
         full: "Memory Consolidation Turns Temporary Statements Into Standing Facts",
         d: "Memory consolidation drops temporal aspect: \"I'm staying in Pasadena\" becomes \"lives in Pasadena.\" LAPSE measures it. Preregistered pilot, still blinded." },
+      { t: "LAPSE", k: "arXiv", date: "2026-09", kind: "paper", active: true,
+        href: "https://arxiv.org/abs/2609.36457",
+        full: "Memory Consolidation Flattens the Temporal Shape of User Facts",
+        d: "Memory writers store \"I am driving a Peugeot\" as \"The user drives a Peugeot.\" On LAPSE, three writers flattened the progressive in 244 of 381 pairs, never the reverse; mem0, Graphiti, and Letta do it too." },
     ],
   },
   {
