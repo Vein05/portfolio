@@ -227,10 +227,54 @@ After the draft is written, before publishing:
 3. **H1** matches search intent; **H2s** target secondary keywords and People Also Ask questions.
 4. **Alt text on every image** describes what is shown with relevant terms.
 5. **Structured data.** Confirm `Article` and author `Person` schema, `BreadcrumbList`, and `ImageObject` for original figures. Person schema (`name`, `jobTitle`, `knowsAbout`, `sameAs`) is the E-E-A-T signal that matters most.
-6. **Sitemap.** The build regenerates it; resubmit in Search Console after deploy to speed recrawl.
+6. **Sitemap and IndexNow.** The build regenerates the sitemap. After deploy:
+   - `scripts/gsc.py submit` resubmits it to Google, and `scripts/gsc.py inspect /blog/slug/` checks index status a few days later. "Discovered - currently not indexed" means Google has not crawled it yet; use "Request indexing" in the Search Console UI, since the API cannot.
+   - `scripts/indexnow.py /blog/slug/` pings IndexNow (Bing, Yandex, Seznam, Naver); with no arguments it sends every sitemap URL. Bing's index backs ChatGPT search and Copilot, so this is the fast path into AI answers. It only works once `public/9487d40c57ee4bfcb0a0c4e8dda6374d.txt` is live; do not rename or delete that key file.
+   - `src/pages/llms.txt.ts` lists posts automatically, but papers and core pages are hand-kept there. Add a new paper to `PAPERS` when it gets an arXiv id.
 7. **No links in headings or FAQ answer text.** They break the table of contents and render as raw markdown in FAQ blocks. Body paragraphs only.
 
 SEO never gets veto power over the sentence. Do not add a keyword, question heading, FAQ, repeated definition, or generic summary that makes the article sound less like the work itself.
+
+---
+
+## AI search and distribution
+
+AI agents do not have their own map of the web. They run a search, read the top results, and quote them. A page that is not in a search index does not exist to an agent, so AI visibility is mostly ordinary indexing plus being worth quoting.
+
+**Which index feeds which agent** (as of late 2026; re-check, this changes):
+
+| Engine | Index it leans on | How we reach it |
+|---|---|---|
+| Google, AI Overviews, Gemini | Google | Sitemap, `scripts/gsc.py`, Request indexing |
+| ChatGPT search, Copilot | Bing, plus OpenAI's own crawler | Bing Webmaster Tools, `scripts/indexnow.py` |
+| Perplexity, Claude | Their own crawlers plus third-party search APIs | Open robots.txt, `llms.txt`, inbound links |
+
+**The bottleneck is crawl demand, not metadata.** In October 2026 every post already had canonicals, BlogPosting and BreadcrumbList schema, and descriptions, yet the RAG compression companion post and four new posters sat at "Discovered - currently not indexed" with no crawl. Google crawls a small site in proportion to how much the rest of the web points at it. More on-page tuning will not fix that; inbound links from pages Google already trusts will.
+
+**Quotable beats clever.** Agents lift the first two sentences of a section and the numbers in it. The inverted-pyramid rule in "Structure for discoverability" is what makes a post citable by an agent, not only by Google.
+
+### Where to post outside the site
+
+Every off-site post links back to the canonical spanthi.com URL. Never name the venue of a paper under review, in any of these places.
+
+Places we own, so do these first and once per paper:
+
+- **arXiv:** put the project or blog URL in the comments field on the next version.
+- **GitHub:** README of each paper repo (lapse, pali, deepseek-go) links its companion post; the profile README links the blog.
+- **Scholar profiles:** Google Scholar, Semantic Scholar, OpenReview, ORCID all list spanthi.com as the homepage. Add each profile URL to the Person `sameAs` list in `src/pages/index.astro` (it holds only LinkedIn and GitHub as of October 2026); that list is how search engines tie the papers and the site to one person.
+- **Hugging Face:** claim authorship on each paper's HF Papers page and add the GitHub and blog links. Publish datasets (LAPSE, SEAM) as HF Datasets with the post in the dataset card.
+- **alphaXiv:** the SEAM page links the companion post.
+- **Lab and department:** AIMS Lab page and the USM CS news page link the paper and post.
+
+Places with an audience, one post per real result, written for that community:
+
+- **Reddit:** r/MachineLearning with the `[R]` tag for papers; r/LocalLLaMA for findings about open models; r/golang for the Go series. Post the finding, not the link alone.
+- **Hacker News:** Show HN for tools (deepseek-go, pali); a plain submission for a post with a surprising number (the ARR score data).
+- **X and Bluesky:** a thread per paper with the main figure as an image and the link in the last post.
+- **LinkedIn:** a short post per paper with the main figure.
+- **Cross-posts:** dev.to or Hashnode for the engineering posts only, with the canonical URL set to spanthi.com so they do not compete with the original.
+
+Skip link directories, link exchanges, and posting the same text everywhere. They read as spam to both moderators and search engines.
 
 ---
 
@@ -256,7 +300,7 @@ Non-negotiables per post:
 
 ## Cadence
 
-Quality over volume. A few strong posts beat a burst of thin ones, which also reads as a content-farm signal. Hold phenomenon posts as drafts until the evidence supports the claim, then publish and resubmit the sitemap. Papers under double-blind review stay unpublished until camera-ready; do not deanonymize a submission for traffic.
+Quality over volume. A few strong posts beat a burst of thin ones, which also reads as a content-farm signal. Hold phenomenon posts as drafts until the evidence supports the claim, then publish, resubmit the sitemap, and ping IndexNow. Papers under double-blind review stay unpublished until camera-ready; do not deanonymize a submission for traffic.
 
 ---
 

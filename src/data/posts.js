@@ -19,8 +19,8 @@ export const posts = [
     status: "cooking",
     excerpt: "I pulled every score ACL Rolling Review has published: 69,781 scored submissions across 35 cycles, 2021 to 2026. No paper ever averaged a 5.0. The scores are per-paper aggregates, not individual reviews, the mode is 2.5, and the meta score swings wider than a paper's averaged reviews.",
     tags: ["Peer Review", "ACL Rolling Review", "ARR", "Score Distribution", "Meta-Review", "NLP", "Data Analysis"],
-    seoTitle: "None of ARR’s 69,781 Published Paper Scores Is a 5.0 | Sugam Panthi",
-    seoDescription: "Across 69,781 scored ACL Rolling Review submissions from 2021 to 2026, no paper averaged a 5.0. ARR scores are per-paper aggregates, not individual reviews; the mode is 2.5 and area-chair meta scores swing wider.",
+    seoTitle: "ARR Score Distribution: No Paper Averages 5.0 (69,781 Papers) | Sugam Panthi",
+    seoDescription: "ACL Rolling Review score distribution across 69,781 scored papers, 2021 to 2026: the mode is 2.5, no paper averaged 5.0, and meta scores swing wider.",
     canonicalPath: "/blog/five-years-zero-fives"
   },
   {
