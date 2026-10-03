@@ -1002,7 +1002,168 @@ export const ArrMeanVsVolumeChart = () => {
   );
 };
 
+// --- Thinking gain: which passage was kept ----------------------------------
+// Amber has no theme token. It marks the forced-answer instruction, matching
+// the paper's figures (blue = evidence-only prompt, amber = forced answer).
+const amber = '#B45309';
+
+const Diamond = ({ cx, cy, r = 6, fill, stroke }) => (
+  <path d={`M ${cx} ${cy - r} L ${cx + r} ${cy} L ${cx} ${cy + r} L ${cx - r} ${cy} Z`}
+    fill={fill} stroke={stroke} strokeWidth="2" />
+);
+
+const GainLegend = ({ y = 26, notFollowed = false }) => (
+  <g fontFamily="monospace" fontSize="10.5" fill={ink}>
+    <circle cx="26" cy={y} r="5.5" fill={blue} />
+    <text x="40" y={y + 4}>evidence-only prompt</text>
+    <Diamond cx={222} cy={y} fill={surface} stroke={amber} />
+    <text x="236" y={y + 4}>forced-answer instruction</text>
+    {notFollowed && (
+      <>
+        <Diamond cx={456} cy={y} fill={surface} stroke={muted} />
+        <text x="470" y={y + 4}>instruction not followed</text>
+      </>
+    )}
+  </g>
+);
+
+export const ThinkingGainPassagesChart = () => {
+  const groups = [
+    { reader: 'DeepSeek V4.1 Flash', rows: [
+      { label: "correct option's passage", ev: -79.1, fa: 4.3 },
+      { label: "other option's passage", ev: -30.9, fa: 53.6 },
+      { label: 'all gold passages', ev: 10.7, fa: 6.8 },
+    ] },
+    { reader: 'GPT-5.6 Luna', rows: [
+      { label: "correct option's passage", ev: -35.1, fa: -1.8 },
+      { label: "other option's passage", ev: 28.4, fa: 65.9 },
+      { label: 'all gold passages', ev: 10.1, fa: 9.8 },
+    ] },
+    { reader: 'MiniMax M3', rows: [
+      { label: "correct option's passage", ev: 4.6, fa: 19.7 },
+      { label: "other option's passage", ev: -2.6, fa: 17.4 },
+      { label: 'all gold passages', ev: 15.1, fa: 15.4 },
+    ] },
+  ];
+  const W = 720, H = 488;
+  const x0 = 232, x1 = 540, min = -90, max = 70;
+  const scale = (v) => x0 + ((v - min) / (max - min)) * (x1 - x0);
+  const fmt = (v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`;
+  const top = 70, groupGap = 120, rowGap = 28;
+  const yRow = (g, r) => top + 28 + g * groupGap + r * rowGap;
+  const axisY = top + 3 * groupGap + 12;
+
+  return (
+    <ChartCard
+      kicker="300 2Wiki comparison questions"
+      title="The same questions give DeepSeek V4.1 Flash a thinking gain from −79.1 to +10.7, depending on the passage"
+      caption="Thinking accuracy minus direct-answer accuracy, in points, by which passage the reader saw. Three repetitions per question; point estimates. HotpotQA shows the same pattern."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Dot chart of thinking gains for three readers under three passage conditions. With only the correct option's passage, DeepSeek V4.1 Flash's gain is minus 79.1 and GPT-5.6 Luna's is minus 35.1; with all gold passages every gain is between plus 10.1 and plus 15.1. The forced-answer instruction moves every correct-passage gain to between minus 1.8 and plus 19.7.">
+        <GainLegend />
+        <g fontFamily="monospace" fontSize="9.5" fill={muted}>
+          <text x="616" y={top - 8} textAnchor="end">EV.-ONLY</text>
+          <text x="680" y={top - 8} textAnchor="end">FORCED</text>
+        </g>
+        {[-80, -60, -40, -20, 0, 20, 40, 60].map((tick) => (
+          <g key={tick} fontFamily="monospace" fontSize="10" fill={muted}>
+            <line x1={scale(tick)} y1={top} x2={scale(tick)} y2={axisY} stroke={tick === 0 ? muted : border}
+              strokeWidth={tick === 0 ? 1.4 : 1} strokeDasharray={tick === 0 ? '4 4' : '2 4'} />
+            <text x={scale(tick)} y={axisY + 18} textAnchor="middle">{tick > 0 ? `+${tick}` : tick}</text>
+          </g>
+        ))}
+        {groups.map((group, g) => (
+          <g key={group.reader} fontFamily="monospace">
+            <text x="20" y={yRow(g, 0) - 20} fontSize="11" fontWeight="600" fill={ink}>{group.reader}</text>
+            {group.rows.map((row, r) => {
+              const y = yRow(g, r);
+              return (
+                <g key={row.label}>
+                  <text x="20" y={y + 4} fontSize="10.5" fill={muted}>{row.label}</text>
+                  <line x1={scale(row.ev)} y1={y} x2={scale(row.fa)} y2={y} stroke={muted} strokeWidth="1.2" opacity="0.6" />
+                  <circle cx={scale(row.ev)} cy={y} r="5.5" fill={blue} />
+                  <Diamond cx={scale(row.fa)} cy={y} fill={surface} stroke={amber} />
+                  <text x="616" y={y + 4} textAnchor="end" fontSize="11" fontWeight="700" fill={blue}>{fmt(row.ev)}</text>
+                  <text x="680" y={y + 4} textAnchor="end" fontSize="11" fontWeight="700" fill={amber}>{fmt(row.fa)}</text>
+                </g>
+              );
+            })}
+          </g>
+        ))}
+        <text x={(x0 + x1) / 2} y={axisY + 40} textAnchor="middle" fontFamily="monospace" fontSize="9.5" fill={muted}>
+          THINKING GAIN IN POINTS (BELOW ZERO: THINKING SCORES LOWER)
+        </text>
+      </svg>
+    </ChartCard>
+  );
+};
+
+// --- Thinking gain: removing the linking passage ---------------------------
+export const BridgeDeletionChart = () => {
+  const rows = [
+    { reader: 'DeepSeek V4 Flash', ev: [31.4, 23.8, 39.0], fa: [1.4, -3.8, 6.6] },
+    { reader: 'Qwen3-8B', ev: [18.3, 12.1, 24.7], fa: [17.8, 11.6, 24.2], notFollowed: true },
+    { reader: 'DeepSeek V4.1 Flash', ev: [0.0, -7.2, 7.4], fa: [-2.6, -7.4, 2.4] },
+    { reader: 'MiniMax M3', ev: [-0.7, -6.2, 4.8], fa: [-6.0, -11.7, -0.3] },
+    { reader: 'MiMo V2.6 Pro', ev: [-1.6, -7.2, 4.0], fa: [-5.0, -9.0, -1.0] },
+    { reader: 'GPT-5.6 Luna', ev: [-4.1, -10.4, 2.1], fa: [-3.8, -9.2, 1.6] },
+  ];
+  const W = 720, H = 460;
+  const x0 = 210, x1 = 540, min = -15, max = 40;
+  const scale = (v) => x0 + ((v - min) / (max - min)) * (x1 - x0);
+  const fmt = (v) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`;
+  const top = 60, rowGap = 56;
+  const y = (i) => top + 30 + i * rowGap;
+  const axisY = top + rows.length * rowGap + 8;
+
+  return (
+    <ChartCard
+      kicker="193 2Wiki questions, six readers"
+      title="Removing the linking passage lowers the thinking gain for two of six readers"
+      caption="Bridge effect: the thinking gain with the linking passage minus the gain without it, with 95% intervals over questions. Qwen3-8B is shown at a 16,384-token thinking budget."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Interval chart of the bridge effect for six readers. DeepSeek V4 Flash falls by 31.4 points under the evidence-only prompt and 1.4 under the forced-answer instruction. Qwen3-8B falls by 18.3 and 17.8 because it did not follow the instruction. The other four readers are between minus 4.1 and 0.0 under the evidence-only prompt.">
+        <GainLegend notFollowed />
+        <g fontFamily="monospace" fontSize="9.5" fill={muted}>
+          <text x="616" y={top - 4} textAnchor="end">EV.-ONLY</text>
+          <text x="680" y={top - 4} textAnchor="end">FORCED</text>
+        </g>
+        {[-10, 0, 10, 20, 30, 40].map((tick) => (
+          <g key={tick} fontFamily="monospace" fontSize="10" fill={muted}>
+            <line x1={scale(tick)} y1={top} x2={scale(tick)} y2={axisY} stroke={tick === 0 ? muted : border}
+              strokeWidth={tick === 0 ? 1.4 : 1} strokeDasharray={tick === 0 ? '4 4' : '2 4'} />
+            <text x={scale(tick)} y={axisY + 18} textAnchor="middle">{tick > 0 ? `+${tick}` : tick}</text>
+          </g>
+        ))}
+        {rows.map((row, i) => {
+          const yEv = y(i) - 8, yFa = y(i) + 8;
+          const faColor = row.notFollowed ? muted : amber;
+          return (
+            <g key={row.reader} fontFamily="monospace">
+              <text x="20" y={y(i) + 4} fontSize="11" fill={ink}>{row.reader}</text>
+              <line x1={scale(row.ev[1])} y1={yEv} x2={scale(row.ev[2])} y2={yEv} stroke={blue} strokeWidth="2.5" />
+              <circle cx={scale(row.ev[0])} cy={yEv} r="5.5" fill={blue} />
+              <line x1={scale(row.fa[1])} y1={yFa} x2={scale(row.fa[2])} y2={yFa} stroke={faColor} strokeWidth="2.5"
+                strokeDasharray={row.notFollowed ? '5 4' : undefined} />
+              <Diamond cx={scale(row.fa[0])} cy={yFa} fill={surface} stroke={faColor} />
+              <text x="616" y={y(i) + 4} textAnchor="end" fontSize="11" fontWeight="700" fill={blue}>{fmt(row.ev[0])}</text>
+              <text x="680" y={y(i) + 4} textAnchor="end" fontSize="11" fontWeight="700" fill={faColor}>{fmt(row.fa[0])}</text>
+            </g>
+          );
+        })}
+        <text x={(x0 + x1) / 2} y={axisY + 40} textAnchor="middle" fontFamily="monospace" fontSize="9.5" fill={muted}>
+          BRIDGE EFFECT IN POINTS (ABOVE ZERO: THE GAIN FALLS)
+        </text>
+      </svg>
+    </ChartCard>
+  );
+};
+
 const ResearchChart = ({ type }) => {
+  if (type === 'thinking-gain-passages') return <ThinkingGainPassagesChart />;
+  if (type === 'bridge-deletion') return <BridgeDeletionChart />;
   if (type === 'seam-absorption') return <SeamAbsorptionChart />;
   if (type === 'seam-model-panel') return <SeamModelPanelChart />;
   if (type === 'seam-register') return <SeamRegisterChart />;

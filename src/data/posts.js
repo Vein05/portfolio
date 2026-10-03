@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "thinking-gain-missing-passage",
+    title: "The Thinking Gain Depends on Which Passage Was Kept",
+    date: "2026-10-03",
+    category: "Research",
+    status: "cooking",
+    excerpt: "On 600 comparison questions with one passage missing, thinking abstained and direct answering named whichever option the passage described. Which passage was kept moved DeepSeek V4.1 Flash's thinking gain from -79.1 to +10.7 points, and two added sentences removed the deficit.",
+    tags: ["Reasoning Models", "Thinking Gain", "RAG", "Abstention", "Multi-hop QA", "2WikiMultihopQA", "HotpotQA", "Evaluation"],
+    seoTitle: "Thinking Gain Under Missing Evidence | Sugam Panthi",
+    seoDescription: "When a multi-hop question is missing one passage, the thinking gain mostly records abstention and which passage was kept. Results on 600 comparison questions.",
+    canonicalPath: "/blog/thinking-gain-missing-passage"
+  },
+  {
     slug: "building-a-synthetic-dataset-for-llm-memory",
     title: "How to Create a Simple Synthetic Dataset?",
     date: "2026-09-21",
