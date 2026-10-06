@@ -143,7 +143,7 @@ The numbers above come from the 19-model run I wrote this post from. The paper, 
 
 Across 20 models, absorption at a bare newline ranged from 7.7% to 66.7%. A blank line did not significantly reduce absorption in any model, and boundary markers reduced it in 19 of 20. Comments that fit the pasted text, such as a code comment typed after code, were absorbed significantly more often in 17 of 20 models.
 
-The benchmark, code, and case-level labels are on [GitHub](https://github.com/aimsresearchlab/seam), and the poster is at [spanthi.com/poster/seam](/poster/seam/).
+The benchmark, code, and case-level labels are on [GitHub](https://github.com/aimsresearchlab/seam), the benchmark is also on [Hugging Face](https://huggingface.co/datasets/vein05/seam), and the poster is at [spanthi.com/poster/seam](/poster/seam/).
 
 ## Cite this
 
