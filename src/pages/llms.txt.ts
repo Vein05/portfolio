@@ -31,8 +31,8 @@ const PAPERS = [
     'Memory writers rewrite temporary statements ("I\'m staying in Pasadena") as permanent facts ("lives in Pasadena"). LAPSE measures how consolidation drops temporal aspect.',
   ),
   link(
-    'Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams (SEAM, alphaXiv preprint)',
-    'https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation',
+    'Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams (SEAM, arXiv:2610.04210)',
+    'https://arxiv.org/abs/2610.04210',
     'The SEAM benchmark: across 20 models, 7.7% to 66.7% absorb a trailing remark into the pasted artifact at a bare newline; explicit markers help in 19 of 20.',
   ),
   link(

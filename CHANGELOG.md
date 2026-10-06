@@ -2,6 +2,16 @@
 
 All notable changes to the portfolio site are documented here. Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## 2026-10-05
+
+### Changed
+- **SEAM is on arXiv** as [2610.04210](https://arxiv.org/abs/2610.04210). Card, BibTeX (`@misc` with eprint and DOI), news, `llms.txt`, timeline, companion post and CV now link arXiv instead of alphaXiv. Title casing follows arXiv ("from User Speech"). The portrait poster gets the arXiv id in its kicker and a "Scan for paper" QR (`public/poster/seam-qr.svg`).
+- **RAG compression paper revised on arXiv (v2)** as "Compression Is Not Evaluation-Neutral: Fixed RAG Compression Can Distort Reader Comparisons". Retitled on the card, BibTeX, poster, `llms.txt`, timeline, news, CV and resume.
+- **`compression-is-a-coin-flip` rewritten** around the v2 paper, with three new charts in `ResearchCharts.jsx` (`rc-reader-replay`, `rc-rescue-damage`, `rc-retention`).
+- **Paper posts**: LAPSE and SEAM posts gain a section with the paper's results, repo and poster links; all five paper posts get sharper `seoTitle`/`seoDescription` and a poster link.
+- **`updated` field in `posts.js`** feeds sitemap `lastmod` and BlogPosting `dateModified`; it falls back to `date`.
+- **Paper cards** link their companion post.
+
 ## 2026-09-17
 
 ### Added

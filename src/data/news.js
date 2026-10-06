@@ -2,6 +2,11 @@
 export const news = [
   {
     date: "2026-10-02",
+    text: "SEAM posted on arXiv.",
+    href: "https://arxiv.org/abs/2610.04210",
+  },
+  {
+    date: "2026-10-02",
     text: "RAG compression paper revised on arXiv as \"Compression Is Not Evaluation-Neutral\".",
     href: "https://arxiv.org/abs/2606.21807",
   },

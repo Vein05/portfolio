@@ -29,9 +29,9 @@ export const posters = [
   {
     slug: 'seam',
     title: 'Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams',
-    venue: 'Under review; preprint on alphaXiv, September 2026',
+    venue: 'arXiv:2610.04210',
     authors: 'Sugam Panthi, Muhaiminul Yeamin, and Rabab Abdelfattah',
-    status: 'under-review',
+    status: 'published',
     formats: ['portrait', 'landscape'],
   },
   {

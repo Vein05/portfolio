@@ -139,7 +139,7 @@ Until chat systems carry that signal forward, models will keep editing the userâ
 
 ## Across 20 models, boundary markers reduced absorption in 19
 
-The numbers above come from the 19-model run I wrote this post from. The paper, [Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams](https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation), reports the final benchmark. SEAM has 300 editing examples, each tested under six matched conditions that differ only in how the boundary between the pasted text and the user's later words is expressed.
+The numbers above come from the 19-model run I wrote this post from. The paper, [Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams](https://arxiv.org/abs/2610.04210), reports the final benchmark. SEAM has 300 editing examples, each tested under six matched conditions that differ only in how the boundary between the pasted text and the user's later words is expressed.
 
 Across 20 models, absorption at a bare newline ranged from 7.7% to 66.7%. A blank line did not significantly reduce absorption in any model, and boundary markers reduced it in 19 of 20. Comments that fit the pasted text, such as a code comment typed after code, were absorbed significantly more often in 17 of 20 models.
 

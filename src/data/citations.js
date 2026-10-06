@@ -18,13 +18,16 @@ export const citations = {
 }`,
   },
   "seam": {
-    label: "Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams (alphaXiv 2026)",
+    label: "Can LLMs Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams (arXiv 2026)",
     bibtex: `@misc{panthi2026seam,
-  title         = {Can {LLMs} Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams},
+  title         = {Can {LLMs} Separate Pasted Artifacts from User Speech? Absorption at Unmarked Prompt Seams},
   author        = {Panthi, Sugam and Yeamin, Muhaiminul and Abdelfattah, Rabab},
   year          = {2026},
-  howpublished  = {alphaXiv preprint},
-  url           = {https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation}
+  eprint        = {2610.04210},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  doi           = {10.48550/arXiv.2610.04210},
+  url           = {https://arxiv.org/abs/2610.04210}
 }`,
   },
   "outcome-monitors": {
