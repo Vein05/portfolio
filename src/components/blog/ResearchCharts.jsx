@@ -1161,7 +1161,198 @@ export const BridgeDeletionChart = () => {
   );
 };
 
+// --- RAG compression: 20 HotpotQA readers, raw passages vs one stored RECOMP output.
+// Per-reader exact match from the frozen official-score matrix
+// (memory-eligibility-feasibility, journal/results/official-scoring/row_scores.csv.gz),
+// methods naive_top_k and recomp_top5, 500 rows each. Sorted by raw score.
+// rescued/damaged are row counts of 0->1 and 1->0 exact-match transitions.
+const hotpotRecompReaders = [
+  { name: 'Claude 3.5 Haiku', raw: 12.6, comp: 36.4, rescued: 132, damaged: 13 },
+  { name: 'Grok 4.1 Fast', raw: 14.4, comp: 35.8, rescued: 140, damaged: 33 },
+  { name: 'Qwen 2.5 7B', raw: 18.2, comp: 38.8, rescued: 137, damaged: 34 },
+  { name: 'Phi-4', raw: 18.8, comp: 33.8, rescued: 106, damaged: 31 },
+  { name: 'Llama 3.1 8B', raw: 23.4, comp: 37.8, rescued: 114, damaged: 42 },
+  { name: 'OLMo 3.1 32B', raw: 30.6, comp: 45.4, rescued: 113, damaged: 39 },
+  { name: 'Llama 4 Scout', raw: 34.2, comp: 40.4, rescued: 93, damaged: 62 },
+  { name: 'Gemma 3 12B', raw: 34.4, comp: 39.2, rescued: 87, damaged: 63 },
+  { name: 'GPT-4.1 mini', raw: 34.4, comp: 41.2, rescued: 86, damaged: 52 },
+  { name: 'Command R', raw: 34.6, comp: 41.2, rescued: 87, damaged: 54 },
+  { name: 'GLM-4 32B', raw: 35.8, comp: 38.0, rescued: 93, damaged: 82 },
+  { name: 'Qwen3 14B', raw: 36.6, comp: 43.0, rescued: 101, damaged: 69 },
+  { name: 'Seed 2.0 Mini', raw: 37.0, comp: 39.0, rescued: 84, damaged: 74 },
+  { name: 'Gemma 3 27B', raw: 38.4, comp: 36.6, rescued: 74, damaged: 83 },
+  { name: 'R1 Distill Llama 70B', raw: 38.4, comp: 45.6, rescued: 89, damaged: 53 },
+  { name: 'Qwen3 8B', raw: 43.0, comp: 41.8, rescued: 83, damaged: 89 },
+  { name: 'Qwen3 32B', raw: 43.2, comp: 43.4, rescued: 77, damaged: 76 },
+  { name: 'Qwen 2.5 72B', raw: 43.6, comp: 41.2, rescued: 69, damaged: 81 },
+  { name: 'Llama 3.3 70B', raw: 43.8, comp: 44.2, rescued: 75, damaged: 73 },
+  { name: 'Llama 3.1 70B', raw: 44.4, comp: 44.2, rescued: 75, damaged: 76 },
+];
+
+export const RcReaderReplayChart = () => {
+  const W = 720, H = 326;
+  const x0 = 180, x1 = 690, min = 10, max = 50;
+  const scale = (v) => x0 + ((v - min) / (max - min)) * (x1 - x0);
+  const yRaw = 86, yComp = 216;
+  const first = hotpotRecompReaders[0];
+  const last = hotpotRecompReaders[hotpotRecompReaders.length - 1];
+  const isEnd = (r) => r === first || r === last;
+  return (
+    <ChartCard
+      kicker="20 readers, 500 HotpotQA questions"
+      title="One stored RECOMP output shrinks the gap between the lowest and highest raw scorers from 31.8 to 7.8 points"
+      caption="Exact match per reader on raw passages (top) and on the same stored RECOMP text (bottom). Every reader received byte-identical compressed evidence. The panel mean rises from 33.0% to 40.4%."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Slope chart of 20 readers. On raw passages exact match spans 12.6% (Claude 3.5 Haiku) to 44.4% (Llama 3.1 70B), a 31.8-point gap. On the same stored RECOMP text, Claude 3.5 Haiku scores 36.4% and Llama 3.1 70B 44.2%, a 7.8-point gap; the panel spans 33.8% to 45.6%.">
+        {[10, 20, 30, 40, 50].map((t) => (
+          <g key={t} fontFamily="monospace" fontSize="10" fill={muted}>
+            <line x1={scale(t)} y1={yRaw - 46} x2={scale(t)} y2={yComp + 40} stroke={border} strokeDasharray="2 4" />
+            <text x={scale(t)} y={yComp + 60} textAnchor="middle">{t}%</text>
+          </g>
+        ))}
+        <g fontFamily="monospace">
+          <text x="20" y={yRaw - 4} fontSize="11" fontWeight="600" fill={ink}>RAW PASSAGES</text>
+          <text x="20" y={yRaw + 14} fontSize="10" fill={muted}>mean 33.0%</text>
+          <text x="20" y={yComp - 4} fontSize="11" fontWeight="600" fill={blue}>STORED RECOMP</text>
+          <text x="20" y={yComp + 14} fontSize="10" fill={muted}>mean 40.4%</text>
+        </g>
+        {hotpotRecompReaders.filter((r) => !isEnd(r)).map((r) => (
+          <line key={r.name} x1={scale(r.raw)} y1={yRaw} x2={scale(r.comp)} y2={yComp} stroke={muted} strokeWidth="1" opacity="0.35" />
+        ))}
+        {[first, last].map((r) => (
+          <line key={r.name} x1={scale(r.raw)} y1={yRaw} x2={scale(r.comp)} y2={yComp} stroke={blue} strokeWidth="2.2" />
+        ))}
+        {hotpotRecompReaders.map((r) => (
+          <g key={r.name}>
+            <circle cx={scale(r.raw)} cy={yRaw} r={isEnd(r) ? 6.5 : 4.5} fill={ink} opacity={isEnd(r) ? 1 : 0.55} />
+            <circle cx={scale(r.comp)} cy={yComp} r={isEnd(r) ? 6.5 : 4.5} fill={blue} opacity={isEnd(r) ? 1 : 0.55} />
+          </g>
+        ))}
+        <g fontFamily="monospace">
+          <line x1={scale(first.raw)} y1={yRaw - 34} x2={scale(last.raw)} y2={yRaw - 34} stroke={ink} strokeWidth="1.2" />
+          <line x1={scale(first.raw)} y1={yRaw - 38} x2={scale(first.raw)} y2={yRaw - 30} stroke={ink} strokeWidth="1.2" />
+          <line x1={scale(last.raw)} y1={yRaw - 38} x2={scale(last.raw)} y2={yRaw - 30} stroke={ink} strokeWidth="1.2" />
+          <text x={(scale(first.raw) + scale(last.raw)) / 2} y={yRaw - 42} textAnchor="middle" fontSize="12" fontWeight="700" fill={ink}>31.8-point gap</text>
+          <text x={scale(first.raw)} y={yRaw - 12} textAnchor="middle" fontSize="10" fill={muted}>Haiku 12.6</text>
+          <text x={scale(last.raw)} y={yRaw - 12} textAnchor="middle" fontSize="10" fill={muted}>Llama 70B 44.4</text>
+          <line x1={scale(first.comp)} y1={yComp + 30} x2={scale(last.comp)} y2={yComp + 30} stroke={blue} strokeWidth="1.2" />
+          <line x1={scale(first.comp)} y1={yComp + 26} x2={scale(first.comp)} y2={yComp + 34} stroke={blue} strokeWidth="1.2" />
+          <line x1={scale(last.comp)} y1={yComp + 26} x2={scale(last.comp)} y2={yComp + 34} stroke={blue} strokeWidth="1.2" />
+          <text x={scale(first.comp) - 8} y={yComp + 34} textAnchor="end" fontSize="12" fontWeight="700" fill={blue}>7.8-point gap</text>
+          <text x={scale(first.comp)} y={yComp + 20} textAnchor="middle" fontSize="10" fill={muted}>36.4</text>
+          <text x={scale(last.comp)} y={yComp + 20} textAnchor="middle" fontSize="10" fill={muted}>44.2</text>
+        </g>
+      </svg>
+    </ChartCard>
+  );
+};
+
+export const RcRescueDamageChart = () => {
+  const rows = hotpotRecompReaders;
+  const W = 720, rowH = 22, top = 64;
+  const H = top + rows.length * rowH + 30;
+  const mid = 470, unit = 1.4; // px per answer
+  return (
+    <ChartCard
+      kicker="Per reader, 500 HotpotQA questions"
+      title="RECOMP rescues far more answers than it damages for the lowest raw scorers; for the top readers the two roughly cancel"
+      caption="Exact-match answers that went from wrong to right (rescued) and right to wrong (damaged) when raw passages were replaced by the stored RECOMP text. Readers sorted by raw score."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Diverging bars for 20 readers. Claude 3.5 Haiku has 132 rescued and 13 damaged answers; Grok 4.1 Fast 140 and 33; Qwen 2.5 7B 137 and 34. The highest raw scorers are close to even: Llama 3.1 70B has 75 rescued and 76 damaged, Qwen3 8B 83 and 89.">
+        <g fontFamily="monospace" fontSize="10" fill={muted}>
+          <text x="20" y={top - 18}>READER</text>
+          <text x="262" y={top - 18} textAnchor="end">RAW EM</text>
+          <text x={mid - 8} y={top - 18} textAnchor="end" fill={red}>← DAMAGED</text>
+          <text x={mid + 8} y={top - 18} fill={blue}>RESCUED →</text>
+        </g>
+        <line x1={mid} y1={top - 10} x2={mid} y2={top + rows.length * rowH} stroke={muted} strokeWidth="1" />
+        {rows.map((r, i) => {
+          const y = top + i * rowH;
+          const cy = y + rowH / 2;
+          return (
+            <g key={r.name} fontFamily="monospace">
+              <text x="20" y={cy + 4} fontSize="11" fill={ink}>{r.name}</text>
+              <text x="262" y={cy + 4} fontSize="10.5" textAnchor="end" fill={muted}>{r.raw.toFixed(1)}%</text>
+              <rect x={mid - r.damaged * unit} y={y + 4} width={r.damaged * unit} height={rowH - 8} fill={red} opacity="0.75" />
+              <rect x={mid} y={y + 4} width={r.rescued * unit} height={rowH - 8} fill={blue} opacity="0.8" />
+              <text x={mid - r.damaged * unit - 6} y={cy + 4} fontSize="10.5" fontWeight="700" textAnchor="end" fill={red}>{r.damaged}</text>
+              <text x={mid + r.rescued * unit + 6} y={cy + 4} fontSize="10.5" fontWeight="700" fill={blue}>{r.rescued}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartCard>
+  );
+};
+
+// --- RAG compression: retention vs average gain per fixed-artifact panel.
+// Paper (arXiv:2606.21807 v2) Table 3: every panel with >= 8 readers that
+// passes the shared-artifact rule. EM except LongMemEval (semantic judge).
+export const RcRetentionChart = () => {
+  const rows = [
+    { b: 'HotpotQA', p: 'EXIT', gain: 1.7, kept: 83.6, mark: true },
+    { b: 'MuSiQue', p: 'shared summary', gain: 18.4, kept: 62.3 },
+    { b: 'NQ-Open', p: 'EXIT', gain: -1.9, kept: 58.2 },
+    { b: 'NQ-Open', p: 'RECOMP, raw fallback', gain: 1.4, kept: 47.3 },
+    { b: 'LongMemEval', p: 'SIEVE', gain: 5.8, kept: 43.2 },
+    { b: 'TriviaQA', p: 'shared summary', gain: -0.4, kept: 42.8 },
+    { b: 'NQ-Open', p: 'Provence', gain: -2.3, kept: 40.3 },
+    { b: 'HotpotQA', p: 'RECOMP top-5', gain: 7.4, kept: 24.5 },
+    { b: 'NQ-Open', p: 'shared summary', gain: -1.9, kept: 20.2 },
+    { b: 'HotpotQA', p: 'shared summary', gain: 13.6, kept: 18.1, mark: true },
+    { b: 'HotpotQA', p: 'RECOMP abstractive', gain: -0.2, kept: 13.8 },
+    { b: 'NQ-Open', p: 'RECOMP top-5', gain: -2.7, kept: 13.4 },
+    { b: 'LongMemEval', p: 'shared summary', gain: 4.2, kept: 4.5 },
+  ];
+  const W = 720, rowH = 27, top = 58;
+  const H = top + rows.length * rowH + 24;
+  const bx0 = 330, bx1 = 590;
+  const color = (b) => (b === 'HotpotQA' ? blue : b === 'MuSiQue' ? amber : muted);
+  return (
+    <ChartCard
+      kicker="13 fixed-compression panels, 8 to 20 readers each"
+      title="All 13 point estimates show the reader upgrade shrinking, and a larger average gain did not mean more of it was kept"
+      caption="Share of the raw upgrade between the lowest and highest raw scorers still visible under compression, and the panel's mean score change in points. Exact match; LongMemEval uses a semantic judge. Paper Table 3."
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="auto" role="img"
+        aria-label="Bars of upgrade retention for 13 panels, from 83.6% for HotpotQA EXIT (mean gain plus 1.7 points) down to 4.5% for the LongMemEval shared summary (plus 4.2). The HotpotQA shared summary raises the mean by 13.6 points and keeps 18.1%.">
+        <g fontFamily="monospace" fontSize="10" fill={muted}>
+          <text x="20" y={top - 18}>BENCHMARK, COMPRESSOR</text>
+          <text x={bx0} y={top - 18}>UPGRADE KEPT</text>
+          <text x="700" y={top - 18} textAnchor="end">AVG. GAIN</text>
+        </g>
+        {[0, 50, 100].map((t) => (
+          <line key={t} x1={bx0 + (t / 100) * (bx1 - bx0)} y1={top - 6} x2={bx0 + (t / 100) * (bx1 - bx0)}
+            y2={top + rows.length * rowH} stroke={t === 100 ? muted : border} strokeDasharray="2 4" />
+        ))}
+        <text x={bx1} y={top + rows.length * rowH + 16} textAnchor="middle" fontFamily="monospace" fontSize="10" fill={muted}>100% kept</text>
+        {rows.map((r, i) => {
+          const y = top + i * rowH;
+          const cy = y + rowH / 2;
+          const w = (r.kept / 100) * (bx1 - bx0);
+          return (
+            <g key={r.b + r.p} fontFamily="monospace">
+              {r.mark && <rect x="12" y={y + 1} width="696" height={rowH - 2} fill={blue} opacity="0.07" />}
+              <text x="20" y={cy + 4} fontSize="11" fontWeight={r.mark ? 700 : 400} fill={ink}>{r.b}, {r.p}</text>
+              <rect x={bx0} y={y + 6} width={w} height={rowH - 12} fill={color(r.b)} opacity="0.8" />
+              <text x={bx0 + w + 6} y={cy + 4} fontSize="10.5" fontWeight="700" fill={ink}>{r.kept.toFixed(1)}%</text>
+              <text x="700" y={cy + 4} textAnchor="end" fontSize="11" fontWeight="700" fill={r.gain >= 0 ? blue : red}>
+                {r.gain > 0 ? '+' : r.gain < 0 ? '−' : ''}{Math.abs(r.gain).toFixed(1)}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </ChartCard>
+  );
+};
+
 const ResearchChart = ({ type }) => {
+  if (type === 'rc-reader-replay') return <RcReaderReplayChart />;
+  if (type === 'rc-rescue-damage') return <RcRescueDamageChart />;
+  if (type === 'rc-retention') return <RcRetentionChart />;
   if (type === 'thinking-gain-passages') return <ThinkingGainPassagesChart />;
   if (type === 'bridge-deletion') return <BridgeDeletionChart />;
   if (type === 'seam-absorption') return <SeamAbsorptionChart />;

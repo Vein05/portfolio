@@ -137,4 +137,16 @@ Until chat systems carry that signal forward, models will keep editing the userâ
 - [StruQ](https://arxiv.org/abs/2402.06363) studies structured instruction-data separation in the opposite, instruction-execution direction.
 - [Instruction Hierarchy](https://arxiv.org/abs/2404.13208) is related work on conflicts between trusted and untrusted instructions.
 
-This article reports the manuscriptâ€™s current measured results. The paper, benchmark, and full reproducibility artifact will be linked here with the public release.
+## Across 20 models, boundary markers reduced absorption in 19
+
+The numbers above come from the 19-model run I wrote this post from. The paper, [Can LLMs Separate Pasted Artifacts From User Speech? Absorption at Unmarked Prompt Seams](https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation), reports the final benchmark. SEAM has 300 editing examples, each tested under six matched conditions that differ only in how the boundary between the pasted text and the user's later words is expressed.
+
+Across 20 models, absorption at a bare newline ranged from 7.7% to 66.7%. A blank line did not significantly reduce absorption in any model, and boundary markers reduced it in 19 of 20. Comments that fit the pasted text, such as a code comment typed after code, were absorbed significantly more often in 17 of 20 models.
+
+The benchmark, code, and case-level labels are on [GitHub](https://github.com/aimsresearchlab/seam), and the poster is at [spanthi.com/poster/seam](/poster/seam/).
+
+## Cite this
+
+```bibtex
+key: seam
+```

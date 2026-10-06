@@ -158,6 +158,8 @@ The interface result is specific: agents often already have another route, but t
 
 This article reports the results from the paper, now public: [Outcome Monitors: Recovery Affordances for Silent Tool Failures](https://arxiv.org/abs/2608.19303) (Panthi and Abdelfattah, arXiv 2026).
 
+The poster is at [spanthi.com/poster/outcome-monitors](/poster/outcome-monitors/).
+
 ## Cite this work
 
 ```bibtex

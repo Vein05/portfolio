@@ -54,7 +54,7 @@ const jsonLd = postMeta
       '@type': 'BlogPosting',
       headline: postMeta.seoTitle ?? postMeta.title,
       datePublished: postMeta.date,
-      dateModified: postMeta.date,
+      dateModified: postMeta.updated ?? postMeta.date,
       description: postMeta.seoDescription ?? postMeta.excerpt,
       mainEntityOfPage: canonicalUrl,
       keywords: postMeta.tags?.join(', '),

@@ -151,7 +151,13 @@ The pilot suggests that this schema is missing the field that matters:
 
 That representation is a design direction, not an evaluated solution. But it makes the responsibility explicit. Consolidation should preserve the user’s temporal commitment or translate it into a validity field. It should not silently promote a visit into a residence and hope a later model notices the date.
 
-This article reports the current LAPSE pilot. The paper is on arXiv as [2609.36457](https://arxiv.org/abs/2609.36457). The benchmark and reproducibility materials will be linked here as the study clears its cross-model gates.
+## The paper measured flattening across 11 model configurations
+
+The pilot above used one model. The paper, [Memory Consolidation Flattens the Temporal Shape of User Facts](https://arxiv.org/abs/2609.36457), measures the same effect with LAPSE, a benchmark of matched user statements that differ only in temporal form. Three writer models flattened the progressive statement but kept its simple-present match in 244 of 381 pairs, and never the reverse. The asymmetry held in all 11 model configurations tested and in three installed memory pipelines: mem0, Graphiti, and Letta.
+
+The paper also asks whether the lost cue matters later. In exploratory tests, changing only the stored verb shifted all three readers' estimates that a fact still holds. When readers could ask the user before acting, two of the three acted without asking more often on flattened notes. The planned memory-use task could not detect this, because readers there acted on almost every stored fact, including expired ones.
+
+The benchmark and code are on [GitHub](https://github.com/aimsresearchlab/lapse), and the poster is at [spanthi.com/poster/aspect-persistence](/poster/aspect-persistence/).
 
 ## Cite this
 

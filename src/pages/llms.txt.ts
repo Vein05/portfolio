@@ -41,9 +41,9 @@ const PAPERS = [
     'AI agents trust plausible but corrupted tool results; outcome-monitor receipts improve recovery across five models and two environments.',
   ),
   link(
-    'Fixed RAG Compression Collapses Measured Reader Scaling (arXiv:2606.21807)',
+    'Compression Is Not Evaluation-Neutral: Fixed RAG Compression Can Distort Reader Comparisons (arXiv:2606.21807)',
     'https://arxiv.org/abs/2606.21807',
-    'Post-retrieval evidence compression helps small reader models but is a coin flip for strong ones.',
+    'Giving every reader the same stored compressed evidence shrinks reader upgrades: on HotpotQA, a 31.8-point gap between readers falls to 7.8 points under one RECOMP output. Releases the ragscale audit toolkit.',
   ),
   link(
     'Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks (Findings of EMNLP 2026, arXiv:2605.24060)',

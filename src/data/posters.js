@@ -20,7 +20,7 @@ export const posters = [
   },
   {
     slug: 'rag-compression',
-    title: 'Fixed RAG Compression Collapses Measured Reader Scaling',
+    title: 'Compression Is Not Evaluation-Neutral: Fixed RAG Compression Can Distort Reader Comparisons',
     venue: 'arXiv:2606.21807',
     authors: 'Sugam Panthi and Rabab Abdelfattah',
     status: 'published',

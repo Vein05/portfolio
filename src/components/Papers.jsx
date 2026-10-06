@@ -133,6 +133,7 @@ export const papers = [
     linkLabel: "Read on arXiv",
     linkIcon: "external",
     posterHref: "/poster/aspect-persistence/",
+    postHref: "/blog/aspect-persistence-eternal-present-memory/",
     doi: "10.48550/arXiv.2609.36457",
     details: [
       "Authors: Sugam Panthi, Muhaiminul Yeamin, Siyan Luo, Rabab Abdelfattah",
@@ -152,6 +153,7 @@ export const papers = [
     linkLabel: "Read on alphaXiv",
     linkIcon: "external",
     posterHref: "/poster/seam/",
+    postHref: "/blog/where-does-the-paste-end/",
     details: [
       "Authors: Sugam Panthi, Muhaiminul Yeamin, Rabab Abdelfattah",
       "Preprint posted to alphaXiv on September 14, 2026; under review",
@@ -170,6 +172,7 @@ export const papers = [
     linkLabel: "Read on arXiv",
     linkIcon: "external",
     posterHref: "/poster/outcome-monitors/",
+    postHref: "/blog/agents-believe-tools-that-lie/",
     doi: "10.48550/arXiv.2608.19303",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
@@ -179,22 +182,23 @@ export const papers = [
     ],
   },
   {
-    title: "Fixed RAG Compression Collapses Measured Reader Scaling",
+    title: "Compression Is Not Evaluation-Neutral: Fixed RAG Compression Can Distort Reader Comparisons",
     thumb: "ReaderScaling",
     anchorId: "research-rag-compression",
     citeKey: "rag-compression",
     tag: "Research Paper · arXiv 2026",
-    summary: "Shows that fixed RAG compression can raise average accuracy while hiding reader upgrades and reversing model rankings across 20 readers and ten domain-method settings.",
+    summary: "Shows that fixed RAG compression can raise average accuracy while hiding most of a reader upgrade: on HotpotQA, one stored RECOMP output shrinks a 31.8-point gap between the lowest- and highest-scoring readers to 7.8 points.",
     link: "https://arxiv.org/abs/2606.21807",
     linkLabel: "Read on arXiv",
     linkIcon: "external",
     posterHref: "/poster/rag-compression/",
+    postHref: "/blog/compression-is-a-coin-flip/",
     doi: "10.48550/arXiv.2606.21807",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
-      "Submitted to arXiv on June 19, 2026",
-      "Evaluates compression–reader interaction across 20 readers and 10 domain-method settings",
-      "Benchmarked on four QA datasets and one summarization dataset",
+      "Submitted to arXiv on June 19, 2026; revised October 2, 2026",
+      "Gives 8 to 20 readers the same stored compressed text across five QA benchmarks and five compression families",
+      "Releases ragscale and a 176,864-row reader-by-compression matrix",
     ],
   },
   {
@@ -208,6 +212,7 @@ export const papers = [
     linkLabel: "Read on arXiv",
     linkIcon: "external",
     posterHref: "/poster/memory-targets/",
+    postHref: "/blog/your-memory-benchmark-is-lying-to-you/",
     doi: "10.48550/arXiv.2605.24060",
     details: [
       "Authors: Sugam Panthi, Rabab Abdelfattah",
@@ -365,6 +370,15 @@ const Papers = () => {
                         {activeItem.linkLabel}
                         <ExternalLink className="h-2.5 w-2.5 opacity-50" />
                       </a>
+                      {activeItem.postHref && (
+                        <a
+                          href={activeItem.postHref}
+                          className="inline-flex items-center gap-1.5 text-xs text-ink-blue hover:underline"
+                        >
+                          <FileText className="h-3 w-3" />
+                          Companion post
+                        </a>
+                      )}
                       {activeItem.posterHref && (
                         <a
                           href={activeItem.posterHref}

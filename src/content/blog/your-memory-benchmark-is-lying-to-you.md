@@ -239,7 +239,9 @@ If your memory benchmark can score the same ranked list as both a miss and a hit
 
 It measures retrieval quality together with an ontology choice about which stored forms count as relevant. Report that choice explicitly.
 
-This post is the public companion to our paper, [Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks](https://arxiv.org/abs/2605.24060), by Sugam Panthi and Rabab Abdelfattah, accepted to Findings of EMNLP 2026.
+This post is the public companion to our paper, [Same Ranking, Different Winner: How Scoring Targets Shape LLM Memory Benchmarks](https://arxiv.org/abs/2605.24060), by Sugam Panthi and Rabab Abdelfattah, accepted to Findings of EMNLP 2026. The poster is at [spanthi.com/poster/memory-targets](/poster/memory-targets/).
+
+A later paper finds a similar problem one stage downstream, in RAG: a fixed compressor in front of the answering model shrank a 31.8-point gap between readers to 7.8 points. The companion post is [RAG Compression Can Hide Most of a Reader Upgrade](/blog/compression-is-a-coin-flip/).
 
 ```bibtex
 key: memory-targets

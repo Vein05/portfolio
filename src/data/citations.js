@@ -41,9 +41,9 @@ export const citations = {
 }`,
   },
   "rag-compression": {
-    label: "Fixed RAG Compression Collapses Measured Reader Scaling (arXiv 2026)",
+    label: "Compression Is Not Evaluation-Neutral: Fixed RAG Compression Can Distort Reader Comparisons (arXiv 2026)",
     bibtex: `@misc{panthi2026ragcompression,
-  title         = {Fixed RAG Compression Collapses Measured Reader Scaling},
+  title         = {Compression Is Not Evaluation-Neutral: Fixed {RAG} Compression Can Distort Reader Comparisons},
   author        = {Panthi, Sugam and Abdelfattah, Rabab},
   year          = {2026},
   eprint        = {2606.21807},

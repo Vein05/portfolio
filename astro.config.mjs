@@ -6,10 +6,11 @@ import sitemap from '@astrojs/sitemap';
 import { posts } from './src/data/posts.js';
 
 // lastmod tells Google which pages are worth recrawling. Blog posts carry a
-// real publication date; pages without one are left without a lastmod rather
-// than stamped with the build time, which Google treats as noise.
+// real publication date, or `updated` when the post was substantially revised;
+// pages without one are left without a lastmod rather than stamped with the
+// build time, which Google treats as noise.
 const postDates = new Map(
-  posts.map((post) => [`https://spanthi.com/blog/${post.slug}/`, post.date]),
+  posts.map((post) => [`https://spanthi.com/blog/${post.slug}/`, post.updated ?? post.date]),
 );
 
 export default defineConfig({

@@ -1,6 +1,11 @@
 // Short dated items for the news card on /simple. Newest first.
 export const news = [
   {
+    date: "2026-10-02",
+    text: "RAG compression paper revised on arXiv as \"Compression Is Not Evaluation-Neutral\".",
+    href: "https://arxiv.org/abs/2606.21807",
+  },
+  {
     date: "2026-09-14",
     text: "SEAM preprint posted on alphaXiv.",
     href: "https://www.alphaxiv.org/abs/2609.llm-pasted-artifact-separation",
