@@ -1,5 +1,18 @@
 export const posts = [
   {
+    slug: "ai-memory-dreaming",
+    title: "Somnium Machinae: What AI Memory Systems Do When They Dream",
+    date: "2026-10-08",
+    category: "Research",
+    status: "cooking",
+    excerpt: "Anthropic, Devin, Honcho, OpenClaw and Letta now run a second memory writer while you are away. What it reads, what it deletes, what it adds that nobody said, and what none of them have measured. An illustrated page, as of 8 October 2026.",
+    tags: ["AI Dreaming", "Agent Memory", "LLM Memory", "Memory Consolidation", "Anthropic", "Devin", "Honcho", "Sleep-time Compute"],
+    seoTitle: "What Is AI Memory Dreaming? Anthropic, Devin, Honcho Compared | Sugam Panthi",
+    seoDescription: "What is dreaming in AI agent memory? A background job that rewrites an agent's memory between sessions. How Anthropic, Devin, Honcho, OpenClaw and Letta do it.",
+    ogImage: "https://spanthi.com/posts/images/ai-memory-dreaming/og.webp",
+    canonicalPath: "/blog/ai-memory-dreaming"
+  },
+  {
     slug: "thinking-gain-missing-passage",
     title: "The Thinking Gain Depends on Which Passage Was Kept",
     date: "2026-10-03",
