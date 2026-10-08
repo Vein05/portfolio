@@ -279,7 +279,7 @@ footer ul { padding-left: 1.1em; }
 <header class="hero" id="hero">
   <nav class="topbar" aria-label="Breadcrumb">
     <a href="/blog/">&larr; Blog</a>
-    <time datetime="2026-10-08">8 October 2026</time>
+    <time datetime="2026-10-08">October 2026</time>
     <button class="theme-toggle" id="themeBtn" aria-label="Switch between day and night">☾ / ☀</button>
   </nav>
   <!-- one viewBox for the painting and its labels, so they stay aligned at any width (same crop as CSS cover, anchored right-bottom) -->
@@ -298,13 +298,14 @@ footer ul { padding-left: 1.1em; }
   <div class="legend-sky" id="skyLegend" hidden></div>
 </header>
 
-<p class="asof">Vendor features change monthly. Everything here was read from public docs, launch posts and source code on 8 October 2026; check the linked sources for current behaviour.</p>
+<p class="asof">Vendor features change monthly. Everything here was read from public docs, launch posts and source code in October 2026; check the linked sources for current behaviour.</p>
 
 <main class="wrap">
 
 <section id="what" style="padding-top:36px">
-  <p class="intro" style="color:var(--ink)">Tell an assistant you are in Singapore, and weeks after you fly home its memory may still say you are there. The example is OpenAI's, and so is the fix: a process that rewrites memory in the background as time passes, so "You're going to Singapore in July" becomes "You went to Singapore in July 2026". OpenAI calls the process dreaming.</p>
-  <p class="intro" style="color:var(--ink)">ChatGPT is not the only one. Anthropic, Devin, Honcho, OpenClaw and Letta also run a second memory writer while you are away, and it can merge, replace, delete and infer. The vendors present it as an improvement. None has released a test of dreaming itself that someone else could rerun.</p>
+  <p class="intro" style="color:var(--ink)">I study how AI assistants remember people, as a research assistant at the University of Southern Mississippi, so I paid attention when OpenAI said ChatGPT now dreams. Its headline example is exactly the kind of failure my research is about: a background process that rewrites "You're going to Singapore in July" as "You went to Singapore in July 2026" once the trip is over.</p>
+  <p class="intro" style="color:var(--ink)">ChatGPT was not the first. As far as I can tell, Honcho was the first memory system to use the word, in a pull request titled <a href="https://github.com/plastic-labs/honcho/pull/212" target="_blank" rel="noopener">"wip: dreaming"</a> in September 2025. OpenAI now calls its April 2025 memory update the first version of dreaming, but I can't find the name in anything it published before June 2026. Anthropic, Devin, OpenClaw and Letta have their own versions too. All of them let a model rewrite your memory while you are away: merge entries, replace them, delete them, and add things you never said.</p>
+  <p class="intro" style="color:var(--ink)">This page is what I found reading their docs, launch posts and, for Honcho, the source code. The vendors present dreaming as an improvement. None has released a test of it that someone else could rerun.</p>
   <h2>What is dreaming in AI memory?</h2>
   <p class="intro" style="color:var(--ink)"><b>Dreaming</b> is memory writing that runs outside the conversation. A model reads stored memory together with many past sessions, then merges duplicates, replaces outdated entries, deletes notes, and adds inferences that no single session stated. It runs on a schedule, after a threshold, or continually in the background. Normal memory writing runs inside the conversation and mostly records what was said.</p>
 </section>
@@ -404,7 +405,7 @@ footer ul { padding-left: 1.1em; }
   <p class="intro">The six fall into two families. <em>Curation</em> rewrites memory into a cleaner version of itself; five of the six work this way. <em>Elaboration</em> keeps the stated facts and builds inferences on top of them; only Honcho does. Across both, the designs differ most in what protects memory from a bad night.</p>
   <div class="marble houses-box" style="margin-top:20px">
     <table class="houses">
-      <caption class="vh">How Honcho, ChatGPT, Anthropic, Devin, OpenClaw and Letta implement dreaming, as of 8 October 2026</caption>
+      <caption class="vh">How Honcho, ChatGPT, Anthropic, Devin, OpenClaw and Letta implement dreaming, as of October 2026</caption>
       <colgroup><col class="sys"><col><col><col><col><col></colgroup>
       <thead><tr><th scope="col">System</th><th scope="col">Day writer</th><th scope="col">When it dreams</th><th scope="col">What the dream does</th><th scope="col">Where it writes</th><th scope="col">Safeguards</th></tr></thead>
       <tbody>
@@ -473,7 +474,7 @@ footer ul { padding-left: 1.1em; }
   <h3>How is dreaming different from normal memory writing?</h3>
   <p>Normal writing runs inside a conversation, sees one session, and mostly appends. Dreaming runs outside the conversation, sees many sessions and stored memory at once, reads its own earlier output, deletes and replaces entries, and writes inferences nobody said. No user is present to catch a mistake.</p>
   <h3>Which AI products use dreaming?</h3>
-  <p>As of 8 October 2026: ChatGPT (since April 2025, rebuilt in June 2026), Anthropic's Claude Managed Agents (research preview), Devin by Cognition (about once a day), Honcho by Plastic Labs (open source, since October 2025), OpenClaw (nightly), and Letta (after a set number of steps or on context compaction).</p>
+  <p>As of October 2026: ChatGPT (since April 2025, rebuilt in June 2026), Anthropic's Claude Managed Agents (research preview), Devin by Cognition (about once a day), Honcho by Plastic Labs (open source, since October 2025), OpenClaw (nightly), and Letta (after a set number of steps or on context compaction).</p>
   <h3>Does ChatGPT have dreaming?</h3>
   <p>Yes. OpenAI <a href="https://openai.com/index/chatgpt-memory-dreaming/" target="_blank" rel="noopener">added a first version</a> in April 2025, which curated memory from chat history in the background alongside saved memories. In June 2026 it made a rebuilt version, Dreaming V3, the foundation of ChatGPT memory. It updates memories as time passes and shows the result on a memory summary page, where you can correct an entry or tell ChatGPT not to mention it again. Temporary chats do not create or update memories.</p>
   <h3>Is dreaming the same as sleep-time compute?</h3>
@@ -489,7 +490,7 @@ footer ul { padding-left: 1.1em; }
 <footer class="wrap">
   <div class="rule"></div>
   <p class="caps" style="letter-spacing:.2em;font-size:15px">About this page</p>
-  <p>Written from primary sources read on 8 October 2026: product docs, launch posts, and Honcho's source code. The store in section II is invented to show the operations; each operation comes from the sources below.</p>
+  <p>Written from primary sources read in October 2026: product docs, launch posts, and Honcho's source code. The store in section II is invented to show the operations; each operation comes from the sources below.</p>
   <ul>
     <li>Honcho source code: <a href="https://github.com/plastic-labs/honcho">github.com/plastic-labs/honcho</a> (deriver prompts, dreamer specialists, dream trigger, config); evaluations at <a href="https://honcho.dev/evals/">honcho.dev/evals</a></li>
     <li>OpenAI: the <a href="https://openai.com/index/chatgpt-memory-dreaming/">dreaming post</a> and the <a href="https://help.openai.com/en/articles/8590148-memory-faq">Memory FAQ</a></li>
