@@ -24,7 +24,7 @@ const RANGES = [
     ],
   },
   {
-    name: "LLM evaluation", span: "2026–now",
+    name: "Evaluation", span: "2026–now",
     layout: { cx: 640, hw: 340, h: 400 },
     stops: [
       { t: "Pali", k: "Open source", date: "2026-03", kind: "project", active: true, ls: 1,
@@ -207,7 +207,7 @@ export default function ResearchRange() {
       <div className="range-scroll -mx-5 overflow-x-auto px-5 md:mx-0 md:overflow-visible md:px-0">
       <div className="min-w-[860px] md:min-w-0">
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img"
-        aria-label="Three mountain peaks, one per research theme: tool agents, LLM evaluation, and LLM and human behavior. Papers, posts, and projects are stops on the trail up each peak."
+        aria-label="Three mountain peaks, one per research theme: tool agents, evaluation, and LLM and human behavior. Papers, posts, and projects are stops on the trail up each peak."
         style={{ display: "block", height: "auto", shapeRendering: "geometricPrecision" }}>
         {/* distant range */}
         <polygon points={pts(FAR)} fill={BORDER} opacity={0.35} />
