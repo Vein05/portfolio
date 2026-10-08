@@ -7,13 +7,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>What Is AI Memory Dreaming? Anthropic, Devin, Honcho Compared | Sugam Panthi</title>
-<meta name="description" content="What is dreaming in AI agent memory? A background job that rewrites an agent's memory between sessions. How Anthropic, Devin, Honcho, OpenClaw and Letta do it, and how it differs from normal memory writing.">
+<title>What Is AI Memory Dreaming? ChatGPT, Claude, Devin Compared</title>
+<meta name="description" content="What is dreaming in AI memory? A background process that rewrites stored memory between chats. How ChatGPT, Claude, Devin, Honcho, OpenClaw and Letta do it.">
 <link rel="canonical" href="https://spanthi.com/blog/ai-memory-dreaming/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="Sugam Panthi" href="/rss.xml">
 <meta name="author" content="Sugam Panthi">
-<meta name="keywords" content="AI dreaming, AI memory dreaming, agent memory dreaming, memory consolidation, Claude dreaming, Devin dreaming, Honcho, sleep-time compute">
+<meta name="keywords" content="AI dreaming, AI memory dreaming, ChatGPT dreaming, agent memory dreaming, memory consolidation, Claude dreaming, Devin dreaming, Honcho, sleep-time compute">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta property="article:modified_time" content="2026-10-08">
 <meta property="og:image:width" content="1200">
@@ -23,15 +23,15 @@
 <meta property="og:site_name" content="Sugam Panthi">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-10-08">
-<meta property="og:title" content="What Is AI Memory Dreaming? Anthropic, Devin, Honcho Compared">
-<meta property="og:description" content="What is dreaming in AI agent memory? A background job that rewrites an agent's memory between sessions. How Anthropic, Devin, Honcho, OpenClaw and Letta do it, and how it differs from normal memory writing.">
+<meta property="og:title" content="What Is AI Memory Dreaming? ChatGPT, Claude, Devin Compared">
+<meta property="og:description" content="What is dreaming in AI memory? A background process that rewrites stored memory between chats. How ChatGPT, Claude, Devin, Honcho, OpenClaw and Letta do it.">
 <meta property="og:url" content="https://spanthi.com/blog/ai-memory-dreaming/">
 <meta property="og:image" content="https://spanthi.com/posts/images/ai-memory-dreaming/og.webp">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="What Is AI Memory Dreaming? Anthropic, Devin, Honcho Compared">
-<meta name="twitter:description" content="What is dreaming in AI agent memory? A background job that rewrites an agent's memory between sessions. How Anthropic, Devin, Honcho, OpenClaw and Letta do it, and how it differs from normal memory writing.">
+<meta name="twitter:title" content="What Is AI Memory Dreaming? ChatGPT, Claude, Devin Compared">
+<meta name="twitter:description" content="What is dreaming in AI memory? A background process that rewrites stored memory between chats. How ChatGPT, Claude, Devin, Honcho, OpenClaw and Letta do it.">
 <meta name="twitter:image" content="https://spanthi.com/posts/images/ai-memory-dreaming/og.webp">
-<script is:inline type="application/ld+json" set:html={`{"@context":"https://schema.org","@type":"BlogPosting","headline":"What Is AI Memory Dreaming? Anthropic, Devin, Honcho Compared","datePublished":"2026-10-08","dateModified":"2026-10-08","description":"What is dreaming in AI agent memory? A background job that rewrites an agent's memory between sessions. How Anthropic, Devin, Honcho, OpenClaw and Letta do it, and how it differs from normal memory writing.","mainEntityOfPage":"https://spanthi.com/blog/ai-memory-dreaming/","image":"https://spanthi.com/posts/images/ai-memory-dreaming/og.webp","keywords":"AI dreaming, AI memory dreaming, agent memory dreaming, memory consolidation, Claude dreaming, Devin dreaming, Honcho, sleep-time compute","inLanguage":"en","author":{"@type":"Person","name":"Sugam Panthi","url":"https://spanthi.com"},"publisher":{"@type":"Person","name":"Sugam Panthi","url":"https://spanthi.com"}}`}></script>
+<script is:inline type="application/ld+json" set:html={`{"@context":"https://schema.org","@type":"BlogPosting","headline":"What Is AI Memory Dreaming? ChatGPT, Claude, Devin Compared","datePublished":"2026-10-08","dateModified":"2026-10-08","description":"What is dreaming in AI memory? A background process that rewrites stored memory between chats. How ChatGPT, Claude, Devin, Honcho, OpenClaw and Letta do it.","mainEntityOfPage":"https://spanthi.com/blog/ai-memory-dreaming/","image":"https://spanthi.com/posts/images/ai-memory-dreaming/og.webp","keywords":"AI dreaming, AI memory dreaming, ChatGPT dreaming, agent memory dreaming, memory consolidation, Claude dreaming, Devin dreaming, Honcho, sleep-time compute","inLanguage":"en","author":{"@type":"Person","name":"Sugam Panthi","url":"https://spanthi.com"},"publisher":{"@type":"Person","name":"Sugam Panthi","url":"https://spanthi.com"}}`}></script>
 <script is:inline type="application/ld+json" set:html={`{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://spanthi.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://spanthi.com/blog/"},{"@type":"ListItem","position":3,"name":"AI memory dreaming","item":"https://spanthi.com/blog/ai-memory-dreaming/"}]}`}></script>
 <script is:inline>
   (function(c,l,a,r,i,t,y){
@@ -93,10 +93,12 @@ a { color: var(--gold); }
 
 /* ---------- hero: the sky of sessions ---------- */
 .hero {
-  position: relative; aspect-ratio: 1961 / 802; min-height: 520px; max-height: 880px; overflow: hidden; background: #6fa6dc;
+  position: relative; width: 100%; aspect-ratio: 1961 / 802; min-height: 520px; max-height: 880px; overflow: hidden; background: #6fa6dc;
 }
 .hero svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
-#nightVeil { opacity: 0; mix-blend-mode: multiply; transition: opacity 1.8s ease; pointer-events: none; }
+/* the painting is a real <img> so image search can index it; object-position matches the svg's xMaxYMax slice */
+.hero .painting { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 100% 100%; }
+#nightVeil { position: absolute; inset: 0; background: #0b1838; opacity: 0; mix-blend-mode: multiply; transition: opacity 1.8s ease; pointer-events: none; }
 .hero.night #nightVeil { opacity: .66; }
 #painting { transition: filter 1.8s ease; }
 .hero.night #painting { filter: brightness(.72) saturate(.85); }
@@ -106,7 +108,7 @@ a { color: var(--gold); }
 }
 .hero .eyebrow { font-family: "Cinzel", serif; letter-spacing: .3em; font-size: 15px; opacity: .95; }
 .hero h1 .latin { display: block; }
-.hero h1 .h1-sub { display: block; font-family: "EB Garamond", serif; font-weight: 500; font-style: italic; letter-spacing: .01em; font-size: clamp(22px, 2.6vw, 30px); margin: .4em 0 .9em; }
+.hero h1 .h1-sub { display: block; max-width: 520px; font-family: "EB Garamond", serif; font-weight: 500; font-style: italic; letter-spacing: .01em; font-size: clamp(22px, 2.6vw, 30px); margin: .4em 0 .9em; }
 .hero h1 { font-size: clamp(40px, 5.4vw, 72px); margin: .15em 0 .15em; font-weight: 700; letter-spacing: .08em; line-height: 1.02; }
 .hero p.lede { max-width: 460px; font-size: clamp(20px, 2.3vw, 25px); margin: 0 0 1.2em; }
 .hero .btn { margin-right: 8px; }
@@ -148,19 +150,35 @@ p.intro { max-width: 720px; color: var(--ink-soft); }
 }
 
 /* ---------- diptych ---------- */
-.diptych { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 6px double var(--gold); }
-.panel { padding: 22px 22px 18px; }
-.panel.day { background: linear-gradient(180deg, #cfe5f8 0%, #f5f9fd 70%); color: #22304a; }
-.panel.night { background: linear-gradient(180deg, #13284f 0%, #2f4f86 100%); color: #eef2fb; }
-.panel h3 { font-size: 22px; }
-.panel .sub { font-style: italic; opacity: .85; margin-bottom: 12px; }
-.row { display: grid; grid-template-columns: 1fr; padding: 10px 0; border-top: 1px solid rgba(120,130,150,.3); }
-.row b { font-family: "Cinzel", serif; font-weight: 600; font-size: 13px; letter-spacing: .14em; opacity: .75; }
-@media (max-width: 720px) { .diptych { grid-template-columns: 1fr; } }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+table.diptych { width: 100%; border-collapse: collapse; table-layout: fixed; border: 6px double var(--gold); }
+.diptych col.lab { width: 200px; }
+.diptych th, .diptych td { padding: 10px 20px; text-align: left; vertical-align: top; font-weight: 400; border-top: 1px solid rgba(120,130,150,.3); }
+.diptych thead th { padding-top: 22px; padding-bottom: 12px; border-top: 0; }
+.diptych thead .caps { display: block; font-size: 22px; letter-spacing: .1em; }
+.diptych .sub { display: block; font-style: italic; opacity: .85; }
+.diptych tbody th { font-family: "Cinzel", serif; font-weight: 600; font-size: 13px; letter-spacing: .14em; color: var(--ink-soft); background: var(--marble); padding-top: 14px; }
+.diptych thead .lab { background: var(--marble); border-top: 0; }
+.diptych .day { background: #e6f0fa; color: #22304a; }
+.diptych thead .day { background: #cfe5f8; }
+.diptych .night { background: #24416f; color: #eef2fb; }
+.diptych thead .night { background: #13284f; }
+@media (max-width: 720px) {
+  table.diptych, .diptych thead, .diptych tbody { display: block; }
+  .diptych colgroup { display: none; }
+  .diptych tr { display: grid; grid-template-columns: 1fr 1fr; }
+  .diptych thead .lab { display: none; }
+  .diptych tbody th { grid-column: 1 / -1; padding: 8px 14px 6px; }
+  .diptych th, .diptych td { padding-left: 14px; padding-right: 14px; }
+  .diptych thead .caps { font-size: 18px; }
+}
 
 /* ---------- temple ---------- */
 .temple-box { padding: 18px; }
-.temple-box svg { width: 100%; height: auto; display: block; }
+.temple-fig { position: relative; }
+.temple-fig svg { position: relative; z-index: 1; width: 100%; height: auto; display: block; }
+/* the painting sits at y 0..769 of the svg's 1030-tall viewBox (which starts at y -110) */
+.temple-fig img { position: absolute; left: 0; top: 10.6796%; width: 100%; height: auto; display: block; }
 .temple-legend { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 18px; margin: 8px 0 0; color: var(--ink-soft); }
 .key { display: inline-block; width: 18px; height: 12px; margin-right: 6px; vertical-align: -1px; border: 1px solid var(--stone); }
 svg .lbl { font-family: "EB Garamond", serif; fill: var(--ink); }
@@ -198,14 +216,23 @@ svg .cap { font-family: "Cinzel", serif; letter-spacing: .08em; fill: var(--ink)
 .note { font-size: 17px; font-style: italic; color: var(--ink-soft); }
 
 /* ---------- houses ---------- */
-.houses { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 18px; }
-.house { padding: 18px 18px 14px; position: relative; }
-.house .roman { position: absolute; right: 14px; top: 10px; font-family: "Cinzel", serif; color: var(--gold); font-size: 25px; opacity: .6; }
-.house .kind { display: inline-block; font-family: "Cinzel", serif; font-size: 12px; letter-spacing: .14em; padding: 2px 8px; border: 1px solid var(--gold); color: var(--gold); margin-bottom: 8px; }
-.house dl { margin: 6px 0 0; font-size: 18px; }
-.house dt { font-family: "Cinzel", serif; font-size: 12px; letter-spacing: .14em; color: var(--ink-soft); margin-top: 8px; }
-.house dd { margin: 0; }
-.emblem { width: 64px; height: 64px; display: block; margin-bottom: 6px; transition: transform .25s; }
+table.houses { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 17px; line-height: 1.45; }
+.houses col.sys { width: 172px; }
+.houses th, .houses td { padding: 14px 12px; text-align: left; vertical-align: top; border-top: 1px solid var(--vein); }
+.houses thead th { font-family: "Cinzel", serif; font-weight: 600; font-size: 12px; letter-spacing: .14em; color: var(--ink-soft); border-top: 0; border-bottom: 2px solid var(--gold); padding-top: 0; }
+.houses tbody th { font-weight: 400; }
+.houses .name { display: block; font-family: "Cinzel", serif; font-weight: 600; font-size: 18px; letter-spacing: .06em; }
+.houses .kind { display: inline-block; font-family: "Cinzel", serif; font-size: 11px; letter-spacing: .14em; padding: 2px 6px; border: 1px solid var(--gold); color: var(--gold); margin-top: 6px; }
+.houses-box { padding: 18px 16px 6px; }
+@media (max-width: 820px) {
+  table.houses, .houses tbody, .houses tr, .houses th, .houses td { display: block; width: auto; }
+  .houses thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .houses tr { padding: 4px 0 12px; border-top: 2px solid var(--gold); }
+  .houses tr:first-child { border-top: 0; }
+  .houses th, .houses td { border-top: 0; padding: 6px 2px; }
+  .houses td::before { content: attr(data-label); display: block; font-family: "Cinzel", serif; font-size: 12px; letter-spacing: .14em; color: var(--ink-soft); }
+}
+.emblem { width: 48px; height: 48px; display: block; margin-bottom: 6px; transition: transform .25s; }
 .emblem-link { display: inline-block; }
 .emblem-link:hover .emblem { transform: translateY(-2px) scale(1.06); }
 
@@ -226,6 +253,7 @@ svg .cap { font-family: "Cinzel", serif; letter-spacing: .08em; fill: var(--ink)
 
 .faq h3 { font-family: "EB Garamond", serif; font-weight: 600; letter-spacing: 0; font-size: 22px; margin: 1.2em 0 .2em; }
 .faq p { max-width: 760px; margin: 0; }
+.sim-label { font-size: 20px; letter-spacing: .1em; margin: 0 0 .3em; }
 footer { padding: 48px 0 64px; font-size: 17px; color: var(--ink-soft); }
 footer ul { padding-left: 1.1em; }
 /* sits on the painting, no bar of its own */
@@ -255,15 +283,15 @@ footer ul { padding-left: 1.1em; }
     <button class="theme-toggle" id="themeBtn" aria-label="Switch between day and night">☾ / ☀</button>
   </nav>
   <!-- one viewBox for the painting and its labels, so they stay aligned at any width (same crop as CSS cover, anchored right-bottom) -->
+  <img class="painting" id="painting" src="/posts/images/ai-memory-dreaming/sky.webp" width="1961" height="802" fetchpriority="high" alt="Painting of a marble Greek temple on a hill under a blue sky full of clouds, with a robed figure standing in the grass, illustrating AI memory dreaming">
+  <div id="nightVeil" aria-hidden="true"></div>
   <svg class="scene" viewBox="0 0 1961 802" preserveAspectRatio="xMaxYMax slice" aria-hidden="true">
-    <image id="painting" href="/posts/images/ai-memory-dreaming/sky.webp" x="0" y="0" width="1961" height="802"/>
-    <rect id="nightVeil" x="0" y="0" width="1961" height="802" fill="#0b1838"/>
     <g id="clouds"></g>
   </svg>
 
   <div class="title">
     <div class="eyebrow">A FIELD GUIDE TO DREAMING IN AI MEMORY</div>
-    <h1><span class="latin">Somnium<br>Machinae</span><span class="h1-sub">What is dreaming in AI agent memory?</span></h1>
+    <h1><span class="latin">Somnium<br>Machinae</span><span class="h1-sub">How ChatGPT, Claude and other AI systems rewrite their memory while you are away</span></h1>
     <button class="btn" id="nightBtn">Let the sky turn to night</button>
     <a class="btn ghost" href="#i" style="color:#fffdf6;border-color:#fffdf6;background:rgba(25,50,95,.35);text-decoration:none">Read</a>
   </div>
@@ -275,37 +303,32 @@ footer ul { padding-left: 1.1em; }
 <main class="wrap">
 
 <section id="what" style="padding-top:36px">
+  <p class="intro" style="color:var(--ink)">Tell an assistant you are in Singapore, and weeks after you fly home its memory may still say you are there. The example is OpenAI's, and so is the fix: a process that rewrites memory in the background as time passes, so "You're going to Singapore in July" becomes "You went to Singapore in July 2026". OpenAI calls the process dreaming.</p>
+  <p class="intro" style="color:var(--ink)">ChatGPT is not the only one. Anthropic, Devin, Honcho, OpenClaw and Letta also run a second memory writer while you are away, and it can merge, replace, delete and infer. The vendors present it as an improvement. None has released a test of dreaming itself that someone else could rerun.</p>
   <h2>What is dreaming in AI memory?</h2>
-  <p class="intro" style="color:var(--ink)"><b>Dreaming</b> is a background job in AI agent memory systems. After conversations end, a model reads the agent's memory store together with many past sessions, then merges duplicates, replaces outdated facts, deletes notes, and adds inferences that no single session stated. Normal memory writing happens during a conversation and mostly records what was said.</p>
+  <p class="intro" style="color:var(--ink)"><b>Dreaming</b> is memory writing that runs outside the conversation. A model reads stored memory together with many past sessions, then merges duplicates, replaces outdated entries, deletes notes, and adds inferences that no single session stated. It runs on a schedule, after a threshold, or continually in the background. Normal memory writing runs inside the conversation and mostly records what was said.</p>
 </section>
 
 <!-- ================= I ================= -->
 <section id="i">
   <div class="numeral">I</div>
   <h2>Day and night</h2>
-  <p class="intro">Every memory system has a writer that runs during the conversation. Dreaming adds a second writer that runs after the conversation ends. It reads the whole store and many sessions together, then edits the store across sessions.</p>
-  <div class="diptych" style="margin-top:22px">
-    <div class="panel day">
-      <h3 class="caps">The day writer</h3>
-      <div class="sub">normal memory writing, inside a session</div>
-      <div class="row"><b>SEES</b>one session or one batch of messages</div>
-      <div class="row"><b>READS ITS OWN PAST OUTPUT</b>rarely; it mostly appends</div>
-      <div class="row"><b>DELETES OR REPLACES</b>rarely</div>
-      <div class="row"><b>WRITES</b>what was said. Honcho's writer prompt: facts "derived directly from their messages"</div>
-      <div class="row"><b>BUDGET</b>one fast call per batch (Honcho) or a few file edits (Anthropic, Devin)</div>
-      <div class="row"><b>WHO IS WATCHING</b>the user; the next turn can catch a mistake</div>
-    </div>
-    <div class="panel night">
-      <h3 class="caps">The night writer</h3>
-      <div class="sub">dreaming, after the session, on a schedule or a threshold</div>
-      <div class="row"><b>SEES</b>the whole store plus many sessions (Anthropic: 1 to 100)</div>
-      <div class="row"><b>READS ITS OWN PAST OUTPUT</b>always; the store is its input</div>
-      <div class="row"><b>DELETES OR REPLACES</b>yes, in all five systems read here</div>
-      <div class="row"><b>WRITES</b>also things nobody said: deductions, patterns, "insights", "lessons missed"</div>
-      <div class="row"><b>BUDGET</b>a multi-step agent, often a larger model</div>
-      <div class="row"><b>WHO IS WATCHING</b>nobody at write time; the user is away</div>
-    </div>
-  </div>
+  <p class="intro">Every memory system has a writer that runs during the conversation. Dreaming adds a second writer that runs outside it. The second writer reads many sessions together and edits memory across them, which the first writer cannot do.</p>
+  <table class="diptych" style="margin-top:22px">
+    <caption class="vh">Normal memory writing (the day writer) compared with dreaming (the night writer)</caption>
+    <colgroup><col class="lab"><col><col></colgroup>
+    <thead>
+      <tr><td class="lab"></td><th scope="col" class="day"><span class="caps">The day writer</span><span class="sub">normal memory writing, inside a session</span></th><th scope="col" class="night"><span class="caps">The night writer</span><span class="sub">dreaming, outside the conversation: on a schedule, after a threshold, or continually</span></th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">SEES</th><td class="day">one session or one batch of messages</td><td class="night">stored memory plus many sessions (Anthropic: 1 to 100)</td></tr>
+      <tr><th scope="row">READS ITS OWN PAST OUTPUT</th><td class="day">rarely; it mostly appends</td><td class="night">always; the store is its input</td></tr>
+      <tr><th scope="row">DELETES OR REPLACES</th><td class="day">rarely</td><td class="night">yes; five of the six systems here document it</td></tr>
+      <tr><th scope="row">WRITES</th><td class="day">what was said. Honcho's writer prompt: facts "derived directly from their messages"</td><td class="night">also things nobody said: deductions, patterns, "insights", "lessons missed"</td></tr>
+      <tr><th scope="row">BUDGET</th><td class="day">one fast call per batch (Honcho) or a few file edits (Anthropic, Devin)</td><td class="night">a multi-step agent, often a larger model</td></tr>
+      <tr><th scope="row">WHO IS WATCHING</th><td class="day">the user; the next turn can catch a mistake</td><td class="night">no one at write time; at most, the user sees the result later</td></tr>
+    </tbody>
+  </table>
 </section>
 
 <div class="rule"></div>
@@ -318,19 +341,19 @@ footer ul { padding-left: 1.1em; }
   <div class="sim" style="margin-top:18px">
     <div class="marble tablets" id="tablets"></div>
     <div class="marble chronicle">
-      <h3 class="caps">The night</h3>
+      <div class="caps sim-label">The night</div>
       <div class="controls">
         <button class="btn" id="stepBtn">Next step</button>
         <button class="btn" id="allBtn">Whole night</button>
         <button class="btn ghost" id="resetBtn">Wake</button>
       </div>
       <ol id="chron">
-        <li data-step="1"><span class="who">Merge · Anthropic, Devin, OpenClaw</span>Duplicates become one.</li>
-        <li data-step="2"><span class="who">Supersede · Honcho, Anthropic</span>Tuesday is struck; Thursday is recorded.</li>
-        <li data-step="3"><span class="who">Deduce · Honcho</span>"Nurse" becomes "works in healthcare".</li>
-        <li data-step="4"><span class="who">Induce · Honcho</span>Two Python requests become a preference.</li>
-        <li data-step="5"><span class="who">Risk: rewrite · curation dreamers</span>"This week" is lost.</li>
-        <li data-step="6"><span class="who">Risk: delete if unused · Devin</span>The never-read allergy is removed.</li>
+        <li data-step="1"><span class="who">Merge: Anthropic, Devin, OpenClaw</span>Duplicates become one.</li>
+        <li data-step="2"><span class="who">Supersede: Honcho, Anthropic, ChatGPT</span>Tuesday is struck; Thursday is recorded.</li>
+        <li data-step="3"><span class="who">Deduce: Honcho</span>"Nurse" becomes "works in healthcare".</li>
+        <li data-step="4"><span class="who">Induce: Honcho</span>Two Python requests become a preference.</li>
+        <li data-step="5"><span class="who">Rewrite risk: curation dreamers</span>"This week" is lost.</li>
+        <li data-step="6"><span class="who">Deletion risk: Devin</span>The never-read allergy is removed.</li>
       </ol>
     </div>
   </div>
@@ -344,15 +367,16 @@ footer ul { padding-left: 1.1em; }
   <h2>The temple of elaboration</h2>
   <p class="intro">Honcho dreams differently from the others: it keeps the stated facts and builds inferences on top of them, each tied to the facts that hold it up. Read from the source code (plastic-labs/honcho, commit cb8ab1a).</p>
   <div class="marble temple-box" style="margin-top:18px">
+    <div class="temple-fig">
+    <img src="/posts/images/ai-memory-dreaming/temple.webp" width="1614" height="769" loading="lazy" decoding="async" alt="Illustration of Honcho's AI memory store as a Greek temple: columns are facts stated in sessions, gold beams are deductions made while dreaming, the pediment is an inferred pattern, and a broken column is a soft-deleted fact">
     <svg viewBox="0 -110 1614 1030" role="img" aria-label="Honcho's memory as a temple. Columns are explicit facts written during sessions. Gold beams across columns are deductive observations written while dreaming. The blue pediment is an inductive observation resting on the two facts that support it. The broken column is a soft-deleted fact.">
-      <image href="/posts/images/ai-memory-dreaming/temple.webp" x="0" y="0" width="1614" height="769"/>
       <!-- induction: the pediment over columns 1 and 2 -->
-      <text x="316" y="-48" text-anchor="middle" class="lbl-i" font-size="26">inductive · low confidence · 2 sources</text>
+      <text x="316" y="-48" text-anchor="middle" class="lbl-i" font-size="26">inductive, low confidence, 2 sources</text>
       <text x="316" y="142" text-anchor="middle" class="cap" font-size="25" fill="#2a3550">PREFERS PYTHON</text>
       <!-- deductions: the gold beams -->
-      <text x="942" y="62" text-anchor="middle" class="lbl-i" font-size="26">deductive · premise s4</text>
+      <text x="942" y="62" text-anchor="middle" class="lbl-i" font-size="26">deductive, from s4</text>
       <text x="942" y="100" text-anchor="middle" class="lbl" font-size="32">works in healthcare</text>
-      <text x="1314" y="62" text-anchor="middle" class="lbl-i" font-size="26">deductive · update · premises s3, s6</text>
+      <text x="1314" y="62" text-anchor="middle" class="lbl-i" font-size="26">deductive update, from s3 and s6</text>
       <text x="1314" y="100" text-anchor="middle" class="lbl" font-size="32">meeting is Thursday</text>
       <!-- the update still points at the fact it replaced -->
       <line x1="1222" y1="190" x2="1222" y2="452" stroke="#a8843f" stroke-width="3" stroke-dasharray="10 8"/>
@@ -360,6 +384,7 @@ footer ul { padding-left: 1.1em; }
       <text x="1240" y="332" class="lbl-i" font-size="26">soft-deleted fact</text>
       <g id="plaques"></g>
     </svg>
+    </div>
     <div class="temple-legend">
       <span><i class="key" style="background:#f6f1e6"></i>Column: a fact said in a session</span>
       <span><i class="key" style="background:#ead79f;border-color:#a8843f"></i>Beam: a deduction, made while dreaming</span>
@@ -367,7 +392,7 @@ footer ul { padding-left: 1.1em; }
       <span><i class="key" style="background:transparent;border-style:dashed"></i>Ruin: deleted, but the row is kept</span>
     </div>
   </div>
-  <p class="intro" style="margin-top:16px">When the store has gained 50 new explicit facts, the user has been idle for an hour, and 8 hours have passed since the last dream, a <b>deduction agent</b> (up to 12 tool steps) looks for updates, implications and contradictions and may delete outdated facts. Then an <b>induction agent</b> (up to 10 steps) writes patterns, preferences and personality traits; its prompt says "think like a psychologist". Every inference must cite the IDs of the facts it rests on; invented IDs are discarded. At answer time, the reading agent is told to check an inference's premises before trusting it.</p>
+  <p class="intro" style="margin-top:16px">When the store has gained 50 new explicit facts, the user has been idle for an hour, and 8 hours have passed since the last dream, a deduction agent (up to 12 tool steps) looks for updates, implications and contradictions and may delete outdated facts. Then an induction agent (up to 10 steps) writes patterns, preferences and personality traits; its prompt says "think like a psychologist". Every inference must cite the IDs of the facts it rests on; invented IDs are discarded. At answer time, the reading agent is told to check an inference's premises before trusting it.</p>
 </section>
 
 <div class="rule"></div>
@@ -375,84 +400,24 @@ footer ul { padding-left: 1.1em; }
 <!-- ================= IV ================= -->
 <section id="iv">
   <div class="numeral">IV</div>
-  <h2>Five houses that dream</h2>
-  <p class="intro">Two families. <b>Curation</b> rewrites the store into a cleaner one. <b>Elaboration</b> keeps the stated facts and adds inferred layers. They differ most in what protects the store from a bad night.</p>
-  <div class="houses" style="margin-top:20px">
-
-    <article class="marble house">
-      <span class="roman">I</span>
-      <a class="emblem-link" href="https://honcho.dev" target="_blank" rel="noopener" aria-label="Honcho website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><polygon points="6,24 32,8 58,24" fill="#c6d8ee" stroke="#5f86b8"/><rect x="8" y="24" width="48" height="5" fill="#ead79f" stroke="#a8843f"/><g fill="#f6f1e6" stroke="#b6aa92"><rect x="12" y="29" width="6" height="22"/><rect x="29" y="29" width="6" height="22"/><rect x="46" y="29" width="6" height="22"/></g><rect x="6" y="51" width="52" height="5" fill="#f6f1e6" stroke="#b6aa92"/></svg></a>
-      <h3 class="caps">Honcho</h3>
-      <span class="kind">ELABORATION</span>
-      <dl>
-        <dt>DAY WRITER</dt><dd>One LLM call per message batch extracts atomic facts about the target peer.</dd>
-        <dt>WHEN IT DREAMS</dt><dd>50 new facts, 60 min idle, 8 h since the last dream (defaults).</dd>
-        <dt>WHAT THE DREAM DOES</dt><dd>Deduction: updates, implications, contradictions, deletes outdated facts. Induction: patterns, preferences, traits from 2+ facts.</dd>
-        <dt>WHERE IT WRITES</dt><dd>Same store, new rows tagged deductive, inductive, contradiction.</dd>
-        <dt>SAFEGUARDS</dt><dd>Required premise IDs; soft deletes; reader told to check premises.</dd>
-      </dl>
-    </article>
-
-    <article class="marble house">
-      <span class="roman">II</span>
-      <a class="emblem-link" href="https://www.anthropic.com" target="_blank" rel="noopener" aria-label="Anthropic website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="22" height="36" fill="#f6f1e6" stroke="#b6aa92"/><rect x="36" y="14" width="22" height="36" fill="#fffaf0" stroke="#a8843f"/><g stroke="#b6aa92"><line x1="10" y1="22" x2="24" y2="22"/><line x1="10" y1="28" x2="24" y2="28"/><line x1="10" y1="34" x2="24" y2="34"/><line x1="10" y1="40" x2="20" y2="40"/></g><g stroke="#a8843f"><line x1="40" y1="22" x2="54" y2="22"/><line x1="40" y1="28" x2="54" y2="28"/><line x1="40" y1="34" x2="50" y2="34"/></g><path d="M29 32 L35 32 M32 29 L35 32 L32 35" stroke="#a8843f" fill="none"/></svg></a>
-      <h3 class="caps">Anthropic</h3>
-      <span class="kind">CURATION</span>
-      <dl>
-        <dt>DAY WRITER</dt><dd>The agent edits files in a mounted memory store with its file tools; every change is versioned.</dd>
-        <dt>WHEN IT DREAMS</dt><dd>The launch post calls it "a scheduled process"; the API docs show only an on-demand call.</dd>
-        <dt>WHAT THE DREAM DOES</dt><dd>Reads one store and 1–100 sessions; merges duplicates, replaces stale or contradicted entries, adds "new insights". Optional steering text.</dd>
-        <dt>WHERE IT WRITES</dt><dd>A new, separate store. The input is never modified.</dd>
-        <dt>SAFEGUARDS</dt><dd>A person decides whether to use the copy; the dream's own session can be streamed and is kept.</dd>
-      </dl>
-    </article>
-
-    <article class="marble house">
-      <span class="roman">III</span>
-      <a class="emblem-link" href="https://devin.ai" target="_blank" rel="noopener" aria-label="Devin website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="8" width="40" height="48" fill="#f6f1e6" stroke="#b6aa92"/><g stroke="#8a7a5c"><line x1="18" y1="18" x2="46" y2="18"/><line x1="18" y1="26" x2="46" y2="26"/><line x1="18" y1="34" x2="40" y2="34"/></g><line x1="18" y1="42" x2="44" y2="42" stroke="#b0503a" stroke-dasharray="2 3" opacity=".6"/><circle cx="48" cy="48" r="7" fill="none" stroke="#a8843f"/><path d="M48 44 L48 48 L51 50" stroke="#a8843f" fill="none"/></svg></a>
-      <h3 class="caps">Devin</h3>
-      <span class="kind">CURATION</span>
-      <dl>
-        <dt>DAY WRITER</dt><dd>On corrections, preferences and reusable findings, edits a note; one-line bullets that link to their session; saved as git commits.</dd>
-        <dt>WHEN IT DREAMS</dt><dd>About once a day when you have been using Devin.</dd>
-        <dt>WHAT THE DREAM DOES</dt><dd>Merges overlapping notes, drops transient details, deletes notes no session has used, adds lessons missed during the work, reorganizes the index.</dd>
-        <dt>WHERE IT WRITES</dt><dd>In place, in a git repo of markdown files.</dd>
-        <dt>SAFEGUARDS</dt><dd>The app lists each dream and what it changed; source links and explicit preferences kept.</dd>
-      </dl>
-    </article>
-
-    <article class="marble house">
-      <span class="roman">IV</span>
-      <a class="emblem-link" href="https://openclaw.ai" target="_blank" rel="noopener" aria-label="OpenClaw website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#a8843f" stroke-width="2"><path d="M6 54 V30 A6 6 0 0 1 18 30 V54"/><path d="M26 54 V30 A6 6 0 0 1 38 30 V54"/><path d="M46 54 V30 A6 6 0 0 1 58 30 V54"/></g><rect x="4" y="18" width="56" height="6" fill="#f6f1e6" stroke="#b6aa92"/><rect x="4" y="54" width="56" height="4" fill="#f6f1e6" stroke="#b6aa92"/></svg></a>
-      <h3 class="caps">OpenClaw</h3>
-      <span class="kind">CURATION, GATED</span>
-      <dl>
-        <dt>DAY WRITER</dt><dd>The agent writes daily notes; recall of each snippet is recorded.</dd>
-        <dt>WHEN IT DREAMS</dt><dd>Nightly cron, 03:00 by default.</dd>
-        <dt>WHAT THE DREAM DOES</dt><dd>Light: stage candidates. REM: themes, no durable write. Deep: three numeric gates (score, recall count, distinct queries), then the model picks add, merge or supersede.</dd>
-        <dt>WHERE IT WRITES</dt><dd>In place, MEMORY.md; a diary in DREAMS.md.</dd>
-        <dt>SAFEGUARDS</dt><dd>Model returns operations, not prose; cap on how many old entries may be lost; source reference required; copy of the old file kept; untrusted sources excluded.</dd>
-      </dl>
-    </article>
-
-    <article class="marble house">
-      <span class="roman">V</span>
-      <a class="emblem-link" href="https://www.letta.com" target="_blank" rel="noopener" aria-label="Letta website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><circle cx="22" cy="22" r="8" fill="#f6f1e6" stroke="#b6aa92"/><path d="M10 52 Q22 32 34 52 Z" fill="#f6f1e6" stroke="#b6aa92"/><circle cx="44" cy="24" r="7" fill="#fffaf0" stroke="#a8843f"/><path d="M33 52 Q44 34 55 52 Z" fill="#fffaf0" stroke="#a8843f"/></svg></a>
-      <h3 class="caps">Letta</h3>
-      <span class="kind">CURATION</span>
-      <dl>
-        <dt>DAY WRITER</dt><dd>The main agent updates memory when it learns something durable; /remember.</dd>
-        <dt>WHEN IT DREAMS</dt><dd>After a set number of agent steps, or when the context is compacted.</dd>
-        <dt>WHAT THE DREAM DOES</dt><dd>Background subagents review recent conversations and update memory.</dd>
-        <dt>WHERE IT WRITES</dt><dd>In place.</dd>
-        <dt>SAFEGUARDS</dt><dd>Optional second agent reviews the proposed changes; no human approval.</dd>
-      </dl>
-    </article>
-
-    <article class="marble house" style="background:transparent;box-shadow:none;border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:200px">
-      <p class="caps" style="color:var(--ink-soft);letter-spacing:.2em;margin:0">More coming soon</p>
-    </article>
+  <h2>Six houses that dream</h2>
+  <p class="intro">The six fall into two families. <em>Curation</em> rewrites memory into a cleaner version of itself; five of the six work this way. <em>Elaboration</em> keeps the stated facts and builds inferences on top of them; only Honcho does. Across both, the designs differ most in what protects memory from a bad night.</p>
+  <div class="marble houses-box" style="margin-top:20px">
+    <table class="houses">
+      <caption class="vh">How Honcho, ChatGPT, Anthropic, Devin, OpenClaw and Letta implement dreaming, as of 8 October 2026</caption>
+      <colgroup><col class="sys"><col><col><col><col><col></colgroup>
+      <thead><tr><th scope="col">System</th><th scope="col">Day writer</th><th scope="col">When it dreams</th><th scope="col">What the dream does</th><th scope="col">Where it writes</th><th scope="col">Safeguards</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><a class="emblem-link" href="https://honcho.dev" target="_blank" rel="noopener" aria-label="Honcho website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><polygon points="6,24 32,8 58,24" fill="#c6d8ee" stroke="#5f86b8"/><rect x="8" y="24" width="48" height="5" fill="#ead79f" stroke="#a8843f"/><g fill="#f6f1e6" stroke="#b6aa92"><rect x="12" y="29" width="6" height="22"/><rect x="29" y="29" width="6" height="22"/><rect x="46" y="29" width="6" height="22"/></g><rect x="6" y="51" width="52" height="5" fill="#f6f1e6" stroke="#b6aa92"/></svg></a><span class="name">Honcho</span><span class="kind">ELABORATION</span></th><td data-label="Day writer">One LLM call per message batch extracts atomic facts about the target peer.</td><td data-label="When it dreams">50 new facts, 60 min idle, 8 h since the last dream (defaults).</td><td data-label="What the dream does">Deduction: updates, implications, contradictions, deletes outdated facts. Induction: patterns, preferences, traits from 2+ facts.</td><td data-label="Where it writes">Same store, new rows tagged deductive, inductive, contradiction.</td><td data-label="Safeguards">Required premise IDs; soft deletes; reader told to check premises.</td></tr>
+        <tr><th scope="row"><a class="emblem-link" href="https://openai.com" target="_blank" rel="noopener" aria-label="OpenAI website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><g fill="#f6f1e6" stroke="#b6aa92"><rect x="6" y="10" width="18" height="10"/><rect x="6" y="27" width="18" height="10"/><rect x="6" y="44" width="18" height="10"/></g><path d="M24 15 L34 28 M24 32 L34 32 M24 49 L34 36" stroke="#a8843f" fill="none"/><rect x="34" y="18" width="24" height="28" fill="#fffaf0" stroke="#a8843f"/><g stroke="#a8843f"><line x1="38" y1="25" x2="54" y2="25"/><line x1="38" y1="31" x2="54" y2="31"/><line x1="38" y1="37" x2="49" y2="37"/></g></svg></a><span class="name">ChatGPT</span><span class="kind">CURATION</span></th><td data-label="Day writer">Saved memories, written during the chat on strong cues such as "remember I'm traveling to Singapore in July".</td><td data-label="When it dreams">Continually, in the background; no schedule is published. First version April 2025; the current one, "Dreaming V3", from June 2026.</td><td data-label="What the dream does">Learns from many conversations and synthesizes a memory state; revises entries as time passes, so "going to Singapore in July" becomes "went to Singapore in July 2026".</td><td data-label="Where it writes">A synthesized memory, shown to the user as a summary. Saved memories are stored separately.</td><td data-label="Safeguards">The user can correct the summary, mark a topic "Don't mention this again", or delete it. Temporary chats never create memories.</td></tr>
+        <tr><th scope="row"><a class="emblem-link" href="https://www.anthropic.com" target="_blank" rel="noopener" aria-label="Anthropic website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="14" width="22" height="36" fill="#f6f1e6" stroke="#b6aa92"/><rect x="36" y="14" width="22" height="36" fill="#fffaf0" stroke="#a8843f"/><g stroke="#b6aa92"><line x1="10" y1="22" x2="24" y2="22"/><line x1="10" y1="28" x2="24" y2="28"/><line x1="10" y1="34" x2="24" y2="34"/><line x1="10" y1="40" x2="20" y2="40"/></g><g stroke="#a8843f"><line x1="40" y1="22" x2="54" y2="22"/><line x1="40" y1="28" x2="54" y2="28"/><line x1="40" y1="34" x2="50" y2="34"/></g><path d="M29 32 L35 32 M32 29 L35 32 L32 35" stroke="#a8843f" fill="none"/></svg></a><span class="name">Anthropic</span><span class="kind">CURATION</span></th><td data-label="Day writer">The agent edits files in a mounted memory store with its file tools; every change is versioned.</td><td data-label="When it dreams">The launch post calls it "a scheduled process"; the API docs show only an on-demand call.</td><td data-label="What the dream does">Reads one store and 1–100 sessions; merges duplicates, replaces stale or contradicted entries, adds "new insights". Optional steering text.</td><td data-label="Where it writes">A new, separate store. The input is never modified.</td><td data-label="Safeguards">A person decides whether to use the copy; the dream's own session can be streamed and is kept.</td></tr>
+        <tr><th scope="row"><a class="emblem-link" href="https://devin.ai" target="_blank" rel="noopener" aria-label="Devin website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="8" width="40" height="48" fill="#f6f1e6" stroke="#b6aa92"/><g stroke="#8a7a5c"><line x1="18" y1="18" x2="46" y2="18"/><line x1="18" y1="26" x2="46" y2="26"/><line x1="18" y1="34" x2="40" y2="34"/></g><line x1="18" y1="42" x2="44" y2="42" stroke="#b0503a" stroke-dasharray="2 3" opacity=".6"/><circle cx="48" cy="48" r="7" fill="none" stroke="#a8843f"/><path d="M48 44 L48 48 L51 50" stroke="#a8843f" fill="none"/></svg></a><span class="name">Devin</span><span class="kind">CURATION</span></th><td data-label="Day writer">On corrections, preferences and reusable findings, edits a note; one-line bullets that link to their session; saved as git commits.</td><td data-label="When it dreams">About once a day when you have been using Devin.</td><td data-label="What the dream does">Merges overlapping notes, drops transient details, deletes notes no session has used, adds lessons missed during the work, reorganizes the index.</td><td data-label="Where it writes">In place, in a git repo of markdown files.</td><td data-label="Safeguards">The app lists each dream and what it changed; source links and explicit preferences kept.</td></tr>
+        <tr><th scope="row"><a class="emblem-link" href="https://openclaw.ai" target="_blank" rel="noopener" aria-label="OpenClaw website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="#a8843f" stroke-width="2"><path d="M6 54 V30 A6 6 0 0 1 18 30 V54"/><path d="M26 54 V30 A6 6 0 0 1 38 30 V54"/><path d="M46 54 V30 A6 6 0 0 1 58 30 V54"/></g><rect x="4" y="18" width="56" height="6" fill="#f6f1e6" stroke="#b6aa92"/><rect x="4" y="54" width="56" height="4" fill="#f6f1e6" stroke="#b6aa92"/></svg></a><span class="name">OpenClaw</span><span class="kind">CURATION, GATED</span></th><td data-label="Day writer">The agent writes daily notes; recall of each snippet is recorded.</td><td data-label="When it dreams">Nightly cron, 03:00 by default.</td><td data-label="What the dream does">Light: stage candidates. REM: themes, no durable write. Deep: three numeric gates (score, recall count, distinct queries), then the model picks add, merge or supersede.</td><td data-label="Where it writes">In place, MEMORY.md; a diary in DREAMS.md.</td><td data-label="Safeguards">Model returns operations, not prose; cap on how many old entries may be lost; source reference required; copy of the old file kept; untrusted sources excluded.</td></tr>
+        <tr><th scope="row"><a class="emblem-link" href="https://www.letta.com" target="_blank" rel="noopener" aria-label="Letta website"><svg class="emblem" viewBox="0 0 64 64" aria-hidden="true"><circle cx="22" cy="22" r="8" fill="#f6f1e6" stroke="#b6aa92"/><path d="M10 52 Q22 32 34 52 Z" fill="#f6f1e6" stroke="#b6aa92"/><circle cx="44" cy="24" r="7" fill="#fffaf0" stroke="#a8843f"/><path d="M33 52 Q44 34 55 52 Z" fill="#fffaf0" stroke="#a8843f"/></svg></a><span class="name">Letta</span><span class="kind">CURATION</span></th><td data-label="Day writer">The main agent updates memory when it learns something durable; /remember.</td><td data-label="When it dreams">After a set number of agent steps, or when the context is compacted.</td><td data-label="What the dream does">Background subagents review recent conversations and update memory.</td><td data-label="Where it writes">In place.</td><td data-label="Safeguards">Optional second agent reviews the proposed changes; no human approval.</td></tr>
+      </tbody>
+    </table>
   </div>
+  <p class="note" style="margin-top:10px">More systems coming soon.</p>
 </section>
 
 <div class="rule"></div>
@@ -461,14 +426,14 @@ footer ul { padding-left: 1.1em; }
 <section id="v">
   <div class="numeral">V</div>
   <h2>Where dreams go wrong</h2>
-  <p class="intro">Each failure below either has been measured in a paper (gold) or is allowed by a product's design and has not been measured (terracotta).</p>
+  <p class="intro">Each failure below has either been measured in a paper (gold) or is allowed by a product's design and has not been measured (terracotta). The papers show what consolidation can do in a research setup, not how often it happens inside any product on this page.</p>
   <div class="risks" style="margin-top:18px">
     <div class="marble risk-card"><div class="status measured">MEASURED</div><h3 class="caps">Rewrites compound</h3><p>Memory updated again and again by an LLM first helps, then degrades, sometimes below having no memory; keeping raw episodes was competitive. <a href="https://arxiv.org/abs/2605.12978" target="_blank" rel="noopener"><em>Zhang et al., arXiv 2605.12978</em></a>.</p></div>
-    <div class="marble risk-card"><div class="status measured">MEASURED</div><h3 class="caps">The tense is lost</h3><p>Memory writers flattened "I am driving a Peugeot" to "drives a Peugeot" but kept the simple-present version in 244 of 381 pairs, never the reverse, across 11 configurations and in mem0, Graphiti and Letta. <a href="https://arxiv.org/abs/2609.36457" target="_blank" rel="noopener"><em>LAPSE, arXiv 2609.36457</em></a>.</p></div>
+    <div class="marble risk-card"><div class="status measured">MEASURED</div><h3 class="caps">The tense is lost</h3><p>In 244 of 381 matched pairs, a memory writer turned "I am driving a Peugeot" into "drives a Peugeot" while keeping "I drive a Peugeot" as said, and never the reverse. The pattern held in all 11 configurations and in mem0, Graphiti and Letta. <em><a href="/blog/aspect-persistence-eternal-present-memory/">LAPSE</a>, <a href="https://arxiv.org/abs/2609.36457" target="_blank" rel="noopener">arXiv 2609.36457</a></em>. ChatGPT's dreamer is built to make the opposite move, from "going to" to "went", and <a href="https://openai.com/index/chatgpt-memory-dreaming/" target="_blank" rel="noopener">OpenAI reports</a> a gain on its own time evaluation.</p></div>
     <div class="marble risk-card"><div class="status measured">MEASURED</div><h3 class="caps">The speaker's standing is lost</h3><p>Consolidation kept a claim but dropped the limits on who said it and how it may be used in 48 of 49 configurations. <a href="https://arxiv.org/abs/2608.01679" target="_blank" rel="noopener"><em>AuthMem-Bench, arXiv 2608.01679</em></a>.</p></div>
     <div class="marble risk-card"><div class="status open">ALLOWED, NOT MEASURED</div><h3 class="caps">Traits from two facts</h3><p><a href="https://github.com/plastic-labs/honcho/blob/main/src/dreamer/specialists.py" target="_blank" rel="noopener">Honcho's induction</a> may write a personality trait from two observations. Whether such traits are stable across runs or predict what the person says next is unknown.</p></div>
     <div class="marble risk-card"><div class="status open">ALLOWED, NOT MEASURED</div><h3 class="caps">Forgetting the rare</h3><p><a href="https://docs.devin.ai/product-guides/memory" target="_blank" rel="noopener">Devin deletes notes</a> no session has used. A fact needed once a year is, by that rule, a candidate for deletion.</p></div>
-    <div class="marble risk-card"><div class="status open">ALLOWED, NOT MEASURED</div><h3 class="caps">No one awake</h3><p>In the in-place designs (<a href="https://github.com/plastic-labs/honcho" target="_blank" rel="noopener">Honcho</a>, <a href="https://docs.devin.ai/product-guides/memory" target="_blank" rel="noopener">Devin</a>, <a href="https://docs.letta.com/guides/agents/architectures/sleeptime" target="_blank" rel="noopener">Letta</a>, <a href="https://docs.openclaw.ai/concepts/dreaming" target="_blank" rel="noopener">OpenClaw</a>) a bad night reaches the next session unless someone reads the change log.</p></div>
+    <div class="marble risk-card"><div class="status open">ALLOWED, NOT MEASURED</div><h3 class="caps">No one awake</h3><p>In the in-place designs (<a href="https://openai.com/index/chatgpt-memory-dreaming/" target="_blank" rel="noopener">ChatGPT</a>, <a href="https://github.com/plastic-labs/honcho" target="_blank" rel="noopener">Honcho</a>, <a href="https://docs.devin.ai/product-guides/memory" target="_blank" rel="noopener">Devin</a>, <a href="https://docs.letta.com/guides/agents/architectures/sleeptime" target="_blank" rel="noopener">Letta</a>, <a href="https://docs.openclaw.ai/concepts/dreaming" target="_blank" rel="noopener">OpenClaw</a>) a bad night reaches the next session unless someone reads what changed. ChatGPT's summary, by <a href="https://help.openai.com/en/articles/8590148-memory-faq" target="_blank" rel="noopener">OpenAI's own description</a>, may leave out details that memory can still use.</p></div>
   </div>
 </section>
 
@@ -482,7 +447,7 @@ footer ul { padding-left: 1.1em; }
     <div class="marble lens">
       <svg class="medallion" viewBox="0 0 92 92" aria-hidden="true"><circle cx="46" cy="46" r="42" fill="none" stroke="#a8843f" stroke-width="2"/><circle cx="46" cy="46" r="36" fill="none" stroke="#a8843f" stroke-dasharray="2 4"/><g stroke="currentColor" stroke-width="2"><line x1="46" y1="24" x2="46" y2="66"/><line x1="26" y1="34" x2="66" y2="34"/></g><path d="M20 50 L26 34 L32 50 Z M60 50 L66 34 L72 50 Z" fill="none" stroke="currentColor"/></svg>
       <h3 class="caps">Psychometrics</h3>
-      <p>Treat a dream as a measurement. <b>Reliability:</b> run the same night twice; do the same traits and inferences come back? <b>Validity:</b> do the inferred traits predict what the person says later? Honcho's trait inference makes this literal.</p>
+      <p>Treat a dream as a measurement. <em>Reliability:</em> run the same night twice; do the same traits and inferences come back? <em>Validity:</em> do the inferred traits predict what the person says later? Honcho's trait inference makes this literal.</p>
     </div>
     <div class="marble lens">
       <svg class="medallion" viewBox="0 0 92 92" aria-hidden="true"><circle cx="46" cy="46" r="42" fill="none" stroke="#a8843f" stroke-width="2"/><path d="M28 56 C 18 40, 30 22, 48 24 C 66 26, 70 44, 60 52 C 54 58, 56 66, 52 70 L40 70 C 40 64, 34 62, 28 56 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M40 36 C 46 32, 52 36, 50 42 M46 46 C 52 44, 58 48, 54 54" fill="none" stroke="#a8843f"/></svg>
@@ -492,7 +457,7 @@ footer ul { padding-left: 1.1em; }
     <div class="marble lens">
       <svg class="medallion" viewBox="0 0 92 92" aria-hidden="true"><circle cx="46" cy="46" r="42" fill="none" stroke="#a8843f" stroke-width="2"/><polygon points="22,40 46,24 70,40" fill="none" stroke="currentColor" stroke-width="2"/><g stroke="currentColor" stroke-width="2"><line x1="30" y1="42" x2="30" y2="64"/><line x1="46" y1="42" x2="46" y2="64"/><line x1="62" y1="42" x2="62" y2="64"/><line x1="22" y1="66" x2="70" y2="66"/></g></svg>
       <h3 class="caps">Real use</h3>
-      <p>Honcho and OpenClaw are open source and keep enough history to diff a store before and after a night. Anthropic keeps both stores and the dream's transcript, behind preview access. Devin shows each night's changes, but memory is private.</p>
+      <p>Honcho and OpenClaw are open source and keep enough history to diff a store before and after a night. Anthropic keeps both stores and the dream's transcript, behind preview access. Devin shows each night's changes, but memory is private. ChatGPT shows a summary rather than the memory itself, so a night's changes are hard to see from outside.</p>
     </div>
   </div>
 </section>
@@ -504,15 +469,19 @@ footer ul { padding-left: 1.1em; }
   <div class="numeral">VII</div>
   <h2>Questions</h2>
   <h3>What is AI dreaming?</h3>
-  <p>In AI agents, dreaming is offline memory maintenance. A separate model run reviews past sessions and the agent's stored memory, then rewrites or extends that memory so later sessions start from a cleaner, more complete store. The name borrows from sleep, when people consolidate memories.</p>
+  <p>Dreaming is memory maintenance that runs outside the conversation. A separate model run reviews past sessions and stored memory, then rewrites or extends that memory so later sessions start from a cleaner, more complete version. The name borrows from sleep, when people consolidate memories.</p>
   <h3>How is dreaming different from normal memory writing?</h3>
-  <p>Normal writing runs inside a conversation, sees one session, and mostly appends. Dreaming runs afterwards, sees many sessions and the whole store at once, reads its own earlier output, deletes and replaces entries, and writes inferences nobody said. No user is present to catch a mistake.</p>
+  <p>Normal writing runs inside a conversation, sees one session, and mostly appends. Dreaming runs outside the conversation, sees many sessions and stored memory at once, reads its own earlier output, deletes and replaces entries, and writes inferences nobody said. No user is present to catch a mistake.</p>
   <h3>Which AI products use dreaming?</h3>
-  <p>As of 8 October 2026: Anthropic's Claude Managed Agents (research preview), Devin by Cognition (about once a day), Honcho by Plastic Labs (open source, since October 2025), OpenClaw (nightly), and Letta (after a set number of steps or on context compaction).</p>
+  <p>As of 8 October 2026: ChatGPT (since April 2025, rebuilt in June 2026), Anthropic's Claude Managed Agents (research preview), Devin by Cognition (about once a day), Honcho by Plastic Labs (open source, since October 2025), OpenClaw (nightly), and Letta (after a set number of steps or on context compaction).</p>
+  <h3>Does ChatGPT have dreaming?</h3>
+  <p>Yes. OpenAI <a href="https://openai.com/index/chatgpt-memory-dreaming/" target="_blank" rel="noopener">added a first version</a> in April 2025, which curated memory from chat history in the background alongside saved memories. In June 2026 it made a rebuilt version, Dreaming V3, the foundation of ChatGPT memory. It updates memories as time passes and shows the result on a memory summary page, where you can correct an entry or tell ChatGPT not to mention it again. Temporary chats do not create or update memories.</p>
   <h3>Is dreaming the same as sleep-time compute?</h3>
   <p>They are related. <a href="https://arxiv.org/abs/2504.13171" target="_blank" rel="noopener">Sleep-time compute</a> (Lin et al., 2025) has a model reason about a context before questions arrive. Dreaming applies offline work to the memory store itself. OpenClaw's docs name sleep-time compute as an inspiration, and Letta now calls its sleep-time agents "dreaming".</p>
-  <h3>Does dreaming make agents better?</h3>
-  <p>Not yet shown in a controlled test. Anthropic's launch post reports one customer's completion rates rising about 6x "in their tests", without the task set or baseline. An <a href="https://arxiv.org/abs/2605.12978" target="_blank" rel="noopener">independent study</a> found that memory rewritten again and again by an LLM can end up worse than no memory.</p>
+  <h3>Does dreaming make memory better?</h3>
+  <p>OpenAI and Anthropic report that it does; neither has released a test that others can rerun. OpenAI compares its 2024, 2025 and 2026 memory systems on its own evaluations of recall, preferences and time awareness, and reports gains on each without publishing the evaluations. Anthropic's launch post reports one customer's completion rates rising about 6x "in their tests", without the task set or baseline. An <a href="https://arxiv.org/abs/2605.12978" target="_blank" rel="noopener">independent study</a> found that memory rewritten again and again by an LLM can end up worse than no memory.</p>
+  <h3>Can users see or correct what a dream wrote?</h3>
+  <p>It depends on the product. ChatGPT shows a memory summary that you can correct or delete, though <a href="https://help.openai.com/en/articles/8590148-memory-faq" target="_blank" rel="noopener">OpenAI says</a> it may not include every detail memory can use. Anthropic writes each dream to a new store, and a person decides whether to use it. Devin lists every dream and what it changed. OpenClaw keeps a copy of the file it rewrote and a diary of each night. Honcho and Letta leave review to the developer; Letta can have a second agent check the changes first.</p>
 </section>
 
 </main>
@@ -522,12 +491,13 @@ footer ul { padding-left: 1.1em; }
   <p class="caps" style="letter-spacing:.2em;font-size:15px">About this page</p>
   <p>Written from primary sources read on 8 October 2026: product docs, launch posts, and Honcho's source code. The store in section II is invented to show the operations; each operation comes from the sources below.</p>
   <ul>
-    <li>Honcho source code: <a href="https://github.com/plastic-labs/honcho">github.com/plastic-labs/honcho</a> (deriver prompts, dreamer specialists, dream trigger, config) · <a href="https://honcho.dev/evals/">honcho.dev/evals</a></li>
-    <li>Anthropic: <a href="https://claude.com/resources/articles/new-in-claude-managed-agents">launch post</a> · <a href="https://platform.claude.com/docs/en/managed-agents/dreams">Dreams</a> · <a href="https://platform.claude.com/docs/en/managed-agents/memory">Memory stores</a></li>
-    <li>Devin: <a href="https://docs.devin.ai/product-guides/memory">Memory and Dreaming docs</a> · <a href="https://devin.ai/blog/memory-and-dreaming">blog</a></li>
+    <li>Honcho source code: <a href="https://github.com/plastic-labs/honcho">github.com/plastic-labs/honcho</a> (deriver prompts, dreamer specialists, dream trigger, config); evaluations at <a href="https://honcho.dev/evals/">honcho.dev/evals</a></li>
+    <li>OpenAI: the <a href="https://openai.com/index/chatgpt-memory-dreaming/">dreaming post</a> and the <a href="https://help.openai.com/en/articles/8590148-memory-faq">Memory FAQ</a></li>
+    <li>Anthropic: the <a href="https://claude.com/resources/articles/new-in-claude-managed-agents">launch post</a>, and the <a href="https://platform.claude.com/docs/en/managed-agents/dreams">Dreams</a> and <a href="https://platform.claude.com/docs/en/managed-agents/memory">Memory stores</a> docs</li>
+    <li>Devin: the <a href="https://docs.devin.ai/product-guides/memory">Memory and Dreaming docs</a> and the <a href="https://devin.ai/blog/memory-and-dreaming">blog post</a></li>
     <li>OpenClaw: <a href="https://docs.openclaw.ai/concepts/dreaming">Dreaming</a></li>
     <li>Letta: <a href="https://docs.letta.com/guides/agents/architectures/sleeptime">Dreaming (sleep-time)</a></li>
-    <li>Papers: <a href="https://arxiv.org/abs/2605.12978">Zhang et al. 2605.12978</a> · <a href="https://arxiv.org/abs/2609.36457">LAPSE 2609.36457</a> · <a href="https://arxiv.org/abs/2608.01679">AuthMem-Bench 2608.01679</a></li>
+    <li>Papers: <a href="https://arxiv.org/abs/2605.12978">Zhang et al. 2605.12978</a>, <a href="https://arxiv.org/abs/2609.36457">LAPSE 2609.36457</a>, <a href="https://arxiv.org/abs/2608.01679">AuthMem-Bench 2608.01679</a></li>
   </ul>
 </footer>
 
@@ -595,8 +565,8 @@ footer ul { padding-left: 1.1em; }
   // ---------- temple plaques: one under each column (painting coordinates) ----------
   var colX = [184, 456, 684, 940, 1222, 1476];
   var labels = [
-    ['asked for', 'Python', 'explicit · s2'], ['asked for Python', 'again', 'explicit · s7'], ['writes tests', 'in pytest', 'explicit · s9'],
-    ['works as', 'a nurse', 'explicit · s4'], ['meeting is', 'on Tuesday', 'soft-deleted · s3'], ['moved meeting', 'to Thursday', 'explicit · s6']
+    ['asked for', 'Python', 'explicit, s2'], ['asked for Python', 'again', 'explicit, s7'], ['writes tests', 'in pytest', 'explicit, s9'],
+    ['works as', 'a nurse', 'explicit, s4'], ['meeting is', 'on Tuesday', 'soft-deleted, s3'], ['moved meeting', 'to Thursday', 'explicit, s6']
   ];
   var plq = document.getElementById('plaques');
   colX.forEach(function (x, i) {
@@ -618,12 +588,12 @@ footer ul { padding-left: 1.1em; }
     { id: 'f', k: 'explicit', t: 'Ana asked for the code in Python', s: 'session 2' },
     { id: 'g', k: 'explicit', t: 'Ana asked for Python again', s: 'session 7' },
     { id: 'h', k: 'explicit', t: 'Ana is driving a rental car this week', s: 'session 5' },
-    { id: 'i', k: 'explicit', t: 'Ana is allergic to penicillin', s: 'session 1 · never read' }
+    { id: 'i', k: 'explicit', t: 'Ana is allergic to penicillin', s: 'session 1, never read' }
   ];
   var box = document.getElementById('tablets');
   var step = 0;
   function render() {
-    box.innerHTML = '<h3 class="caps" style="margin-bottom:10px">The store</h3>';
+    box.innerHTML = '<div class="caps sim-label" style="margin-bottom:10px">The store</div>';
     initial.forEach(function (x) { box.appendChild(make(x)); });
   }
   function make(x) {
@@ -642,27 +612,27 @@ footer ul { padding-left: 1.1em; }
     function () {
       var a = document.getElementById('t-a');
       a.querySelector('.txt').lastChild.textContent = 'Ana lives in Lisbon, Portugal';
-      a.querySelector('.src').textContent = 'merged · sessions 1, 3';
+      a.querySelector('.src').textContent = 'merged from sessions 1, 3';
       a.classList.add('flash'); setTimeout(function () { a.classList.remove('flash'); }, 1400);
       document.getElementById('t-b').classList.add('gone');
     },
     function () {
       document.getElementById('t-c').classList.add('struck');
-      document.getElementById('t-c').querySelector('.src').textContent = 'session 3 · soft-deleted';
-      addAfter('d', { id: 'd2', k: 'deductive', t: "Ana's meeting is on Thursday", s: 'updated · sessions 3, 6' });
+      document.getElementById('t-c').querySelector('.src').textContent = 'session 3, soft-deleted';
+      addAfter('d', { id: 'd2', k: 'deductive', t: "Ana's meeting is on Thursday", s: 'updated from sessions 3, 6' });
     },
     function () {
-      addAfter('e', { id: 'e2', k: 'deductive', t: 'Ana works in healthcare', s: 'from session 4 · never said' });
+      addAfter('e', { id: 'e2', k: 'deductive', t: 'Ana works in healthcare', s: 'from session 4, never said' });
     },
     function () {
-      addAfter('g', { id: 'g2', k: 'inductive', t: 'Ana prefers Python', s: 'low · sessions 2, 7' });
+      addAfter('g', { id: 'g2', k: 'inductive', t: 'Ana prefers Python', s: 'low confidence, sessions 2, 7' });
     },
     function () {
       var h = document.getElementById('t-h');
       h.className = 'tablet risk flash';
       h.querySelector('.badge').textContent = 'REWRITTEN';
       h.querySelector('.txt').lastChild.textContent = 'Ana drives a rental car';
-      h.querySelector('.src').textContent = 'session 5 · "this week" lost';
+      h.querySelector('.src').textContent = 'session 5, "this week" lost';
       setTimeout(function () { h.classList.remove('flash'); }, 1400);
     },
     function () {

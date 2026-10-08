@@ -159,6 +159,8 @@ The paper also asks whether the lost cue matters later. In exploratory tests, ch
 
 The benchmark and code are on [GitHub](https://github.com/aimsresearchlab/lapse), and the poster is at [spanthi.com/poster/aspect-persistence](/poster/aspect-persistence/).
 
+The same kind of rewrite now also runs between sessions. ChatGPT, Anthropic, Devin, Honcho, OpenClaw and Letta each ship a "dreaming" step that consolidates stored memory again while the user is away; [what AI memory systems do when they dream](/blog/ai-memory-dreaming/) compares how each one rewrites the store and what none of them have measured.
+
 ## Cite this
 
 ```bibtex
