@@ -44,7 +44,7 @@ const pipes = [
         <div class="kicker">01 The problem</div>
         <h2>The note keeps the fact and drops the progressive</h2>
         <figure class="paper-fig">
-          <img src="/slides/lapse/fig1-lapse-overview.png" alt="A user says 'I'm working at Corvida Analytics.' The memory writer stores 'User works at Corvida Analytics as of August 27, 2026.' The progressive verb, which marks an ongoing event, becomes a simple present, which reads as a standing fact. A write-time test checks whether the form survived; a separate read-time test checks whether a later model uses it." />
+          <img src="/slides/lapse/fig1-lapse-overview.webp" alt="A user says 'I'm working at Corvida Analytics.' The memory writer stores 'User works at Corvida Analytics as of August 27, 2026.' The progressive verb, which marks an ongoing event, becomes a simple present, which reads as a standing fact. A write-time test checks whether the form survived; a separate read-time test checks whether a later model uses it." />
         </figure>
         <div class="two-up">
           <p><span class="blue">“I'm working at”</span> marks an ongoing situation that can end.</p>
@@ -64,7 +64,7 @@ const pipes = [
             <p>Models tend to assume an action in progress reached its goal, even when the sentence never says so.</p>
             <p class="gap"><span class="gap-label">Difference</span>They give the model the original sentence. We test whether the form survives when the sentence is rewritten into a note.</p>
             <div class="more">
-              <figure><img src="/slides/lapse/related/imperfective-tab1.png" alt="Table 1 of Ma and Miyao: 'The carpenter was building a gazebo' does not entail 'The carpenter built a gazebo'; 'The boy was running in the park' does entail 'The boy ran in the park'." /></figure>
+              <figure><img src="/slides/lapse/related/imperfective-tab1.webp" alt="Table 1 of Ma and Miyao: 'The carpenter was building a gazebo' does not entail 'The carpenter built a gazebo'; 'The boy was running in the park' does entail 'The boy ran in the park'." /></figure>
               <div class="more-result">
                 <span class="gap-label">Main result</span>
                 <p>Llama-3.1 scored 0.98 on “was running” items and 0.02 on “was building” items: it read an unfinished action as finished.</p>
@@ -79,7 +79,7 @@ const pipes = [
             <p>Memory consolidation strips hedges like “probably” and “reportedly”, turning tentative reports into facts.</p>
             <p class="gap"><span class="gap-label">Difference</span>Their cue is a hedge word. Ours is the verb form, with no hedge word present.</p>
             <div class="more">
-              <figure><img src="/slides/lapse/related/kwon-fig1.png" alt="Figure 1 of Kwon: a user says Alice was probably promoted to admin; mem0 consolidation drops 'probably' and 'mentioned' and stores 'Alice clearance: ADMIN, 2026-06-12'; the agent then grants Alice an admin request it should not." /></figure>
+              <figure><img src="/slides/lapse/related/kwon-fig1.webp" alt="Figure 1 of Kwon: a user says Alice was probably promoted to admin; mem0 consolidation drops 'probably' and 'mentioned' and stores 'Alice clearance: ADMIN, 2026-06-12'; the agent then grants Alice an admin request it should not." /></figure>
               <div class="more-result">
                 <span class="gap-label">Main result</span>
                 <p>With the confident note “Alice's clearance is admin”, all five models granted unauthorized requests at a rate of 0.81. Hedged notes such as “Alice is probably an admin” dropped that to 0.00 to 0.40.</p>
@@ -94,7 +94,7 @@ const pipes = [
             <p>Tests whether agents notice a memory is out of date after a later message changes the facts.</p>
             <p class="gap"><span class="gap-label">Difference</span>They add a later message that changes the fact. We keep the history fixed and change only the verb.</p>
             <div class="more side">
-              <figure class="tall"><img src="/slides/lapse/related/stale-fig1.png" alt="Panel 1 of STALE Figure 1: a user first says they ride a bike to work every day; sessions later they say they broke their leg playing basketball." /></figure>
+              <figure class="tall"><img src="/slides/lapse/related/stale-fig1.webp" alt="Panel 1 of STALE Figure 1: a user first says they ride a bike to work every day; sessions later they say they broke their leg playing basketball." /></figure>
               <div class="more-result">
                 <span class="gap-label">Main result</span>
                 <p>400 conflict scenarios and 1,200 questions. The best evaluated model answered 55.2% correctly.</p>
@@ -191,7 +191,7 @@ const pipes = [
         <div class="kicker">06 Result</div>
         <h2>Writers drop the progressive and keep the simple present</h2>
         <figure class="paper-fig result-fig">
-          <img src="/slides/lapse/fig2-direction-frames.png" alt="Paper Figure 2. Panel a: in every one of 11 model configurations, matched pairs where only the progressive was destroyed far outnumber pairs where only the simple form was; the confirmatory writers show 104, 79, and 61 against 0, and all 11 total 807 against 2. Panel b: progressive destruction per topic frame, highest for vehicle and workplace, alongside the installed mem0 pipeline's lost temporal cues." />
+          <img src="/slides/lapse/fig2-direction-frames.webp" alt="Paper Figure 2. Panel a: in every one of 11 model configurations, matched pairs where only the progressive was destroyed far outnumber pairs where only the simple form was; the confirmatory writers show 104, 79, and 61 against 0, and all 11 total 807 against 2. Panel b: progressive destruction per topic frame, highest for vehicle and workplace, alongside the installed mem0 pipeline's lost temporal cues." />
         </figure>
       </section>
 
@@ -214,7 +214,7 @@ const pipes = [
             <p class="pipe-foot">Each pipeline ran unmodified, with DeepSeek V4 Flash as its writer model.</p>
           </div>
           <figure class="paper-fig tab-fig">
-            <img src="/slides/lapse/tab17-mem0-writers.png" alt="Paper Table 17. Temporal cues lost in mem0 notes, by frame, for two writer models, out of 16 inputs per frame. Progressive flattened: DeepSeek 49 of 128, Gemini 15. 'At the moment' lost: DeepSeek 104, Gemini 1. 'For now' lost: DeepSeek 91, Gemini 22." />
+            <img src="/slides/lapse/tab17-mem0-writers.webp" alt="Paper Table 17. Temporal cues lost in mem0 notes, by frame, for two writer models, out of 16 inputs per frame. Progressive flattened: DeepSeek 49 of 128, Gemini 15. 'At the moment' lost: DeepSeek 104, Gemini 1. 'For now' lost: DeepSeek 91, Gemini 22." />
             <figcaption>LAPSE paper, Table 17. Temporal cues lost in mem0 notes by writer model (DeepSeek V4 Flash, Gemini 3 Flash), out of 16 inputs per frame.</figcaption>
           </figure>
         </div>

@@ -39,10 +39,6 @@ const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year
         <span class="mx-2 text-ink-muted">/</span>
         <a href="/blog/" class="text-ink-blue hover:underline">Blog</a>
         <span class="mx-2 text-ink-muted">/</span>
-        <a href="/posters/" class="text-ink-blue hover:underline">Posters</a>
-        <span class="mx-2 text-ink-muted">/</span>
-        <a href="/slides/" class="text-ink-blue hover:underline">Slides</a>
-        <span class="mx-2 text-ink-muted">/</span>
         <a href="/CV.pdf" class="text-ink-blue hover:underline">CV</a>
         <span class="mx-2 text-ink-muted">/</span>
         <a href="/Resume.pdf" class="text-ink-blue hover:underline">R&eacute;sum&eacute;</a>
@@ -73,7 +69,7 @@ const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year
           </p>
         </div>
         <img
-          src="/images/headshot.jpeg"
+          src={import.meta.env.DEV ? '/images/optimized/headshot.webp' : '/.netlify/images?url=/images/optimized/headshot.webp&w=276&h=288&fit=cover&position=bottom&q=82'}
           alt="Sugam Panthi"
           width="138"
           height="144"
@@ -83,7 +79,7 @@ const lastUpdated = new Date().toLocaleDateString('en-US', { month: 'long', year
       </header>
       <aside
         aria-label="News"
-        class="hidden 2xl:absolute 2xl:left-full 2xl:top-1 2xl:ml-20 2xl:block 2xl:w-72 border border-border-paper bg-paper-surface p-4 text-[13px]"
+        class="hidden 2xl:absolute 2xl:left-full 2xl:top-1 2xl:bottom-[-5rem] 2xl:overflow-y-auto 2xl:ml-20 2xl:block 2xl:w-72 border border-border-paper bg-paper-surface p-4 text-[13px]"
       >
           <h2 class="mb-3 text-[11px] font-bold uppercase tracking-wider text-ink-muted">News</h2>
           <ul class="space-y-2.5">

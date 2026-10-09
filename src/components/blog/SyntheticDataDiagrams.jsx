@@ -29,7 +29,8 @@ const makePen = (seedBase) => {
   const base = { roughness: 1.1, bowing: 0.8, strokeWidth: 1.4, stroke: 'ink' };
   const draw = (drawable) =>
     gen.toPaths(drawable).map((p) => ({
-      d: p.d,
+      // rough.js emits 15-digit floats; one decimal is invisible and cuts the inline SVG ~3x
+      d: p.d.replace(/-?\d*\.\d+(?:e-?\d+)?/gi, (n) => String(Math.round(n * 10) / 10)),
       stroke: col(p.stroke),
       strokeWidth: p.strokeWidth,
       fill: col(p.fill),
