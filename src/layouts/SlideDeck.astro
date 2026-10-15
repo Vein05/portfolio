@@ -1,0 +1,351 @@
+---
+// Shared frame for every talk deck under /slides/<slug>/. Full-screen slides on a
+// fixed 1600x900 stage that scales to the window. Space, arrows, or
+// PageUp/PageDown move between slides; F toggles full screen; the URL hash keeps
+// the slide number. Elements with data-step="n" appear one by one before the
+// deck moves on (slides/presenting.md, "Builds"). Rules: slides/CLAUDE.md.
+//
+// draft: in the built site the deck shows only a "not public yet" notice and is
+// marked noindex; `astro dev` shows the slides as usual.
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  draft?: boolean;
+}
+
+const { title, description, canonical, draft = false } = Astro.props;
+const hidden = draft && !import.meta.env.DEV;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  {draft && <meta name="robots" content="noindex, nofollow" slot="head" />}
+  {hidden ? (
+    <main class="deck deck-hidden">
+      <p>This deck is not public yet.</p>
+      <a href="/slides/">All slides</a>
+    </main>
+  ) : (
+    <main class="deck" aria-roledescription="slide deck">
+      <div class="stage" id="stage">
+        <slot />
+      </div>
+
+      <nav class="controls" aria-label="Slide controls">
+        <button type="button" id="prev" aria-label="Previous slide">&larr;</button>
+        <span id="counter" aria-live="polite"></span>
+        <button type="button" id="next" aria-label="Next slide">&rarr;</button>
+        <button type="button" id="fs" aria-label="Toggle full screen">Full screen</button>
+      </nav>
+      <div class="progress"><div id="bar"></div></div>
+    </main>
+  )}
+</BaseLayout>
+
+<style is:global>
+  html, body { height: 100%; overflow: hidden; }
+  body { background: rgb(var(--color-paper-light)); }
+
+  .deck {
+    position: fixed; inset: 0;
+    background: rgb(var(--color-paper-light));
+    color: rgb(var(--color-ink-dark));
+    font-family: 'IBM Plex Sans', 'Oswald', sans-serif;
+  }
+  .deck-hidden {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    font-size: 18px;
+  }
+  .deck-hidden a { color: rgb(var(--color-ink-blue)); }
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1600px; height: 900px;
+    transform: translate(-50%, -50%) scale(var(--s, 1));
+    transform-origin: center center;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 64px 96px 72px;
+    display: none; flex-direction: column;
+  }
+  .slide.active { display: flex; }
+
+  .deck .kicker {
+    font-family: 'Oswald', ui-monospace, monospace;
+    font-size: 22px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+    margin-bottom: 14px;
+  }
+  .deck h1 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 76px; line-height: 1.08; margin: 0; max-width: 1300px;
+  }
+  .deck h2 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 54px; line-height: 1.1; margin: 0 0 36px;
+  }
+  .deck h3 {
+    font-family: 'Oswald', sans-serif; font-weight: 600;
+    font-size: 30px; line-height: 1.15; margin: 0 0 6px;
+  }
+  .deck p { margin: 0; }
+  .deck strong { font-weight: 700; }
+  .deck .blue { color: rgb(var(--color-ink-blue)); font-weight: 600; }
+  .deck .red { color: rgb(var(--color-ink-red)); font-weight: 600; }
+  .deck .ink-strong { font-weight: 600; }
+  .deck .muted { color: rgb(var(--color-ink-muted)); }
+  .deck .nowrap { white-space: nowrap; }
+  .deck .foot {
+    margin-top: auto; font-size: 24px; line-height: 1.45;
+    color: rgb(var(--color-ink-muted));
+  }
+  .deck .label {
+    font-family: 'Oswald', monospace; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-blue)); margin-bottom: 10px;
+  }
+
+  /* Title slides */
+  .title-slide { justify-content: center; }
+  .title-slide .kicker { font-size: 26px; color: rgb(var(--color-ink-blue)); }
+  .title-slide .lede { font-size: 34px; line-height: 1.4; margin-top: 32px; max-width: 1150px; color: rgb(var(--color-ink-muted)); }
+  .title-slide .byline {
+    margin-top: 64px; padding-top: 24px; border-top: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 28px; line-height: 1.5; max-width: 900px;
+  }
+  .title-slide .hint {
+    position: absolute; bottom: 72px; left: 96px;
+    font-family: 'Oswald', monospace; font-size: 20px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+  }
+
+  /* Paper figure on a white card */
+  .paper-fig {
+    margin: 0; padding: 20px 24px; background: #fff;
+    border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .paper-fig img { display: block; width: 100%; height: auto; }
+  .paper-fig figcaption { margin-top: 14px; font-size: 19px; line-height: 1.4; color: #555; }
+  .paper-fig.fill { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 16px 20px; }
+  .paper-fig.fill img { width: auto; max-width: 100%; max-height: 100%; }
+
+  .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: auto; font-size: 30px; line-height: 1.4; }
+
+  /* Related-work cards (RelatedCards.astro, RelatedCard.astro) */
+  .cards {
+    display: grid; grid-template-columns: repeat(var(--n, 3), 1fr);
+    grid-template-rows: auto auto auto 1fr auto; column-gap: 32px; flex: 1;
+  }
+  .card {
+    display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 14px; align-items: start;
+    padding: 30px 30px 28px;
+    background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 24px; line-height: 1.45;
+  }
+  .card .badge {
+    justify-self: start;
+    font-family: 'Oswald', monospace; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 5px 12px; background: rgb(var(--color-ink-blue)); color: #fff;
+  }
+  .card .badge.plain { background: transparent; color: rgb(var(--color-ink-muted)); border: 1.5px solid rgb(var(--color-border-paper)); }
+  .card .cite { font-size: 20px; color: rgb(var(--color-ink-muted)); margin-top: -8px; }
+  .card .gap { padding-top: 18px; border-top: 1.5px dashed rgb(var(--color-border-paper)); }
+  .card[data-expandable] { cursor: zoom-in; user-select: none; }
+  .card.expanded { grid-column: 1 / -1; grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr); column-gap: 44px; cursor: zoom-out; }
+  .card > * { grid-column: 1; }
+  .cards.has-expanded .card:not(.expanded) { display: none; }
+  .card .more { display: none; }
+  .card.expanded .more { display: flex; grid-column: 2; grid-row: 1 / -1; flex-direction: column; gap: 20px; min-height: 0; }
+  .card.expanded .more.text-only { justify-content: center; }
+  .more figure {
+    margin: 0; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center;
+    padding: 16px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .more figure img { display: block; max-width: 100%; max-height: 330px; width: auto; height: auto; }
+  .card.expanded .more.side { flex-direction: row; align-items: stretch; }
+  .more.side figure { flex: 0 0 auto; }
+  .more.side .more-result { flex: 1; border-top: 0; padding-top: 0; align-self: center; }
+  .more figure.tall img { max-height: 520px; }
+  .more-result { border-top: 1.5px dashed rgb(var(--color-border-paper)); padding-top: 16px; }
+  .more.text-only .more-result { border-top: 0; padding-top: 0; }
+  .more-result p { font-size: 24px; line-height: 1.4; }
+  .more-src { margin-top: 8px; font-size: 18px; color: rgb(var(--color-ink-muted)); }
+  .card .gap-label {
+    display: block; font-family: 'Oswald', monospace; font-size: 17px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-blue)); margin-bottom: 6px;
+  }
+
+  /* Takeaway bar */
+  .takeaway {
+    margin-top: 32px !important; padding: 24px 32px;
+    background: rgb(var(--color-ink-dark)); color: rgb(var(--color-paper-light));
+    font-size: 32px; font-weight: 600; line-height: 1.35;
+  }
+
+  /* Guess first (Guess.astro) */
+  .guess {
+    padding: 26px 32px; background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .guess .label { color: rgb(var(--color-ink-muted)); }
+  .guess-q { font-size: 34px; line-height: 1.3; font-weight: 600; }
+  .guess-a { margin-top: 18px !important; padding-top: 18px; border-top: 1.5px dashed rgb(var(--color-border-paper)); font-size: 30px; line-height: 1.35; }
+
+  /* Builds: data-step elements wait for their turn. Hidden with opacity so the
+     layout does not jump when they appear. */
+  .slide [data-step] { transition: opacity 0.35s ease, transform 0.35s ease; }
+  .slide [data-step]:not(.shown) { opacity: 0; transform: translateY(8px); }
+  @media (prefers-reduced-motion: reduce) {
+    .slide [data-step] { transition: none; transform: none !important; }
+  }
+
+  /* Controls */
+  .controls {
+    position: fixed; right: 18px; bottom: 16px; display: flex; align-items: center; gap: 6px;
+    font-family: 'Oswald', monospace; font-size: 14px; letter-spacing: 0.08em;
+    color: rgb(var(--color-ink-muted)); opacity: 0.35; transition: opacity 0.2s;
+  }
+  .controls:hover, .controls:focus-within { opacity: 1; }
+  .controls button {
+    font: inherit; color: inherit; background: rgb(var(--color-paper-surface));
+    border: 1px solid rgb(var(--color-border-paper)); padding: 4px 10px; cursor: pointer;
+  }
+  .controls #counter { min-width: 52px; text-align: center; }
+  .progress { position: fixed; left: 0; right: 0; bottom: 0; height: 4px; background: transparent; }
+  .progress #bar { height: 100%; width: 0; background: rgb(var(--color-ink-blue)); transition: width 0.25s; }
+  :fullscreen .controls { opacity: 0; }
+  :fullscreen .controls:hover { opacity: 1; }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { Flip } from 'gsap/Flip';
+  gsap.registerPlugin(Flip);
+
+  const stage = document.getElementById('stage');
+  if (stage) {
+    const slides = Array.from(stage.querySelectorAll<HTMLElement>('.slide'));
+    const counter = document.getElementById('counter') as HTMLElement;
+    const bar = document.getElementById('bar') as HTMLElement;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0;
+
+    // Builds: the steps of a slide, in order of their data-step number.
+    const stepsOf = (el: HTMLElement) =>
+      Array.from(el.querySelectorAll<HTMLElement>('[data-step]'))
+        .sort((a, b) => Number(a.dataset.step) - Number(b.dataset.step));
+    const groups = (el: HTMLElement) => [...new Set(stepsOf(el).map((s) => Number(s.dataset.step)))];
+    const shownCount = (el: HTMLElement) => Number(el.dataset.shown ?? 0);
+    const setShown = (el: HTMLElement, n: number) => {
+      const g = groups(el);
+      el.dataset.shown = String(n);
+      stepsOf(el).forEach((s) => s.classList.toggle('shown', g.indexOf(Number(s.dataset.step)) < n));
+    };
+
+    const fit = () => {
+      const s = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+      stage.style.setProperty('--s', String(s));
+    };
+
+    // Entering a slide forward starts with no steps shown; entering it backward
+    // shows them all, so going back never replays a build.
+    const show = (n: number, push = true, allSteps = false) => {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides.forEach((el, k) => el.classList.toggle('active', k === i));
+      setShown(slides[i], allSteps ? groups(slides[i]).length : 0);
+      counter.textContent = `${i + 1} / ${slides.length}`;
+      bar.style.width = `${((i + 1) / slides.length) * 100}%`;
+      if (push) history.replaceState(null, '', `#${i + 1}`);
+    };
+
+    const next = () => {
+      const el = slides[i];
+      if (shownCount(el) < groups(el).length) setShown(el, shownCount(el) + 1);
+      else show(i + 1);
+    };
+    const prev = () => {
+      const el = slides[i];
+      if (shownCount(el) > 0) setShown(el, shownCount(el) - 1);
+      else show(i - 1, true, true);
+    };
+
+    const fromHash = () => {
+      const n = parseInt(location.hash.slice(1), 10);
+      return Number.isFinite(n) ? n - 1 : 0;
+    };
+
+    const toggleFs = () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen?.();
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const k = e.key;
+      if (k === ' ' || k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === 'Enter') {
+        e.preventDefault(); if (e.shiftKey && k === ' ') prev(); else next();
+      } else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') {
+        e.preventDefault(); prev();
+      } else if (k === 'Home') { e.preventDefault(); show(0); }
+      else if (k === 'End') { e.preventDefault(); show(slides.length - 1, true, true); }
+      else if (k === 'f' || k === 'F') { e.preventDefault(); toggleFs(); }
+    });
+
+    let x0: number | null = null;
+    stage.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) { if (dx < 0) next(); else prev(); }
+      x0 = null;
+    });
+
+    // Related-work cards: double-click one to widen it to the full row with its
+    // figure and main result; double-click again (or Escape) to return.
+    stage.querySelectorAll<HTMLElement>('.cards').forEach((cardRow) => {
+      const cards = Array.from(cardRow.querySelectorAll<HTMLElement>('.card[data-expandable]'));
+      const all = Array.from(cardRow.querySelectorAll<HTMLElement>('.card'));
+      const toggleCard = (card: HTMLElement | null) => {
+        const opening = !!card && !card.classList.contains('expanded');
+        const state = Flip.getState(all);
+        all.forEach((c) => c.classList.remove('expanded'));
+        if (opening) card!.classList.add('expanded');
+        cardRow.classList.toggle('has-expanded', opening);
+        Flip.from(state, {
+          duration: reduceMotion ? 0 : 0.6,
+          ease: 'power3.inOut',
+          absolute: true,
+          onEnter: (els) => gsap.fromTo(els, { opacity: 0 }, { opacity: 1, duration: 0.35, delay: 0.25 }),
+          onLeave: (els) => gsap.to(els, { opacity: 0, duration: 0.2 }),
+        });
+        if (opening && !reduceMotion) {
+          gsap.fromTo(card!.querySelector('.more'), { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.45, delay: 0.35, ease: 'power2.out' });
+        }
+      };
+      cards.forEach((card) => card.addEventListener('dblclick', () => {
+        window.getSelection()?.removeAllRanges();
+        toggleCard(card);
+      }));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && cardRow.classList.contains('has-expanded')) toggleCard(null);
+      });
+    });
+
+    document.getElementById('prev')!.addEventListener('click', prev);
+    document.getElementById('next')!.addEventListener('click', next);
+    document.getElementById('fs')!.addEventListener('click', toggleFs);
+    window.addEventListener('resize', fit);
+    window.addEventListener('hashchange', () => show(fromHash(), false, true));
+
+    // For slides/check.mjs: show one slide with every step visible.
+    (window as unknown as { __deck: object }).__deck = {
+      count: slides.length,
+      showAll: (n: number) => show(n, false, true),
+    };
+
+    fit();
+    show(fromHash(), false);
+  }
+</script>

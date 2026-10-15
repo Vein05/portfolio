@@ -1,0 +1,44 @@
+---
+// One related paper: what it shows, how our work differs, and (when given) a
+// main result with its source, shown when the card is widened. figure is
+// optional; without it the widened card shows the result alone.
+export interface Props {
+  badge: string;
+  plainBadge?: boolean;
+  title: string;
+  cite: string;
+  summary: string;
+  difference: string;
+  result?: string;
+  source?: string;
+  figure?: string;
+  figureAlt?: string;
+  figureTall?: boolean;
+  side?: boolean;
+}
+
+const {
+  badge, plainBadge = false, title, cite, summary, difference,
+  result, source, figure, figureAlt = '', figureTall = false, side = false,
+} = Astro.props;
+const hasMore = !!result;
+const moreClass = ['more', side && 'side', !figure && 'text-only'].filter(Boolean).join(' ');
+---
+
+<article class="card" data-expandable={hasMore ? '' : undefined}>
+  <div class:list={['badge', { plain: plainBadge }]}>{badge}</div>
+  <h3>{title}</h3>
+  <div class="cite">{cite}</div>
+  <p>{summary}</p>
+  <p class="gap"><span class="gap-label">Difference</span>{difference}</p>
+  {hasMore && (
+    <div class={moreClass}>
+      {figure && <figure class:list={{ tall: figureTall }}><img src={figure} alt={figureAlt} /></figure>}
+      <div class="more-result">
+        <span class="gap-label">Main result</span>
+        <p>{result}</p>
+        {source && <div class="more-src">{source}</div>}
+      </div>
+    </div>
+  )}
+</article>

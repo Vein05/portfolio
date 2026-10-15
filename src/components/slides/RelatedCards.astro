@@ -1,0 +1,13 @@
+---
+// A row of RelatedCard. Double-clicking a card that has more detail widens it
+// to the whole row (script in SlideDeck.astro).
+export interface Props {
+  n?: number;
+}
+
+const { n = 3 } = Astro.props;
+---
+
+<div class="cards" style={`--n:${n}`}>
+  <slot />
+</div>

@@ -1,0 +1,29 @@
+---
+// One slide in a SlideDeck. The title states the slide's finding
+// (slides/writing.md, "Titles"). devOnly slides render only under `astro dev`,
+// for content the public site must not show, such as a submission venue
+// (portfolio AGENTS.md, "Never name a submission venue"). titleStep holds the
+// title back until that build step, so a guess-first slide does not give its
+// answer away (slides/presenting.md, "Guess first").
+export interface Props {
+  label: string;
+  kicker?: string;
+  title?: string;
+  variant?: 'title';
+  devOnly?: boolean;
+  titleStep?: number;
+  class?: string;
+}
+
+const { label, kicker, title, variant, devOnly = false, titleStep, class: extra } = Astro.props;
+const render = !devOnly || import.meta.env.DEV;
+const classes = ['slide', variant === 'title' && 'title-slide', extra].filter(Boolean).join(' ');
+---
+
+{render && (
+  <section class={classes} aria-label={label} data-dev-only={devOnly ? '' : undefined}>
+    {kicker && <div class="kicker">{kicker}</div>}
+    {title && (variant === 'title' ? <h1>{title}</h1> : <h2 data-step={titleStep}>{title}</h2>)}
+    <slot />
+  </section>
+)}

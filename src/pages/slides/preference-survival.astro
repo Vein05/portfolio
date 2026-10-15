@@ -1,0 +1,364 @@
+---
+// Preference survival talk deck, on the shared SlideDeck frame (slides/README.md).
+// Draft: the work is unpublished and the confirmatory study has not run. The
+// venue slide is devOnly (portfolio AGENTS.md, "Never name a submission venue").
+//
+// Sources, all in research/preference-survival/:
+//   DEV  = research/CHANNEL_V1_REPORT_2026-10-08.md (the 2026-10-08 development study)
+//   IDEA = IDEA_CHANGELOG.md, entry of 2026-10-10 (accuracy by side at session 12)
+//   HOLE = research/HOLE_CHECKS_2026-10-10.md
+//   SPEC = spec/default-user.md (the proposed confirmatory study)
+//   CHARTER = CHARTER.md (success and kill criteria)
+//   PRIOR = research/PRIOR_WORK_2026-10-10.md; abstracts re-read on arXiv 2026-10-14
+import SlideDeck from '../../layouts/SlideDeck.astro';
+import Slide from '../../components/slides/Slide.astro';
+import RelatedCards from '../../components/slides/RelatedCards.astro';
+import RelatedCard from '../../components/slides/RelatedCard.astro';
+import Guess from '../../components/slides/Guess.astro';
+
+// DEV, "Q3 Growth across repeated rewriting": share of preferences still in
+// memory, by rewrites since the preference was stated.
+const survival = [
+  { when: 'when stated', pct: 96, label: '96%' },
+  { when: '1 rewrite later', pct: 77, label: '77%' },
+  { when: '4 rewrites later', pct: 54, label: '54%' },
+  { when: '10 or 11 later', pct: 42, label: '37 to 47%' },
+];
+
+// SPEC, section 3 and section 4 (memory systems).
+const design = [
+  { head: 'Preferences', text: 'About 100 choices from real people\'s words' },
+  { head: 'Users', text: '96 users state them by session 4' },
+  { head: 'Memory', text: 'Our writers and 7 installed systems' },
+  { head: 'Readers', text: '4 models read the same memories' },
+  { head: 'Score', text: 'Accuracy when matching the default, minus when against it' },
+];
+---
+
+<SlideDeck
+  title="Preference Survival: Slides from AIMS Lab"
+  description="Talk slides: memory forgets preferences evenly, but models fill the gaps with the same default, so users who differ lose out."
+  canonical="https://spanthi.com/slides/preference-survival/"
+  draft
+>
+  <!-- 1. Title -->
+  <Slide label="Title" variant="title" kicker="Preference survival" title="Memory forgets preferences evenly, but serves only the default user">
+    <p class="lede">When memory forgets a preference, the model falls back on its usual answer, its default. Early results from a development study.</p>
+    <div class="byline">
+      <div>AIMS Lab</div>
+      <div class="muted">University of Southern Mississippi</div>
+    </div>
+    <div class="hint">Work in progress. Press space to begin</div>
+  </Slide>
+
+  <!-- 2. Homogenization. Claims from the arXiv abstracts (PRIOR, Q4 and Q5). -->
+  <Slide label="Homogenization" kicker="01 Homogenization" title="Language models make answers, writing and outcomes more alike">
+    <div class="trio">
+      <div class="trio-item">
+        <div class="label">Across models</div>
+        <p>Different models give strikingly similar answers.</p>
+        <div class="cite">Jiang et al., NeurIPS 2025</div>
+      </div>
+      <div class="trio-item">
+        <div class="label">Across writers</div>
+        <p>Essays written with InstructGPT are more alike.</p>
+        <div class="cite">Padmakumar and He, ICLR 2024</div>
+      </div>
+      <div class="trio-item">
+        <div class="label">Across systems</div>
+        <p>Systems that share data fail the same people.</p>
+        <div class="cite">Bommasani et al., NeurIPS 2022</div>
+      </div>
+    </div>
+  </Slide>
+
+  <!-- 3. The problem, one concrete case. Made-up example; the defaults match
+       the shared defaults in DEV ("bulleted lists"). -->
+  <Slide label="The problem" kicker="02 The problem" title="A forgotten preference becomes the model's usual answer">
+    <div class="case">
+      <div class="case-head"></div>
+      <div class="case-head">The user says</div>
+      <div class="case-head" data-step="1">Memory, session 12</div>
+      <div class="case-head" data-step="2">The answer</div>
+
+      <div class="case-user">User A</div>
+      <div class="case-cell">“Please write in paragraphs, not bullet points.”</div>
+      <div class="case-cell muted" data-step="1">nothing about format</div>
+      <div class="case-cell" data-step="2"><span class="red">bullet points</span>, wrong</div>
+
+      <div class="case-user">User B</div>
+      <div class="case-cell">“Bullet points, please.”</div>
+      <div class="case-cell muted" data-step="1">nothing about format</div>
+      <div class="case-cell" data-step="2"><span class="blue">bullet points</span>, right</div>
+    </div>
+    <p class="foot" data-step="3">
+      Made-up example. The model's usual choice is its <strong>default</strong>. It is right only for User B.
+    </p>
+  </Slide>
+
+  <!-- 4. Mechanism. Step 1: DEV "Q2" (no writer direction); step 2: DEV "Q4"
+       decomposition; step 3: DEV "Instrument checks" (shared defaults). -->
+  <Slide label="How it happens" kicker="03 How it happens" title="Three steps turn even forgetting into uneven outcomes">
+    <ol class="steps">
+      <li data-step="1"><span class="step-n">1</span>A writer model rewrites memory and drops preferences evenly.</li>
+      <li data-step="2"><span class="step-n">2</span>A reader model fills each gap with its default.</li>
+      <li data-step="3"><span class="step-n">3</span>Models from different labs share the same defaults.</li>
+    </ol>
+    <p class="foot" data-step="3">Shared defaults so far: plain wording, brief answers, bullet lists, a serious tone.</p>
+  </Slide>
+
+  <!-- 5. Main result, guess first. IDEA, 2026-10-10 table: 93% matching,
+       50% opposing, both readers, session 12; full history 100% (DEV,
+       "Instrument checks": 432/432). -->
+  <Slide label="Main result" kicker="04 Early result" title="Users who differ from the default fall to a coin flip" titleStep={1}>
+    <Guess question="After 12 sessions, how often is a preference against the default answered correctly?">
+      <div class="numbers">
+        <div><span class="num blue">93%</span><span class="gloss">matches the default</span></div>
+        <div><span class="num red">50%</span><span class="gloss">against the default</span></div>
+        <div><span class="num">100%</span><span class="gloss">either kind, from the full chat history</span></div>
+      </div>
+    </Guess>
+    <p class="foot">Development study, 2026-10-08: 36 synthetic users, two reader models.</p>
+  </Slide>
+
+  <!-- 6. Not the writer. Bars: DEV "Q3". Writer gap: DEV "Q2" table
+       (+0.3, -4.1, -1.1 points; largest 4.1). 87%: DEV "Q4", DeepSeek reader, session 12,
+       dropped preferences, real memory. -->
+  <Slide label="Where the bias comes from" kicker="05 Where the bias comes from" title="Writers forget both sides equally; the reader adds the bias">
+    <div class="split">
+      <div>
+        <div class="label">A preference is still in memory</div>
+        <div class="bars">
+          {survival.map((s) => (
+            <div class="bar-row">
+              <div class="bar-when">{s.when}</div>
+              <div class="bar-track"><div class="bar-fill" style={`width:${s.pct}%`}></div></div>
+              <div class="bar-val">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="num">4 points</span><span class="gloss">at most between what writers keep on each side of the default</span></div>
+        <div class="fact"><span class="num red">87%</span><span class="gloss">of the preferences memory dropped were answered with the default</span></div>
+      </div>
+    </div>
+    <p class="foot">Development study, three writer families. The 87% is one reader at session 12.</p>
+  </Slide>
+
+  <!-- 7. Shared failures. DEV "Q5": every user-preference failed by >= 10 of
+       12 systems opposes the reader default (100%, both readers; 3.0% of
+       user-preferences, DeepSeek reader). 12 systems = 3 writers x 4 policies. HOLE,
+       section 1: about 70 to 75% of the overlap is contrast plus side. -->
+  <Slide label="Shared failures" kicker="06 Shared failures" title="Switching memory systems does not help users who differ">
+    <div class="big">
+      <span class="num red">100%</span>
+      <p>of the preferences that nearly every memory setup got wrong belonged to users who differ from the default.</p>
+    </div>
+    <p class="foot">Wrong in at least 10 of 12 setups: 3 writer models times 4 memory formats. The reason is that all setups drop the same kinds of preferences.</p>
+  </Slide>
+
+  <!-- 8. Limits of the early results. DEV, header and "Q4" (+2.4 to +4.6
+       points excess over erasure at session 12), "Budget drift". -->
+  <Slide label="Limits" kicker="07 What this does not show yet" title="The early results are small, synthetic and judged by a model">
+    <ul class="limits">
+      <li>36 made-up users and three model families.</li>
+      <li>Labels come from a model judge, not from people.</li>
+      <li>Random forgetting explains most of the effect; memory adds 2 to 5 points.</li>
+      <li>Writers go over the length limit, so equal-length comparisons are rough.</li>
+    </ul>
+  </Slide>
+
+  <!-- 9. Related work. Summaries from the arXiv abstracts (PRIOR, Q1, Q2, Q4). -->
+  <Slide label="Related work" kicker="08 Related work" title="Prior work finds homogenization, but not memory drifting to defaults">
+    <RelatedCards>
+      <RelatedCard
+        badge="arXiv 2026"
+        plainBadge
+        title="PRISK"
+        cite="Wang et al., 2026"
+        summary="Personal memories make models more sycophantic."
+        difference="They use memory once. We rewrite it 12 times."
+        result="Across 13 LLMs, user profiles and retrieved memories made all three biases worse: irrelevant personalization, preference narrowing and sycophancy."
+        source="Wang et al., arXiv 2608.28833, abstract."
+      />
+      <RelatedCard
+        badge="arXiv 2026"
+        plainBadge
+        title="Personalize-then-Store"
+        cite="In et al., 2026"
+        summary="Memory should learn what each user needs stored."
+        difference="They skip passing chats. We skip what models guess."
+        result="Storing per user helps retention a lot when the system knows which sessions to skip. Knowing which to skip is still unsolved."
+        source="In et al., arXiv 2605.25535, abstract."
+      />
+      <RelatedCard
+        badge="NeurIPS 2022"
+        title="Picking on the Same Person"
+        cite="Bommasani et al., 2022"
+        summary="Shared parts make systems fail the same people."
+        difference="They test fairness data. We test assistant memory."
+        result="Sharing training data reliably made outcomes more alike, and more so for individuals than for groups."
+        source="Bommasani et al., arXiv 2211.13972, abstract."
+      />
+    </RelatedCards>
+  </Slide>
+
+  <!-- 10. The fix. Made-up example. Reader-side prediction: SPEC section 1. -->
+  <Slide label="The fix" kicker="09 The fix" title="We predict that storing only how users differ closes the gap">
+    <div class="notes">
+      <div>
+        <div class="label">Usual writer</div>
+        <div class="note">Likes plain wording. Prefers brief answers.</div>
+        <p class="note-gloss">Stores what the model would guess anyway.</p>
+      </div>
+      <div data-step="1">
+        <div class="label">Default-aware writer</div>
+        <div class="note">Prefers paragraphs to bullet lists.</div>
+        <p class="note-gloss">Stores only what the model would get wrong.</p>
+      </div>
+    </div>
+    <p class="foot" data-step="2">Made-up example: one user, the same space. A reader-side fix cannot help, because the preference is gone.</p>
+  </Slide>
+
+  <!-- 11. Design. SPEC sections 2 to 5; harvest status from AGENTS.md (2026-10-11). -->
+  <Slide label="Study design" kicker="10 The study" title="Users state preferences in four sessions, then chat for eight more">
+    <div class="flow">
+      {design.map((d, k) => (
+        <div class="flow-box" data-step={k + 1}>
+          <div class="label">{d.head}</div>
+          <p>{d.text}</p>
+        </div>
+      ))}
+    </div>
+    <p class="foot">Controls: the full chat history, and an empty memory that shows each default.</p>
+  </Slide>
+
+  <!-- 12. Predictions. CHARTER, "Primary Success Criterion" and "Kill Criterion". -->
+  <Slide label="Predictions" kicker="11 Predictions" title="Three predictions, and how each one fails, fixed in advance">
+    <table class="preds">
+      <thead><tr><th></th><th>We predict</th><th>It fails if</th></tr></thead>
+      <tbody>
+        <tr><td class="pred-name">Shared default</td><td>Defaults agree in 80% of families.</td><td>Defaults differ.</td></tr>
+        <tr><td class="pred-name">Gap</td><td>Gap of 20 points or more.</td><td>Installed systems: under 10.</td></tr>
+        <tr><td class="pred-name">Fix</td><td>Halves the gap at equal length.</td><td>Gap shrinks less than half.</td></tr>
+      </tbody>
+    </table>
+    <p class="foot">One run, frozen before any data. Failures get reported.</p>
+  </Slide>
+
+  <!-- 13. Venue (dev only). Theme name, deadline Jan 4, 2027,
+       long papers 8 pages, special session and Thematic Paper Award anticipated.
+       CHARTER: no committed submission, hence "Target". -->
+  <Slide label="Where it goes" kicker="12 Where it goes" title="Target: a 2027 conference theme on homogenization and knowledge collapse" devOnly>
+    <p class="venue-lede">The theme asks whether LLMs converge on narrow answers. Nobody has measured memory as a cause.</p>
+    <div class="numbers">
+      <div><span class="num">2027-01-04</span><span class="gloss">submission deadline</span></div>
+      <div><span class="num">8 pages</span><span class="gloss">long paper</span></div>
+      <div><span class="num">Aug 2027</span><span class="gloss">conference, with a theme session and award</span></div>
+    </div>
+    <p class="foot">Status: preferences mined. The study is designed, not yet run.</p>
+  </Slide>
+
+  <!-- 14. Thanks -->
+  <Slide label="Thank you" variant="title" kicker="Preference survival" title="Thank you">
+    <p class="lede">Questions?</p>
+    <div class="byline">
+      <div>AIMS Lab</div>
+      <div class="muted">spanthi.com</div>
+    </div>
+  </Slide>
+</SlideDeck>
+
+<style is:global>
+  /* Color meaning for this deck: blue = right for the user, red = wrong or lost. */
+
+  /* Homogenization */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; flex: 1; align-content: center; }
+  .trio-item {
+    padding: 32px 32px 28px; background: rgb(var(--color-paper-surface));
+    border: 1.5px solid rgb(var(--color-border-paper));
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .trio-item p { font-size: 32px; line-height: 1.3; }
+  .trio-item .cite { font-size: 20px; color: rgb(var(--color-ink-muted)); }
+
+  /* The problem */
+  .case { margin: auto 0; display: grid; grid-template-columns: 170px 1.3fr 1fr 1fr; column-gap: 28px; row-gap: 20px; align-items: center; margin-top: 12px; }
+  .case-head {
+    font-family: 'Oswald', monospace; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+  }
+  .case-user { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 32px; }
+  .case-cell {
+    padding: 22px 26px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 28px; line-height: 1.3; min-height: 112px; display: flex; align-items: center;
+  }
+
+  /* How it happens */
+  .steps { list-style: none; margin: auto 0; padding: 0; display: flex; flex-direction: column; gap: 28px; }
+  .steps li { display: grid; grid-template-columns: 72px 1fr; align-items: center; font-size: 38px; line-height: 1.3; }
+  .step-n {
+    width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: rgb(var(--color-ink-blue)); color: #fff; font-family: 'Oswald', sans-serif; font-size: 28px;
+  }
+
+  /* Number cards */
+  .numbers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .numbers > div, .fact { display: flex; flex-direction: column; gap: 8px; }
+  .deck .num { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 72px; line-height: 1; }
+  .deck .gloss { font-size: 24px; line-height: 1.35; color: rgb(var(--color-ink-muted)); }
+  .guess { margin-top: 8px; }
+
+  /* Where the bias comes from */
+  .split { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 64px; align-items: center; flex: 1; }
+  .bars { display: flex; flex-direction: column; gap: 22px; margin-top: 8px; }
+  .bar-row { display: grid; grid-template-columns: 300px 1fr 140px; gap: 20px; align-items: center; font-size: 24px; }
+  .bar-track { height: 18px; background: rgb(var(--color-blue-soft)); }
+  .bar-fill { height: 100%; background: rgb(var(--color-ink-blue)); }
+  .bar-val { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 28px; }
+  .facts { display: flex; flex-direction: column; gap: 40px; }
+  .fact .num { font-size: 60px; }
+
+  /* Shared failures */
+  .big { flex: 1; display: grid; grid-template-columns: auto 1fr; gap: 56px; align-items: center; }
+  .big .num { font-size: 180px; }
+  .big p { font-size: 40px; line-height: 1.3; max-width: 900px; }
+
+  /* Limits */
+  .limits { list-style: disc; margin: auto 0; padding-left: 36px; display: flex; flex-direction: column; gap: 26px; font-size: 36px; line-height: 1.3; }
+
+  /* The fix */
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; flex: 1; align-items: center; }
+  .notes .note {
+    padding: 26px 30px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper));
+    font-size: 32px; line-height: 1.35;
+  }
+  .note-gloss { margin-top: 16px !important; font-size: 26px; line-height: 1.35; color: rgb(var(--color-ink-muted)); }
+
+  /* Study design */
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; flex: 1; align-items: center; position: relative; }
+  .flow-box {
+    position: relative; padding: 24px 22px; min-height: 230px;
+    background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper));
+  }
+  .flow-box p { font-size: 25px; line-height: 1.35; }
+  .flow-box + .flow-box::before {
+    content: ''; position: absolute; left: -24px; top: 50%; width: 24px; height: 2px;
+    background: rgb(var(--color-ink-muted));
+  }
+
+  /* Predictions */
+  .preds { width: 100%; border-collapse: collapse; font-size: 28px; line-height: 1.35; }
+  .preds th {
+    text-align: left; padding: 0 24px 12px 0;
+    font-family: 'Oswald', monospace; font-size: 18px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgb(var(--color-ink-muted));
+  }
+  .preds td { padding: 22px 24px 22px 0; border-top: 1.5px solid rgb(var(--color-border-paper)); vertical-align: top; }
+  .preds tr:last-child td { border-bottom: 1.5px solid rgb(var(--color-border-paper)); }
+  .preds .pred-name { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 30px; width: 240px; }
+
+  /* Venue */
+  .venue-lede { font-size: 34px; line-height: 1.35; max-width: 1250px; margin-bottom: 56px !important; }
+</style>

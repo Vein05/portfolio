@@ -1,5 +1,6 @@
 ---
-// Slide decks: one entry per talk under /slides/<slug>.
+// Slide decks: one entry per talk under /slides/<slug>. A draft deck is listed
+// only under `astro dev` (slides/README.md).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const decks = [
@@ -9,7 +10,14 @@ const decks = [
     blurb: 'Memory writers turn "I\'m working at" into "works at" and lose the cue that a fact may not last.',
     slides: 9,
   },
-];
+  {
+    slug: 'preference-survival',
+    title: 'Forgetting Is Not Neutral: Memory Serves the Default User',
+    blurb: 'Memory forgets preferences evenly, but models fill the gaps with the same default, so users who differ lose out.',
+    slides: 14,
+    draft: true,
+  },
+].filter((d) => !d.draft || import.meta.env.DEV);
 ---
 
 <BaseLayout

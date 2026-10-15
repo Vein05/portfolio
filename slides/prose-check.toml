@@ -1,0 +1,79 @@
+# prose-check config for slides (writing.md). check.mjs runs it on slides/build/<slug>/text.md,
+# the text of every slide. Copied on 2026-10-14 from research/paper-notes/prose-check.toml, with tighter
+# sentence limits and the portfolio's bans (AGENTS.md) added at the end.
+profile = "none"
+
+[thresholds]
+sentence_words_warn = 24
+paragraph_words_warn = 60
+numbers_per_sentence_warn = 2
+numbers_per_paragraph_warn = 4
+parentheticals_per_sentence_warn = 1
+
+[rules]
+severity = { long-sentence = "error", em-dash = "error" }
+
+# Sales voice: hype and promises of ease (writing.md, section 2)
+[[banned]]
+pattern = '(?i)\b(?:groundbreaking|game[- ]chang(?:er|ing)|revolutionar(?:y|ize[sd]?)|cutting[- ]edge|breakthrough|mind[- ]blowing|incredible|amazing|stunning|remarkabl[ey]|powerful|seamless(?:ly)?|effortless(?:ly)?)\b'
+message = "sales voice: state what the method does or what was measured (writing.md, section 2)"
+
+[[banned]]
+pattern = '(?i)\b(?:unlock(?:s|ed|ing)?|supercharg(?:e|es|ed|ing)|unleash(?:es|ed|ing)?|turbocharg(?:e|es|ed|ing)|magic(?:al)?|secret sauce)\b'
+message = "sales voice: say the mechanism in plain words (writing.md, section 2)"
+
+[[banned]]
+pattern = '(?i)\b(?:obviously|of course|trivial(?:ly)?|it is easy to see|needless to say)\b'
+message = "talks down to the reader who did not find it easy (writing.md, section 2)"
+
+[[banned]]
+pattern = '(?i)\b(?:simply|easy|easily)\b'
+severity = "warn"
+message = "promise of ease: keep only if the source itself measures ease (writing.md, section 2)"
+
+[[banned]]
+pattern = '(?i)\bjust\b'
+severity = "warn"
+message = "'just' often minimizes a step; keep it only for time ('just before') (writing.md, section 2)"
+
+# Hooks (writing.md, section 2)
+[[banned]]
+pattern = '(?i)(?:\bimagine\b|what if I told you|here.?s the (?:kicker|catch|best part|twist|thing)|\bspoiler\b|the key insight|buckle up|let.?s (?:dive|unpack|break (?:it|this) down))'
+message = "hook: start with the example or the fact (writing.md, section 2)"
+
+[[banned]]
+pattern = '[A-Za-z0-9)]!(?=\s|$)'
+message = "no exclamation marks (writing.md, section 2)"
+
+[[banned]]
+pattern = "(?i)you'?ll (?:love|be amazed|see why)"
+message = "tells the reader how to feel (writing.md, section 2)"
+
+# Claim strength above what a paper usually states (writing.md, section 2, rule 3)
+[[banned]]
+pattern = '(?i)\b(?:proves?|proven|solves?|solved|guarantees?)\b'
+severity = "warn"
+message = "claim strength: keep only if the source uses this word for this result"
+
+# Everyday words (writing.md, section 3)
+[[banned]]
+pattern = '(?i)\b(?:utiliz(?:e|es|ed|ing|ation)|leverag(?:e|es|ed|ing)|facilitat(?:e|es|ed|ing)|in order to|due to the fact that|a plethora of|myriad)\b'
+severity = "warn"
+message = "use the everyday word: use, help, to, because, many (writing.md, section 3)"
+
+# Analogy without its limit (writing.md, section 5); a person checks the next sentence
+[[banned]]
+pattern = '(?i)\b(?:think of (?:it|this) (?:as|like)|is like a|is kind of like)\b'
+severity = "warn"
+message = "analogy: label it and say where it breaks in the next sentence (writing.md, section 5)"
+
+# Portfolio bans (AGENTS.md) and internal codes (writing.md, section 3)
+[[banned]]
+pattern = ' \u00b7 '
+message = "no middle-dot lists: write a sentence, a comma list, or 'label: detail' (portfolio AGENTS.md)"
+
+[[banned]]
+# A capital letter and a digit (E1, S0a, Q6), but not a model version (DeepSeek V4 Flash, V4.1).
+pattern = '\b(?:[A-Z][0-9][a-z]?(?![.0-9]| [A-Z])|channel-v[0-9]+|default-user-v[0-9]+)\b'
+severity = "warn"
+message = "internal code as a name: write the thing's full name (writing.md, section 3)"

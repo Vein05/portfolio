@@ -1,0 +1,19 @@
+---
+// A paper's own figure on a white card. fill makes it take the slide's
+// remaining height (for a result figure that is the whole slide).
+export interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  fill?: boolean;
+  class?: string;
+}
+
+const { src, alt, caption, fill = false, class: extra } = Astro.props;
+const classes = ['paper-fig', fill && 'fill', extra].filter(Boolean).join(' ');
+---
+
+<figure class={classes}>
+  <img src={src} alt={alt} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

@@ -1,0 +1,16 @@
+---
+// Guess first (slides/presenting.md): the question shows with the slide, the
+// answer appears on the next key press. Only for a main result.
+export interface Props {
+  question: string;
+  step?: number;
+}
+
+const { question, step = 1 } = Astro.props;
+---
+
+<div class="guess">
+  <div class="label">Guess first</div>
+  <p class="guess-q">{question}</p>
+  <div class="guess-a" data-step={step}><slot /></div>
+</div>

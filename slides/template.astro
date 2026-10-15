@@ -1,0 +1,42 @@
+---
+// <Deck name> talk deck, on the shared SlideDeck frame (slides/README.md).
+// Every number below has a source comment next to it (slides/writing.md, section 6).
+import SlideDeck from '../../layouts/SlideDeck.astro';
+import Slide from '../../components/slides/Slide.astro';
+import PaperFigure from '../../components/slides/PaperFigure.astro';
+import RelatedCards from '../../components/slides/RelatedCards.astro';
+import RelatedCard from '../../components/slides/RelatedCard.astro';
+import Guess from '../../components/slides/Guess.astro';
+---
+
+<SlideDeck
+  title="<Deck name>: Slides from AIMS Lab"
+  description="<One sentence: the main finding.>"
+  canonical="https://spanthi.com/slides/<slug>/"
+  draft
+>
+  <Slide label="Title" variant="title" kicker="<Short name>" title="<The question or the main finding>">
+    <p class="lede"><The other one: the finding or the question.></p>
+    <div class="byline">
+      <div>AIMS Lab</div>
+      <div class="muted">University of Southern Mississippi</div>
+    </div>
+    <div class="hint">Press space to begin</div>
+  </Slide>
+
+  <Slide label="The problem" kicker="01 The problem" title="<A sentence that states the finding>">
+    <!-- One concrete case first, then its name. -->
+  </Slide>
+
+  <Slide label="Main result" kicker="02 Result" title="<The main finding, stated>" titleStep={1}>
+    <Guess question="<Ask for a direction or a size>"><The answer, with its source></Guess>
+  </Slide>
+
+  <Slide label="Thank you" variant="title" kicker="<Short name>" title="Thank you">
+    <p class="lede">Questions?</p>
+    <div class="byline">
+      <div>AIMS Lab</div>
+      <div class="muted">spanthi.com</div>
+    </div>
+  </Slide>
+</SlideDeck>

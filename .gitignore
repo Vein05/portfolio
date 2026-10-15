@@ -44,3 +44,6 @@ AGENTS.md
 .codex-ui-screens/
 pptx/
 scripts/__pycache__/
+
+# Slide check output
+/slides/build/
