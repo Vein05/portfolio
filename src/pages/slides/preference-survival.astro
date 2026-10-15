@@ -1,17 +1,16 @@
 ---
 // Preference survival talk deck, on the shared SlideDeck frame (slides/README.md).
 // Public deck; the work is unpublished and the confirmatory study has not run. The
-// venue slide is devOnly (portfolio AGENTS.md, "Never name a submission venue").
+// talk ends at related work.
 //
 // Sources, all in research/preference-survival/:
 //   DEV  = research/CHANNEL_V1_REPORT_2026-10-08.md (the 2026-10-08 development study)
 //   IDEA = IDEA_CHANGELOG.md, entry of 2026-10-10 (accuracy by side at session 12)
 //   HOLE = research/HOLE_CHECKS_2026-10-10.md
-//   SPEC = spec/default-user.md (the proposed confirmatory study)
-//   CHARTER = CHARTER.md (success and kill criteria)
 //   PRIOR = research/PRIOR_WORK_2026-10-10.md; abstracts re-read on arXiv 2026-10-14
 import SlideDeck from '../../layouts/SlideDeck.astro';
 import Slide from '../../components/slides/Slide.astro';
+import PaperFigure from '../../components/slides/PaperFigure.astro';
 import RelatedCards from '../../components/slides/RelatedCards.astro';
 import RelatedCard from '../../components/slides/RelatedCard.astro';
 import Guess from '../../components/slides/Guess.astro';
@@ -25,14 +24,14 @@ const survival = [
   { when: '10 or 11 later', pct: 42, label: '37 to 47%' },
 ];
 
-// SPEC, section 3 and section 4 (memory systems).
-const design = [
-  { head: 'Preferences', text: 'About 100 choices from real people\'s words' },
-  { head: 'Users', text: '96 users state them by session 4' },
-  { head: 'Memory', text: 'Our writers and 7 installed systems' },
-  { head: 'Readers', text: '4 models read the same memories' },
-  { head: 'Score', text: 'Accuracy when matching the default, minus when against it' },
-];
+// The six users of the default-user figure (slide "The default user"), from
+// research/figures/preference-survival/html/data.js (gen_data.py over data/channel-v1):
+// stated values per contrast, model defaults, and the figure's face colours. Glyphs are
+// Phosphor (MIT) and the face is Material Symbols face-sharp (Apache-2.0), as in fig1-ph.js.
+const userContrasts = [{"head":"prose or bullets","def":1,"sides":["pilcrow","list"]},{"head":"diagrams or text","def":1,"sides":["workflow","file-text"]},{"head":"alone or group","def":0,"sides":["user","users"]},{"head":"quiet or lively","def":0,"sides":["coffee","party-popper"]}];
+const users = [{"user":4,"color":"#2b7fa0","stated":[1,1,0,0]},{"user":0,"color":"#c8901a","stated":[1,1,0,1]},{"user":3,"color":"#7b4fa6","stated":[1,0,0,1]},{"user":6,"color":"#3a8a57","stated":[1,0,1,0]},{"user":2,"color":"#3f5cc0","stated":[0,0,1,0]},{"user":15,"color":"#8a6440","stated":[0,0,1,1]}];
+const glyphs = {"pilcrow":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M208 36H96a68 68 0 0 0 0 136h36v36a12 12 0 0 0 24 0V60h16v148a12 12 0 0 0 24 0V60h12a12 12 0 0 0 0-24m-76 112H96a44 44 0 0 1 0-88h36Z\"/></g>","list":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M76 64a12 12 0 0 1 12-12h128a12 12 0 0 1 0 24H88a12 12 0 0 1-12-12m140 52H88a12 12 0 0 0 0 24h128a12 12 0 0 0 0-24m0 64H88a12 12 0 0 0 0 24h128a12 12 0 0 0 0-24M44 112a16 16 0 1 0 16 16a16 16 0 0 0-16-16m0-64a16 16 0 1 0 16 16a16 16 0 0 0-16-16m0 128a16 16 0 1 0 16 16a16 16 0 0 0-16-16\"/></g>","workflow":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M160 116h48a20 20 0 0 0 20-20V48a20 20 0 0 0-20-20h-48a20 20 0 0 0-20 20v12h-12a28 28 0 0 0-28 28v28H76v-4a20 20 0 0 0-20-20H24a20 20 0 0 0-20 20v32a20 20 0 0 0 20 20h32a20 20 0 0 0 20-20v-4h24v28a28 28 0 0 0 28 28h12v12a20 20 0 0 0 20 20h48a20 20 0 0 0 20-20v-48a20 20 0 0 0-20-20h-48a20 20 0 0 0-20 20v12h-12a4 4 0 0 1-4-4V88a4 4 0 0 1 4-4h12v12a20 20 0 0 0 20 20M52 140H28v-24h24Zm112 24h40v40h-40Zm0-112h40v40h-40Z\"/></g>","file-text":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"m216.49 79.52l-56-56A12 12 0 0 0 152 20H56a20 20 0 0 0-20 20v176a20 20 0 0 0 20 20h144a20 20 0 0 0 20-20V88a12 12 0 0 0-3.51-8.48M160 57l23 23h-23ZM60 212V44h76v48a12 12 0 0 0 12 12h48v108Zm112-80a12 12 0 0 1-12 12H96a12 12 0 0 1 0-24h64a12 12 0 0 1 12 12m0 40a12 12 0 0 1-12 12H96a12 12 0 0 1 0-24h64a12 12 0 0 1 12 12\"/></g>","user":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M234.38 210a123.36 123.36 0 0 0-60.78-53.23a76 76 0 1 0-91.2 0A123.36 123.36 0 0 0 21.62 210a12 12 0 1 0 20.77 12c18.12-31.32 50.12-50 85.61-50s67.49 18.69 85.61 50a12 12 0 0 0 20.77-12M76 96a52 52 0 1 1 52 52a52.06 52.06 0 0 1-52-52\"/></g>","users":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M164.38 181.1a52 52 0 1 0-72.76 0a75.9 75.9 0 0 0-30 28.89a12 12 0 0 0 20.78 12a53 53 0 0 1 91.22 0a12 12 0 1 0 20.78-12a75.9 75.9 0 0 0-30.02-28.89M100 144a28 28 0 1 1 28 28a28 28 0 0 1-28-28m147.21 9.59a12 12 0 0 1-16.81-2.39c-8.33-11.09-19.85-19.59-29.33-21.64a12 12 0 0 1-1.82-22.91a20 20 0 1 0-24.78-28.3a12 12 0 1 1-21-11.6a44 44 0 1 1 73.28 48.35a92.2 92.2 0 0 1 22.85 21.69a12 12 0 0 1-2.39 16.8m-192.28-24c-9.48 2.05-21 10.55-29.33 21.65a12 12 0 0 1-19.19-14.45a92.4 92.4 0 0 1 22.85-21.69a44 44 0 1 1 73.28-48.35a12 12 0 1 1-21 11.6a20 20 0 1 0-24.78 28.3a12 12 0 0 1-1.82 22.91Z\"/></g>","coffee":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M212 76H32a12 12 0 0 0-12 12v48a100.24 100.24 0 0 0 26.73 68H32a12 12 0 0 0 0 24h176a12 12 0 0 0 0-24h-14.73a100.8 100.8 0 0 0 20-32A44 44 0 0 0 256 128v-8a44.05 44.05 0 0 0-44-44m-16 60a76.27 76.27 0 0 1-42 68H86a76.27 76.27 0 0 1-42-68v-36h152Zm36-8a20 20 0 0 1-12.57 18.55A97 97 0 0 0 220 136v-34.32A20 20 0 0 1 232 120ZM68 48V24a12 12 0 0 1 24 0v24a12 12 0 0 1-24 0m40 0V24a12 12 0 0 1 24 0v24a12 12 0 0 1-24 0m40 0V24a12 12 0 0 1 24 0v24a12 12 0 0 1-24 0\"/></g>","party-popper":"<g transform=\"scale(0.09375)\"><path fill=\"currentColor\" d=\"M114.32 49.8a19.79 19.79 0 0 0-32.6 7.2l-52.5 144.41A19.82 19.82 0 0 0 47.75 228a20 20 0 0 0 6.84-1.22L199 174.28a19.79 19.79 0 0 0 7.24-32.6Zm-10.13 133.41l-31.4-31.4l10.15-27.91l49.16 49.16Zm-40.42-6.51l15.53 15.56l-24.45 8.89ZM157 164L92 99l10-27.58L184.57 154ZM128 40V16a12 12 0 0 1 24 0v24a12 12 0 0 1-24 0m116.48 83.51a12 12 0 0 1-17 17l-16-16a12 12 0 0 1 17-17Zm-.69-40.13l-24 8a12 12 0 0 1-7.59-22.77l24-8a12 12 0 1 1 7.59 22.77M156.6 65.93C159.83 47.47 173.39 36 192 36c6.45 0 8.69-2.49 10-4.92a18 18 0 0 0 2-7.22V24a12 12 0 0 1 24 0c0 14.47-9.59 36-36 36c-4.94 0-10.21 1.19-11.76 10.06A12 12 0 0 1 168.43 80a12.4 12.4 0 0 1-2.08-.18a12 12 0 0 1-9.75-13.89\"/></g>"};
+const face = "<path fill=\"currentColor\" d=\"M8.113 13.888Q7.75 13.525 7.75 13t.363-.888T9 11.75t.888.363t.362.887t-.363.888T9 14.25t-.888-.363m6 0q-.362-.362-.362-.887t.363-.888t.887-.362t.888.363t.362.887t-.363.888t-.887.362t-.888-.363M12 20q3.35 0 5.675-2.325T20 12q0-.6-.075-1.162T19.65 9.75q-.525.125-1.05.188T17.5 10q-2.275 0-4.3-.975T9.75 6.3q-.8 1.95-2.287 3.388T4 11.85V12q0 3.35 2.325 5.675T12 20m0 2q-2.075 0-3.9-.787t-3.175-2.138T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22\"/>";
 ---
 
 <SlideDeck
@@ -68,6 +67,32 @@ const design = [
         <div class="cite">Bommasani et al., NeurIPS 2022</div>
       </div>
     </div>
+  </Slide>
+
+  <!-- 2b. The users, so the default-user figure's cast is known before it appears.
+       Data: userContrasts and users above. A chip is red when the stated value is not
+       the models' default. -->
+  <Slide label="The users" kicker="02 The problem" title="Some users want what the model assumes, and some do not">
+    <div class="users">
+      <div></div>
+      {userContrasts.map((c) => <div class="u-head">{c.head}</div>)}
+      <div></div>
+      {users.map((u) => {
+        const n = u.stated.filter((v, k) => v !== userContrasts[k].def).length;
+        return (
+          <Fragment>
+            <svg class="u-face" viewBox="0 0 24 24" style={`color:${u.color}`} aria-hidden="true" set:html={face} />
+            {u.stated.map((v, k) => (
+              <div class:list={['u-chip', v === userContrasts[k].def ? 'def' : 'oth']}>
+                <svg viewBox="0 0 24 24" aria-hidden="true" set:html={glyphs[userContrasts[k].sides[v]]} />
+              </div>
+            ))}
+            <div class="u-count">{n === 0 ? 'matches all 4' : `${n} of 4 differ`}</div>
+          </Fragment>
+        );
+      })}
+    </div>
+    <p class="foot">Six of 36 users from the development study. Red: not what models assume.</p>
   </Slide>
 
   <!-- 3. The problem, one concrete case. Made-up example; the defaults match
@@ -117,6 +142,20 @@ const design = [
       </div>
     </Guess>
     <p class="foot">Development study, 2026-10-08: 36 synthetic users, two reader models.</p>
+  </Slide>
+
+  <!-- 5b. The default-user figure, approved demo of 2026-10-11:
+       research/figures/preference-survival/build/fig1-demo-sharp.png, data from
+       html/data.js (gen_data.py over data/channel-v1). Rows: six of 36 users chosen by
+       stated profile; GLM writer, summary policy; DeepSeek reader; session 12. Five rows
+       end identical to the default user (html/story.md). 93% and 50% pool all 12 systems. -->
+  <Slide label="The default user" kicker="04 Early result" title="Five of six example users end up answered as the default user">
+    <PaperFigure
+      fill
+      src="/slides/preference-survival/default-user.webp"
+      alt="Six users state preferences in sessions 1 to 4; red marks a preference that differs from the model's default. By session 12 memory keeps only three of 24 preferences. The reader answers the rest with its default, so five of the six users get the same answers as one default user: bullets, text, alone, quiet. Pooled over all 12 memory systems, 93% of preferences that match the default are answered right, and 50% of those that differ."
+    />
+    <p class="foot">Demo from the development study: six of 36 users, GLM writer, DeepSeek reader. Percentages pool all 12 memory systems.</p>
   </Slide>
 
   <!-- 6. Not the writer. Bars: DEV "Q3". Writer gap: DEV "Q2" table
@@ -178,7 +217,9 @@ const design = [
         summary="Personal memories make models more sycophantic."
         difference="They use memory once. We rewrite it 12 times."
         result="Across 13 LLMs, user profiles and retrieved memories made all three biases worse: irrelevant personalization, preference narrowing and sycophancy."
-        source="Wang et al., arXiv 2608.28833, abstract."
+        figure="/slides/preference-survival/related/prisk-fig4.webp"
+        figureAlt="Figure 4 of Wang et al.: personalization risk against usefulness for Claude, Gemini, GPT, Llama and Qwen on irrelevant personalization, sycophantic bias and preference narrowing; points with a profile, retrieval, or both sit higher in risk than the no-personalization points."
+        source="Wang et al., arXiv 2608.28833, abstract and Figure 4."
       />
       <RelatedCard
         badge="arXiv 2026"
@@ -188,7 +229,9 @@ const design = [
         summary="Memory should learn what each user needs stored."
         difference="They skip passing chats. We skip what models guess."
         result="Storing per user helps retention a lot when the system knows which sessions to skip. Knowing which to skip is still unsolved."
-        source="In et al., arXiv 2605.25535, abstract."
+        figure="/slides/preference-survival/related/permem-fig1.webp"
+        figureAlt="Figure 1 of In et al.: Alice and Bob use an agent for different domains; a one-size-fits-all memory system evicts memories each of them needs, while a personalized memory system keeps each user's important memories and evicts their transient ones."
+        source="In et al., arXiv 2605.25535, abstract and Figure 1."
       />
       <RelatedCard
         badge="NeurIPS 2022"
@@ -197,68 +240,14 @@ const design = [
         summary="Shared parts make systems fail the same people."
         difference="They test fairness data. We test assistant memory."
         result="Sharing training data reliably made outcomes more alike, and more so for individuals than for groups."
-        source="Bommasani et al., arXiv 2211.13972, abstract."
+        figure="/slides/preference-survival/related/bommasani-fig2.webp"
+        figureAlt="Figure 2 of Bommasani et al.: outcome homogenization on ACS PUMS with logistic regression as training data grows, for models trained on fixed (shared) versus disjoint data, at the individual level (left) and for racial groups (right)."
+        source="Bommasani et al., arXiv 2211.13972, abstract and Figure 2."
       />
     </RelatedCards>
   </Slide>
 
-  <!-- 10. The fix. Made-up example. Reader-side prediction: SPEC section 1. -->
-  <Slide label="The fix" kicker="09 The fix" title="We predict that storing only how users differ closes the gap">
-    <div class="notes">
-      <div>
-        <div class="label">Usual writer</div>
-        <div class="note">Likes plain wording. Prefers brief answers.</div>
-        <p class="note-gloss">Stores what the model would guess anyway.</p>
-      </div>
-      <div data-step="1">
-        <div class="label">Default-aware writer</div>
-        <div class="note">Prefers paragraphs to bullet lists.</div>
-        <p class="note-gloss">Stores only what the model would get wrong.</p>
-      </div>
-    </div>
-    <p class="foot" data-step="2">Made-up example: one user, the same space. A reader-side fix cannot help, because the preference is gone.</p>
-  </Slide>
-
-  <!-- 11. Design. SPEC sections 2 to 5; harvest status from AGENTS.md (2026-10-11). -->
-  <Slide label="Study design" kicker="10 The study" title="Users state preferences in four sessions, then chat for eight more">
-    <div class="flow">
-      {design.map((d, k) => (
-        <div class="flow-box" data-step={k + 1}>
-          <div class="label">{d.head}</div>
-          <p>{d.text}</p>
-        </div>
-      ))}
-    </div>
-    <p class="foot">Controls: the full chat history, and an empty memory that shows each default.</p>
-  </Slide>
-
-  <!-- 12. Predictions. CHARTER, "Primary Success Criterion" and "Kill Criterion". -->
-  <Slide label="Predictions" kicker="11 Predictions" title="Three predictions, and how each one fails, fixed in advance">
-    <table class="preds">
-      <thead><tr><th></th><th>We predict</th><th>It fails if</th></tr></thead>
-      <tbody>
-        <tr><td class="pred-name">Shared default</td><td>Defaults agree in 80% of families.</td><td>Defaults differ.</td></tr>
-        <tr><td class="pred-name">Gap</td><td>Gap of 20 points or more.</td><td>Installed systems: under 10.</td></tr>
-        <tr><td class="pred-name">Fix</td><td>Halves the gap at equal length.</td><td>Gap shrinks less than half.</td></tr>
-      </tbody>
-    </table>
-    <p class="foot">One run, frozen before any data. Failures get reported.</p>
-  </Slide>
-
-  <!-- 13. Venue (dev only). Theme name, deadline Jan 4, 2027,
-       long papers 8 pages, special session and Thematic Paper Award anticipated.
-       CHARTER: no committed submission, hence "Target". -->
-  <Slide label="Where it goes" kicker="12 Where it goes" title="Target: a 2027 conference theme on homogenization and knowledge collapse" devOnly>
-    <p class="venue-lede">The theme asks whether LLMs converge on narrow answers. Nobody has measured memory as a cause.</p>
-    <div class="numbers">
-      <div><span class="num">2027-01-04</span><span class="gloss">submission deadline</span></div>
-      <div><span class="num">8 pages</span><span class="gloss">long paper</span></div>
-      <div><span class="num">Aug 2027</span><span class="gloss">conference, with a theme session and award</span></div>
-    </div>
-    <p class="foot">Status: preferences mined. The study is designed, not yet run.</p>
-  </Slide>
-
-  <!-- 14. Thanks -->
+  <!-- 10. Thanks -->
   <Slide label="Thank you" variant="title" kicker="Preference survival" title="Thank you">
     <p class="lede">Questions?</p>
     <div class="byline">
@@ -282,7 +271,16 @@ const design = [
   .trio-item .cite { font-size: 20px; color: rgb(var(--color-ink-muted)); }
 
   /* The problem */
-  .case { margin: auto 0; display: grid; grid-template-columns: 170px 1.3fr 1fr 1fr; column-gap: 28px; row-gap: 20px; align-items: center; margin-top: 12px; }
+  /* Users (slide 2b): chips and faces in the default-user figure's colours */
+.users { margin: auto 0; display: grid; grid-template-columns: 72px repeat(4, 170px) 1fr; gap: 14px 20px; align-items: center; justify-items: center; }
+.u-head { font-family: 'Oswald', sans-serif; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); }
+.u-face { width: 64px; height: 64px; }
+.u-chip { width: 64px; height: 64px; display: grid; place-items: center; border: 2px solid; }
+.u-chip svg { width: 38px; height: 38px; }
+.u-chip.def { background: #e8ecf1; border-color: #5d6978; color: #5d6978; }
+.u-chip.oth { background: #e5625f; border-color: #bf3b37; color: #fff; }
+.u-count { justify-self: start; font-size: 26px; color: rgb(var(--color-ink-muted)); }
+.case { margin: auto 0; display: grid; grid-template-columns: 170px 1.3fr 1fr 1fr; column-gap: 28px; row-gap: 20px; align-items: center; margin-top: 12px; }
   .case-head {
     font-family: 'Oswald', monospace; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase;
     color: rgb(var(--color-ink-muted));
@@ -323,40 +321,9 @@ const design = [
   .big .num { font-size: 180px; }
   .big p { font-size: 40px; line-height: 1.3; max-width: 900px; }
 
+  /* The default user: keep the note clear of the figure card */
+  .paper-fig.fill + .foot { margin-top: 20px; }
+
   /* Limits */
   .limits { list-style: disc; margin: auto 0; padding-left: 36px; display: flex; flex-direction: column; gap: 26px; font-size: 36px; line-height: 1.3; }
-
-  /* The fix */
-  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; flex: 1; align-items: center; }
-  .notes .note {
-    padding: 26px 30px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper));
-    font-size: 32px; line-height: 1.35;
-  }
-  .note-gloss { margin-top: 16px !important; font-size: 26px; line-height: 1.35; color: rgb(var(--color-ink-muted)); }
-
-  /* Study design */
-  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; flex: 1; align-items: center; position: relative; }
-  .flow-box {
-    position: relative; padding: 24px 22px; min-height: 230px;
-    background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper));
-  }
-  .flow-box p { font-size: 25px; line-height: 1.35; }
-  .flow-box + .flow-box::before {
-    content: ''; position: absolute; left: -24px; top: 50%; width: 24px; height: 2px;
-    background: rgb(var(--color-ink-muted));
-  }
-
-  /* Predictions */
-  .preds { width: 100%; border-collapse: collapse; font-size: 28px; line-height: 1.35; }
-  .preds th {
-    text-align: left; padding: 0 24px 12px 0;
-    font-family: 'Oswald', monospace; font-size: 18px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase;
-    color: rgb(var(--color-ink-muted));
-  }
-  .preds td { padding: 22px 24px 22px 0; border-top: 1.5px solid rgb(var(--color-border-paper)); vertical-align: top; }
-  .preds tr:last-child td { border-bottom: 1.5px solid rgb(var(--color-border-paper)); }
-  .preds .pred-name { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 30px; width: 240px; }
-
-  /* Venue */
-  .venue-lede { font-size: 34px; line-height: 1.35; max-width: 1250px; margin-bottom: 56px !important; }
 </style>
