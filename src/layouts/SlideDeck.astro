@@ -7,6 +7,7 @@
 //
 // draft: in the built site the deck shows only a "not public yet" notice and is
 // marked noindex; `astro dev` shows the slides as usual.
+// ogImage: the link-preview image (1200x630); without it the site default is used.
 import BaseLayout from './BaseLayout.astro';
 
 export interface Props {
@@ -14,13 +15,14 @@ export interface Props {
   description: string;
   canonical: string;
   draft?: boolean;
+  ogImage?: string;
 }
 
-const { title, description, canonical, draft = false } = Astro.props;
+const { title, description, canonical, draft = false, ogImage } = Astro.props;
 const hidden = draft && !import.meta.env.DEV;
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical}>
+<BaseLayout title={title} description={description} canonical={canonical} ogImage={ogImage}>
   {draft && <meta name="robots" content="noindex, nofollow" slot="head" />}
   {hidden ? (
     <main class="deck deck-hidden">
