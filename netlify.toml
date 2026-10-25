@@ -44,3 +44,9 @@
   from = "/images/.optimized/*"
   to = "/images/optimized/:splat"
   status = 200
+
+# Unlisted transcript: reachable by direct link only, kept out of search engines
+[[headers]]
+  for = "/transcript-b129645f.pdf"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
