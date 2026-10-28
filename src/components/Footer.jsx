@@ -53,6 +53,7 @@ const Footer = () => {
           <a href="https://notes.spanthi.com/papers/lost-in-transliteration/" tabIndex={-1}>Lost in Transliteration: Bridging the Script Gap in Neural IR</a>
           <a href="https://notes.spanthi.com/papers/biology/" tabIndex={-1}>On the Biology of a Large Language Model</a>
           <a href="https://notes.spanthi.com/papers/grpo-sft-lora/" tabIndex={-1}>GRPO, SFT and LoRA: How a Model Learns From Scores</a>
+          <a href="https://notes.spanthi.com/papers/irt-trust/" tabIndex={-1}>Can We Trust Item Response Theory for AI Evaluation?</a>
         </div>
       </div>
     </footer>
