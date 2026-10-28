@@ -46,6 +46,13 @@ const Footer = () => {
           <a href="https://magnoliaed.ai" tabIndex={-1} rel="noopener">MagnoliaEd</a>
           <a href="https://costumary.com" tabIndex={-1} rel="noopener">Costumary</a>
           <a href="https://deptlink.com" tabIndex={-1} rel="noopener">DeptLink</a>
+          <a href="https://notes.spanthi.com/library/" tabIndex={-1}>Paper notes</a>
+          <a href="https://notes.spanthi.com/papers/lapse/" tabIndex={-1}>Language Model Memory Flattens the Temporal Form of User Facts</a>
+          <a href="https://notes.spanthi.com/papers/derivaudit/" tabIndex={-1}>Memory Is a Derivation: The Distributed-Evidence Paradox in Long-Term Agents</a>
+          <a href="https://notes.spanthi.com/papers/lost-in-compaction/" tabIndex={-1}>Lost in Context Compaction: When LLM Systems Drop Side Constraints</a>
+          <a href="https://notes.spanthi.com/papers/lost-in-transliteration/" tabIndex={-1}>Lost in Transliteration: Bridging the Script Gap in Neural IR</a>
+          <a href="https://notes.spanthi.com/papers/biology/" tabIndex={-1}>On the Biology of a Large Language Model</a>
+          <a href="https://notes.spanthi.com/papers/grpo-sft-lora/" tabIndex={-1}>GRPO, SFT and LoRA: How a Model Learns From Scores</a>
         </div>
       </div>
     </footer>
