@@ -16,6 +16,13 @@ const decks = [
     blurb: 'Memory forgets preferences evenly, but models fill the gaps with the same default, so users who differ lose out.',
     slides: 12,
   },
+  {
+    slug: 'romanized-scoring',
+    title: 'Correct Answers Written Another Way Score Zero',
+    blurb: 'Multilingual QA scores assume answers are written like English, so names in Latin letters, other digits and romanized text lose credit.',
+    slides: 11,
+    draft: true,
+  },
 ].filter((d) => !d.draft || import.meta.env.DEV);
 ---
 

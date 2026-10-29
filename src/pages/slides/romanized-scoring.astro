@@ -1,0 +1,290 @@
+---
+// Romanized RAG scoring talk deck, on the shared SlideDeck frame (slides/README.md).
+// Draft: unpublished work. An introductory talk: what romanized text is, where the
+// string score fails, and how we found and checked it. Mohor and related work are
+// left out on purpose (not reliable yet; not this talk).
+//
+// Sources, all in research/romanized-rag-judges/:
+//   CLAIMS = claims.md (numbers re-run 2026-10-27 and 2026-10-28)
+//   CHECKS = archive/checks-2026-10-27.md (gold scan, broken-answer test, detectors)
+//   INVAR  = evidence/script-invariance-test.md
+//   HAND   = handoff/2026-10-28-end.md (the Bob Dylan example)
+import SlideDeck from '../../layouts/SlideDeck.astro';
+import Slide from '../../components/slides/Slide.astro';
+import RelatedCards from '../../components/slides/RelatedCards.astro';
+import RelatedCard from '../../components/slides/RelatedCard.astro';
+
+// CLAIMS, claim 3: romanized Bangla questions, string score against each gold
+// (Sonnet rows from the Sonnet table; the other three from the main table).
+const byRoman = [
+  { model: 'Sonnet 5.5', score: 44.1 },
+  { model: 'Mistral-Small', score: 25.5 },
+  { model: 'Qwen3-30B', score: 6.1 },
+  { model: 'gpt-oss-20b', score: 3.7 },
+];
+const byNative = [
+  { model: 'gpt-oss-20b', score: 28.9 },
+  { model: 'Qwen3-30B', score: 21.3 },
+  { model: 'Mistral-Small', score: 12.9 },
+  { model: 'Sonnet 5.5', score: 11.5 },
+];
+---
+
+<SlideDeck
+  title="Romanized RAG Scoring: Slides from AIMS Lab"
+  description="Talk slides: multilingual QA scores give zero to correct answers written in another script, which moves language gaps and model rankings."
+  canonical="https://spanthi.com/slides/romanized-scoring/"
+  draft
+>
+  <!-- 1. Title -->
+  <Slide label="Title" variant="title" kicker="Romanized RAG scoring" title="Correct answers written another way score zero">
+    <p class="lede">Multilingual QA scores assume answers are written like English. Elsewhere, part of the gap to English comes from the score itself.</p>
+    <div class="byline">
+      <div>AIMS Lab</div>
+      <div class="muted">University of Southern Mississippi</div>
+    </div>
+    <div class="hint">Press space to begin</div>
+  </Slide>
+
+  <!-- 2. Scripts. Examples from glossary.md ("Writing systems"). -->
+  <Slide label="Scripts" kicker="01 Words first" title="One language can be written in more than one script">
+    <div class="scripts">
+      <div class="sc">
+        <div class="label">Native script</div>
+        <div class="sc-text">म घर जान्छु</div>
+        <p class="muted">Nepali in Devanagari, its usual script</p>
+      </div>
+      <div class="sc">
+        <div class="label">Romanized</div>
+        <div class="sc-text">ma ghar janchhu</div>
+        <p class="muted">The same Nepali, in Latin letters</p>
+      </div>
+    </div>
+    <p class="foot">Latin script is the a to z alphabet. Romanized means a language typed in it, as many people text.</p>
+  </Slide>
+
+  <!-- 3. Variant forms. Belebele example: CHECKS, section 4. Digits: glossary.md.
+       kolkata: glossary.md ("Transliteration"). -->
+  <Slide label="Variant forms" kicker="01 Words first" title="One answer has many written forms, and none is fixed">
+    <div class="forms">
+      <div class="form">
+        <div class="label">Transliteration, by a rule</div>
+        <p><span class="native">কলকাতা</span> → kolkata</p>
+      </div>
+      <div class="form">
+        <div class="label">Romanized, by people</div>
+        <p><span class="native">थप भोल्यूमका लागि</span> → thap awaz ko laagi</p>
+        <p class="muted small">Belebele swapped “volume” for “sound”</p>
+      </div>
+      <div class="form">
+        <div class="label">Digit systems</div>
+        <p>1736 = <span class="native">১৭৩৬</span> = <span class="native">१७३६</span></p>
+      </div>
+    </div>
+    <p class="foot">People spell romanized text however they like. The same meaning arrives as many different strings.</p>
+  </Slide>
+
+  <!-- 4. The example. HAND, "Title and example": MKQA Thai, all four MKQA models
+       answer "Bob Dylan" in Latin letters and score 0 against the Thai gold. -->
+  <Slide label="The problem" kicker="02 The problem" title="Four models answer Bob Dylan, and all four score 0">
+    <div class="ex">
+      <div class="ex-row"><div class="ex-k">Question, in Thai</div><div class="ex-v">Who wrote “Make You Feel My Love”?</div></div>
+      <div class="ex-row" data-step="1"><div class="ex-k">Gold answer</div><div class="ex-v thai">บ็อบ ดิลลัน</div></div>
+      <div class="ex-row" data-step="2"><div class="ex-k">Model answer</div><div class="ex-v"><span class="blue">Bob Dylan</span></div></div>
+      <div class="ex-row" data-step="3"><div class="ex-k">Score</div><div class="ex-v"><span class="red ex-big">0</span></div></div>
+    </div>
+    <p class="foot">MKQA, Thai. The question is shown in English here. The answer is right; it is written in another script.</p>
+  </Slide>
+
+  <!-- Related work. Checked in the paper text, research/romanized-rag-judges/reading/
+       (notes-mrag-language-preference.md; txt/wang2026alllang.txt, txt/sharma2024faux.txt,
+       pdfs/ki2025nepotism.pdf). Venues from the user's reference list. -->
+  <Slide label="Related work" kicker="03 Related work" title="Prior work measures language bias but never tests the scorer">
+    <RelatedCards>
+      <RelatedCard
+        badge="ACL 2026"
+        title="All Languages Matter"
+        cite="Wang et al., 2026"
+        summary="Rerankers favor English and the query's language across 13 languages."
+        difference="They score answers with 3-gram recall, Thai included. We test that score."
+        result="With the BGE reranker, more than 70% of the top-5 documents, averaged over 13 languages, come from English or the query language. Answer quality is character 3-gram recall, following Chirkova et al."
+        source="Wang et al., arXiv 2604.20199, introduction and Section 2.2."
+      />
+      <RelatedCard
+        badge="ICML 2026"
+        title="Linguistic Nepotism"
+        cite="Ki et al., 2026"
+        summary="Models cite English sources over equally relevant ones in other languages."
+        difference="They measure which source is cited. We measure how answers are scored."
+        result="Models preferentially cite English sources when queries are in English, and the bias grows for lower-resource languages such as Bengali and Swahili."
+        source="Ki et al., arXiv 2509.13930, abstract and Table 1."
+      />
+      <RelatedCard
+        badge="NAACL 2025"
+        title="Faux Polyglot"
+        cite="Sharma et al., 2025"
+        summary="LLMs prefer facts from documents in the query's language."
+        difference="They translate answers to English before scoring. We score each script as written."
+        result="Models preferred facts from native-language documents and rarely presented foreign perspectives. Generated answers are translated back to English with translate-shell before matching."
+        source="Sharma et al., arXiv 2407.05502, Sections 3.2.1 and 5.2."
+      />
+    </RelatedCards>
+  </Slide>
+
+  <!-- 5. The score. CLAIMS, "Thesis" and claim 1; glossary.md ("3-gram recall").
+       CHECKS, section 2: exact match and substring give 0 in every case. -->
+  <Slide label="The score" kicker="04 The score" title="The score counts which 3-letter pieces of the gold appear">
+    <div class="grams">
+      <div class="g-row">
+        <div class="g-k">Gold</div><div class="g-word">kolkata</div>
+        <div class="g-pieces"><span>kol</span><span>olk</span><span>lka</span><span>kat</span><span>ata</span></div>
+      </div>
+      <div class="g-row" data-step="1">
+        <div class="g-k">Answer “kolkata”</div><div class="g-word blue">5 of 5</div><div class="g-pieces muted">score 1.0</div>
+      </div>
+      <div class="g-row" data-step="2">
+        <div class="g-k">Gold <span class="native">কলকাতা</span></div><div class="g-word red">0 of 5</div><div class="g-pieces muted">same answer, score 0</div>
+      </div>
+    </div>
+    <p class="foot">Character 3-gram recall, from BERGEN (Chirkova et al., 2024). Exact match, the official MKQA score, is stricter.</p>
+  </Slide>
+
+  <!-- 6. The four assumptions. CLAIMS, "Thesis"; examples from claims 1, 2 and CHECKS
+       section 1. -->
+  <Slide label="Four assumptions" kicker="04 The score" title="The score assumes every answer is written like English">
+    <div class="assume">
+      <div class="as"><div class="as-n">1</div><div><h3>One script</h3><p>Bob Dylan against บ็อบ ดิลลัน</p></div></div>
+      <div class="as"><div class="as-n">2</div><div><h3>Digits 0 to 9</h3><p>1736 against <span class="native">১৭৩৬</span></p></div></div>
+      <div class="as"><div class="as-n">3</div><div><h3>One stored form per letter</h3><p>Bengali letters stored two ways</p></div></div>
+      <div class="as"><div class="as-n">4</div><div><h3>Spaces between words</h3><p>Short gold 老子 never matches</p></div></div>
+    </div>
+    <p class="foot">Romanized Bangla and Nepali break all four.</p>
+  </Slide>
+
+  <!-- 7. How we noticed. HAND, "The story". -->
+  <Slide label="How we noticed" kicker="05 How we found it" title="Two results looked wrong before we had any theory">
+    <div class="two-up noticed">
+      <div>
+        <div class="label">Thai</div>
+        <p>Scores fell far below English, though the answers looked right.</p>
+      </div>
+      <div>
+        <div class="label">Romanized Bangla and Nepali</div>
+        <p>Scores moved with the gold we picked, Latin or native script.</p>
+      </div>
+    </div>
+    <p class="foot">Belebele ships both golds for each romanized item.</p>
+  </Slide>
+
+  <!-- 11. Ranking flip. byRoman[] and byNative[] above (CLAIMS, claim 3). -->
+  <Slide label="Ranking flip" kicker="06 Result" title="Changing only the gold's script reverses the model ranking">
+    <div class="flip">
+      <div>
+        <div class="label">Against the romanized gold</div>
+        <ol class="rank">{byRoman.map((r) => <li><span>{r.model}</span><span class="r-val">{r.score}</span></li>)}</ol>
+      </div>
+      <div class="flip-arrow" data-step="1">⇄</div>
+      <div data-step="1">
+        <div class="label">Against the native-script gold</div>
+        <ol class="rank">{byNative.map((r) => <li><span>{r.model}</span><span class="r-val">{r.score}</span></li>)}</ol>
+      </div>
+    </div>
+    <p class="foot">Romanized Bangla questions, the same answers in both columns. String score, 0 to 100.</p>
+  </Slide>
+
+  <!-- 16. Limits. CLAIMS, "Open" and claim 3 limits. -->
+  <Slide label="Limits" kicker="07 What this does not show yet" title="These are early results, without native-speaker labels yet">
+    <ul class="limits">
+      <li>Native-speaker labels are not collected yet.</li>
+      <li>Four to five answer models.</li>
+      <li>Romanized results come from one benchmark, Belebele.</li>
+    </ul>
+  </Slide>
+
+  <!-- 17. Thanks -->
+  <Slide label="Thank you" variant="title" kicker="Romanized RAG scoring" title="Thank you">
+    <p class="lede">Questions?</p>
+    <div class="byline">
+      <div>AIMS Lab</div>
+      <div class="muted">spanthi.com</div>
+    </div>
+  </Slide>
+</SlideDeck>
+
+<style is:global>
+  /* Color meaning for this deck: blue = a correct answer or credit kept, red = credit lost. */
+  .deck .native, .deck .thai { font-family: 'Noto Sans Bengali', 'Noto Sans Devanagari', 'Noto Sans Thai', 'Kohinoor Bangla', 'Kohinoor Devanagari', 'Thonburi', sans-serif; }
+
+  /* The example */
+  .ex { margin: auto 0; display: flex; flex-direction: column; gap: 22px; }
+  .ex-row { display: grid; grid-template-columns: 340px 1fr; align-items: center; }
+  .ex-k { font-family: 'Oswald', monospace; font-size: 22px; letter-spacing: 0.14em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); }
+  .ex-v { font-size: 44px; line-height: 1.25; }
+  .ex-big { font-family: 'Oswald', sans-serif; font-size: 96px; line-height: 1; }
+
+  /* Scripts */
+  .scripts { margin: auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .sc { padding: 36px 40px; background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper)); display: flex; flex-direction: column; gap: 14px; }
+  .sc-text { font-size: 64px; line-height: 1.3; }
+  .sc p { font-size: 26px; }
+
+  /* Variant forms */
+  .forms { margin: auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .form { padding: 30px 32px; background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper)); display: flex; flex-direction: column; gap: 14px; }
+  .form p { font-size: 34px; line-height: 1.35; }
+  .form p.small { font-size: 22px; }
+
+  /* The score */
+  .grams { margin: auto 0; display: flex; flex-direction: column; gap: 30px; }
+  .g-row { display: grid; grid-template-columns: 340px 220px 1fr; align-items: center; gap: 24px; font-size: 36px; }
+  .g-k { font-family: 'Oswald', monospace; font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); }
+  .g-k .native { font-size: 30px; letter-spacing: 0; text-transform: none; color: rgb(var(--color-ink-dark)); }
+  .g-word { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 44px; }
+  .g-pieces { display: flex; gap: 14px; }
+  .g-pieces span { padding: 6px 14px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper)); font-family: ui-monospace, monospace; font-size: 30px; }
+  .g-pieces.muted { font-size: 30px; }
+
+  /* Four assumptions */
+  .assume { margin: auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px 48px; }
+  .as { display: grid; grid-template-columns: 72px 1fr; align-items: start; padding: 26px 30px; background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper)); }
+  .as-n { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgb(var(--color-ink-blue)); color: #fff; font-family: 'Oswald', sans-serif; font-size: 28px; }
+  .as h3 { font-size: 34px; }
+  .as p { font-size: 26px; color: rgb(var(--color-ink-muted)); }
+
+  /* How we noticed */
+  .noticed { margin: auto 0; }
+  .noticed p { font-size: 36px; line-height: 1.35; }
+
+  /* Number cards */
+  .facts3 { margin: auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+  .fact { display: flex; flex-direction: column; gap: 12px; }
+  .numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .numbers > div { display: flex; flex-direction: column; gap: 8px; }
+  .deck .num { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 96px; line-height: 1; }
+  .deck .gloss { font-size: 28px; line-height: 1.35; color: rgb(var(--color-ink-muted)); }
+  .guess .num { font-size: 72px; }
+
+  /* Bars */
+  .bars { display: flex; flex-direction: column; gap: 26px; margin: auto 0; }
+  .bar-row { display: grid; grid-template-columns: 300px 1fr 140px; gap: 24px; align-items: center; font-size: 30px; }
+  .bar-track { height: 26px; background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper)); }
+  .bar-fill { height: 100%; }
+  .red-fill { background: rgb(var(--color-ink-red)); }
+  .bar-val { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 34px; }
+
+  /* Ranking flip */
+  .flip { margin: auto 0; display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 24px; }
+  .flip-arrow { font-size: 72px; text-align: center; color: rgb(var(--color-ink-muted)); }
+  .rank { margin: 0; padding-left: 44px; display: flex; flex-direction: column; gap: 14px; font-size: 34px; }
+  .rank li { padding-left: 8px; }
+  .rank li span:first-child { display: inline-block; width: 300px; }
+  .r-val { font-family: 'Oswald', sans-serif; font-weight: 600; }
+
+  /* Big number */
+  .big { flex: 1; display: grid; grid-template-columns: auto 1fr; gap: 56px; align-items: center; }
+  .big .num { font-size: 150px; }
+  .big p { font-size: 40px; line-height: 1.3; max-width: 760px; }
+
+  /* Lists */
+  .limits { list-style: disc; margin: auto 0; padding-left: 36px; display: flex; flex-direction: column; gap: 26px; font-size: 38px; line-height: 1.3; }
+</style>
