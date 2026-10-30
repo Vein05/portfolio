@@ -14,19 +14,20 @@ import Slide from '../../components/slides/Slide.astro';
 import RelatedCards from '../../components/slides/RelatedCards.astro';
 import RelatedCard from '../../components/slides/RelatedCard.astro';
 
+// Icons: Iconify `logos` set (CC0-1.0), copied from research/figures/assets/icons/ (see icons.md there).
 // CLAIMS, claim 3: romanized Bangla questions, string score against each gold
 // (Sonnet rows from the Sonnet table; the other three from the main table).
 const byRoman = [
-  { model: 'Sonnet 5.5', score: 44.1 },
-  { model: 'Mistral-Small', score: 25.5 },
-  { model: 'Qwen3-30B', score: 6.1 },
-  { model: 'gpt-oss-20b', score: 3.7 },
+  { model: 'Sonnet 5.5', icon: 'claude', score: 44.1 },
+  { model: 'Mistral-Small', icon: 'mistral', score: 25.5 },
+  { model: 'Qwen3-30B', icon: 'qwen', score: 6.1 },
+  { model: 'gpt-oss-20b', icon: 'openai', score: 3.7 },
 ];
 const byNative = [
-  { model: 'gpt-oss-20b', score: 28.9 },
-  { model: 'Qwen3-30B', score: 21.3 },
-  { model: 'Mistral-Small', score: 12.9 },
-  { model: 'Sonnet 5.5', score: 11.5 },
+  { model: 'gpt-oss-20b', icon: 'openai', score: 28.9 },
+  { model: 'Qwen3-30B', icon: 'qwen', score: 21.3 },
+  { model: 'Mistral-Small', icon: 'mistral', score: 12.9 },
+  { model: 'Sonnet 5.5', icon: 'claude', score: 11.5 },
 ];
 ---
 
@@ -52,17 +53,17 @@ const byNative = [
     <div class="hint">Press space to begin</div>
   </Slide>
 
-  <!-- 2. Scripts. Examples from glossary.md ("Writing systems"). -->
+  <!-- 2. Scripts. "I go home" in Bangla, written for this slide (glossary.md has the Nepali version). -->
   <Slide label="Scripts" kicker="01 Words first" title="Romanized text is a language typed in English letters">
     <div class="scripts">
       <div class="sc">
         <div class="label">Native script</div>
-        <div class="sc-text">म घर जान्छु</div>
-        <p class="muted">Nepali in Devanagari, the alphabet taught in school</p>
+        <div class="sc-text native">আমি বাড়ি যাই</div>
+        <p class="muted">Bangla in its own script, taught in school</p>
       </div>
       <div class="sc">
         <div class="label">Romanized</div>
-        <div class="sc-text">ma ghar janchhu</div>
+        <div class="sc-text">ami bari jai</div>
         <p class="muted">The same words in a to z, spelled by sound</p>
       </div>
     </div>
@@ -90,10 +91,24 @@ const byNative = [
     <p class="foot">People spell romanized text however they like. The same meaning arrives as many different strings.</p>
   </Slide>
 
+  <!-- Pipeline: the stages of a multilingual RAG evaluation, as in BERGEN (Chirkova et al., 2024). -->
+  <Slide label="Anatomy" kicker="02 Anatomy of multilingual RAG" title="Every multilingual RAG result passes through a scorer at the end">
+    <div class="pipe">
+      <div class="pstep"><h3>Retrieve</h3><p class="muted">Find documents, in any language</p></div>
+      <div class="arrow">→</div>
+      <div class="pstep"><h3>Read</h3><p class="muted">The model reads the top documents</p></div>
+      <div class="arrow">→</div>
+      <div class="pstep"><h3>Answer</h3><p class="muted">The model writes a short answer</p></div>
+      <div class="arrow">→</div>
+      <div class="pstep scorer" data-step="1"><h3>Score</h3><p class="red">Compare the answer with the gold</p></div>
+    </div>
+    <p class="pipe-q" data-step="1">A low score can mean a wrong answer or a scorer that missed a right one.</p>
+  </Slide>
+
   <!-- Related work. Checked in the paper text, research/romanized-rag-judges/reading/
        (notes-mrag-language-preference.md; txt/wang2026alllang.txt, txt/sharma2024faux.txt,
        pdfs/ki2025nepotism.pdf). Venues from the user's reference list. -->
-  <Slide label="Related work" kicker="02 Related work" title="Prior work measures language bias but never tests the scorer">
+  <Slide label="Related work" kicker="03 Related work" title="Prior work measures language bias but never tests the scorer">
     <RelatedCards>
       <RelatedCard
         badge="ACL 2026"
@@ -102,7 +117,10 @@ const byNative = [
         summary="Rerankers favor English and the query's language across 13 languages."
         difference="They score answers with 3-gram recall, Thai included. We test that score."
         result="With the BGE reranker, more than 70% of the top-5 documents, averaged over 13 languages, come from English or the query language. Answer quality is character 3-gram recall, following Chirkova et al."
-        source="Wang et al., arXiv 2604.20199, introduction and Section 2.2."
+        source="Wang et al., arXiv 2604.20199, introduction, Section 2.2 and Figure 1."
+        figure="/slides/romanized-scoring/related/wang-fig1.webp"
+        figureAlt="Figure 1 of Wang et al.: a Chinese question about The Fifth Element; the reranker keeps English, Chinese and Spanish documents, drops the German evidence document, and the model answers wrong."
+        side
       />
       <RelatedCard
         badge="ICML 2026"
@@ -112,6 +130,8 @@ const byNative = [
         difference="They measure which source is cited. We measure how answers are scored."
         result="Models preferentially cite English sources when queries are in English, and the bias grows for lower-resource languages such as Bengali and Swahili."
         source="Ki et al., arXiv 2509.13930, abstract and Table 1."
+        figure="/slides/romanized-scoring/related/ki-tab1.webp"
+        figureAlt="Table 1 of Ki et al.: citation accuracy by model and language; every language is below English for every model, with Bengali and Swahili furthest behind."
       />
       <RelatedCard
         badge="NAACL 2025"
@@ -120,15 +140,22 @@ const byNative = [
         summary="LLMs prefer facts from documents in the query's language."
         difference="They translate answers to English before scoring. We score each script as written."
         result="Models preferred facts from native-language documents and rarely presented foreign perspectives. Generated answers are translated back to English with translate-shell before matching."
-        source="Sharma et al., arXiv 2407.05502, Sections 3.2.1 and 5.2."
+        source="Sharma et al., arXiv 2407.05502, Sections 3.2.1 and 5.2, and Figure 1."
+        figure="/slides/romanized-scoring/related/sharma-fig1.webp"
+        figureAlt="Figure 1 of Sharma et al.: the same question about the India-China conflict asked in Chinese, Hindi, Arabic and English gets a different answer in each language."
+        figureTall
+        side
       />
     </RelatedCards>
   </Slide>
 
   <!-- 5. The score. CLAIMS, "Thesis" and claim 1; glossary.md ("3-gram recall").
        CHECKS, section 2: exact match and substring give 0 in every case. -->
-  <Slide label="The score" kicker="03 The score" title="The score counts which 3-letter pieces of the gold appear">
+  <Slide label="The score" kicker="04 The score" title="The score counts which 3-letter pieces of the gold appear">
     <div class="grams">
+      <div class="g-row">
+        <div class="g-k">Question</div><div class="g-q">What is the capital of West Bengal?</div>
+      </div>
       <div class="g-row">
         <div class="g-k">Gold</div><div class="g-word">kolkata</div>
         <div class="g-pieces"><span>kol</span><span>olk</span><span>lka</span><span>kat</span><span>ata</span></div>
@@ -140,12 +167,37 @@ const byNative = [
         <div class="g-k">Gold <span class="native">কলকাতা</span></div><div class="g-word red">0 of 5</div><div class="g-pieces muted">same answer, score 0</div>
       </div>
     </div>
-    <p class="foot">Character 3-gram recall, from BERGEN (Chirkova et al., 2024). Exact match, the official MKQA score, is stricter.</p>
+    <p class="foot">Character 3-gram recall, from BERGEN (Chirkova et al., 2024). Exact match, the official MKQA score, is stricter. Made-up example.</p>
+  </Slide>
+
+  <!-- Languages. CLAIMS, "Our runs": MKQA (1,000 questions per language), XOR-TyDi (with documents; Bengali and
+       Telugu without), Belebele Bengali and Nepali, native script and romanized (900 each). 11 languages.
+       Makers from each paper's first page: reading/pdfs/mkqa-arxiv-2007.15207.pdf (Apple Inc.),
+       xorqa-arxiv-2010.11856.pdf (UW, Google Research, UT Austin, AI2), bandarkar2024-belebele-acl.pdf (Meta AI). -->
+  <Slide label="Languages" kicker="04 The score" title="We test the score on eleven languages from three benchmarks">
+    <div class="langs">
+      <div class="bench">
+        <div class="label">MKQA</div>
+        <div class="maker">Made by Apple</div>
+        <p>English, Arabic, Japanese, Korean, Russian, Chinese, <span class="red">Thai</span></p>
+      </div>
+      <div class="bench">
+        <div class="label">XOR-TyDi</div>
+        <div class="maker">Made by University of Washington and Google</div>
+        <p>English, Arabic, Finnish, Japanese, Korean, Russian, Bengali, Telugu</p>
+      </div>
+      <div class="bench">
+        <div class="label">Belebele</div>
+        <div class="maker">Made by Meta AI</div>
+        <p>Bangla and Nepali, each in native script and <span class="red">romanized</span></p>
+      </div>
+    </div>
+    <p class="foot">In red, the two cases this talk follows: Thai, and romanized Bangla and Nepali.</p>
   </Slide>
 
   <!-- 6. The four assumptions. CLAIMS, "Thesis"; examples from claims 1, 2 and CHECKS
        section 1. -->
-  <Slide label="Four assumptions" kicker="03 The score" title="The score assumes every answer is written like English">
+  <Slide label="Four assumptions" kicker="04 The score" title="The score assumes every answer is written like English">
     <div class="assume">
       <div class="as"><div class="as-n">1</div><div><h3>One script</h3><p>Bob Dylan against บ็อบ ดิลลัน</p></div></div>
       <div class="as"><div class="as-n">2</div><div><h3>Digits 0 to 9</h3><p>1736 against <span class="native">১৭৩৬</span></p></div></div>
@@ -158,7 +210,7 @@ const byNative = [
   <!-- Thai gap. CLAIMS, claim 8 table: MKQA Thai gap to English, range over the four models,
        string score 37.1 to 50.3, judge (Gemma 4 31B) 8.0 to 23.5. Code: BERGEN metrics.py as released,
        copied in research/romanized-rag-judges/scripts/bergen_metrics_upstream.py, lines 51 to 71. -->
-  <Slide label="Thai gap" kicker="04 Result" title="A judge shrinks Thai's gap to English for every model">
+  <Slide label="Thai gap" kicker="05 Result" title="A judge shrinks Thai's gap to English for every model">
     <div class="thai-gap">
       <div class="thai-gap-nums">
         <div>
@@ -167,7 +219,7 @@ const byNative = [
           <p class="gloss">points behind English</p>
         </div>
         <div data-step="1">
-          <div class="label">Model judge</div>
+          <div class="label">Model judge, Gemma 4 31B</div>
           <div class="num blue">8 to 24</div>
           <p class="gloss">points behind English</p>
         </div>
@@ -188,28 +240,29 @@ def f1_single(prediction, ground_truth, tokenfun):
     recall = 1.0 * num_same / len(ground_truth_tokens)</pre>
       </figure>
     </div>
-    <p class="foot">MKQA Thai, four answer models, judge Gemma 4 31B. Bob Dylan and <span class="thai">บ็อบ ดิลลัน</span> share no 3-letter piece.</p>
+    <p class="foot">MKQA Thai, four answer models. Bob Dylan and <span class="thai">บ็อบ ดิลลัน</span> share no 3-letter piece.</p>
   </Slide>
 
   <!-- 11. Ranking flip. byRoman[] and byNative[] above (CLAIMS, claim 3). -->
-  <Slide label="Ranking flip" kicker="04 Result" title="Changing only the gold's script reverses the model ranking">
+  <Slide label="Ranking flip" kicker="05 Result" title="Changing only the gold's script reverses the model ranking">
+    <p class="flip-setup">Belebele gives each romanized Bangla question two correct answers, one in Latin letters and one in Bengali script. We scored the same model outputs against each.</p>
     <div class="flip">
       <div>
         <div class="label">Against the romanized gold</div>
-        <ol class="rank">{byRoman.map((r) => <li><span>{r.model}</span><span class="r-val">{r.score}</span></li>)}</ol>
+        <ol class="rank">{byRoman.map((r) => <li><span><img class="m-icon" src={`/slides/romanized-scoring/icons/${r.icon}.svg`} alt="" />{r.model}</span><span class="r-val">{r.score}</span></li>)}</ol>
       </div>
       <div class="flip-arrow" data-step="1">⇄</div>
       <div data-step="1">
         <div class="label">Against the native-script gold</div>
-        <ol class="rank">{byNative.map((r) => <li><span>{r.model}</span><span class="r-val">{r.score}</span></li>)}</ol>
+        <ol class="rank">{byNative.map((r) => <li><span><img class="m-icon" src={`/slides/romanized-scoring/icons/${r.icon}.svg`} alt="" />{r.model}</span><span class="r-val">{r.score}</span></li>)}</ol>
       </div>
     </div>
-    <p class="foot">Romanized Bangla questions, the same answers in both columns. String score, 0 to 100.</p>
+    <p class="foot">String score, 0 to 100.</p>
   </Slide>
 
   <!-- 16. Limits. CLAIMS, "Open" and claim 3 limits. 98 to 99%: CLAIMS, claim 7, "both golds shown"
        row (Gemma 98.2 to 98.9, Haiku 97.7 to 99.4). -->
-  <Slide label="Limits" kicker="05 What this does not show yet" title="Judges pass human-written answers; real model answers still need people">
+  <Slide label="Limits" kicker="06 What this does not show yet" title="Judges pass human-written answers; real model answers still need people">
     <ul class="limits">
       <li>On Belebele's human-written answer options, the judges score 98 to 99%.</li>
       <li>The models' own answers have no native-speaker labels yet.</li>
@@ -261,6 +314,7 @@ def f1_single(prediction, ground_truth, tokenfun):
   .g-k .native { font-size: 30px; letter-spacing: 0; text-transform: none; color: rgb(var(--color-ink-dark)); }
   .g-word { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 44px; }
   .g-pieces { display: flex; gap: 14px; }
+  .g-q { grid-column: 2 / -1; font-size: 40px; }
   .g-pieces span { padding: 6px 14px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper)); font-family: ui-monospace, monospace; font-size: 30px; }
   .g-pieces.muted { font-size: 30px; }
 
@@ -300,12 +354,29 @@ def f1_single(prediction, ground_truth, tokenfun):
   .code pre { margin: 0; font-family: ui-monospace, monospace; font-size: 18.5px; line-height: 1.45; white-space: pre; }
   .code .hl { background: rgb(var(--color-ink-red) / 0.12); }
 
+  /* Pipeline */
+  .pipe { margin: auto 0 0; display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr 60px 1fr; align-items: stretch; }
+  .pstep { padding: 30px 28px; background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper)); display: flex; flex-direction: column; gap: 10px; }
+  .pstep h3 { font-size: 40px; }
+  .pstep p { font-size: 24px; }
+  .pstep.scorer { border: 3px solid rgb(var(--color-ink-red)); background: #fff; }
+  .pipe .arrow { display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgb(var(--color-ink-muted)); }
+  .deck .pipe-q { margin: 56px 0 auto; font-size: 36px; line-height: 1.35; max-width: 1200px; }
+
+  /* Languages */
+  .langs { margin: auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .bench { padding: 30px 32px; background: rgb(var(--color-paper-surface)); border: 1.5px solid rgb(var(--color-border-paper)); }
+  .bench p { font-size: 32px; line-height: 1.4; }
+  .maker { font-size: 22px; color: rgb(var(--color-ink-muted)); margin: -4px 0 16px; }
+
   /* Ranking flip */
+  .deck .flip-setup { font-size: 30px; line-height: 1.4; max-width: 1300px; color: rgb(var(--color-ink-muted)); }
   .flip { margin: auto 0; display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 24px; }
   .flip-arrow { font-size: 72px; text-align: center; color: rgb(var(--color-ink-muted)); }
   .rank { margin: 0; padding-left: 44px; display: flex; flex-direction: column; gap: 14px; font-size: 34px; }
   .rank li { padding-left: 8px; }
-  .rank li span:first-child { display: inline-block; width: 300px; }
+  .rank li span:first-child { display: inline-block; width: 360px; white-space: nowrap; }
+  .deck .m-icon { display: inline-block; width: 34px; height: 34px; margin-right: 16px; vertical-align: -6px; }
   .r-val { font-family: 'Oswald', sans-serif; font-weight: 600; }
 
   /* Big number */
