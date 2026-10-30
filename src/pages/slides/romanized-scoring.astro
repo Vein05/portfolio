@@ -155,23 +155,44 @@ const byNative = [
     <p class="foot">Romanized Bangla and Nepali break all four.</p>
   </Slide>
 
-  <!-- 7. How we noticed. HAND, "The story". -->
-  <Slide label="How we noticed" kicker="04 How we found it" title="Two results looked wrong before we had any theory">
-    <div class="two-up noticed">
-      <div>
-        <div class="label">Thai</div>
-        <p>Scores fell far below English, though the answers looked right.</p>
+  <!-- Thai gap. CLAIMS, claim 8 table: MKQA Thai gap to English, range over the four models,
+       string score 37.1 to 50.3, judge (Gemma 4 31B) 8.0 to 23.5. Code: BERGEN metrics.py as released,
+       copied in research/romanized-rag-judges/scripts/bergen_metrics_upstream.py, lines 51 to 71. -->
+  <Slide label="Thai gap" kicker="04 Result" title="A judge shrinks Thai's gap to English for every model">
+    <div class="thai-gap">
+      <div class="thai-gap-nums">
+        <div>
+          <div class="label">String score</div>
+          <div class="num red">37 to 50</div>
+          <p class="gloss">points behind English</p>
+        </div>
+        <div data-step="1">
+          <div class="label">Model judge</div>
+          <div class="num blue">8 to 24</div>
+          <p class="gloss">points behind English</p>
+        </div>
       </div>
-      <div>
-        <div class="label">Romanized Bangla and Nepali</div>
-        <p>Scores moved with the gold we picked, Latin or native script.</p>
-      </div>
+      <figure class="code">
+        <figcaption>The string score, BERGEN metrics.py</figcaption>
+<pre>def ngrams(s, n=3):
+    ...
+    for w in s.split():
+        ...
+        for i in range(l-n+1):
+            tokens.append(w[i:i+n])
+
+def f1_single(prediction, ground_truth, tokenfun):
+    ...
+    common = <span class="hl">Counter(prediction_tokens) &amp; Counter(ground_truth_tokens)</span>
+    ...
+    recall = 1.0 * num_same / len(ground_truth_tokens)</pre>
+      </figure>
     </div>
-    <p class="foot">Belebele ships both golds for each romanized item.</p>
+    <p class="foot">MKQA Thai, four answer models, judge Gemma 4 31B. Bob Dylan and <span class="thai">บ็อบ ดิลลัน</span> share no 3-letter piece.</p>
   </Slide>
 
   <!-- 11. Ranking flip. byRoman[] and byNative[] above (CLAIMS, claim 3). -->
-  <Slide label="Ranking flip" kicker="05 Result" title="Changing only the gold's script reverses the model ranking">
+  <Slide label="Ranking flip" kicker="04 Result" title="Changing only the gold's script reverses the model ranking">
     <div class="flip">
       <div>
         <div class="label">Against the romanized gold</div>
@@ -186,12 +207,13 @@ const byNative = [
     <p class="foot">Romanized Bangla questions, the same answers in both columns. String score, 0 to 100.</p>
   </Slide>
 
-  <!-- 16. Limits. CLAIMS, "Open" and claim 3 limits. -->
-  <Slide label="Limits" kicker="06 What this does not show yet" title="These are early results, without native-speaker labels yet">
+  <!-- 16. Limits. CLAIMS, "Open" and claim 3 limits. 98 to 99%: CLAIMS, claim 7, "both golds shown"
+       row (Gemma 98.2 to 98.9, Haiku 97.7 to 99.4). -->
+  <Slide label="Limits" kicker="05 What this does not show yet" title="Judges pass human-written answers; real model answers still need people">
     <ul class="limits">
-      <li>Native-speaker labels are not collected yet.</li>
-      <li>Four to five answer models.</li>
-      <li>Romanized results come from one benchmark, Belebele.</li>
+      <li>On Belebele's human-written answer options, the judges score 98 to 99%.</li>
+      <li>The models' own answers have no native-speaker labels yet.</li>
+      <li>Four answer models; romanized results come from one benchmark, Belebele.</li>
     </ul>
   </Slide>
 
@@ -269,6 +291,14 @@ const byNative = [
   .bar-fill { height: 100%; }
   .red-fill { background: rgb(var(--color-ink-red)); }
   .bar-val { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 34px; }
+
+  /* Thai gap */
+  .thai-gap { margin: auto 0; display: grid; grid-template-columns: 460px 1fr; gap: 56px; align-items: center; }
+  .thai-gap-nums { display: flex; flex-direction: column; gap: 40px; }
+  .code { margin: 0; padding: 22px 26px; background: #fff; border: 1.5px solid rgb(var(--color-border-paper)); }
+  .code figcaption { font-family: 'Oswald', monospace; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); margin-bottom: 12px; }
+  .code pre { margin: 0; font-family: ui-monospace, monospace; font-size: 18.5px; line-height: 1.45; white-space: pre; }
+  .code .hl { background: rgb(var(--color-ink-red) / 0.12); }
 
   /* Ranking flip */
   .flip { margin: auto 0; display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; gap: 24px; }
