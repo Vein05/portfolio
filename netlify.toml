@@ -24,6 +24,11 @@
   status = 301
 
 [[redirects]]
+  from = "/prep"
+  to = "/prep-e3d21522/"
+  status = 302
+
+[[redirects]]
   from = "/mars"
   to = "https://mars-weather-app-fawn.vercel.app/"
   status = 301
