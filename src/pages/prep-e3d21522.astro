@@ -26,6 +26,16 @@ const transfers = [
   ['Summer project and why this lab', 'Rewrite for each lab'],
 ];
 
+const audiences = [
+  ['Agents or software engineering', 'Gemma first, then Outcome Monitors. Who checks the agent\'s work, and what lets it recover.'],
+  ['Search and retrieval', 'Same Ranking first, then compression and Pali. What counts as a correct result.'],
+  ['LLM judges and benchmarks', 'Gemma leniency measure and the Same Ranking judge validation. When a judge\'s score can be trusted.'],
+  ['Measurement or social science', 'Same Ranking as an operationalization choice, then reliability vs validity.'],
+  ['Human-AI interaction', 'SEAM and Outcome Monitors. What the user meant, and what the user or agent gets told.'],
+  ['Model training', 'Gemma: LoRA and thinking left the trust in place. State clearly that the cause is not established.'],
+  ['Non-specialist', 'Gemma\'s matplotlib example, or the plain version of Same Ranking. One story, no coined terms.'],
+];
+
 const sections: Section[] = [
   {
     id: 'story',
@@ -43,6 +53,7 @@ const sections: Section[] = [
           'Hidden definitions of success',
           'Retrieval: what counts as the right memory',
           'Agents: a tool can return normally without doing the job',
+          'Coding agents: the model that wrote a patch also decides it is done',
           'You also build what you measure (Pali)',
         ]},
         { q: 'Explain your main result to someone outside the field.', points: [
@@ -179,6 +190,89 @@ const sections: Section[] = [
           { q: 'How is this different from AgentRx?', points: [
             'Read the paper first (arXiv 2602.02475)',
             'Your unverified working answer: they diagnose after the run from its trajectory, you check during the run and point to recovery tools',
+          ]},
+        ],
+      },
+      {
+        title: 'Gemma 4 Gives Its Failing Patches Full Marks',
+        items: [
+          { q: 'What did you find, in plain words?', points: [
+            'Not on your submitted CV. The writeup and title are still changing, so recheck these numbers before an interview',
+            'Agents often ask the model that wrote a patch whether it is finished',
+            'Judges saw the issue and one patch, without its writer',
+            'Gemma 4 31B gave its top score to 52 of its 85 failing patches. Outside judges scored the same patches lower',
+            'Example: matplotlib 24570. Gemma scored it 100, GLM-4.5 scored it 20, and the hidden tests fail',
+          ]},
+          { q: 'Why compare with outside judges at all?', points: [
+            'Some failing patches look right to everyone, so a raw score says little',
+            'Leniency: a judge\'s score minus the outside judges\' mean on the same patch',
+            'Own vs other writers\' failing patches: +16.6 [10.3, 23.1] on held-out issues',
+            'Also +17.8 on SWE-bench Lite and +23.0 on LiveCodeBench',
+            'Matched on what outside judges scored: +13.6 [7.1, 20.3], exploratory',
+          ]},
+          { q: 'Does Gemma recognize its own patches?', points: [
+            'You cannot claim it does or rule it out. Writer was never varied with the patch held fixed',
+            'Same-edit patches from other writers get extra trust: +20.0 on Lite, +8.0 on held-out with an interval reaching zero',
+            'Your plan allows the edit explanation only if both data sets support it, and held-out is inconclusive',
+            'Against it: on Lite, Gemma trusts Claude 4 Sonnet\'s failing patches about as much as its own',
+            'Gemma endorses the defective line in 18 of 18 coded cases. Both coders were Claude models, so expect a question',
+          ]},
+          { q: 'Is this only Gemma?', points: [
+            'Do not say so. Five large models judging their own patches: pooled +0.4 [-2.5, 3.4]',
+            'On contest programs, three of four usable small open models are lenient too, and Gemma 4 12B and 26B-A4B',
+            'Keep two facts apart: smaller Gemmas reading the 31B\'s patches show no measurable extra trust, yet they are lenient on their own programs',
+            'Not every lenient model clears zero on the same-problem test: Nemotron-Nano-9B-v2 is +13.5 [-3.3, 29.5]',
+          ]},
+          { q: 'Why not make Gemma check harder?', points: [
+            'Thinking first: 62% still scored 100, against 61%',
+            'A shell and a test it must write: still 100 on 80% of the 51, AUROC 0.58',
+            'LoRA on 990 labeled patches: still accepts 48 of 51, against 50',
+            'Do not say its own checks catch nothing. The shell and the existing-test check detect at similar rates',
+            'What differs is what follows: a failing developer test gives Gemma something to repair from',
+          ]},
+          { q: 'Do you have a fix?', points: [
+            'Run the existing tests on the changed code before and after the patch, and hold back the patch if one breaks',
+            'Holds back 26 of 85 failing patches, 15 of the 52 scored 100. In 14 of the 15 the broken test passes with the reference patch',
+            'With broken tests shown, Gemma repairs 14 of the 26, against 6 after a second look',
+            'End to end: 9 of the 52 repaired, 4 of 81 correct patches broken',
+            'This changes the patch. Gemma\'s score of 100 does not change',
+          ]},
+          { q: 'Is the repair gain significant?', points: [
+            'p = 0.004 belongs only to tests shown vs second look on held-back patches (8 vs 0 discordant)',
+            'Net gains are not significant: 6 vs 4 among the 133, p = 0.38. 9 vs 4 overall, p = 0.13',
+            'One run per patch, one seed, on issues you had studied before',
+          ]},
+          { q: 'Why does it break correct patches?', points: [
+            'Some tests assert the old behavior the issue asks to change',
+            'The check holds back 7 of 81 correct patches scored 100, and 18 of 193 reference patches',
+            'Gemma often obeys such a test. Sympy 12481: it restored the old behavior to make the test pass',
+          ]},
+          { q: 'What could undermine this result?', points: [
+            'The repository Python environment was not active in held-out runs, which lowers resolve rate. The rubber-stamp rate holds without this problem (65%)',
+            'The tie-break gain from 61% to 78% may partly reflect that same problem',
+            'Grading: 26 of 30 control patches got their official label, all misses being passes graded as failures. So you kept issues whose reference patch passes',
+            'One model and Python only. Reviewers on your panel raised this most',
+            'Reproduction-script row: the paper says 63 of 73 and the script gives 58 of 64. Settle this first',
+          ]},
+          { q: 'How does this differ from earlier self-preference work?', points: [
+            'Pombal et al.: no self-preference in Gemma 3 on contest programs',
+            'Roytburg et al.: much self-preference goes away against other wrong answers to the same question. Your measure also compares on the same patch',
+            'Khullar et al.: a patch framed as the model\'s own earlier answer. Yours has no authorship cue and uses full agent runs',
+            'Reread each paper before stating its result',
+          ]},
+          { q: 'Tell us about how this project changed direction.', points: [
+            'Eleven candidate directions in two days, from silent tool failures to this one',
+            'Many attempted fixes failed, including the pretrained-judge fix on Lite',
+            'Strong answer to "a hypothesis that failed" when the interviewer works on agents',
+          ]},
+          { q: 'What must you not claim?', points: [
+            'Post-training causes it',
+            'Gemma recognizes its patches, or recognition is ruled out',
+            'Only Gemma does it, or other models never do',
+            'The repair fixes Gemma\'s judgment or most rubber-stamped failures',
+            'Training cannot work, or no internal signal exists',
+            'A tie-break, a second judge or a shell fixes rubber-stamping',
+            'Gemma gives little extra trust to its passing patches, since scores near the ceiling limit that test',
           ]},
         ],
       },
@@ -462,7 +556,7 @@ const sources = [
   ['MSR program FAQ', 'https://www.microsoft.com/en-us/research/academic-program/undergraduate-research-internship-computing/faq/'],
 ];
 
-const nav = [...sections.map((s) => [s.id, s.title]), ['design', 'Open-ended design'], ['basics', 'Basics'], ['labs', 'By lab'], ['ask', 'Ask them'], ['checks', 'Still to check']];
+const nav = [['who', 'Who is asking'], ...sections.map((s) => [s.id, s.title]), ['design', 'Open-ended design'], ['basics', 'Basics'], ['labs', 'By lab'], ['ask', 'Ask them'], ['checks', 'Still to check']];
 const external = { target: '_blank', rel: 'noopener noreferrer' };
 ---
 
@@ -530,6 +624,13 @@ const external = { target: '_blank', rel: 'noopener noreferrer' };
           <p class="kicker">A judgment call, not from a report</p>
           <h2 class="mb-3 mt-1 text-xl font-semibold">What transfers</h2>
           {transfers.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+        </section>
+
+        <section id="who" class="mb-10 scroll-mt-4">
+          <p class="kicker">A judgment call, not from a report</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Who is asking</h2>
+          <p class="mb-3 text-sm text-ink-muted">Look up each interviewer first. Lead with the work closest to theirs, then connect it to your main question.</p>
+          {audiences.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
         </section>
 
         {sections.map((section) => (
