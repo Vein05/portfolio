@@ -20,8 +20,8 @@ export default defineConfig({
     // applyBaseStyles: false because we import our own full CSS with @tailwind base
     tailwind({ applyBaseStyles: false }),
     sitemap({
-      // Landscape poster sheets canonicalize to the portrait page.
-      filter: (page) => !page.endsWith('/landscape/'),
+      // Landscape poster sheets canonicalize to the portrait page. The prep page is unlisted.
+      filter: (page) => !page.endsWith('/landscape/') && !page.includes('/prep-e3d21522/'),
       serialize(item) {
         const date = postDates.get(item.url);
         if (date) item.lastmod = new Date(`${date}T00:00:00Z`).toISOString();

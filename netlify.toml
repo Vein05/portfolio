@@ -50,3 +50,9 @@
   for = "/transcript-b129645f.pdf"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
+
+# Unlisted interview prep page: reachable by direct link only, kept out of search engines
+[[headers]]
+  for = "/prep-e3d21522/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"

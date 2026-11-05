@@ -1,0 +1,603 @@
+---
+// Unlisted research interview prep. Reachable by direct link only: noindex meta here, an
+// X-Robots-Tag header in netlify.toml, and a sitemap filter in astro.config.mjs. It skips
+// BaseLayout so the page has no analytics, canonical or social tags, and is never linked
+// from the site. Do not name a submission venue here (see AGENTS.md).
+import '../styles/global.css';
+
+type Item = { q: string; points: string[] };
+type Group = { title?: string; items: Item[] };
+type Section = { id: string; kicker: string; title: string; note?: string; groups: Group[] };
+
+const expect = [
+  ['Last cycle, one admitted applicant on Reddit', 'Invites came around Nov 19, 2025. Two interviews with senior researchers on Dec 3, offer on Dec 19. Both technical and behavioral, focused on past projects.'],
+  ['2022 intern blog', 'One 40 to 45 minute Teams call with 1 to 3 people: a domain expert and up to two others. Mostly about your research and essays.'],
+  ['Glassdoor, across MSR internships', 'Mostly CV and past projects. Some easy to medium coding, some ML basics, a few asked for slides on past research.'],
+  ['Reddit, earlier cycle', 'One open-ended prompt: design a smart elevator.'],
+  ['Not known', 'Whether "technical" means project depth or live coding. Prepare both, at a light level for coding.'],
+];
+
+const transfers = [
+  ['Your story and your papers', 'Every research interview'],
+  ['Research judgment, mentors, collaboration', 'Every research interview'],
+  ['Evaluation and statistics', 'Any group that reads your papers closely'],
+  ['Open-ended design', 'Mostly company labs, some faculty'],
+  ['Coding and ML basics', 'Mostly company labs, rarely faculty'],
+  ['Summer project and why this lab', 'Rewrite for each lab'],
+];
+
+const sections: Section[] = [
+  {
+    id: 'story',
+    kicker: 'Start here',
+    title: 'Your story',
+    groups: [{
+      items: [
+        { q: 'Tell us about yourself.', points: [
+          'Junior in CS at Southern Miss, no local NLP group',
+          'One question: when does an evaluation support the conclusion drawn from it?',
+          'One result, in plain words',
+          'What you want from this internship, then stop',
+        ]},
+        { q: 'What connects your projects?', points: [
+          'Hidden definitions of success',
+          'Retrieval: what counts as the right memory',
+          'Agents: a tool can return normally without doing the job',
+          'You also build what you measure (Pali)',
+        ]},
+        { q: 'Explain your main result to someone outside the field.', points: [
+          'Memory systems rewrite what you said into facts and summaries',
+          'A benchmark must then choose what earns credit: the original turn, anything derived from it, or one canonical fact',
+          'You kept the retrieved lists fixed and changed only that choice',
+          'Scores and design recommendations changed',
+          'Save the coined terms for follow-ups',
+        ]},
+        { q: 'Why research? Why this area?', points: [
+          'The real origin: the result that turned this into a question for you',
+          'Starting without a local group: the shared GPU machine, the undocumented driver',
+          'Next: PhD and an academic career on reliable retrieval and agent systems',
+        ]},
+        { q: 'You have many papers for an undergraduate. How? How much of this is AI-assisted?', points: [
+          'A prediction, not from a report. Expect some version of it',
+          'Be plain about which tools you use and for what',
+          'How you check the output: numbers traced to data, citations checked against the source',
+          'Prove depth by going deep on any number they pick',
+          'Name what your advisor and coauthors did',
+        ]},
+      ],
+    }],
+  },
+  {
+    id: 'papers',
+    kicker: 'Likely the largest part',
+    title: 'Your papers',
+    note: 'For every paper, know what was yours, what your advisor or coauthor did, and the sample size behind each percentage.',
+    groups: [
+      {
+        title: 'Same Ranking, Different Winner',
+        items: [
+          { q: 'Why nDCG?', points: [
+            'The reader gets the top 60, so position matters',
+            'MRR counts only the first relevant item. Recall@60 ignores position',
+            'The Source target can make several items relevant at once',
+            'Do not argue from graded credit: relevance in the paper is binary',
+            'Keep the reason for the metric apart from the finding',
+            'Target sensitivity holds under Recall@60, MRR and nDCG@60 on the transfer runs',
+          ]},
+          { q: 'What exactly is the 83 to 94 percent computed over?', points: [
+            'Raw vs Canonical only, per run, 8 runs (4 retrievers, 2 datasets)',
+            'Canonical-covered shared queries only, because covered queries are easier',
+            '"Changed" means any nonzero change',
+            'Other pairs are lower: Raw vs Source 31.3 to 66.2, Source vs Canonical 44.2 to 55.2',
+          ]},
+          { q: 'How large are the changes?', points: [
+            'Mean absolute change: 0.25 on LoCoMo, 0.33 on LongMemEval-S',
+            'At least 0.1 on 65% and 71% of queries',
+          ]},
+          { q: 'Did the per-query changes flip benchmark results?', points: [
+            'Not by themselves. In the 8 native runs, Canonical beats Raw for every retriever',
+            'The flips are separate: target orderings on the Mem0 and MemoryOS transfer runs, and the parser-density recommendation',
+            'Your research statement says the changes "flipped benchmark results". Have this distinction ready',
+          ]},
+          { q: 'So which target is correct?', points: [
+            'Still open in your notes. Say it aloud in 3 or 4 sentences',
+            'Raw best predicts answer F1 on LoCoMo',
+            'Source and Canonical match the judge-based scorer better on LongMemEval-S',
+            'Only 29.2% of contested credits were fully justified',
+            'End on what a benchmark should report',
+          ]},
+          { q: 'Why trust the LLM judges?', points: [
+            '115 human-labeled cases, stratified by rank',
+            'Each model vs the human: kappa 0.77 to 0.87, binary',
+            'Five-model majority vote on 1,902 contested cases',
+            'Use the model vs human numbers, not the pooled kappa of 0.83',
+            'Limits: small set, one primary annotator with a 36-case overlap',
+            'Claude Sonnet 4 votes in the audit but was not in the human validation',
+            'Agreement is not correctness: models can share blind spots',
+          ]},
+          { q: 'Is this just metric sensitivity?', points: [
+            'The metric can stay fixed. What changes is the definition of a correct item',
+            'The retrieved list does not change at all',
+          ]},
+          { q: 'Is your Recall@60 standard recall?', points: [
+            'No. The code returns 1 if any target ID is in the top 60, so it is hit@60',
+            'Say so before an IR person finds it',
+          ]},
+          { q: 'Is the result model-dependent?', points: [
+            'Ask what "model" means: memory system, retriever or parser',
+            'Say which of these the evidence covers and which it does not',
+          ]},
+          { q: 'Why k = 60?', points: [
+            'Matches or exceeds the retrieval depth of the systems in scope',
+            'Rescoring at k = 20 and 40 made the effect stronger, so 60 is the conservative depth',
+          ]},
+        ],
+      },
+      {
+        title: 'Outcome Monitors',
+        items: [
+          { q: 'What is a silent failure, and what do the monitors do?', points: [
+            'Example: a cached error page or a negative price in the expected format',
+            'Rules mined from task-disjoint traces or derived from public schemas',
+            'On a violation: keep the result, send a nonbinding receipt naming the broken property and the recovery tools',
+          ]},
+          { q: 'What are the main results?', points: [
+            'ToolMaze completion 10.9% to 28.1% across four models in two provider families, replicated in a third',
+            'τ-bench retail: +14.0 and +12.0 points on two tiers',
+            'Gains concentrate where the fault blocks completion',
+          ]},
+          { q: 'How do you know the recovery-tool list drives the gain?', points: [
+            'Stripped receipt performs at baseline. Restoring the list adds 11.4 points (p = .028)',
+            '114 matched workflow pairs',
+            'Witness detail and timing nulls are power-bounded, about 18 points minimum detectable effect',
+            'Say "no detectable difference", not "no effect"',
+          ]},
+          { q: 'Your statement credits recovery guidance over detection alone. Do you still believe that?', points: [
+            'Your later flag-only study changes how you should say this for silent faults',
+            'Work out the wording before any interview: which setting each claim holds in',
+            'Good material for "what changed your mind?"',
+          ]},
+          { q: 'Did you design the detector and the faults together?', points: [
+            'The paper says the miner and injector may be aligned',
+            'τ-bench and AppWorld faults were designed so contract sources could express them',
+            'On a suite authored blind to the vocabulary, detection falls to about 46% and completion is unchanged',
+          ]},
+          { q: 'What about false alarms?', points: [
+            'Clean workflows: 74 of 114 for both arms, interval of about 5.3 points each way',
+            '16 false-trigger receipts in 14 pairs, five rescues and five harms',
+            'So clean traffic is not harm-free, even though every action stays available',
+          ]},
+          { q: 'Would this work in deployment?', points: [
+            'Fault-enriched samples, no live deployment, no organic failures',
+            'At the unfavorable interval endpoints, a net gain needs fault prevalence of about 0.32 or more',
+            'Not established: adversarial tools, privacy failures, irreversible actions',
+          ]},
+          { q: 'What if no recovery tool exists?', points: [
+            'Think this through. Check whether the paper tests it',
+            'Links to the irreversible-actions limit',
+          ]},
+          { q: 'How is this different from AgentRx?', points: [
+            'Read the paper first (arXiv 2602.02475)',
+            'Your unverified working answer: they diagnose after the run from its trajectory, you check during the run and point to recovery tools',
+          ]},
+        ],
+      },
+      {
+        title: 'SEAM',
+        items: [
+          { q: 'How does absorption differ from an instruction-following failure?', points: [
+            'Existing benchmarks tell the model which text is instruction and which is data, then test obedience',
+            'SEAM tests harmless user speech after an unmarked paste',
+            'The model returns your comment inside the edited text',
+          ]},
+          { q: 'What did you find?', points: [
+            '300 editing examples, six matched conditions, 20 models',
+            'Bare newline: 7.7% to 66.7% absorbed',
+            'A blank line does not significantly help in any model',
+            'Boundary markers help in 19 of 20, without removing the failure',
+            'Comments that fit the pasted text are absorbed more in 17 of 20',
+          ]},
+          { q: 'What can it not tell you?', points: [
+            'Constructed English examples, first turn only',
+            'The WildChat and LMSYS audit shows the pattern occurs, not how common it is',
+            'One marker format, no deployed interface',
+          ]},
+          { q: 'You ran a test per model. How did you handle multiple comparisons?', points: [
+            'Look up the exact correction in the paper before you answer',
+          ]},
+        ],
+      },
+      {
+        title: 'Compression Is Not Evaluation-Neutral',
+        items: [
+          { q: 'What is the claim?', points: [
+            'Giving every reader the same stored compressed evidence shrinks reader upgrades',
+            'HotpotQA: a 31.8-point gap between readers falls to 7.8 under one RECOMP output',
+            'Your submitted CV lists arXiv 2606.21807 under a different title than the site. Know both',
+          ]},
+        ],
+      },
+      {
+        title: 'SIEVE',
+        items: [
+          { q: 'Tell us about a hypothesis that failed.', points: [
+            'Four kinds of adaptive compression: reader, acquisition, format, query type',
+            'Kill criteria fixed in advance. Only query type passed',
+            'What you did after three of the four failed',
+          ]},
+          { q: 'Why does query type transfer across readers when the others do not?', points: [
+            'Know which part is measured and which part is your explanation',
+            'Why those four axes and not others',
+          ]},
+        ],
+      },
+      {
+        title: 'LAPSE',
+        items: [
+          { q: 'What is it? (On your site and arXiv, not on your submitted CV)', points: [
+            'Memory writers turn temporary statements ("I\'m staying in Pasadena") into permanent facts ("lives in Pasadena")',
+            'Review the human validation before you bring it up',
+          ]},
+        ],
+      },
+      {
+        title: 'Pali, MagnoliaEd, deepseek-go',
+        items: [
+          { q: 'You critique memory benchmarks and also built a memory system. What did building teach you?', points: [
+            'Lexical and vector retrieval with candidate fusion, pluggable backends',
+            'Benchmarked on LoCoMo, LongMemEval and BEAM',
+            'One specific design choice that an evaluation changed, or failed to settle',
+          ]},
+          { q: 'Walk us through one hard engineering problem.', points: [
+            'MagnoliaEd: Fargate, Docker, Terraform, load-tested to 1,000+ concurrent sessions',
+            'deepseek-go: maintaining an SDK that others use in production',
+            'What broke and how you found it',
+          ]},
+          { q: 'You run a startup and do research. How do you split your time?', points: [
+            'A prediction, not from a report',
+            'Give a true answer about current time split and summer commitment',
+          ]},
+        ],
+      },
+    ],
+  },
+  {
+    id: 'judgment',
+    kicker: 'Any research interview',
+    title: 'Research judgment',
+    groups: [{
+      items: [
+        { q: 'What was the hardest part of your research? What part did you dislike?', points: [
+          'Pick a true part and say why',
+          'Then what you changed because of it',
+        ]},
+        { q: 'If you started this project again, what would you do differently?', points: [
+          'Same Ranking: all five voters in the human validation, more double-labeled cases',
+          'Outcome Monitors: failures that occur naturally',
+          'Avoid vague answers such as "more data"',
+        ]},
+        { q: 'Why did you make this particular design choice?', points: [
+          'Formula: what you chose, where it came from, why it fits here or what you checked',
+          '"That is what everyone does" is a gap',
+          'If untested: "I took that from X and did not test alternatives. Here is how I would."',
+        ]},
+        { q: 'How do you decide to stop a project, or keep going after a failed pilot?', points: [
+          'One failed pilot is not enough: check that the setup can detect the effect at all',
+          'One example of stopping, one of continuing',
+        ]},
+        { q: 'What conclusions did you draw, and why do they matter?', points: [
+          'Who should change what they do',
+          'What your result does not show',
+        ]},
+        { q: 'Where would you take this project next?', points: [
+          'One concrete next study per paper',
+          'What result would change your mind',
+        ]},
+        { q: 'Pick a recent paper. What would you do next if you were the author?', points: [
+          'Have two ready: one from their group, one from outside it',
+          'One real strength, one real weakness, one next study',
+        ]},
+      ],
+    }],
+  },
+  {
+    id: 'evaluation',
+    kicker: 'Your own area',
+    title: 'Evaluation and statistics',
+    groups: [{
+      items: [
+        { q: 'Is a retrieval metric evidence about answer quality?', points: [
+          'Construct validity: what is "correct retrieval" meant to measure?',
+          'Your own Appendix E: which target predicts answer F1 depends on the dataset',
+        ]},
+        { q: 'Are your gains outside run-to-run noise?', points: [
+          'Number of tasks and seeds behind each percentage',
+          'Paired tests: McNemar for paired outcomes, paired bootstrap over queries',
+          'What your intervals include',
+        ]},
+        { q: 'Does it hold beyond your datasets and systems?', points: [
+          'Which systems, datasets and models you covered',
+          'Name one setting where you expect it to fail',
+        ]},
+        { q: 'What is the difference between reliability and validity in your audit?', points: [
+          'Reliability: do judges agree?',
+          'Validity: are they measuring what you claim?',
+          'Your paper shows more evidence for the first',
+        ]},
+        { q: 'LLM outputs vary between runs. How many repeats do you need?', points: [
+          'Tie it to the smallest effect you care about',
+          'Minimum detectable effect: Outcome Monitors reports about 18 points on some contrasts',
+        ]},
+      ],
+    }],
+  },
+  {
+    id: 'summer',
+    kicker: 'Rewrite for each lab',
+    title: 'The summer project',
+    groups: [{
+      items: [
+        { q: 'Walk us through your project in 12 weeks.', points: [
+          'A sensitivity report for agent benchmarks: vary what counts as success and which recovery actions exist',
+          'Which benchmark first, what you reuse from saved outputs',
+          'What exists at week 6',
+          'What runs out first: compute, labels or time',
+        ]},
+        { q: 'What would make it fail, and what would you report?', points: [
+          'If rankings survive every choice, that is still a result',
+          'What would make the test uninformative',
+        ]},
+        { q: 'What if your mentor has a different project in mind?', points: [
+          'Be open to it. Topic match to that year\'s projects often decides selection',
+          'Which of your skills carry over',
+        ]},
+      ],
+    }],
+  },
+  {
+    id: 'people',
+    kicker: 'Any research interview',
+    title: 'Mentors, people, leadership',
+    groups: [{
+      items: [
+        { q: 'What do you look for in a good mentor?', points: [
+          'A specific behavior, with one example from your advisor',
+          'How often you want to meet, what you want pushed on',
+        ]},
+        { q: 'What did you like or dislike about working with a past mentor?', points: [
+          'One honest, specific point',
+          'No complaint without what you did about it',
+        ]},
+        { q: 'Tell us about a disagreement with an advisor or collaborator.', points: [
+          'The actual issue, the evidence each side had, how it ended',
+          'Pick one where you were at least partly wrong',
+        ]},
+        { q: 'You had no local group. How did you get feedback?', points: [
+          'Your advisor, reviewers, outreach',
+          'What was missing, and why you want a group now',
+        ]},
+        { q: 'Tell us about mentoring the three students.', points: [
+          'First-generation students who had never done research',
+          'Reading papers, turning questions into experiments, real results vs lucky seeds',
+          'One is submitting their first paper',
+          'The diversity essay makes all of this checkable. MSR treats it as an important part of review',
+        ]},
+        { q: 'What are your strengths and weaknesses?', points: [
+          'A real weakness with what you are doing about it',
+          'A strength with one example',
+        ]},
+        { q: 'What would be a good outcome from this internship?', points: [
+          'From your statement: turning an individual agenda into a collaborative one',
+          'A concrete output as well, such as a paper or a tool',
+        ]},
+      ],
+    }],
+  },
+];
+
+const designSteps = [
+  ['Clarify', 'Who uses it, what scale, what is fixed. Ask 2 or 3 questions, then state assumptions.'],
+  ['Objective', 'Name the metric and what it hides. Elevator: mean wait, p95 wait, energy, fairness across floors.'],
+  ['Baseline', 'The simplest thing that works.'],
+  ['Improve', 'One or two ideas, and the tradeoff each makes.'],
+  ['Evaluate', 'How you test before deployment, the comparison, and which result would change your mind. Spend extra time here.'],
+  ['Failure and people', 'Safety, accessibility, perceived fairness, sensor failure.'],
+];
+
+const designPrompts = [
+  'Design a smart elevator for a 40-floor office building.',
+  'Design a traffic-light controller for one busy intersection.',
+  'How would you decide whether a new spell-checker beats the old one?',
+  'Design an evaluation for an agent that books travel. What counts as success?',
+  'A user says "forget what I said about my job." Design memory that handles this, and test it.',
+  'How would you find out whether an LLM judge prefers its own model\'s outputs?',
+  'A tool call returns 200 OK but did nothing. Detect this at scale without labels.',
+  'Tell a user when an answer should not be trusted. How do you check it does not cause over-reliance?',
+  'A new memory benchmark ranks System A above B. What do you check before believing it?',
+];
+
+const basics = [
+  ['ML', 'Precision and recall, bias and variance, regularization, imbalanced data. All reported on Glassdoor.'],
+  ['IR', 'nDCG, MRR and hit@k by hand. BM25 vs embeddings. Fusion. Where a RAG pipeline can fail.'],
+  ['Statistics', 'What a p-value and an interval mean. McNemar, bootstrap, Cohen vs Fleiss kappa, multiple comparisons, minimum detectable effect.'],
+  ['Coding', 'Easy to medium: arrays, hash maps, strings, graphs. Write nDCG@k from scratch.'],
+  ['Self-check', 'Target {A, B}, A at rank 1, B at rank 3: DCG 1.5, ideal DCG about 1.63, nDCG about 0.92.'],
+];
+
+const labs = [
+  ['AI Frontiers, MSR Redmond', 'Evaluation beyond one score, non-deterministic outputs, finding which agent caused a failure. Read Eureka (arXiv 2409.10566) and the Magentic-One report.'],
+  ['Human-AI eXperiences, MSR Redmond', 'Fix it or tell the user? What does a false alarm cost a person? Actions that cannot be undone. Read Magentic-One and AgentRx.'],
+  ['AI Interaction and Learning, MSR NYC', 'Multi-turn degradation, a correction at turn 30, multi-turn benchmarks without hidden choices. Read "LLMs Get Lost in Multi-Turn Conversation".'],
+  ['FATE and STAC, MSR NYC', 'Concept, operationalization, validation. How to prefer one scoring target over another, beyond showing they disagree. Read Wallach\'s measurement papers.'],
+  ['Asta, Ai2', 'Rubric and LLM-judge validity on their own benchmarks. Read AstaBench (arXiv 2510.21652) and "Deep Research, Shallow Evaluation" (arXiv 2603.06942).'],
+  ['University labs and PhD interviews', 'Less coding, more "why this lab" and "what would you work on". Read the host\'s last two papers.'],
+];
+
+const askThem = [
+  'What have past interns worked on, and what happened to that work?',
+  'What would the scope of my role and contributions be?',
+  'How is the project chosen: before I arrive, or together?',
+  'What separates a great summer from a good one, in your view?',
+  'What is your group\'s current biggest evaluation problem?',
+];
+
+const checks = [
+  'Read AgentRx (arXiv 2602.02475). Skim Eureka (arXiv 2409.10566), since your statement names both',
+  'Same Ranking: which LongMemEval-S retriever is missing from Figure 3, and why',
+  'Same Ranking: which scorer produced the LongMemEval-S "answer F1" in Table 12, and what "strong" means there',
+  'Same Ranking: how target mapping handles queries with several evidence turns',
+  'Same Ranking: the source paper for each borrowed choice, and the kappa on the 36-case overlap',
+  'Outcome Monitors: tasks and interval behind each main number',
+  'SEAM: the multiple-comparison correction used',
+  'CV: the 300+ event attendance figure is marked in your source as worth confirming',
+  'Practice: mock interviews with your advisor or a grad student, then one open-ended prompt aloud each week',
+];
+
+const sources = [
+  ['Intern blog, 2022', 'https://drshika.pages.dev/2022/03/03/Microsoft-Research-Internship'],
+  ['Reddit, 2026 program thread', 'https://www.reddit.com/r/csMajors/comments/1ocjebv/microsoft_undergraduate_research_internship_2026/'],
+  ['Reddit, earlier thread', 'https://www.reddit.com/r/csMajors/comments/1gl875n/microsoft_undergraduate_research_internship/'],
+  ['Glassdoor, MSR research intern', 'https://www.glassdoor.com/Interview/Microsoft-Research-Intern-Interview-Questions-EI_IE1651.0,9_KO10,25.htm'],
+  ['Alex Lu, internships at MSR', 'https://www.alexluresearch.com/resources/internships/'],
+  ['MSR program FAQ', 'https://www.microsoft.com/en-us/research/academic-program/undergraduate-research-internship-computing/faq/'],
+];
+
+const nav = [...sections.map((s) => [s.id, s.title]), ['design', 'Open-ended design'], ['basics', 'Basics'], ['labs', 'By lab'], ['ask', 'Ask them'], ['checks', 'Still to check']];
+const external = { target: '_blank', rel: 'noopener noreferrer' };
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <title>Interview prep</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      try {
+        const stored = localStorage.getItem('portfolio-theme');
+        document.documentElement.dataset.theme = stored === 'dim' ? 'dim' : 'daylight';
+      } catch {
+        document.documentElement.dataset.theme = 'daylight';
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      .prep { font-family: 'IBM Plex Sans', sans-serif; }
+      .prep .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); }
+      .prep summary { cursor: pointer; list-style: none; display: flex; gap: 0.6rem; font-weight: 500; padding: 0.7rem 0; }
+      .prep summary::-webkit-details-marker { display: none; }
+      .prep summary::before { content: '+'; font-family: 'IBM Plex Mono', monospace; color: rgb(var(--color-ink-blue)); flex: none; width: 0.8rem; }
+      .prep details[open] > summary::before { content: '\2212'; }
+      .prep details { border-top: 1px solid rgb(var(--color-border-paper)); }
+      .prep details > ul { list-style: disc; margin: 0 0 0.9rem 1.45rem; padding-left: 1rem; color: rgb(var(--color-ink-dark)); }
+      .prep details > ul li { margin: 0.25rem 0; }
+      .prep a { color: rgb(var(--color-ink-blue)); }
+      .prep a:hover { text-decoration: underline; }
+      .prep .row { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 0.25rem 1.25rem; padding: 0.6rem 0; border-top: 1px solid rgb(var(--color-border-paper)); }
+      .prep .row > :first-child { font-weight: 500; }
+      @media (max-width: 560px) { .prep .row { grid-template-columns: minmax(0, 1fr); } }
+      @media print { .prep .no-print { display: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="prep min-h-screen bg-paper-light text-ink-dark">
+      <main class="mx-auto max-w-[46rem] px-4 py-10 text-[16px] leading-relaxed sm:px-6">
+        <header class="mb-8">
+          <p class="kicker">Unlisted</p>
+          <h1 class="mt-1 text-3xl font-semibold">Research interview prep</h1>
+          <p class="mt-3">Questions with short points, not scripted answers. Say each answer aloud, then open the points to see what you missed. Built for the Microsoft Research undergraduate internship, and most of it carries over to other research interviews.</p>
+          <p class="mt-3 text-sm text-ink-muted">Questions come from interview reports and your own papers and notes. Items marked as a prediction or inference are guesses. Updated November 5, 2026.</p>
+        </header>
+
+        <nav class="no-print mb-8 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-border-paper py-3 text-sm" aria-label="Sections">
+          {nav.map(([id, title]) => <a href={`#${id}`}>{title}</a>)}
+          <button id="toggle-all" type="button" class="ml-auto border border-border-paper px-3 py-1 text-ink-dark">Open all</button>
+        </nav>
+
+        <section class="mb-10">
+          <p class="kicker">What people report</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">What to expect</h2>
+          <p class="mb-3 text-sm text-ink-muted">Self-reported and uneven. Microsoft does not describe the format or dates.</p>
+          {expect.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+        </section>
+
+        <section class="mb-10">
+          <p class="kicker">A judgment call, not from a report</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">What transfers</h2>
+          {transfers.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+        </section>
+
+        {sections.map((section) => (
+          <section id={section.id} class="mb-10 scroll-mt-4">
+            <p class="kicker">{section.kicker}</p>
+            <h2 class="mb-3 mt-1 text-xl font-semibold">{section.title}</h2>
+            {section.note && <p class="mb-3 text-sm text-ink-muted">{section.note}</p>}
+            {section.groups.map((group) => (
+              <div class="mb-6">
+                {group.title && <h3 class="mb-2 mt-5 text-base font-semibold text-ink-blue">{group.title}</h3>}
+                {group.items.map((item) => (
+                  <details>
+                    <summary>{item.q}</summary>
+                    <ul>{item.points.map((point) => <li>{point}</li>)}</ul>
+                  </details>
+                ))}
+              </div>
+            ))}
+          </section>
+        ))}
+
+        <section id="design" class="mb-10 scroll-mt-4">
+          <p class="kicker">About 10 minutes, said aloud</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Open-ended design</h2>
+          <p class="mb-3 text-sm text-ink-muted">Only one such prompt is reported for this program. This structure is a working guess. If you blank, go back to choosing a metric.</p>
+          {designSteps.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">Practice prompts</h3>
+          <ul class="ml-5 list-disc space-y-1">{designPrompts.map((prompt) => <li>{prompt}</li>)}</ul>
+        </section>
+
+        <section id="basics" class="mb-10 scroll-mt-4">
+          <p class="kicker">Light review</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Basics</h2>
+          {basics.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+        </section>
+
+        <section id="labs" class="mb-10 scroll-mt-4">
+          <p class="kicker">Inferred from each group's work</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">By lab</h2>
+          <p class="mb-3 text-sm text-ink-muted">No report lists these. Read a paper before saying anything about it.</p>
+          {labs.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+        </section>
+
+        <section id="ask" class="mb-10 scroll-mt-4">
+          <p class="kicker">End of the interview</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Ask them</h2>
+          <ul class="ml-5 list-disc space-y-1">{askThem.map((question) => <li>{question}</li>)}</ul>
+        </section>
+
+        <section id="checks" class="mb-10 scroll-mt-4">
+          <p class="kicker">Before the interview</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Still to check</h2>
+          <ul class="ml-5 list-disc space-y-1">{checks.map((check) => <li>{check}</li>)}</ul>
+        </section>
+
+        <footer class="border-t border-border-paper pt-4 text-sm text-ink-muted">
+          <p class="kicker mb-2">Sources</p>
+          <ul class="space-y-1">{sources.map(([label, href]) => <li><a href={href} {...external}>{label}</a></li>)}</ul>
+        </footer>
+      </main>
+    </div>
+    <script is:inline>
+      const toggle = document.getElementById('toggle-all');
+      toggle.addEventListener('click', () => {
+        const open = toggle.textContent === 'Open all';
+        document.querySelectorAll('.prep details').forEach((d) => { d.open = open; });
+        toggle.textContent = open ? 'Close all' : 'Open all';
+      });
+    </script>
+  </body>
+</html>
