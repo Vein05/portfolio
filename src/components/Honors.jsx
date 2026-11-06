@@ -1,7 +1,10 @@
 import React from 'react';
-import { Trophy, GraduationCap, Code } from 'lucide-react';
+import { Award, Trophy, GraduationCap, Code } from 'lucide-react';
 
 const typeConfig = {
+  Grant: {
+    icon: Award,
+  },
   Winner: {
     icon: Trophy,
   },
@@ -14,6 +17,12 @@ const typeConfig = {
 };
 
 export const honors = [
+  {
+    type: "Grant",
+    title: "Eagle SPUR Research Grant",
+    organization: "USM Drapeau Center for Undergraduate Research",
+    link: "https://www.usm.edu/undergraduate-research/eagle-scholars-program-undergraduate-research-eagle-spur.php"
+  },
   {
     type: "Winner",
     title: "Pitch Competition",

@@ -1,6 +1,11 @@
 // Short dated items for the news card on /simple. Newest first.
 export const news = [
   {
+    date: "2026-11-06",
+    text: "Received an Eagle SPUR undergraduate research grant from USM.",
+    href: "https://www.usm.edu/undergraduate-research/eagle-scholars-program-undergraduate-research-eagle-spur.php",
+  },
+  {
     date: "2026-10-02",
     text: "SEAM posted on arXiv.",
     href: "https://arxiv.org/abs/2610.04210",
