@@ -33,7 +33,7 @@ const audiences = [
   ['Measurement or social science', 'Same Ranking as an operationalization choice, then reliability vs validity.'],
   ['Human-AI interaction', 'SEAM and Outcome Monitors. What the user meant, and what the user or agent gets told.'],
   ['Model training', 'Gemma: LoRA and thinking left the trust in place. State clearly that the cause is not established.'],
-  ['Non-specialist', 'Gemma\'s matplotlib example, or the plain version of Same Ranking. One story, no coined terms.'],
+  ['Non-specialist', 'Gemma\'s {{matplotlib example}}, or the plain version of Same Ranking. One story, no coined terms.'],
 ];
 
 const sections: Section[] = [
@@ -201,7 +201,7 @@ const sections: Section[] = [
             'Agents often ask the model that wrote a patch whether it is finished',
             'Judges saw the issue and one patch, without its writer',
             'Gemma 4 31B gave its top score to 52 of its 85 failing patches. Outside judges scored the same patches lower',
-            'Example: matplotlib 24570. Gemma scored it 100, GLM-4.5 scored it 20, and the hidden tests fail',
+            'Example: {{the matplotlib patch}}. Gemma scored it 100, GLM-4.5 scored it 20, and the hidden tests fail',
           ]},
           { q: 'Why compare with outside judges at all?', points: [
             'Some failing patches look right to everyone, so a raw score says little',
@@ -556,8 +556,49 @@ const sources = [
   ['MSR program FAQ', 'https://www.microsoft.com/en-us/research/academic-program/undergraduate-research-internship-computing/faq/'],
 ];
 
-const nav = [['who', 'Who is asking'], ...sections.map((s) => [s.id, s.title]), ['design', 'Open-ended design'], ['basics', 'Basics'], ['labs', 'By lab'], ['ask', 'Ask them'], ['checks', 'Still to check']];
+const matplotlibDiff = `-    elif align in ["left", "top"]:
++    elif align in ["right", "bottom"]:
+         offsets = [d for h, d in hd_list]
+-    elif align in ["right", "bottom"]:
++    elif align in ["left", "top"]:
+         offsets = [height - h + d for h, d in hd_list]`;
+
+const matplotlibPairings = [
+  ['Original', 'Near edge: left, top. Far edge: right, bottom. Top and bottom are wrong.'],
+  ['Gemma', 'Near edge: right, bottom. Far edge: left, top. Top and bottom are fixed, and left and right are now wrong.'],
+  ['Reference fix', 'Near edge: left, bottom. Far edge: right, top. All four are right.'],
+];
+
+const matplotlibScores = [
+  ['Gemma 4 31B', '100'],
+  ['gpt-oss-20b', '10'],
+  ['GLM-4.5', '20'],
+  ['gpt-oss-120b', '22'],
+  ['Kimi-K2', '90'],
+  ['Qwen3-Coder', '95'],
+  ['GLM-4.7-Flash', '100'],
+  ['Llama-4-Maverick', '100'],
+  ['Qwen3.5-9B', '100'],
+];
+
+const matplotlibTelling = [
+  'A bug report says top and bottom are reversed',
+  'Gemma swaps the code, so top and bottom now work, and left and right break',
+  'Asked if the patch will pass, Gemma gives it 100 and talks only about top and bottom',
+  'The hidden tests for left and right fail',
+];
+
+const matplotlibChallenges = [
+  'One chosen case. Only 3 of the 8 outside judges scored it low, and the other 5 gave 90 or more',
+  'GLM-4.5\'s 20 is not stable. With the reproduction script removed from the patch, GLM-4.5 scores it 95 and Gemma still scores it 100',
+  'It does not show that Gemma recognized its own patch. Gemma 4 12B and 26B-A4B also scored it 100',
+  'The shell result here is the exception. Gemma still gave 100 on 80% of the 51 patches in that test',
+  'The repository-test repair does not help here, since no existing test breaks',
+];
+
+const nav = [['who', 'Who is asking'], ['matplotlib', 'The matplotlib example'], ...sections.map((s) => [s.id, s.title]), ['design', 'Open-ended design'], ['basics', 'Basics'], ['labs', 'By lab'], ['ask', 'Ask them'], ['checks', 'Still to check']];
 const external = { target: '_blank', rel: 'noopener noreferrer' };
+const linkParts = (text: string) => text.split(/\{\{|\}\}/);
 ---
 
 <!doctype html>
@@ -594,6 +635,11 @@ const external = { target: '_blank', rel: 'noopener noreferrer' };
       .prep a:hover { text-decoration: underline; }
       .prep .row { display: grid; grid-template-columns: minmax(0, 13rem) minmax(0, 1fr); gap: 0.25rem 1.25rem; padding: 0.6rem 0; border-top: 1px solid rgb(var(--color-border-paper)); }
       .prep .row > :first-child { font-weight: 500; }
+      .prep code { font-family: 'IBM Plex Mono', monospace; font-size: 0.88em; }
+      .prep pre { font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.55; overflow-x: auto; padding: 0.75rem; border: 1px solid rgb(var(--color-border-paper)); }
+      .prep .scores { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.25rem; max-width: 20rem; }
+      .prep .scores > span { padding: 0.3rem 0; border-top: 1px solid rgb(var(--color-border-paper)); }
+      .prep .scores > span:nth-child(even) { font-family: 'IBM Plex Mono', monospace; text-align: right; }
       @media (max-width: 560px) { .prep .row { grid-template-columns: minmax(0, 1fr); } }
       @media print { .prep .no-print { display: none; } }
     </style>
@@ -630,7 +676,36 @@ const external = { target: '_blank', rel: 'noopener noreferrer' };
           <p class="kicker">A judgment call, not from a report</p>
           <h2 class="mb-3 mt-1 text-xl font-semibold">Who is asking</h2>
           <p class="mb-3 text-sm text-ink-muted">Look up each interviewer first. Lead with the work closest to theirs, then connect it to your main question.</p>
-          {audiences.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+          {audiences.map(([label, text]) => <div class="row"><span>{label}</span><span>{linkParts(text).map((part, i) => i % 2 ? <a href="#matplotlib">{part}</a> : part)}</span></div>)}
+        </section>
+
+        <section id="matplotlib" class="mb-10 scroll-mt-4">
+          <p class="kicker">Gemma paper, one patch</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">The matplotlib example</h2>
+          <p class="mb-3">Gemma fixed the reported bug, broke something next to it, then gave its patch a perfect score. Its reasoning covers only the reported bug.</p>
+
+          <div class="row"><span>The report</span><span><a href="https://github.com/matplotlib/matplotlib/issues/24386" {...external}>Issue 24386</a> says <code>top</code> and <code>bottom</code> are reversed in <code>HPacker</code>, the class that lays boxes out in a row.</span></div>
+          <div class="row"><span>The catch</span><span><code>VPacker</code> stacks boxes in a column and calls the same helper for <code>left</code> and <code>right</code>. Those two already worked, so a correct fix has to leave them alone.</span></div>
+          <div class="row"><span>The patch</span><span>Gemma swapped the two branches of the helper whole. Offset 0 is the near edge, the left or the bottom.</span></div>
+          <pre class="my-3" set:text={matplotlibDiff} />
+          {matplotlibPairings.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+          <div class="row"><span>Gemma's own check</span><span>While writing the patch, Gemma's script tried only <code>bottom</code> and <code>top</code> in <code>HPacker</code>.</span></div>
+          <div class="row"><span>Gemma as judge</span><span>Asked for the chance the hidden tests pass, without being told who wrote the patch, Gemma answered 100. It called the change "a simple swap" that "correctly implements the expected behavior". Its reasoning covers only top and bottom, and both coders marked the defect as not named.</span></div>
+          <div class="row"><span>The test result</span><span>The test added by the <a href="https://github.com/matplotlib/matplotlib/pull/24570" {...external}>upstream fix</a> checks six alignments. <code>left</code> and <code>right</code> fail, and the other four pass.</span></div>
+          <div class="row"><span>GLM-4.5 as judge</span><span>GLM-4.5 scored it 20: the patch "breaks VPacker by reversing left and right". That is the contrast the paper opens with.</span></div>
+          <div class="row"><span>Other writers</span><span>GLM-4.5, Kimi-K2 and Qwen3-Coder each wrote the correct pairing and pass. Gemma scored all three 100, the same as its own failing patch. It scored Llama-4-Maverick's failing patch 0, so it does not give everything 100.</span></div>
+          <div class="row"><span>Gemma with a shell</span><span>Gemma first suspected the patch also fixed <code>VPacker</code>, then wrote a test for it. The test failed, and Gemma dropped its score to 20.</span></div>
+          <div class="row"><span>Repository tests</span><span>The patch passes this check. All 263 stable existing tests still pass, so the check does not hold it back and it never gets a repair run.</span></div>
+
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">All nine judges, same patch</h3>
+          <div class="scores">{matplotlibScores.map(([judge, score]) => <><span>{judge}</span><span>{score}</span></>)}</div>
+          <p class="mt-2 text-sm text-ink-muted">The eight outside judges average 67, so Gemma's leniency on this patch is about +33.</p>
+
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">Telling it in 20 seconds</h3>
+          <ul class="ml-5 list-disc space-y-1">{matplotlibTelling.map((point) => <li>{point}</li>)}</ul>
+
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">Where it can be challenged</h3>
+          <ul class="ml-5 list-disc space-y-1">{matplotlibChallenges.map((point) => <li>{point}</li>)}</ul>
         </section>
 
         {sections.map((section) => (
@@ -644,7 +719,7 @@ const external = { target: '_blank', rel: 'noopener noreferrer' };
                 {group.items.map((item) => (
                   <details>
                     <summary>{item.q}</summary>
-                    <ul>{item.points.map((point) => <li>{point}</li>)}</ul>
+                    <ul>{item.points.map((point) => <li>{linkParts(point).map((part, i) => i % 2 ? <a href="#matplotlib">{part}</a> : part)}</li>)}</ul>
                   </details>
                 ))}
               </div>
