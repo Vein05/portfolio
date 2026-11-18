@@ -1,0 +1,125 @@
+---
+// Unlisted one-page number sheet for the 2026-11-18 Microsoft Research interview. Same privacy setup as
+// ../msr-dc835a07.astro: noindex meta, X-Robots-Tag via the /msr-dc835a07/* rule in netlify.toml, and the
+// sitemap filter in astro.config.mjs. Every number is copied from that page; do not add ones that are not there.
+import '../../styles/global.css';
+
+type Row = [string, string];
+type Block = { id: string; title: string; note?: string; rows: Row[] };
+
+const blocks: Block[] = [
+  { id: 'om', title: 'Outcome Monitors', rows: [
+    ['1 in 10 → 1 in 4+', 'ToolMaze completion 10.9% → 28.1%'],
+    ['+11.4 pts', 'from putting the recovery-tool list back (p = .028, 114 pairs). Without it: baseline'],
+    ['How rules are mined', 'Plain code reads clean runs from other tasks and tries fixed rule types: required fields, stable types, always-positive numbers, few-valued fields (order status), fields copied from the call, dates in order, one field linear in another. Kept only if it held in every example, with 2 to 4 examples'],
+    ['15,041 rules', 'from 400 clean workflows, 5 folds (a task never builds its own checker), under 2 s, no model call'],
+    ['79.6% / 1.39%', 'faults caught / false alarms on clean results, held out. Schema-only check: 55% / 18%'],
+    ['~46%', 'caught on faults written blind: 25 of 30 structured values, 6 of 27 plausible strings'],
+    ['AppWorld 25/32', 'no net change both ways; the agent finished 23 of 32 despite the fault'],
+    ['$0.13 vs $9.24', 'added cost: receipt (7%) vs a model reviewing each call first (498%, +3.75 pts, not significant)'],
+  ]},
+  { id: 'rg', title: 'Recovery gap', note: 'In progress. Say so. ToolHop, ALFWorld, a search agent; 3 to 5 cheap models.', rows: [
+    ['72–97%', 'of the lost success won back by a one-line "this result is wrong" flag'],
+    ['0–3%', 'won back by a neutral note that names the backup tool but says nothing is wrong'],
+    ['0–16%', 'flag alone on ToolMaze: the exception, needs the fix list too'],
+    ['43% vs 5%', 'unaided recovery, real vs fictional tasks: memory hides the problem'],
+    ['90% vs 81%', 'clean success, real vs fictional: not just "harder"'],
+    ['4 turns late', 'a correct flag still works (16-turn limit)'],
+    ['7–16 / 31–39 pts', 'cost of a wrong flag, real / fictional'],
+  ]},
+  { id: 'sr', title: 'Same Ranking, Different Winner', note: 'Findings of EMNLP 2026. Descriptive, not causal.', rows: [
+    ['83–94%', 'of shared queries change score (any change, one pair of definitions)'],
+    ['0.25–0.33', 'average change'],
+    ['3 metrics × 3 cutoffs', 'effect holds'],
+    ['115 cases', 'human labels checking the model judges, agreement 0.77–0.87'],
+    ['#20 → #1', 'Perplexity on AstaBench ScholarQA-CS2 after one citation rule (half credit for title-only), 35 submissions, all others stay put'],
+  ]},
+  { id: 'gm', title: 'Gemma 4 paper', rows: [
+    ['71%', 'of failing patches (32 models) pass every existing test'],
+    ['16.3 → 8.7 pts', 'extra trust in its own failing patches: vs all writers / vs 7 equally strong writers'],
+    ['1 in 10', 'issues where the correct fix breaks an outdated test, and Gemma undoes the fix'],
+  ]},
+  { id: 'sb', title: 'Shraddha Barke', rows: [
+    ['AgentRx', '170 hand-labeled failed runs, 11 settings, 9 root causes, kappa 0.89. Finds the failing step 75% better than prior work'],
+    ['Symbolic Constraint Agents', 'AppWorld +5.4 to +9.8 pts (one model). Call rules miss hidden state: recall 43–49%'],
+    ['One-line difference', 'AgentRx: after the run. SCA: before the call. Yours: after the result, during the run'],
+  ]},
+  { id: 'mm', title: 'Markus Mobius', rows: [
+    ['1,974 queries', 'one news event, Paying for Information'],
+    ['3 rules', 'Equal, Provenance (first), Completer (only you had it). All Shapley values; reading order decides which'],
+    ['86.2% vs 27.2%', 'cited facts that look unique: within one answer vs whole index. Index scope decides whether the rule matters'],
+    ['41.87% vs 46–50%', 'premium publishers\' share: Equal vs Provenance'],
+    ['up to 20%', 'index corrupted on purpose; gap stays +7.62 to +8.12 (baseline 7.68). Uniform only, their own caveat'],
+    ['33.3% / 58.4%', 'premium / other articles with an exact timestamp'],
+    ['60–100%', 'Magentic Marketplace: first offer picked; fast sellers get a 10–30× edge. Say "your group"'],
+  ]},
+];
+
+const dont: string[] = [
+  '"Tasks the model cannot answer from memory", not "harder tasks"',
+  'Gemma does not "recognize" its own patches',
+  'No claims about stronger or current models; only cheap ones tested',
+  'No Michigan. No submission venue for papers under review',
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <title>MSR numbers</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      try {
+        const stored = localStorage.getItem('portfolio-theme');
+        document.documentElement.dataset.theme = stored === 'dim' ? 'dim' : 'daylight';
+      } catch {
+        document.documentElement.dataset.theme = 'daylight';
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      .cheat { font-family: 'IBM Plex Sans', sans-serif; }
+      .cheat .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); }
+      .cheat a { color: rgb(var(--color-ink-blue)); }
+      .cheat section { border-top: 2px solid rgb(var(--color-border-paper)); padding-top: 0.6rem; margin-bottom: 1.4rem; }
+      .cheat .r { display: grid; grid-template-columns: minmax(0, 10.5rem) minmax(0, 1fr); gap: 0 1rem; padding: 0.3rem 0; border-top: 1px solid rgb(var(--color-border-paper)); font-size: 14.5px; line-height: 1.45; }
+      .cheat .r > :first-child { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: rgb(var(--color-ink-blue)); }
+      .cheat .note { font-size: 13px; color: rgb(var(--color-ink-muted)); margin: 0.1rem 0 0.3rem; }
+      @media (max-width: 520px) { .cheat .r { grid-template-columns: minmax(0, 1fr); } }
+      @media print { .cheat .no-print { display: none; } .cheat main { padding-top: 0; } }
+    </style>
+  </head>
+  <body>
+    <div class="cheat min-h-screen bg-paper-light text-ink-dark">
+      <main class="mx-auto max-w-[46rem] px-4 py-8 sm:px-6">
+        <header class="mb-6">
+          <p class="kicker">Unlisted · 5:30–6:00 PM Central · Teams</p>
+          <h1 class="mt-1 text-2xl font-semibold">Numbers cheatsheet</h1>
+          <p class="no-print mt-2 text-sm">Context for each number is on the <a href="/msr-dc835a07/">full prep page</a>.</p>
+          <nav class="no-print mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm" aria-label="Sections">
+            {blocks.map((b) => <a href={`#${b.id}`}>{b.title}</a>)}
+          </nav>
+        </header>
+
+        {blocks.map((b) => (
+          <section id={b.id} class="scroll-mt-4">
+            <h2 class="text-lg font-semibold">{b.title}</h2>
+            {b.note && <p class="note">{b.note}</p>}
+            {b.rows.map(([n, t]) => <div class="r"><span>{n}</span><span>{t}</span></div>)}
+          </section>
+        ))}
+
+        <section>
+          <h2 class="text-lg font-semibold">Don't say</h2>
+          {dont.map((d) => <div class="r" style="grid-template-columns: minmax(0, 1fr)"><span style="font-family: inherit; font-weight: 400; color: inherit">{d}</span></div>)}
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

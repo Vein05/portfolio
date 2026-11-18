@@ -34,6 +34,11 @@
   status = 302
 
 [[redirects]]
+  from = "/msr-cheat"
+  to = "/msr-dc835a07/cheat/"
+  status = 302
+
+[[redirects]]
   from = "/mars"
   to = "https://mars-weather-app-fawn.vercel.app/"
   status = 301
