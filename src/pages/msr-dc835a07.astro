@@ -1,0 +1,819 @@
+---
+// Unlisted prep page for the Microsoft Research undergraduate internship interview on 2026-11-18.
+// Reachable by direct link only: noindex meta here, an X-Robots-Tag header in netlify.toml, and a
+// sitemap filter in astro.config.mjs. It skips BaseLayout so the page has no analytics, canonical or
+// social tags, and is never linked from the site. Do not name a submission venue for a paper under
+// review here (see AGENTS.md). Facts about the interviewers come from
+// research/reu/msr-interview/*.md, checked against arXiv on 2026-11-16.
+import '../styles/global.css';
+
+type Row = [string, string];
+type Item = { q: string; points: string[] };
+type Paper = { title: string; href: string; role: string; what: string; you: string };
+type Ask = { q: string; why: string };
+
+const external = { target: '_blank', rel: 'noopener noreferrer' };
+// ==text== marks a must-know fact; hl() renders it as a highlight.
+const hl = (text: string) => text.split('==');
+
+const mustKnow: Row[] = [
+  ['Time', 'Wednesday, November 18, ==5:30 to 6:00 PM Central== (3:30 to 4:00 PM Pacific), on Teams.'],
+  ['Who asked for you', 'Most likely Shraddha Barke. ==She wrote AgentRx==, the paper your research statement names.'],
+  ['The difference', '==AgentRx explains a failed run afterwards. Symbolic Constraint Agents checks a call before it runs. Outcome Monitors checks the result during the run and names the tools that can fix it.=='],
+  ['Their gap is your work', 'Symbolic Constraint Agents says call rules ==cannot catch failures hidden in the environment\'s state==. A check on results is for exactly those.'],
+  ['Outcome Monitors', 'ToolMaze completion ==10.9% to 28.1%==. Removing the list of recovery tools removes the gain.'],
+  ['Recovery gap', 'A flag wins back ==72% to 97%== of the loss. A neutral note wins back 0% to 3%. Unaided recovery is ==43% on real tasks, 5% on fictional ones==.'],
+  ['Gemma 4 paper', '==71% of failing patches pass every existing test.== Gemma gives equally strong writers\' failing patches full marks as often as its own.'],
+  ['Markus Mobius', 'Economist. Know two papers: ==Paying for Information, Not for Clicks== (no payment rule is called correct; they show how much the payout depends on it) and Magentic Marketplace (agents take the first offer).'],
+  ['Summer idea for Markus', '==Does who gets paid depend on what the index counts as "the same fact"?== Your memory paper, applied to his marketplace.'],
+  ['Do not say', 'Gemma recognizes its own patches. "Harder tasks" (say ==tasks the model cannot answer from memory==). Anything about stronger or current models. Michigan.'],
+];
+
+const logistics: Row[] = [
+  ['When', 'Wednesday, November 18, ==5:30 to 6:00 PM Central==. That is 3:30 to 4:00 PM Pacific, the time zone they wrote in.'],
+  ['Where', 'Microsoft Teams. Install it and test the camera and microphone the day before.'],
+  ['Who', 'Markus Mobius wrote the email. Shraddha Barke is the second interviewer. Her name is spelled Shraddha.'],
+  ['Reply', 'Not sent yet. Ask for 3:30 to 4:00 PM Pacific.'],
+  ['Length', '30 minutes. A 2022 intern reported one call with 1 to 3 people, mostly about their research and essays.'],
+];
+
+const plan: Row[] = [
+  ['Shraddha Barke', 'Most likely the one who asked for you. ==She wrote AgentRx==, the paper your research statement names, and her group\'s newest paper is the closest work to Outcome Monitors. Lead with Outcome Monitors, then the two projects that followed it.'],
+  ['Markus Mobius', 'An economist. He now uses language models to measure things, and checks whether a result survives a different measurement choice. Lead with Same Ranking, in plain words.'],
+  ['Both', 'Know how your work differs from AgentRx in two sentences. Know what was yours in each paper.'],
+  ['Evidence', 'Mobius wrote the email, so he may be coordinating. The case for Barke: your third area was software engineering and verification, her work is agent checking, and you named her paper. Still a guess.'],
+];
+
+const shape: Row[] = [
+  ['First 5 minutes', 'They introduce themselves. You give the short version of who you are.'],
+  ['Next 15 to 20 minutes', 'Your research. Expect follow-ups on one or two papers.'],
+  ['Last 5 minutes', 'Your questions for them. Pick two, one for each person.'],
+];
+
+const common: Item[] = [
+  { q: 'Tell us a little about yourself.', points: [
+    'Say: "I am Sugam, a junior in computer science at the University of Southern Mississippi in Hattiesburg. I am originally from Nepal. My research is on evaluating large language models: whether a test result actually supports the conclusion people draw from it. I work on two kinds of systems. The first is memory for language models. My Findings of EMNLP paper showed that changing only what a benchmark counts as the correct answer can change which system wins. The second is agents that call tools, and how they fail. Outcome Monitors catches tool calls that report success but did not work, and my newer work asks when agents can recover on their own."',
+    'About 35 seconds. Then stop and let them pick what to ask about',
+    'Graduation: expected May 2028 (CV)',
+  ]},
+  { q: 'What was your contribution?', points: [
+    'Cues: first author on all / I did most of the work: code, experiments, writing / Dr. Rabab oversaw it, full independence, stepped in with the hard questions / SEAM: Yeamin helped design the memory-writing experiments and the annotation',
+    'Roughly: "I\'m first author on all of them, and I did most of the work, the code, running the experiments, the writing. Dr. Rabab oversaw everything, but she gave us a lot of independence. She mostly stepped in with the hard questions, like the one that led to the fictional copies. On SEAM, Yeamin helped design the memory-writing experiments and how we did the annotation."',
+    'Say it from the cues, not word for word',
+  ]},
+  { q: 'What are your strengths and weaknesses?', points: [
+    'Strength 1, cues: finding out what is wrong / Same Ranking: the hidden definition behind a score / Outcome Monitors: tool calls that say success but failed',
+    'Strength 2, cues: explaining CS to people outside CS / research job with Dr. Zhang in construction (plastic recycling review) / mentored three first-generation students / MagnoliaEd: worked with professors on their course chatbots',
+    'Weakness, cues: no group in my area at my school, mostly just my advisor / I work alone on something too long before showing anyone / a short conversation would have changed the approach / now I show rough results early at the weekly meeting, even messy / part of why I want a team this summer',
+    'Roughly: "Because there\'s no group in my area at my school, I\'ve done most of my research with just my advisor. My weakness is that I tend to work on something alone for too long before showing it to anyone. Sometimes a 10-minute conversation would have changed my approach. What I do now is show rough results early, at my advisor\'s weekly meeting, even when they\'re messy. That\'s also part of why I want to work inside a team this summer."',
+    'It is the other side of being independent, so strength and weakness read as one picture. Swap in a real example if you have one',
+    'Do not use the pass-or-fail weakness here: it is already in the likes/dislikes and challenges answers',
+    'Do not name study design or statistics as the weakness. Evaluation is your research, so it sounds like a weakness in your own field. If asked what you are still learning: "formal statistics; right now I use paired comparisons and confidence intervals, and I want to learn causal-inference methods"',
+  ]},
+  { q: 'What do you look for in a good mentor?', points: [
+    'Say: "I learn most when I have room to try my own approach, inside a few clear limits: a goal we agree on, regular check-ins, and a point where we stop or change direction. I also want a mentor who will push back. In my recovery-gap project we measured how well agents recover from tool failures. My advisor, Dr. Rabab, asked whether the agents were really recovering, or just already knew the answer from pretraining. We argued about it, and that led us to build fictional copies of the tasks, where the model cannot know the answer from memory. That turned out to be the main result."',
+    'About 35 seconds. If it runs long, cut the last sentence',
+    'If asked what you found: on real-fact tasks agents got past a wrong tool value because they already knew the answer. ==On the fictional copies they almost never recovered on their own==',
+    'Say "tasks the model cannot answer from memory", not "harder tasks". Nothing about stronger models',
+  ]},
+  { q: 'What would you consider a good outcome from the internship?', points: [
+    'Say: "A good outcome for me is one finished piece of work that others can use, whether that is a paper, a tool, or a benchmark. I also want to learn how to do research as part of a team, because so far I have worked without a group in my area at my school. And I hope the summer starts a mentorship that lasts past the twelve weeks, with someone I can keep learning from through a PhD and into a research career."',
+    'If they ask what the work would be: the sensitivity report for agent benchmarks from your research statement, or the publisher-payment idea for Mobius',
+    'If they ask what comes after: a PhD on reliable retrieval and agent systems',
+  ]},
+  { q: 'What are you most excited to work on at Microsoft Research?', points: [
+    'Say: "The question I am most excited about is what actually causes a tool-calling agent\'s answer. In my recovery-gap work, agents often got past a wrong tool value, but on tasks built from public facts that was because they already knew the answer. I would like to test this causally: change one thing at a time, such as the value a tool returns or whether the fact could be in the model\'s memory, and see which one the answer follows. That would show where these agents actually fail, and whether current benchmarks, which mostly use public facts, can tell the two apart. Checks like your Symbolic Constraint Agents and my Outcome Monitors could then be measured on the cases where they matter. But I am open to what your group needs most."',
+    'About 40 seconds. One idea, then the openness line. Do not list three projects',
+    'If you already told the Dr. Rabab story, do not tell the finding again. Open with: "Building on the recovery-gap result I mentioned, I would like to test it causally..." and skip the second sentence',
+    'Follow-up: "What is the treatment, and what is held fixed?" The task stays the same. One run changes the tool value; another swaps the fact for a fictional one. The outcome is whether the answer follows the tool or the model\'s memory',
+    'Weak point, say it before they do: you cannot switch off a model\'s memory directly. Fictional copies stand in for that, and they could differ in other ways, such as wording or difficulty. That is why the copies keep the same task structure',
+    'If Mobius asks it, or turns to him after: use the publisher-payment idea in his section. ==Do not pitch "remove a source and see if the answer changes" to him as a way to pay publishers==. His paper argues those methods "answer the wrong counterfactual" for payment (Appendix C.4)',
+    'If asked what you have not done that this needs: no program synthesis, no proofs, no training models',
+  ]},
+  { q: 'Your questions about the internship (ask one, after a research question)', points: [
+    '"If I am selected, how are interns matched with mentors? Would I work with one of you?"',
+    '"What would a strong intern have done by the end of the summer?"',
+    '"If a related question comes up during the project, how much room is there to follow it?"',
+    '"What do interns usually use to run experiments: model APIs, GPUs, or shared tools?" Ask this one only if time is left. Better after an offer',
+  ]},
+  { q: 'Why Microsoft Research?', points: [
+    'Cues: agents from two angles here / Shraddha: checking agents like software (AgentRx) / Markus: agents acting for people (Marketplace, first offer wins) / me: in the middle, does the test show what we think',
+    'Roughly: "Honestly, a big part of it is that people here look at agents from really different angles. Like Shraddha, with AgentRx, it\'s almost checking agents the way you\'d check software. And Markus, your group looks at what happens when agents actually go out and act for people, like Magentic Marketplace, where they kept picking whatever offer showed up first. What I care about kind of sits in the middle of that: does the test actually tell you what you think it does. So being around both of those is really exciting to me."',
+    'Say it from the cues, not word for word',
+    'Magentic Marketplace: Bansal et al., arXiv 2510.25779. Markus is a middle author, so say "your group", not "your paper". You have read only its abstract',
+    'Do not say other labs lack this. Say you have not seen it elsewhere',
+  ]},
+  { q: 'What would you do next with this project?', points: [
+    'Same Ranking, cues: already tried it on an agent benchmark / AstaBench ScholarQA-CS2 (Ai2, literature QA by research agents) / one citation rule: half credit for a paper cited by title only / reused the saved judge decisions for 35 submissions, changed only that rule / Perplexity moves from #20 to #1; every other system stays put / next: do this across agent benchmarks, the sensitivity report',
+    'If asked what Ai2 said: you sent it to the ScholarQA team, and Dany Haddad replied that half credit is already generous, so the #1 end is the unrealistic one. Your point stands: the rank of a system without quotes is set by one number someone chose. Do not say it changed their design',
+    'Do not mention that you applied to Ai2',
+    'Write-up and code: github.com/Vein05/scholarqa-grading-check',
+    'Outcome Monitors: "Test it on failures that happen in real use. In the paper the failures were injected."',
+    'Recovery gap: the causal test in the "most excited" answer. If you already gave it, say "the causal test I mentioned"',
+  ]},
+  { q: 'What do you like or dislike about doing research?', points: [
+    'Say: "Coming from programming, I was used to tests: a test passes or fails, so you know roughly whether your fix worked. In research, for most questions that matter, nothing turns green to tell you that you are on the right path. I found that hard, because I like clear goals. But it is also what I like most. You are not held to one metric, and a result that goes against your plan can be a finding in itself. It is also part of why I study evaluation: even in code, a passing test does not always mean the fix is right. In my Gemma paper, the project\'s own tests missed most wrong fixes."',
+    'About 35 seconds. Do not follow it with the goalposts line from the challenges answer if you already said it',
+  ]},
+  { q: 'What are some challenges you encountered?', points: [
+    'Say: "The hardest part was starting. I came from programming, so the code was the easy part. What I did not know was how to turn an idea into a research question, plan the experiments, and decide when to drop an idea that is not working. Statistics was the other half: if a metric goes up 5%, is that real, is it noise, or is the average hiding something? Working with my advisor helped most. I now write down what counts as success and failure before I run anything, so I cannot move the goalposts after seeing results. In my benchmark paper I report how many individual queries change, not only the average score."',
+    'About 30 seconds',
+    'Likely follow-up, from Mobius: "So how would you tell if 5% is real?" Answer: compare on the same tasks with a paired test; put a confidence interval on the difference; check whether the gain comes from a few tasks; and say how many tasks it rests on. ==With about a hundred tasks, five points can easily be noise==',
+  ]},
+];
+
+const barkeWho: Row[] = [
+  ['Job', 'Senior Researcher in the Research in Software Engineering group at Microsoft Research, Redmond, since 2024.'],
+  ['Training', 'PhD at UC San Diego (2018 to 2024) with Nadia Polikarpova, on program synthesis: getting a computer to write a small program from examples.'],
+  ['In her words', '"Making AI trustworthy." Lately: training models on program reasoning, building coding agents you can trust, and checking that tool-using agents follow rules.'],
+  ['Her method', 'Pair a language model with a strict checker: rules, tests, a logic solver or a proof checker.'],
+  ['Known for', 'Grounded Copilot (2023), a study of how programmers use Copilot. It won a Distinguished Paper Award and has over 1,000 citations.'],
+  ['MSR history', 'She interned at Microsoft Research twice, in 2019 and 2022, before joining. She has mentored undergraduates.'],
+];
+
+const barkePapers: Paper[] = [
+  {
+    title: 'AgentRx: Diagnosing AI Agent Failures from Execution Trajectories',
+    href: 'https://arxiv.org/abs/2602.02475',
+    role: 'First author. Findings of EMNLP 2026. Your statement names it.',
+    what: 'Takes the log of an agent run that failed and finds the step where it went wrong for good. It writes rules from the tool descriptions and policy, checks each step against them, and gives the list of broken rules to a model that names the bad step. They also release 170 failed runs labeled by hand.',
+    you: 'Your research statement names this paper. Same problem as Outcome Monitors, at a different time: ==AgentRx looks at a run after it has failed, and you check during the run.==',
+  },
+  {
+    title: 'Symbolic Constraint Agents: Mining Formal Tool-Call Constraints to Prevent Agent Errors',
+    href: 'https://arxiv.org/abs/2610.25552',
+    role: 'Second author, with her intern Jinu Lee. October 18, 2026.',
+    what: 'Reads API documentation and writes rules about tool calls, such as "this key must come from an earlier login call". Before each tool call runs, a logic solver checks it against the rules. If a call breaks a rule, the agent gets a warning, or the call is fixed automatically when only one fix is possible.',
+    you: '==The closest paper to Outcome Monitors.== It came out two months after yours and does not cite it. Treat it as related work you found interesting. Do not raise who was first.',
+  },
+  {
+    title: 'Agents as Software: A Programming Languages Agenda for Agent Reliability',
+    href: 'https://arxiv.org/abs/2609.32198',
+    role: 'First author, with Adithya Murali. An essay, September 2026.',
+    what: 'Argues that agents should be treated like programs: write down what they must do, check it before they run, watch them while they run, and repair them after failures. One section separates mistakes an agent can still recover from and points of no return.',
+    you: '==Read this one first.== Your monitors are an example of her "watch while it runs" and "recover" parts. Her words to reuse: recoverable, runtime monitor, mined rules.',
+  },
+  {
+    title: 'Willful Disobedience: Automatically Detecting Failures in Agentic Traces (AgentPex)',
+    href: 'https://arxiv.org/abs/2603.23806',
+    role: 'Middle author. May 2026.',
+    what: 'Pulls the rules out of an agent\'s prompt and checks whole runs against them. An agent can end in the right final state, get full marks, and still have broken a required step along the way.',
+    you: 'Same idea as your Gemma paper: a passing score can hide a wrong process. For her it is final-state scoring. For you it is the existing tests and the model\'s own score.',
+  },
+  {
+    title: 'PromptPex: Automatic Test Generation for Language Model Prompts',
+    href: 'https://arxiv.org/abs/2503.05070',
+    role: 'Middle author. 2025.',
+    what: 'Reads a prompt, writes down what inputs and outputs it allows, and generates tests designed to make the model break those rules.',
+    you: 'Your Gemma paper finds that existing tests miss most wrong fixes. Her answer to weak tests is to generate better ones from a written rule.',
+  },
+];
+
+const barkeOther: Row[] = [
+  ['Tokengeist (2026)', 'Traces which earlier turns in a long conversation shaped a part of the model\'s answer. Middle author.'],
+  ['Understanding Enrichment in Reinforcement Learning (2026)', 'Training math reasoning with sparse rewards and hints. Her only public training paper. Not about code.'],
+  ['What\'s in a Proof? (2025)', 'A study of eight experts writing machine-checked proofs, with design advice for proof assistants.'],
+  ['HYSYNTH (NeurIPS 2024)', 'Uses a language model\'s guesses to steer a program search. First author.'],
+];
+
+const compare: [string, string, string, string][] = [
+  ['When it runs', 'During the run, after each tool result', 'After the run, on the failed log', 'During the run, before each tool call'],
+  ['What it checks', 'The result a tool sent back', 'Every step of the finished run', 'The call the agent is about to make'],
+  ['Where rules come from', 'A fixed program mines them from successful runs on other tasks, or reads public schemas. No model call', 'Tool descriptions, policy and the run itself', 'Language-model agents write them from API documentation, then correct them on sample runs'],
+  ['What does the checking', 'Plain code', 'Rule checks, then a language-model judge reads the log', 'An SMT solver'],
+  ['What happens next', 'The agent is told which rule broke and which tools can recover', 'A model names the step where the run failed', 'A warning, or an automatic fix of the call'],
+  ['Main result', 'ToolMaze completion 10.9% to 28.1%', 'Finds the failing step 75% better than prior work', 'Task success up 5.4 to 9.8 points on AppWorld, for one model'],
+];
+
+const mining: Row[] = [
+  ['What "mined" means', 'A program reads clean tool results from workflows that are not being tested. For each tool it tries a fixed list of rule types: required fields, stable types, numbers that are always positive, fields with only a few values (like an order status), fields copied from the call\'s arguments, dates in order, and one field being an exact linear function of another. ==A rule is kept only if it held in every example and had enough examples== (2 to 4, depending on the type).'],
+  ['Kept out of the test', 'Five folds: the rules used on a workflow come only from the other four folds, so no workflow helps build its own checker. 15,041 rules from 400 clean workflows, built in under two seconds.'],
+  ['Other environments', 'AppWorld: the published response schemas (a missing field or a wrong type fires). Tau-bench retail: rules read from the public order database (valid status values, positive prices, payment equals item total). Neither reads tasks, solutions or the grader.'],
+  ['Recovery tool list', 'Also built by a program, from ToolMaze\'s public list of substitute tools, then cut to the tools the agent can actually call. In 91.5% of receipts the agent still had at least two choices.'],
+  ['How much is deterministic', '==Everything except the agent.== Mining, checking and writing the receipt are plain code with zero model calls. The human part: I chose the rule types and the minimum example counts. The program applied them.'],
+  ['How good the detector is', 'On held-out hard workflows it flagged 79.6% of injected faults, with false alarms on 1.39% of clean results. An earlier schema-only check: 55% caught at 18% false alarms.'],
+];
+
+const barkeAsk: Item[] = [
+  { q: 'Why is the monitor deterministic? Why not have a model write or check the rules?', points: [
+    'Cost: ==the receipt adds no model call==. In the reviewer comparison it added $0.13 (7% over baseline). The port of Reinforced Agent, a language model that reviews each call before it runs, added $9.24 (498%) for a gain of 3.75 points that was not significant. Receipts beat it by 11.25 points',
+    'No hidden help: with code, you can show the rules never saw the test workflow, its solution or the fault label. A model writing rules could bring in what it already knows about the benchmark, and that is hard to rule out',
+    'Clean comparison: the same call and result always give the same receipt, so in paired runs the receipt is the only thing that changes. A model checker would add its own randomness to the treatment',
+    'Outside grounding: self-correction without an outside check can make answers worse (Huang et al., which the paper cites). The Gemma 4 paper shows the same thing for a model grading its own fix',
+    'The price: a fixed rule list only catches what it can express. On faults written blind, detection fell to about 46%: 25 of 30 wrong structured values, but only 6 of 27 wrong but plausible strings',
+    'Her group made the other choice: in Symbolic Constraint Agents, language-model agents write and correct the rules, and a solver checks them. That reaches rules a trace alone cannot show, like "this key must come from an earlier login". The two fit: a model proposes rules, clean runs accept or reject them, and the check at run time stays code',
+  ]},
+  { q: 'How is Outcome Monitors different from AgentRx?', points: [
+    '==AgentRx explains a run after it has failed. Outcome Monitors acts during the run, while the agent can still recover==',
+    'AgentRx finds the failing step. You catch a tool result that looks normal but is wrong, and tell the agent which tools can repair it',
+    'Say you named AgentRx in your statement because it showed you rules can be written for agent behavior',
+  ]},
+  { q: 'How is it different from checking the agent\'s tool calls, like Symbolic Constraint Agents?', points: [
+    'They check the call before it runs: is the agent allowed to make it?',
+    '==You check what came back: did the tool actually do the job?==',
+    'A correct call can still return a cached error page or a negative price. A call check cannot see that',
+    'The two fit together. One checks the call, the other checks the result',
+  ]},
+  { q: 'Why did removing the list of recovery tools remove the gain?', points: [
+    'With the list removed, the receipt performs at baseline. ==Putting the list back adds 11.4 points== (p = .028, 114 matched pairs)',
+    'So telling the agent something is wrong is not enough. It needs to know what it can do about it',
+    'Be careful: some smaller differences in that study had too little data to detect, so say "no detectable difference", not "no effect"',
+  ]},
+  { q: 'A rule learned from successful runs could fire on a valid but rare result. What did false alarms cost?', points: [
+    'On clean runs, both arms completed 74 of 114',
+    'There were 16 false alarms in 14 pairs. They led to 5 rescues and 5 harms',
+    'So clean traffic is not free of harm, even though the agent keeps every action available',
+  ]},
+  { q: 'Did you design the faults and the detector together?', points: [
+    'The paper says they may be aligned',
+    'On a fault set written without seeing the rule vocabulary, detection falls to about 46% and completion does not change',
+    'Say this before she finds it',
+  ]},
+  { q: 'In the Gemma paper, why trust the hidden tests as the answer key?', points: [
+    'Hidden tests are what SWE-bench grades with. They come from the fix the project\'s own developers merged',
+    'You checked control patches: 26 of 30 got their official label, and the misses were passes graded as failures',
+    'So you kept only issues whose reference fix passes',
+  ]},
+  { q: 'When Gemma is shown a failing test and undoes a correct fix, what kind of error is that?', points: [
+    'On one issue in ten, the correct fix breaks an old test that checks the behavior the issue asks to change',
+    'Gemma treats the test as right and puts the old behavior back',
+    'When Gemma first labels such tests as outdated, most correct fixes survive',
+    'Honest answer: it trusts the test over the issue. You have not separated reading errors from trust errors',
+  ]},
+  { q: 'What would you do in 12 weeks here?', points: [
+    'From your statement: a report that varies what counts as success and which recovery actions exist, and checks whether agent rankings survive',
+    'Say: "Beyond the experiments in my statement, I would be glad to go in the direction of Symbolic Constraint Agents. I have only skimmed it so far. In my own work I have tried checks at three points: a reviewer before each call, a monitor after each result, and a judge after the run ends. I am curious whether one idea ties them together."',
+    'Your receipts for the three points. Before the call: the Reinforced Agent reviewer port, +3.75 points, not significant, about 70 times the receipt\'s added cost. After the result: Outcome Monitors receipts, +15 in that same comparison; recovery-gap flags still worked up to four turns late. After the run: the Gemma 4 paper, where the model\'s own score and the existing tests both miss most wrong fixes',
+    '==A possible tying idea: one set of rules used at all three points.== Before the call it checks the call (Symbolic Constraint Agents), after the call it checks the result (Outcome Monitors), after the run it checks the whole log (AgentRx). Then measure which failures each point catches, what each costs, and whether the agent can still undo the mistake when it is caught',
+    'That last part is her essay\'s question: before, during and after a run, and the point of no return. So frame it as her idea extended, not a new agenda',
+    'A second way to combine them: a model proposes rules from the documentation (her way), clean runs accept or reject them (your way), and the check at run time stays plain code. That could lift the 46% blind detection without putting a model in the loop',
+    'If she asks for something specific, give the project in "A specific project to offer" below: her silent-errors setting, four arms',
+    'Offer these as questions, not a plan. Be open to her project. Topic match often decides who gets picked',
+  ]},
+  { q: 'What have you not done that we do?', points: [
+    'No program synthesis, no proofs, no training models on code',
+    'Say so plainly, then say what you would want to learn first',
+  ]},
+];
+
+const pitchSay = 'Your Symbolic Constraint Agents paper says call rules cannot see hidden environment state, and recall stays around 43 to 49 percent. In your silent-errors setting, those missed calls come back as an empty response. I would add a check on the result after each call. When it fires, your mined dependency rules could name the calls that would establish the missing fact, because in my paper the list of recovery tools was what produced the gain. Then compare four arms on that setting: no check, the call check, the result check, and both. But I would want to hear what you think is most worth doing.';
+
+const pitch: Row[] = [
+  ['The gap, in her words', 'Limitations: the rules "cannot detect failures that depend on hidden environment state (e.g., a credit limit the agent has not queried)". Table 1, after refinement: ==recall 43.0% on GPT-5.5 traces and 49.1% on Qwen3.5-27B==, with precision 90.4% and 83.9%. Her example of a miss: a call on a file that does not exist.'],
+  ['Why your work fits', 'In her silent-errors variant, a rejected call gets an empty response. A check on the result sees that. Her rules already say which earlier call establishes a fact ("this key must come from an earlier login"), so they can supply the recovery list. Your ablation showed the list is the part that works: putting it back added 11.4 points.'],
+  ['The hard part', 'An empty result is not always an error. A search with no matches is valid. Rules mined from clean runs say when empty is normal for a given tool. That is what makes this more than "flag every empty response".'],
+  ['Design', 'AppWorld, her silent-errors setting. Four arms on the same tasks, paired: no check, call check (hers), result check (yours), both. Measure task success, how many of her missed calls the result check catches, and false alarms per arm. Both papers report agents retrying valid calls after a false alarm.'],
+  ['Second option: omissions', 'Her other stated gap: the agent never makes a needed call. No call check can see a call that never happens. Her essay\'s monitor keeps "pending obligations". Check them just before the final action (submit, send, answer), the last point where the agent can still recover. This moves the after-the-run check to before the point of no return.'],
+  ['Why it fits 12 weeks', 'The benchmark, the setting and both kinds of check already exist. Your schema contracts already ran on AppWorld. The new code is the result check for her setting and the step from her rules to a recovery list.'],
+  ['What you do not know', 'Whether her code is public (the paper does not say), and whether her group is already building a result check. That is why you end by asking her.'],
+];
+
+const barkeQuestions: Ask[] = [
+  { q: 'Your essay says a wrong turn becomes a point of no return once an irreversible action happens, like sending an email. In my recovery study a flag still worked up to four turns late, but those tasks had no irreversible actions. How would you measure the window between a bad tool result and the action that locks it in?',
+    why: 'Agents as Software defines the two kinds by examples and calls acting on stale data a recoverable wrong turn. It gives no way to measure how long the window stays open.' },
+  { q: 'Your limitations section says rules on tool calls cannot catch failures that depend on hidden environment state. My monitors check the result that comes back, which is where those failures show up. Would a check on results fit into your setup, or does it need a different kind of rule?',
+    why: 'Symbolic Constraint Agents, Limitations: the rules "cannot detect failures that depend on hidden environment state", and "a false alarm may cause an agent to retry a call that was valid". Both are your results.' },
+  { q: 'AgentPex lists generating targeted tests from the extracted rules as future work, building on PromptPex. For coding agents, most wrong fixes pass the existing tests. Have you tried generating tests from the issue text to catch them?',
+    why: 'AgentPex, end of related work: test generation is future work. Neither paper looks at code patches.' },
+  { q: 'For a summer intern, which open question in your agent work could a 12-week project answer?',
+    why: 'Safe and useful. Ask it if time is short.' },
+];
+
+const barkeAnswered: Row[] = [
+  ['How to tell recoverable from not', 'Her essay answers it: a violation is a point of no return once an irreversible action has happened (an email sent, an order submitted, data disclosed). Before that, the monitor can block, ask for evidence, refresh state or replan.'],
+  ['What if the documentation is wrong', 'Symbolic Constraint Agents answers it: rules written from documentation are then corrected on sample runs, which removes rules that are too strict. Without that step, error-detection F1 is 37.0. With it, 58.3.'],
+]
+
+const barkeRead: Row[] = [
+  ['Read first', 'Agents as Software: the introduction and the sections on recovery and runtime monitoring. It is an essay, so it reads quickly.'],
+  ['Then skim', 'Symbolic Constraint Agents, so you can say how it differs from your paper in two sentences.'],
+  ['Know the abstract', 'AgentRx. You named it, so expect questions on it.'],
+];
+
+const sinceLine = 'Outcome Monitors showed that a check helps agents recover from silent tool failures. The next question was when they need one. On tasks built from real facts, agents often get past a wrong value because they already know the answer. On copies with invented facts they almost never recover alone, and a flag wins back most of the loss. So benchmarks built on public facts can make agents look more robust than they are, and monitors matter most where the agent cannot know the answer. Then I asked the same question for coding agents: who checks that a fix is right?';
+
+const bridge: Row[] = [
+  ['Outcome Monitors', 'A check on each tool result, plus the tools that can repair it, raises completion. Shows a monitor helps.'],
+  ['Recovery gap', 'Separates being told from knowing better. Shows where a monitor is needed: tasks the agent cannot answer from memory.'],
+  ['Gemma 4 paper', 'Same question for coding agents. The model\'s own score and the existing tests both miss most wrong fixes.'],
+];
+
+const recovery: Row[] = [
+  ['Status', 'Paper being drafted, not public yet. Numbers can still change. Say "in progress".'],
+  ['Question', 'When a tool silently returns a wrong value, what makes an agent recover?'],
+  ['Answer', 'Being told which result is wrong. Not told, agents recover only when they know better: they remember the real value, or notice it does not fit.'],
+  ['Setup', 'Failures injected into ToolHop (multi-step lookups), ALFWorld (household tasks) and a search agent. Three to five cheap models per setting, such as Haiku 5.5, MiMo and DeepSeek Flash.'],
+  ['What a flag is', 'One line the tool environment adds to the bad result: =="this result is wrong"==, naming the tool call. It does not say how to fix it. Think of it as what a monitor would say when it catches the failure, with the monitor always right.'],
+  ['Flag with a fix', 'The same line plus the backup tool that returns the correct value. On top of a bare flag it adds little on real tasks, and more on fictional ones.'],
+  ['Neutral note', 'Names the backup tool but says nothing is wrong. It tests whether a flag works just by prompting a second look.'],
+  ['Wins back', 'Success drops when the failure hits. The flag\'s share is how much of that drop it recovers. Example: clean 90%, failure 40%, flag 80% wins back 40 of the 50 points, or 80%.'],
+  ['Fictional copy', 'ToolHop rewritten with invented names and shifted years, so the model cannot know the answer from memory. Same tasks, same failures.'],
+];
+
+const recoveryFindings: Row[] = [
+  ['A flag works', 'A one-sentence message saying which result is wrong wins back ==72% to 97%== of the lost success, wherever a second way to get the value exists.'],
+  ['A neutral note does not', 'A note that points to the backup tool without saying anything is wrong wins back ==0% to 3%==. So the agent needs to be told something is wrong, not just shown an option.'],
+  ['Memory hides the problem', 'Without a flag, agents get past the wrong value on ==43% of real tasks but only 5% of fictional ones==. On real facts, the model\'s own memory acts as a hidden second source.'],
+  ['So benchmarks overstate it', 'Tests built on public facts make agents look better at recovering on their own than they are.'],
+  ['Hard to break', 'With a correct flag, recovery holds when the backup is hidden and when the flag comes up to four turns late (with a 16-turn limit).'],
+  ['The price is false alarms', 'A wrong flag costs ==7 to 16 points== on real tasks and 31 to 39 on the fictional copy. Models differ: Haiku stops, Flash carries on, MiMo runs out of reply tokens.'],
+];
+
+const recoveryHer: string[] = [
+  'Her "Agents as Software" essay separates mistakes an agent can recover from and points of no return. Your late-flag result measures that: a flag up to four turns late still works.',
+  'Symbolic Constraint Agents warns the agent when a rule breaks. Your false-alarm result says any such warning has a price, and the price depends on the model.',
+  'Your fictional copy is a way to test recovery without memory helping. It applies to any agent benchmark built on public facts, including the ones her group uses.',
+];
+
+const recoveryCareful: string[] = [
+  'It can sound like it contradicts Outcome Monitors, where the gain needed the list of recovery tools. It does not: ==ToolMaze, where Outcome Monitors was tested, is the exception here too.== There a flag alone won back only 0% to 16%',
+  'So the honest summary: naming the bad result does most of the work where a second route is obvious. Where it is not, the agent also needs to be told how to fix it',
+  'Flags in this study are always correct and name the exact result. Failures are injected. Only cheap models',
+  'Do not say detection is the hard part, or that false alarms are free',
+  'Say =="tasks the model cannot answer from memory"==, not "harder tasks". Fictional copies are only a little harder clean (81% against 90%), which does not explain 43% against 5%',
+  'Do not say "current" or "stronger" models need it more. Only cheap models were tested, and the paper makes no claim about model size',
+  'The memory effect is clear on ToolHop and weak in search (21% against 14%, interval through zero). If pressed, say "on ToolHop"',
+];
+
+const gemma: Row[] = [
+  ['Status', 'Submitted to Kaggle\'s Gemma 4 paper track on November 12. Public on GitHub (Vein05/gemma4-paper-track) and Hugging Face, with every agent and judge run.'],
+  ['Title', 'Neither Gemma 4 nor the Existing Tests Catch Wrong Fixes.'],
+  ['Question', 'Coding agents decide a fix is done by asking a model, often the one that wrote it, or by running the project\'s existing tests. Does either check work?'],
+  ['Setup', 'Gemma 4 31B and eight other models scored SWE-bench patches from 0 to 100. The hidden tests decided which patches were really correct.'],
+];
+
+const gemmaFindings: Row[] = [
+  ['Self-trust is partly ability', 'Gemma trusts its own failing patches 16.3 points more than other writers\' failing patches. Against seven writers as strong as Gemma, the gap halves to 8.7. ==Gemma gives their failing patches full marks as often as its own.=='],
+  ['Tests miss wrong fixes', '==71% of failing patches== from 32 public models ==pass every existing test==. Stronger models write more of these wrong fixes that pass.'],
+  ['Tests can block right fixes', 'On one issue in ten, the correct fix breaks an old test that checks the behavior the issue asks to change. Shown that test, Gemma undoes the correct fix.'],
+  ['A small fix', 'If Gemma first labels such tests as outdated, most correct patches survive.'],
+  ['The example', 'Use the matplotlib patch: Gemma fixed the reported bug, broke the case next to it, and scored its own patch 100. Details on the general prep page.'],
+];
+
+const gemmaHer: string[] = [
+  'AgentPex shows an agent can get full marks on the final state and still break required steps. Your paper shows a patch can pass every existing test and still be wrong. Same problem, in code.',
+  'PromptPex generates tests from written rules. Your result is the case for it: existing tests are a weak answer key.',
+  'AgentRx gives its judge a log of broken rules instead of the raw run. Your failing-test result asks when a judge should trust that kind of evidence: the old test was wrong, and Gemma trusted it.',
+  'This is her "trustworthy code generation" line directly. Ask what her group uses to decide a coding agent\'s patch is done.',
+];
+
+const gemmaCareful: string[] = [
+  '==Do not say Gemma recognizes its own patches.== The writer was never varied with the patch held fixed',
+  'Do not say only Gemma does this. One main judge model, Python repositories only',
+  'Do not say training or thinking fixed it. They did not remove the trust',
+];
+
+const mobiusWho: Row[] = [
+  ['Job', 'Principal Researcher at Microsoft Research New England, in Cambridge, Massachusetts. Formerly an associate professor of economics at Harvard.'],
+  ['Training', 'PhD in economics at MIT (2000). Degrees in economics and mathematics from Oxford.'],
+  ['Older work', 'Social networks and how people read news. ==Not part of this interview.== Do not bring it up, and if he does, listen.'],
+  ['Now', 'The economics of AI agents and AI search, with a Microsoft Research group that includes Rothschild, Nicole Immorlica and Brendan Lucier.'],
+  ['Not', 'He does not train models. ==He uses them as measuring tools== and studies their economic effects.'],
+  ['Careful', 'Searches mix him up with Mark Mobius, an investor. An old page links him to Michigan, which could not be confirmed. ==Do not mention it.=='],
+];
+
+const mobiusPapers: Paper[] = [
+  {
+    title: 'Paying for Information, Not for Clicks: A Block-Level Publisher Content Marketplace for AI Answers',
+    href: 'https://arxiv.org/abs/2610.30324',
+    role: 'First author. October 21, 2026.',
+    what: 'When an AI search answer uses facts from several news sites, who should get paid? A language model splits articles into single facts ("blocks"), matches the same fact across sites, and they compare three payment rules on 1,974 queries about one news event. Looked at one answer at a time, the rules give nearly the same payouts. Looked at across the whole set of articles, they differ.',
+    you: '==Your strongest link to him.== They never decide which payment rule is correct. They show how much the answer depends on the rule, and test the parts with no answer key by perturbing them. That is what Same Ranking does with the definition of a correct answer.',
+  },
+  {
+    title: 'Magentic Marketplace: An Open-Source Environment for Studying Agentic Markets',
+    href: 'https://arxiv.org/abs/2510.25779',
+    role: 'Middle author in a large Microsoft team. October 2025. Code is public (microsoft/multi-agent-marketplace).',
+    what: 'A simulated market where AI agents buy for customers and sell for businesses (restaurants and contractors, all synthetic). A purchase counts only if it has every item and amenity the customer asked for, and the score is total customer welfare. Agents get close to the best possible welfare only when search hands them the right businesses. Agents take the first offer far too often, which gives fast sellers a 10 to 30 times edge over better ones.',
+    you: 'Two links. ==Success is all-or-nothing by design==, which is the kind of choice your statement proposes to vary: would the model ranking survive partial credit? And agents accept the first answer without checking, which is the failure Outcome Monitors is about.',
+  },
+];
+
+const payRules: Row[] = [
+  ['The unit', 'A block is one fact or one piece of commentary. A language model clusters blocks that say the same thing. Commentary is matched together with the news it comments on, since "this was a mistake" means nothing alone. A cited fact appears at a mean of 22.4 publishers.'],
+  ['Equal', 'Each block\'s value is split evenly among every publisher that carried it.'],
+  ['Provenance', 'The earliest publisher gets all of it. Ties are split evenly.'],
+  ['Completer', 'A publisher is paid for what nobody else supplied. The paper calls it fragile: it "rewards being hard to cluster rather than being first or being right".'],
+  ['Why none is "correct"', 'All three are Shapley values of one model of how people read news, with two settings: reading order, and how much a partial answer is worth. So the rule is a choice about reader value, not a fact to look up.'],
+  ['When "first" is unclear', 'Only 33.3% of premium and 58.4% of other articles have an exact time. So they use four timestamp conventions, including noon for date-only records and same-day ties. Premium publishers get 41.87% under Equal and 46.33% to 49.55% under Provenance.'],
+  ['Their own caveat', 'The data shows who filed first, not who found out first. It cannot tell independent reporting from copying, so Provenance "prices priority, not originality".'],
+  ['No answer key', 'The clustering is not checked against people. They corrupt the index on purpose, up to 20% (wrong kind, wrongly split, wrongly merged). The Provenance minus Equal gap stays between +7.62 and +8.12 points, against 7.68.'],
+  ['The main finding', 'With only the articles retrieved for one answer, 86.2% of cited blocks look unique and every rule pays within one point. Against the whole index, only 27.2% are unique and the rules separate. ==The scope of the index decides whether the rule matters at all.=='],
+];
+
+const marketResults: Row[] = [
+  ['Setup', 'Customer agents search, message businesses, get offers and pay. Business agents answer and make offers. Two sizes: 33 customers and 99 businesses, 100 and 300. Nine models, five runs each.'],
+  ['Welfare', 'Under realistic search, most frontier models beat two of the three simple baselines. With perfect search, GPT-4.1 and Gemini-2.5-Flash come very close to the best possible welfare.'],
+  ['More options, worse choices', 'Going from 3 to 100 search results cut welfare by 4.3% for GPT-4o, 44% for GPT-5 (minimal reasoning) and 65.4% for Sonnet-4. Most models contacted only a few businesses however many they were shown.'],
+  ['First-offer bias', 'In every model, the first offer was picked 60% to 100% of the time and the third almost never. That makes speed worth more than quality or price.'],
+  ['Manipulation', 'Frontier models mostly resisted fake credentials, fake reviews and prompt injection. GPT-4o, GPT-OSS-20B and Qwen3-4B paid manipulative businesses more.'],
+  ['What they leave open', 'They suspect the "more options" effect comes from their own design choices plus agent limits, not from agentic markets as such. Markets in the study are static: nobody learns from past rounds.'],
+];
+
+const plainVersions: Row[] = [
+  ['Same Ranking, Different Winner', 'Memory systems turn what you said into notes and summaries. A benchmark then has to choose what earns credit: your original sentence, anything derived from it, or one clean fact. ==I kept every system\'s results fixed and changed only that choice.== Scores changed for most questions, and some recommendations about which design is better reversed. So a benchmark ranking can depend on a definition nobody writes down.'],
+  ['Outcome Monitors', 'An AI agent uses a tool. The tool reports success, but it did not do the job, and the agent carries on. I added a check on each result. When the check also tells the agent which tools can fix the problem, task completion rose from 10.9% to 28.1%. In his terms, the agent cannot see the outcome of its own action, so it needs a cheap way to verify it.'],
+  ['Gemma paper', 'Coding agents often ask a model whether a fix is done. Gemma gave full marks to failing fixes from equally strong models as often as to its own. The project\'s existing tests miss most wrong fixes too. So neither check tells you the fix is right.'],
+];
+
+const mobiusAsk: Item[] = [
+  { q: 'Explain one project in plain words.', points: [
+    'Use the plain version above. Lead with the contrast, then stop',
+    'No coined terms unless he asks',
+  ]},
+  { q: 'How do you know your result is not an artifact of your setup?', points: [
+    'Same Ranking: the retrieved lists stay fixed, so only the definition changes',
+    'The effect holds under three metrics and at three cutoffs',
+    'Outcome Monitors: the ablation, and the fault set written blind, where detection fell to about 46%',
+  ]},
+  { q: 'Is this a causal claim or a descriptive one?', points: [
+    '==Same Ranking is descriptive==: it shows rankings depend on the definition. It does not say which definition is right',
+    '==Outcome Monitors is an experiment==: same tasks, with and without the monitor, paired',
+    'This is the distinction economists care about most. Say it clearly',
+  ]},
+  { q: 'Have you worked with people or real users?', points: [
+    'Same Ranking: 115 human-labeled cases to check the model judges, agreement 0.77 to 0.87',
+    'MagnoliaEd: a course chatbot used in real college classes',
+    'Be plain that you have not run a field experiment',
+  ]},
+  { q: 'What is the strongest objection to your headline number?', points: [
+    'Same Ranking: the 83 to 94% is any change at all, on one pair of definitions. The average change is about 0.25 to 0.33',
+    'Outcome Monitors: failures were injected, not seen in real use',
+  ]},
+  { q: 'What is your background in statistics or social-science methods?', points: [
+    'Paired tests (McNemar, paired bootstrap), agreement between raters (kappa), confidence intervals, minimum detectable effect',
+    'Say which courses you have taken, and be honest about what you have not',
+  ]},
+  { q: 'Would you be willing to work in Cambridge?', points: [
+    'Say: "Yes. The project and the mentor matter more to me than the site, and I would be glad to be in Cambridge."',
+    'Do not bring up that you ranked New England third. If he asks: "I listed Redmond first because I knew of agent and evaluation groups there, but I would be happy in Cambridge."',
+  ]},
+  { q: 'What do you want from this summer?', points: [
+    'From your statement: turn a solo research agenda into a team one, with people who build evaluation at scale',
+    'One concrete output, such as a paper or a tool',
+  ]},
+];
+
+const summerQ = 'When an AI answer pays news publishers, does who gets paid depend on what the index counts as "the same fact"?';
+
+const summerSay = 'In my memory paper, the retrieved results never changed. Only the rule for what counts as the correct item changed, and that was enough to change which system won. Your marketplace has the same kind of rule: when two outlets write the same fact in different words, the index decides whether they count as one fact. I would like to hold the AI answers fixed, vary that rule, and see whether the payouts change. Your paper notes that a rule paying for exclusivity "rewards being hard to cluster", so the rule is also an incentive. A publisher could reword a story to look exclusive.';
+
+const summerMap: [string, string, string][] = [
+  ['What stays fixed', 'Each memory system\'s retrieved list', 'Each AI answer and the facts it cites'],
+  ['The hidden choice', 'Which stored form counts as correct: the original turn, anything derived from it, or one clean fact', 'Which wordings count as the same fact: same sentence, same claim, or same event'],
+  ['What it changes', 'Scores on most questions, and which system or design looks best', 'Which publishers get paid, and how much premium outlets get'],
+  ['Who decides now', 'The benchmark author, without saying so', 'A language model that clusters the facts, with no answer key'],
+];
+
+const summerWhy: string[] = [
+  'His main finding is that payment rules only matter when duplication is visible. Within the retrieved articles, 86% of cited facts look unique and every rule pays within one point of the others. Across the whole index, only 27% are unique and the rules separate. ==How much duplication is visible depends on what counts as the same fact==, which is your question',
+  'His robustness check perturbs the index at random, by up to 20%. A change in the definition of "same fact" is not random. It affects some outlets more than others, which is the caveat he names himself',
+  'For an economist the interesting part is the incentive. If rewording a wire story makes it look exclusive, the rule rewards rewording. That is a testable claim about a market rule, not only a measurement question',
+];
+
+const summerPlan: Row[] = [
+  ['Weeks 1 to 3', 'Reproduce the payouts from their index. Write three rules for "same fact": same sentence, same claim, same event.'],
+  ['Weeks 4 to 6', 'Recompute the payouts under each rule with the answers fixed. Which publishers gain or lose, and does the premium share move?'],
+  ['Weeks 7 to 9', 'Label a sample by hand, split by outlet type (wire copy, paywalled, smaller outlets). Find which rule people agree with, and whether the model\'s mistakes fall more on one type. That tests the caveat his paper could not.'],
+  ['Weeks 10 to 12', 'The rewording test: have a model rewrite wire stories, and check whether the rewrites start counting as exclusive under each rule. Write it up.'],
+];
+
+const summerResults: Row[] = [
+  ['If payouts hold', 'The marketplace is robust to this choice. That is a useful result for anyone who wants to deploy it.'],
+  ['If payouts move', 'Report payouts as a range across rules, as my memory paper recommends for benchmarks, and pick the rule people agree with.'],
+  ['If rewording buys exclusivity', 'The exclusivity rule can be gamed, which supports his own argument against it with data.'],
+];
+
+const summerLimits: string[] = [
+  'I have no training in economics. I know what a payment rule does in his paper, not the theory behind it (Shapley values, mechanism design, equilibrium)',
+  'I have not worked with news data, outlet tiers or browsing panels',
+  'I have not run a study with people beyond labeling cases to check model judges (115 cases in my memory paper)',
+  'I do not know what data and index access an intern would have, or whether this direction fits his plans',
+  'His paper covers one news event and 1,974 queries. A result on that set may not hold for other news',
+  'Say these plainly, then say what you would read first: his paper\'s payment-rule section and an introduction to Shapley values',
+];
+
+const mobiusQuestions: Ask[] = [
+  { q: 'In the marketplace paper you note that uniform perturbation cannot reveal extraction errors that track outlet tier, like shorter wire copy or paywalled excerpts, and that measuring this needs labeled data. Is labeling a sample by tier the next step? I hit the same problem: a scoring choice that affects some systems more than others is invisible to a uniform check.',
+    why: 'Appendix B.2 calls 20% "a reasonable upper bound" and names tier-correlated error as the one open caveat. The paper has no labeled data to test it.' },
+  { q: 'In Magentic Marketplace a purchase counts only if it has every item and amenity, and the value is set at twice the average price. Have you checked whether the ranking of models holds if a near miss gets partial credit, or the value changes? In my memory paper, changing only what counted as correct changed which system won.',
+    why: 'Section 4.2 fixes all-or-nothing fit and one value multiplier (2). The paper reports no check of either choice. This is your statement\'s proposed project, applied to his benchmark.' },
+  { q: 'The first-offer bias holds across every model. Have you tried a market rule that collects all offers before the agent sees any? That would show whether the bias is in the models or in the order the market delivers offers.',
+    why: 'Section 5.4 says the bias is "potentially a deeper limitation" of the models, and the discussion says search ordering becomes critical when it exists. The paper does not test a market rule that removes the order.' },
+  { q: 'What does a good summer intern project look like in your group?',
+    why: 'Safe and useful. Ask it if time is short.' },
+];
+
+const mobiusRead: Row[] = [
+  ['Read first', 'Paying for Information, Not for Clicks: the abstract, the payment-rule section (Section 4), the timestamp table and the limitations. The rows above give the numbers.'],
+  ['Then', 'Magentic Marketplace: the abstract, how welfare is scored (Section 4.2), and the results on more options and first-offer bias (Sections 5.2 and 5.4).'],
+];
+
+const day: string[] = [
+  'Reply to the email with 3:30 to 4:00 PM Pacific, and spell Shraddha correctly',
+  'Install Teams. Test camera, microphone and screen sharing',
+  'Have your CV, research statement and each paper\'s main figure open in tabs',
+  'Read Agents as Software and the publisher marketplace abstract',
+  'Say the AgentRx difference aloud until it takes under 30 seconds',
+  'Say each plain version aloud once',
+  'Join 5 minutes early',
+];
+
+const sources: Row[] = [
+  ['Barke, MSR profile', 'https://www.microsoft.com/en-us/research/people/sbarke/'],
+  ['Barke, CV (October 2025)', 'https://www.microsoft.com/en-us/research/wp-content/uploads/2025/10/shraddhabarkecv.pdf'],
+  ['Mobius, MSR profile', 'https://www.microsoft.com/en-us/research/people/mobius/'],
+  ['Project Ratio', 'https://www.microsoft.com/en-us/research/project/project-ratio/'],
+  ['Mobius, Google Scholar', 'https://scholar.google.com/citations?user=RUTPdHcAAAAJ&hl=en&sortby=pubdate'],
+];
+
+const nav: Row[] = [['must', 'Must know'], ['plan', 'The plan'], ['barke', 'Shraddha Barke'], ['compare', 'Your work vs hers'], ['since', 'Since Outcome Monitors'], ['mobius', 'Markus Mobius'], ['summer', 'Summer idea'], ['plain', 'Plain versions'], ['day', 'Day of']];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="referrer" content="no-referrer" />
+    <title>MSR interview</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      try {
+        const stored = localStorage.getItem('portfolio-theme');
+        document.documentElement.dataset.theme = stored === 'dim' ? 'dim' : 'daylight';
+      } catch {
+        document.documentElement.dataset.theme = 'daylight';
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      .prep { font-family: 'IBM Plex Sans', sans-serif; }
+      .prep .kicker { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); }
+      .prep summary { cursor: pointer; list-style: none; display: flex; gap: 0.6rem; font-weight: 500; padding: 0.7rem 0; }
+      .prep summary::-webkit-details-marker { display: none; }
+      .prep summary::before { content: '+'; font-family: 'IBM Plex Mono', monospace; color: rgb(var(--color-ink-blue)); flex: none; width: 0.8rem; }
+      .prep details[open] > summary::before { content: '\2212'; }
+      .prep details { border-top: 1px solid rgb(var(--color-border-paper)); }
+      .prep details > ul { list-style: disc; margin: 0 0 0.9rem 1.45rem; padding-left: 1rem; }
+      .prep details > ul li { margin: 0.25rem 0; }
+      .prep a { color: rgb(var(--color-ink-blue)); }
+      .prep mark { background: rgba(250, 204, 21, 0.38); color: inherit; padding: 0 2px; }
+      .prep .must { border: 1px solid rgb(var(--color-border-paper)); border-left: 3px solid rgba(234, 179, 8, 0.9); padding: 0.75rem 1rem 0.25rem; }
+      .prep a:hover { text-decoration: underline; }
+      .prep .row { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 0.25rem 1.25rem; padding: 0.6rem 0; border-top: 1px solid rgb(var(--color-border-paper)); }
+      .prep .row > :first-child { font-weight: 500; }
+      .prep .paper { border-top: 1px solid rgb(var(--color-border-paper)); padding: 0.9rem 0; }
+      .prep .label { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: rgb(var(--color-ink-muted)); margin-top: 0.6rem; }
+      .prep .compare { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+      .prep .compare th, .prep .compare td { text-align: left; vertical-align: top; padding: 0.5rem 0.6rem 0.5rem 0; border-top: 1px solid rgb(var(--color-border-paper)); }
+      .prep .compare thead th { font-weight: 500; color: rgb(var(--color-ink-blue)); }
+      .prep .compare tbody th { font-weight: 500; }
+      .prep .compare-wrap { overflow-x: auto; }
+      .prep ol.asks { list-style: decimal; margin-left: 1.45rem; padding-left: 1rem; }
+      .prep ol.asks li { margin: 0.5rem 0; }
+      @media (max-width: 560px) { .prep .row { grid-template-columns: minmax(0, 1fr); } .prep .compare { min-width: 34rem; } }
+      @media print { .prep .no-print { display: none; } }
+    </style>
+  </head>
+  <body>
+    <div class="prep min-h-screen bg-paper-light text-ink-dark">
+      <main class="mx-auto max-w-[46rem] px-4 py-10 text-[16px] leading-relaxed sm:px-6">
+        <header class="mb-8">
+          <p class="kicker">Unlisted</p>
+          <h1 class="mt-1 text-3xl font-semibold">Microsoft Research interview</h1>
+          <p class="mt-3">Who is interviewing you, what they work on, where your work meets theirs, and what to ask. For deep questions on your own papers, use the <a href="/prep-e3d21522/">general prep page</a>.</p>
+          <p class="mt-3 text-sm text-ink-muted">Facts about the interviewers come from their profiles and papers, checked on November 16, 2026. Anything marked as a guess is a guess.</p>
+        </header>
+
+        <nav class="no-print mb-8 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-border-paper py-3 text-sm" aria-label="Sections">
+          {nav.map(([id, title]) => <a href={`#${id}`}>{title}</a>)}
+          <button id="toggle-all" type="button" class="ml-auto border border-border-paper px-3 py-1 text-ink-dark">Open all</button>
+        </nav>
+
+        <section id="must" class="must mb-10 scroll-mt-4">
+          <p class="kicker">If you read nothing else</p>
+          <h2 class="mb-2 mt-1 text-xl font-semibold">Must know</h2>
+          <p class="mb-2 text-sm text-ink-muted">Highlighted text across the page marks the facts to know by heart.</p>
+          {mustKnow.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+        </section>
+
+        <section class="mb-10">
+          <p class="kicker">Logistics</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">The call</h2>
+          {logistics.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+        </section>
+
+        <section id="plan" class="mb-10 scroll-mt-4">
+          <p class="kicker">Start here</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">The plan</h2>
+          {plan.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">How 30 minutes might go</h3>
+          <p class="mb-2 text-sm text-ink-muted">A guess, not from a report.</p>
+          {shape.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">Asked in a past intern's interview</h3>
+          <p class="mb-2 text-sm text-ink-muted">From a 2022 intern's blog (one 40 to 45 minute panel). Either of them may ask these.</p>
+          {common.map((item) => (
+            <details>
+              <summary>{item.q}</summary>
+              <ul>{item.points.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+            </details>
+          ))}
+        </section>
+
+        <section id="barke" class="mb-10 scroll-mt-4">
+          <p class="kicker">Interviewer, Redmond</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Shraddha Barke</h2>
+          {barkeWho.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">Her papers that matter for you</h3>
+          {barkePapers.map((p) => (
+            <div class="paper">
+              <a href={p.href} {...external} class="font-medium">{p.title}</a>
+              <p class="text-sm text-ink-muted">{p.role}</p>
+              <p class="label">What it does</p>
+              <p>{hl(p.what).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</p>
+              <p class="label">Why it matters to you</p>
+              <p>{hl(p.you).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</p>
+            </div>
+          ))}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">Her other work, in one line each</h3>
+          {barkeOther.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+        </section>
+
+        <section id="compare" class="mb-10 scroll-mt-4">
+          <p class="kicker">Most likely question</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Your work vs hers</h2>
+          <p class="mb-3">All three catch agent mistakes with rules. They differ in when they look and what they look at.</p>
+          <div class="compare-wrap">
+            <table class="compare">
+              <thead><tr><th></th><th>Outcome Monitors (yours)</th><th>AgentRx</th><th>Symbolic Constraint Agents</th></tr></thead>
+              <tbody>{compare.map(([label, a, b, c]) => <tr><th scope="row">{label}</th><td>{a}</td><td>{b}</td><td>{c}</td></tr>)}</tbody>
+            </table>
+          </div>
+          <p class="mt-3 text-sm text-ink-muted">Symbolic Constraint Agents' warning adds the broken rule to the agent's context, for example "LOGIN must use the id from an earlier REGISTER". It has no separate list of recovery tools, though a rule can name the tool to call. Its limitations section says call rules cannot catch failures hidden in the environment's state. Those are the failures a check on results is for.</p>
+          <h3 class="mb-2 mt-6 text-base font-semibold text-ink-blue">The two-sentence answer</h3>
+          <p>AgentRx explains a failed run afterwards, and Symbolic Constraint Agents checks a call before it runs. Outcome Monitors checks what a tool sent back, during the run, and tells the agent which tools can repair it.</p>
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">How your rules are mined</h3>
+          <p class="mb-3">She will want to know where the rules come from and whether a model wrote them. Your answer: a program mines them, and no model is involved until the agent reads the receipt.</p>
+          {mining.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">What she might ask</h3>
+          <p class="mb-2 text-sm text-ink-muted">Guesses based on her papers. Say your answer aloud, then open the points.</p>
+          {barkeAsk.map((item) => (
+            <details>
+              <summary>{item.q}</summary>
+              <ul>{item.points.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+            </details>
+          ))}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">A specific project to offer</h3>
+          <p class="mb-3">It starts from a gap her own paper names, uses her benchmark setting, and leaves the choice to her. Say it in your own words:</p>
+          <p class="mb-3 border-l-2 border-ink-blue pl-3">{pitchSay}</p>
+          {pitch.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">What to ask her</h3>
+          <p class="mb-2 text-sm text-ink-muted">Checked against her papers on November 16. Each one starts from something the paper leaves open. Pick one or two.</p>
+          <ol class="asks">{barkeQuestions.map((a) => <li>{a.q}<span class="mt-1 block text-sm text-ink-muted">Why: {a.why}</span></li>)}</ol>
+          <p class="label mt-5">Already answered in her papers. Do not ask, but know the answer</p>
+          {barkeAnswered.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">Read before Wednesday</h3>
+          {barkeRead.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+        </section>
+
+        <section id="since" class="mb-10 scroll-mt-4">
+          <p class="kicker">Your progress, for her</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Since Outcome Monitors</h2>
+          <p class="mb-3">Tell her the work did not stop at one paper. Say this in your own words, then go to whichever part she asks about:</p>
+          <p class="mb-3 border-l-2 border-ink-blue pl-3">{sinceLine}</p>
+          <p class="label mt-5">The thread, one line each</p>
+          {bridge.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">Recovery gap: what makes an agent recover</h3>
+          {recovery.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <p class="label mt-5">What you found</p>
+          {recoveryFindings.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <p class="label mt-5">Where it meets her work</p>
+          <ul class="ml-5 list-disc space-y-1">{recoveryHer.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+          <details class="mt-4">
+            <summary>Be careful with</summary>
+            <ul>{recoveryCareful.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+          </details>
+
+          <h3 class="mb-2 mt-10 text-base font-semibold text-ink-blue">Gemma 4 paper: who checks a coding agent's fix</h3>
+          {gemma.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <p class="label mt-5">What you found</p>
+          {gemmaFindings.map(([label, text]) => <div class="row"><span>{label}</span><span>{label === 'The example' ? <>{text.replace(' Details on the general prep page.', '')}{' '}<a href="/prep-e3d21522/#matplotlib">Details on the general prep page</a>.</> : hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <p class="label mt-5">Where it meets her work</p>
+          <ul class="ml-5 list-disc space-y-1">{gemmaHer.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+          <details class="mt-4">
+            <summary>Be careful with</summary>
+            <ul>{gemmaCareful.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+          </details>
+        </section>
+
+        <section id="mobius" class="mb-10 scroll-mt-4">
+          <p class="kicker">Interviewer, New England</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Markus Mobius</h2>
+          {mobiusWho.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">Why an economist?</h3>
+          <p class="mb-2 text-sm text-ink-muted">A guess. No Microsoft source says how interviewers are paired.</p>
+          <p>His recent papers use language models as measuring tools and test whether results hold up. Your papers ask the same question about benchmarks. He may also be there to test how you reason: what you claim, what would prove you wrong, and whether you can say it without jargon.</p>
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">His papers that matter for you</h3>
+          {mobiusPapers.map((p) => (
+            <div class="paper">
+              <a href={p.href} {...external} class="font-medium">{p.title}</a>
+              <p class="text-sm text-ink-muted">{p.role}</p>
+              <p class="label">What it does</p>
+              <p>{hl(p.what).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</p>
+              <p class="label">Why it matters to you</p>
+              <p>{hl(p.you).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</p>
+            </div>
+          ))}
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">How the payment paper decides who gets credit</h3>
+          <p class="mb-3">When many outlets carry the same fact, someone has to decide who gets paid. The paper does not pick a correct answer. It lays out three rules and measures how much the payout moves.</p>
+          {payRules.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <p class="mt-3 text-sm text-ink-muted">Source: the paper's text, sections 3 to 5, Appendix B and the limitations.</p>
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">What Magentic Marketplace found</h3>
+          {marketResults.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+          <p class="mt-3 text-sm text-ink-muted">Source: arXiv 2510.25779, version 1, sections 4 and 5.</p>
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">What he might ask</h3>
+          <p class="mb-2 text-sm text-ink-muted">Guesses based on his field.</p>
+          {mobiusAsk.map((item) => (
+            <details>
+              <summary>{item.q}</summary>
+              <ul>{item.points.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</li>)}</ul>
+            </details>
+          ))}
+
+          <h3 id="summer" class="mb-2 mt-8 scroll-mt-4 text-base font-semibold text-ink-blue">If he asks what you would work on this summer</h3>
+          <p class="mb-3 text-sm text-ink-muted">Built from your memory paper and his marketplace paper. Checked against his paper's text on November 16.</p>
+          <p class="label">The question</p>
+          <p class="mb-3"><mark>{summerQ}</mark></p>
+          <p class="label">Say it in about 45 seconds</p>
+          <p class="mb-3 border-l-2 border-ink-blue pl-3">{summerSay}</p>
+          <p class="label">The same idea in both papers</p>
+          <div class="compare-wrap">
+            <table class="compare">
+              <thead><tr><th></th><th>Your memory paper</th><th>His marketplace</th></tr></thead>
+              <tbody>{summerMap.map(([label, a, b]) => <tr><th scope="row">{label}</th><td>{a}</td><td>{b}</td></tr>)}</tbody>
+            </table>
+          </div>
+          <p class="label mt-5">Why it is interesting to him</p>
+          <ul class="ml-5 list-disc space-y-1">{summerWhy.map((point) => <li>{hl(point).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}.</li>)}</ul>
+          <p class="label mt-5">Twelve weeks</p>
+          {summerPlan.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+          <p class="label mt-5">What you would report, either way</p>
+          {summerResults.map(([label, text]) => <div class="row"><span>{label}</span><span>{text}</span></div>)}
+          <p class="label mt-5">What you do not know, and should say</p>
+          <ul class="ml-5 list-disc space-y-1">{summerLimits.map((point) => <li>{point}.</li>)}</ul>
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">What to ask him</h3>
+          <p class="mb-2 text-sm text-ink-muted">Checked against his papers on November 16. Each one starts from something the paper leaves open. Pick one or two. The first is the closest to your work.</p>
+          <ol class="asks">{mobiusQuestions.map((a) => <li>{a.q}<span class="mt-1 block text-sm text-ink-muted">Why: {a.why}</span></li>)}</ol>
+
+          <h3 class="mb-2 mt-8 text-base font-semibold text-ink-blue">Read before Wednesday</h3>
+          {mobiusRead.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+        </section>
+
+        <section id="plain" class="mb-10 scroll-mt-4">
+          <p class="kicker">For a non-specialist</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Plain versions of your work</h2>
+          <p class="mb-3 text-sm text-ink-muted">About 30 seconds each. Say them aloud.</p>
+          {plainVersions.map(([label, text]) => <div class="row"><span>{label}</span><span>{hl(text).map((part, i) => i % 2 ? <mark>{part}</mark> : part)}</span></div>)}
+        </section>
+
+        <section id="day" class="mb-10 scroll-mt-4">
+          <p class="kicker">Checklist</p>
+          <h2 class="mb-3 mt-1 text-xl font-semibold">Day of</h2>
+          <ul class="ml-5 list-disc space-y-1">{day.map((d) => <li>{d}</li>)}</ul>
+        </section>
+
+        <footer class="border-t border-border-paper pt-4 text-sm text-ink-muted">
+          <p class="kicker mb-2">Sources</p>
+          <ul class="space-y-1">{sources.map(([label, href]) => <li><a href={href} {...external}>{label}</a></li>)}</ul>
+          <p class="mt-2">Full notes with every paper: research/reu/msr-interview/.</p>
+        </footer>
+      </main>
+    </div>
+    <script is:inline>
+      const toggle = document.getElementById('toggle-all');
+      toggle.addEventListener('click', () => {
+        const open = toggle.textContent === 'Open all';
+        document.querySelectorAll('.prep details').forEach((d) => { d.open = open; });
+        toggle.textContent = open ? 'Close all' : 'Open all';
+      });
+    </script>
+  </body>
+</html>

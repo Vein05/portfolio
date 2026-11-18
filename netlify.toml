@@ -29,6 +29,11 @@
   status = 302
 
 [[redirects]]
+  from = "/msr"
+  to = "/msr-dc835a07/"
+  status = 302
+
+[[redirects]]
   from = "/mars"
   to = "https://mars-weather-app-fawn.vercel.app/"
   status = 301
@@ -59,5 +64,10 @@
 # Unlisted interview prep page: reachable by direct link only, kept out of search engines
 [[headers]]
   for = "/prep-e3d21522/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/msr-dc835a07/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow, noarchive"
