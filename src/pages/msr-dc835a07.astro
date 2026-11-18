@@ -182,7 +182,7 @@ const compare: [string, string, string, string][] = [
   ['Where rules come from', 'A fixed program mines them from successful runs on other tasks, or reads public schemas. No model call', 'Tool descriptions, policy and the run itself', 'Language-model agents write them from API documentation, then correct them on sample runs'],
   ['What does the checking', 'Plain code', 'Rule checks, then a language-model judge reads the log', 'An SMT solver'],
   ['What happens next', 'The agent is told which rule broke and which tools can recover', 'A model names the step where the run failed', 'A warning, or an automatic fix of the call'],
-  ['Main result', 'ToolMaze completion 10.9% to 28.1%', 'Finds the failing step 75% better than prior work', 'Task success up 5.4 to 9.8 points on AppWorld, for one model'],
+  ['Main result', 'ToolMaze completion 10.9% to 28.1%. Held-out AppWorld: no net change, 25 of 32 tasks both ways (p = 1.0). The check fired on all 32 faults, but the agent finished 23 of 32 despite the fault, so there was little to rescue', 'Finds the failing step 75% better than prior work', 'Task success up 5.4 to 9.8 points on AppWorld, for one model'],
 ];
 
 const mining: Row[] = [
