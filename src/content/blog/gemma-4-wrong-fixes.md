@@ -5,6 +5,11 @@ category: "Research"
 status: "plated"
 ---
 
+```image
+src: /posts/images/gemma-4-wrong-fixes/cover.png
+alt: Cartoon cover. A blue four-pointed Gemma star says 100, a red bug peeks over a sheet of test results, and a green check mark smiles, above the title Neither Gemma 4 nor the Existing Tests Catch Wrong Fixes.
+```
+
 This is our writeup for the [Gemma 4 Developer Agent Paper Track](https://www.kaggle.com/competitions/gemma-4-developer-agent-paper/writeups/new-writeup-1794429803201) on Kaggle. The paper, the [supplement](https://github.com/Vein05/gemma4-paper-track/blob/main/paper/rubber-stamp-supplement.pdf), code and judge answers are on [GitHub](https://github.com/Vein05/gemma4-paper-track), and every agent and judge trace is on [Hugging Face](https://huggingface.co/datasets/vein05/gemma4-paper-track-data).
 
 Gemma 4 gives full marks to failing patches from equally strong agents as often as to its own. Seven in ten failing patches from 32 public models pass every existing test, and on one issue in ten the correct fix breaks one.

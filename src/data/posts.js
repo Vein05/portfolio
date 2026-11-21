@@ -9,6 +9,7 @@ export const posts = [
     tags: ["Gemma 4", "SWE-bench", "LLM-as-a-Judge", "Self-Preference", "Coding Agents", "Code Review", "Regression Tests", "Kaggle"],
     seoTitle: "Gemma 4 Trusts Wrong Fixes on SWE-bench | Sugam Panthi",
     seoDescription: "Gemma 4 31B scores failing SWE-bench patches from equally strong agents as high as its own, and 71% of failing patches from 32 models pass every existing test.",
+    ogImage: "https://spanthi.com/posts/images/gemma-4-wrong-fixes/cover.png",
     canonicalPath: "/blog/gemma-4-wrong-fixes"
   },
   {
