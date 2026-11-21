@@ -1,5 +1,17 @@
 export const posts = [
   {
+    slug: "gemma-4-wrong-fixes",
+    title: "Neither Gemma 4 nor the Existing Tests Catch Wrong Fixes",
+    date: "2026-11-21",
+    category: "Research",
+    status: "plated",
+    excerpt: "Gemma 4 gives full marks to failing patches from equally strong agents as often as to its own. Seven in ten failing patches from 32 public models pass every existing test, and on one issue in ten the correct fix breaks one. Our Kaggle Gemma 4 paper track writeup.",
+    tags: ["Gemma 4", "SWE-bench", "LLM-as-a-Judge", "Self-Preference", "Coding Agents", "Code Review", "Regression Tests", "Kaggle"],
+    seoTitle: "Gemma 4 Trusts Wrong Fixes on SWE-bench | Sugam Panthi",
+    seoDescription: "Gemma 4 31B scores failing SWE-bench patches from equally strong agents as high as its own, and 71% of failing patches from 32 models pass every existing test.",
+    canonicalPath: "/blog/gemma-4-wrong-fixes"
+  },
+  {
     slug: "ai-memory-dreaming",
     title: "Somnium Machinae: What AI Memory Systems Do When They Dream",
     date: "2026-10-08",
