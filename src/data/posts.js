@@ -1,5 +1,18 @@
 export const posts = [
   {
+    slug: "gptzero-human-writing",
+    title: "Which Human Writing Does GPTZero Call AI?",
+    date: "2026-11-24",
+    category: "Research",
+    status: "plated",
+    excerpt: "I scanned 500 human texts written between 1902 and 2020 with GPTZero 5.0. Almost everything reads human, including the ESL essays it used to flag. The one place it breaks: two unchanged cuts of Lehman Brothers earnings releases that score AI 100%.",
+    tags: ["GPTZero", "AI Detection", "False Positives", "ESL", "Bounty"],
+    seoTitle: "Which Human Writing Does GPTZero 5.0 Call AI? | Sugam Panthi",
+    seoDescription: "500 human texts from 1902 to 2020 on GPTZero 5.0: almost all read human, ESL essays included. Two unchanged Lehman Brothers excerpts score AI 100%.",
+    ogImage: "https://spanthi.com/posts/images/gptzero-human-writing/banner.png",
+    canonicalPath: "/blog/gptzero-human-writing"
+  },
+  {
     slug: "gemma-4-wrong-fixes",
     title: "Neither Gemma 4 nor the Existing Tests Catch Wrong Fixes",
     date: "2026-11-21",
